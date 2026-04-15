@@ -52,6 +52,67 @@ real_photo.jpg
 
 ---
 
+## 🌐 Browser / WASM 图片站 Alpha
+
+仓库现在额外提供一个**浏览器本地执行**的图片检测 demo，目标是把图片来源信号检测搬到前端执行。
+
+### 当前浏览器版范围
+
+- 只做**图片**，不做视频 / 音频
+- 只做**前端本地分析**，不上传图片到服务器
+- 当前优先支持这些信号类型：
+  - EXIF metadata
+  - XMP / IPTC metadata
+  - PNG `tEXt` / `iTXt` 文本块
+  - 文件名启发式
+- 当前版本**不是完整 CLI 等价移植**，更偏 Browser MVP
+
+### 当前仅支持这些平台 / 工具来源信号
+
+> 重要：这里表示“当前会尝试识别这些平台留下的来源痕迹”，**不是**表示能识别所有 AI 图片，也**不是**表示只看像素就能下定论。
+
+- DALL-E / OpenAI
+- Midjourney
+- Stable Diffusion
+- Adobe Firefly
+- Imagen / Google AI / Gemini
+- Flux
+- Ideogram
+- Leonardo.ai
+- NovelAI
+- Grok
+- Jimeng / 即梦 / Dreamina
+- Qwen / 通义万相
+- Bing Image Creator
+- Copilot Designer
+- Microsoft Designer
+- Canva AI
+- DreamStudio
+- NightCafe
+- Craiyon
+- DeepAI
+- Meta AI
+- Stability AI
+- ComfyUI
+- Automatic1111 / A1111
+- InvokeAI
+- Fooocus
+- Seedream
+- Recraft
+
+### 本地运行浏览器版
+
+> 需要本机安装 Rust toolchain 和 `wasm-pack`。
+
+```bash
+wasm-pack build --target web --out-dir web/pkg
+python3 -m http.server 4173 -d web
+```
+
+打开 `http://localhost:4173`。
+
+---
+
 ## 🔍 工作原理
 
 ```
