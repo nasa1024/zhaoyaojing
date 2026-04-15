@@ -1,0 +1,8 @@
+{
+  "name": "aicheck-web-demo",
+  "private": true,
+  "scripts": {
+    "build:wasm": "wasm-pack build --target web --out-dir web/pkg",
+    "serve": "python3 -m http.server 4173 -d web"
+  }
+}

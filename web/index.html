@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AICheck Browser Demo</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero card">
+        <div class="eyebrow">AICheck · Browser Image Demo</div>
+        <h1>AI 图片来源信号检测</h1>
+        <p class="lead">
+          图片只在你的浏览器里本地分析，不上传服务器。当前版本是
+          <strong>WASM 前端版 Alpha</strong>，重点做图片元数据信号检测。
+        </p>
+        <div class="notice warning">
+          <strong>重要提示：</strong>
+          这不是万能 AI 鉴定器。它只基于 EXIF / XMP / PNG 文本块 / 文件名等来源信号做辅助判断。
+          如果图片经过社交平台压缩、截图、重新导出或清洗元数据，很多信号会直接消失。
+        </div>
+      </section>
+
+      <section class="grid two-col">
+        <div class="card">
+          <h2>上传图片</h2>
+          <label class="upload" for="file-input">
+            <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff" />
+            <span>点击选择图片</span>
+            <small>支持 JPEG / PNG / WebP / GIF / BMP / TIFF</small>
+          </label>
+          <button id="analyze-btn" class="primary" disabled>开始检测</button>
+          <p id="status" class="status muted">正在加载 WASM 模块…</p>
+        </div>
+
+        <div class="card">
+          <h2>当前仅支持这些平台 / 工具来源信号</h2>
+          <p class="muted">
+            这里只代表<strong>当前可识别的来源痕迹范围</strong>，不代表支持所有 AI 图片平台，更不代表能只看像素就断定真伪。
+          </p>
+          <ul id="platform-list" class="tag-list"></ul>
+        </div>
+      </section>
+
+      <section class="grid two-col">
+        <div class="card">
+          <h2>当前浏览器版支持的信号类型</h2>
+          <ul id="signal-types" class="bullet-list"></ul>
+        </div>
+        <div class="card">
+          <h2>支持格式</h2>
+          <ul id="format-list" class="tag-list"></ul>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>检测结果</h2>
+        <div id="empty-state" class="empty-state">
+          选一张原始图片试试。越原始的文件，越容易保留可检测的来源信号。
+        </div>
+        <div id="report" class="report hidden"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

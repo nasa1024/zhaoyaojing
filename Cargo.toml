@@ -1,0 +1,55 @@
+[package]
+name = "aicheck"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.86"
+description = "Detect AI-generated content via metadata and watermarks (C2PA, XMP, EXIF, MP4, ID3, WAV, PNG, filename, spectral, watermark)"
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/MatrixA/aicheck"
+homepage = "https://github.com/MatrixA/aicheck"
+documentation = "https://matrixa.github.io/aicheck/"
+keywords = ["ai-detection", "c2pa", "watermark", "metadata", "forensics"]
+categories = ["command-line-utilities", "multimedia"]
+exclude = [".github/", ".context/", "docs/", "tests/fixtures/"]
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
+[lib]
+name = "aicheck"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "aic"
+path = "src/main.rs"
+
+[dependencies]
+kamadak-exif = "0.6"
+serde = { version = "1", features = ["derive"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+anyhow = "1"
+c2pa = { version = "0.77", features = ["file_io", "pdf"] }
+clap = { version = "4", features = ["derive"] }
+colored = "2"
+image = { version = "0.24", default-features = false, features = ["png", "jpeg", "webp", "gif", "bmp", "tiff"] }
+infer = "0.19"
+serde_json = "1"
+walkdir = "2"
+id3 = "1"
+rustfft = "6"
+quick-xml = "0.36"
+rust-i18n = "3"
+sys-locale = "0.3"
+tempfile = "3"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1"
+serde-wasm-bindgen = "0.6"
+wasm-bindgen = "0.2"
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+tempfile = "3"

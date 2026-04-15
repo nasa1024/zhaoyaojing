@@ -1,0 +1,10 @@
+/target
+.DS_Store
+*.swp
+.idea/
+.vscode/
+.context/
+.env*
+*.pem
+*.key
+web/pkg/
