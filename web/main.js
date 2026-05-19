@@ -6,9 +6,12 @@ const emptyStateEl = document.querySelector('#empty-state');
 const platformListEl = document.querySelector('#platform-list');
 const formatListEl = document.querySelector('#format-list');
 const signalTypesEl = document.querySelector('#signal-types');
+const fileMetaEl = document.querySelector('#file-meta');
+const uploadZoneEl = document.querySelector('#upload-zone');
 
 let wasmApi = null;
 let selectedFile = null;
+let isAnalyzing = false;
 
 boot();
 
@@ -24,7 +27,7 @@ async function boot() {
     const capabilities = await wasmApi.supportedImageCapabilities();
     renderCapabilities(capabilities);
     setStatus('WASM 已就绪，可以开始检测。');
-    analyzeBtn.disabled = false;
+    syncAnalyzeButton();
   } catch (error) {
     console.error(error);
     setStatus('WASM 包尚未构建。先运行 wasm-pack build --target web --out-dir web/pkg。', true);
@@ -33,11 +36,37 @@ async function boot() {
 
 fileInput.addEventListener('change', (event) => {
   selectedFile = event.target.files?.[0] || null;
-  if (selectedFile) {
-    setStatus(`已选择：${selectedFile.name}`);
-  } else {
-    setStatus('还没有选择文件。');
+  renderSelectedFile(selectedFile);
+  syncAnalyzeButton();
+});
+
+['dragenter', 'dragover'].forEach((eventName) => {
+  uploadZoneEl.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    uploadZoneEl.classList.add('drag-over');
+  });
+});
+
+['dragleave', 'drop'].forEach((eventName) => {
+  uploadZoneEl.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    uploadZoneEl.classList.remove('drag-over');
+  });
+});
+
+uploadZoneEl.addEventListener('drop', (event) => {
+  const file = event.dataTransfer?.files?.[0];
+  if (!file) return;
+
+  if (!isSupportedImage(file)) {
+    setStatus('请选择 JPEG / PNG / WebP / GIF / BMP / TIFF 图片文件。', true);
+    return;
   }
+
+  selectedFile = file;
+  fileInput.value = '';
+  renderSelectedFile(file);
+  syncAnalyzeButton();
 });
 
 analyzeBtn.addEventListener('click', async () => {
@@ -51,7 +80,8 @@ analyzeBtn.addEventListener('click', async () => {
   }
 
   try {
-    analyzeBtn.disabled = true;
+    isAnalyzing = true;
+    syncAnalyzeButton();
     setStatus('正在本地分析图片…');
     const bytes = new Uint8Array(await selectedFile.arrayBuffer());
     const report = await wasmApi.analyzeImage(bytes, selectedFile.name);
@@ -61,25 +91,52 @@ analyzeBtn.addEventListener('click', async () => {
     console.error(error);
     setStatus(error?.message || String(error), true);
   } finally {
-    analyzeBtn.disabled = false;
+    isAnalyzing = false;
+    syncAnalyzeButton();
   }
 });
 
 function renderCapabilities(capabilities) {
+  platformListEl.classList.remove('skeleton-list');
+  formatListEl.classList.remove('skeleton-list');
+  signalTypesEl.classList.remove('skeleton-list');
+
   renderTags(platformListEl, capabilities.supported_platforms || []);
   renderTags(formatListEl, capabilities.supported_formats || []);
   renderBullets(signalTypesEl, capabilities.supported_signal_types || []);
+}
+
+function renderSelectedFile(file) {
+  if (!file) {
+    fileMetaEl.classList.add('hidden');
+    fileMetaEl.innerHTML = '';
+    setStatus('还没有选择文件。');
+    return;
+  }
+
+  fileMetaEl.classList.remove('hidden');
+  fileMetaEl.innerHTML = `
+    <div>
+      <strong>${escapeHtml(file.name)}</strong>
+      <span>${escapeHtml(file.type || '未知类型')}</span>
+    </div>
+    <span>${escapeHtml(formatBytes(file.size))}</span>
+  `;
+  setStatus(`已选择：${file.name}`);
 }
 
 function renderReport(report) {
   emptyStateEl.classList.add('hidden');
   reportEl.classList.remove('hidden');
 
-  const signalCards = (report.signals || []).length
-    ? report.signals.map(renderSignalCard).join('')
-    : '<div class="empty-state">没检测到已知 AI 来源信号。注意：这不等于图片一定不是 AI 生成。</div>';
+  const signals = report.signals || [];
+  const signalCards = signals.length
+    ? signals.map(renderSignalCard).join('')
+    : '<div class="empty-state success-state">没检测到已知 AI 来源信号。注意：这不等于图片一定不是 AI 生成。</div>';
 
-  const limitations = (report.limitations || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+  const limitations = (report.limitations || [])
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join('') || '<li>没有额外限制说明。</li>';
 
   reportEl.innerHTML = `
     <div class="report-header">
@@ -102,7 +159,7 @@ function renderReport(report) {
       </div>
       <div class="summary-item">
         <div class="label">信号数量</div>
-        <div class="value">${(report.signals || []).length}</div>
+        <div class="value">${signals.length}</div>
       </div>
     </div>
 
@@ -133,11 +190,37 @@ function renderSignalCard(signal) {
 }
 
 function renderTags(container, items) {
-  container.innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+  container.innerHTML = items.length
+    ? items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
+    : '<li>待加载</li>';
 }
 
 function renderBullets(container, items) {
-  container.innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+  container.innerHTML = items.length
+    ? items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
+    : '<li>待加载</li>';
+}
+
+function syncAnalyzeButton() {
+  analyzeBtn.disabled = !wasmApi || !selectedFile || isAnalyzing;
+  analyzeBtn.textContent = isAnalyzing ? '检测中…' : '开始检测';
+}
+
+function isSupportedImage(file) {
+  return /^image\/(jpeg|png|webp|gif|bmp|tiff)$/.test(file.type) || /\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(file.name);
+}
+
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes) || bytes < 0) return '未知大小';
+  if (bytes < 1024) return `${bytes} B`;
+  const units = ['KB', 'MB', 'GB'];
+  let value = bytes / 1024;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+  return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[unitIndex]}`;
 }
 
 function labelForConfidence(confidence) {
@@ -156,7 +239,7 @@ function labelForConfidence(confidence) {
 function setStatus(message, isError = false) {
   statusEl.textContent = message;
   statusEl.classList.toggle('muted', !isError);
-  statusEl.style.color = isError ? '#ffb3b3' : '';
+  statusEl.classList.toggle('error', isError);
 }
 
 function escapeHtml(value) {
