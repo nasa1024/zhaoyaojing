@@ -1,0 +1,10 @@
+name = "aicheck365"
+pages_build_output_dir = "web"
+compatibility_date = "2026-05-19"
+
+[assets]
+directory = "web"
+not_found_handling = "single-page-application"
+
+[vars]
+ENVIRONMENT = "production"
