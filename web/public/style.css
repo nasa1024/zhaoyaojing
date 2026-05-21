@@ -72,6 +72,36 @@ input {
   transform: translateY(-1px);
 }
 
+.lang-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: rgba(10, 22, 40, 0.92);
+  color: #cfe1ff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236ea8ff'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  padding-right: 26px;
+}
+
+.lang-select:hover,
+.lang-select:focus {
+  border-color: var(--accent);
+  background-color: rgba(110, 168, 255, 0.1);
+}
+
+.lang-select option {
+  background: #0a1628;
+  color: #e9f1ff;
+}
+
 .page {
   max-width: 1160px;
   margin: 0 auto;

@@ -20,8 +20,8 @@ let isAnalyzing = false;
 applyI18n();
 
 // Language switcher
-langBtn?.addEventListener('click', () => {
-  setLang(getCurrentLang() === 'zh-CN' ? 'en' : 'zh-CN');
+langBtn?.addEventListener('change', (e) => {
+  setLang(e.target.value);
 });
 
 // Re-render dynamic UI when language changes
