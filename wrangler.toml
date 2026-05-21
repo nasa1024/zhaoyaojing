@@ -1,6 +1,8 @@
 name = "aicheck365"
-pages_build_output_dir = "web"
 compatibility_date = "2026-05-19"
+
+[build]
+command = "wasm-pack build --target web --out-dir web/pkg"
 
 [assets]
 directory = "web"
