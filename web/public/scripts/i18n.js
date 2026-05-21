@@ -6,7 +6,7 @@ const translations = {
     'page.title':       'AICheck365 · AI 图片检测 | 免费识别 AI 生成图片',
     'page.description': '免费检测图片是否由 AI 生成。基于 EXIF、XMP、C2PA 元数据分析，支持 Midjourney、DALL-E、Stable Diffusion 等主流平台。完全在浏览器本地运行，不上传图片。',
     'eyebrow':               'AI 图片来源检测',
-    'hero.h1':               'AI 图片溯源检测',
+    'hero.h1':               'AI 图片来源信号检测',
     'hero.lead':             '图片只在你的浏览器里<strong>本地分析，不上传服务器</strong>。识别图片元数据、平台痕迹和文件名来源信号。',
     'metric.uploads.value':  '0',
     'metric.uploads.label':  '服务器上传',
@@ -486,8 +486,29 @@ const OG_LOCALE = {
   'fr': 'fr_FR', 'es': 'es_ES', 'pt-BR': 'pt_BR',
 };
 
+const SUPPORTED_LANGS = Object.keys(translations);
+
+function langFromPathname(pathname = window.location.pathname) {
+  const segment = pathname.split('/').filter(Boolean)[0];
+  return SUPPORTED_LANGS.includes(segment) ? segment : null;
+}
+
+function stripLangFromPathname(pathname = window.location.pathname) {
+  const parts = pathname.split('/').filter(Boolean);
+  if (parts.length && SUPPORTED_LANGS.includes(parts[0])) parts.shift();
+  return parts.length ? `/${parts.join('/')}/` : '/';
+}
+
+function withLangInPathname(pathname, lang) {
+  const cleanPath = stripLangFromPathname(pathname);
+  return cleanPath === '/' ? `/${lang}/` : `/${lang}${cleanPath}`;
+}
+
 // ─── Language detection ──────────────────────────────────────────
 function detectLang() {
+  const urlLang = langFromPathname();
+  if (urlLang) return urlLang;
+
   const stored = localStorage.getItem('lang');
   if (stored && translations[stored]) return stored;
 
@@ -515,27 +536,47 @@ export function t(key) {
 
 export function getCurrentLang() { return currentLang; }
 
-export function getSupportedLangs() { return Object.keys(translations); }
+export function getSupportedLangs() { return SUPPORTED_LANGS; }
 
-export function setLang(lang) {
+export function setLang(lang, options = {}) {
   if (!translations[lang]) return;
   currentLang = lang;
   localStorage.setItem('lang', lang);
+
+  if (options.navigate !== false) {
+    const nextPath = withLangInPathname(window.location.pathname, lang);
+    const nextUrl = `${nextPath}${window.location.search}${window.location.hash}`;
+    if (nextUrl !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.location.assign(nextUrl);
+      return;
+    }
+  }
+
   applyI18n();
   document.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
 }
 
 export function applyI18n() {
+  const urlLang = langFromPathname();
+  if (urlLang && urlLang !== currentLang) {
+    currentLang = urlLang;
+    localStorage.setItem('lang', urlLang);
+  }
+
   document.documentElement.lang = currentLang;
-  document.title = t('page.title');
-  document.querySelector('meta[name="description"]')
-    ?.setAttribute('content', t('page.description'));
+
+  if (document.body?.dataset.i18nPage === 'home') {
+    document.title = t('page.title');
+    document.querySelector('meta[name="description"]')
+      ?.setAttribute('content', t('page.description'));
+    document.querySelector('meta[property="og:title"]')
+      ?.setAttribute('content', t('page.title'));
+    document.querySelector('meta[property="og:description"]')
+      ?.setAttribute('content', t('page.description'));
+  }
+
   document.querySelector('meta[property="og:locale"]')
     ?.setAttribute('content', OG_LOCALE[currentLang] || 'en_US');
-  document.querySelector('meta[property="og:title"]')
-    ?.setAttribute('content', t('page.title'));
-  document.querySelector('meta[property="og:description"]')
-    ?.setAttribute('content', t('page.description'));
 
   // text content
   document.querySelectorAll('[data-i18n]').forEach((el) => {
@@ -549,4 +590,18 @@ export function applyI18n() {
   // sync language selector
   const sel = document.getElementById('lang-switch');
   if (sel) sel.value = currentLang;
+
+  localizeInternalLinks();
+}
+
+function localizeInternalLinks() {
+  const urlLang = langFromPathname();
+  if (!urlLang) return;
+
+  document.querySelectorAll('a[href^="/"]').forEach((anchor) => {
+    const href = anchor.getAttribute('href');
+    if (!href || href.startsWith('//')) return;
+    const url = new URL(href, window.location.origin);
+    anchor.setAttribute('href', `${withLangInPathname(url.pathname, urlLang)}${url.search}${url.hash}`);
+  });
 }

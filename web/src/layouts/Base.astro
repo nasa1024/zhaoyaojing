@@ -14,10 +14,61 @@ const {
   ogImage = 'https://aicheck365.com/og.png',
   jsonLd,
 } = Astro.props;
+
+const SITE_URL = 'https://aicheck365.com';
+const DEFAULT_LANG = 'zh-CN';
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const OG_LOCALE: Record<string, string> = {
+  'zh-CN': 'zh_CN',
+  'zh-TW': 'zh_TW',
+  en: 'en_US',
+  ja: 'ja_JP',
+  ko: 'ko_KR',
+  de: 'de_DE',
+  fr: 'fr_FR',
+  es: 'es_ES',
+  'pt-BR': 'pt_BR',
+};
+
+function getUrlLang(pathname: string) {
+  const segment = pathname.split('/').filter(Boolean)[0];
+  return SUPPORTED_LANGS.includes(segment) ? segment : null;
+}
+
+function stripLangPrefix(pathname: string) {
+  const parts = pathname.split('/').filter(Boolean);
+  if (parts.length && SUPPORTED_LANGS.includes(parts[0])) parts.shift();
+  return parts.length ? `/${parts.join('/')}/` : '/';
+}
+
+function localizedPath(pathname: string, lang: string) {
+  const cleanPath = stripLangPrefix(pathname);
+  return cleanPath === '/' ? `/${lang}/` : `/${lang}${cleanPath}`;
+}
+
+function pathFromCanonical(url: string) {
+  try {
+    return new URL(url, SITE_URL).pathname;
+  } catch {
+    return '/';
+  }
+}
+
+const urlLang = getUrlLang(Astro.url.pathname);
+const pageLang = urlLang ?? DEFAULT_LANG;
+const canonicalPath = pathFromCanonical(canonical);
+const canonicalHref = urlLang
+  ? `${SITE_URL}${localizedPath(canonicalPath, pageLang)}`
+  : canonical;
+const navPrefix = urlLang ? `/${pageLang}` : '';
+const homeHref = navPrefix ? `${navPrefix}/` : '/';
+const platformsHref = `${navPrefix}/platforms/`;
+const aboutHref = `${navPrefix}/about/`;
+const i18nPage = canonicalPath === '/' ? 'home' : 'content';
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={pageLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,16 +77,20 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href={canonical} />
+    <link rel="canonical" href={canonicalHref} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${canonicalPath}`} />
+    {SUPPORTED_LANGS.map((lang) => (
+      <link rel="alternate" hreflang={lang} href={`${SITE_URL}${localizedPath(canonicalPath, lang)}`} />
+    ))}
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website" />
-    <meta property="og:url"         content={canonical} />
+    <meta property="og:url"         content={canonicalHref} />
     <meta property="og:title"       content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image"       content={ogImage} />
     <meta property="og:site_name"   content="AICheck365" />
-    <meta property="og:locale"      content="zh_CN" />
+    <meta property="og:locale"      content={OG_LOCALE[pageLang] ?? 'zh_CN'} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card"        content="summary_large_image" />
@@ -53,12 +108,12 @@ const {
 
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body>
+  <body data-i18n-page={i18nPage}>
     <header class="site-header">
-      <a href="/" class="site-logo">AICheck365</a>
+      <a href={homeHref} class="site-logo">AICheck365</a>
       <nav class="site-nav">
-        <a href="/platforms/" class="nav-link">平台指南</a>
-        <a href="/about/" class="nav-link">关于</a>
+        <a href={platformsHref} class="nav-link">平台指南</a>
+        <a href={aboutHref} class="nav-link">关于</a>
       </nav>
       <select id="lang-switch" class="lang-select" aria-label="Select language">
         <option value="zh-CN">中文（简）</option>
@@ -78,9 +133,9 @@ const {
     <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-links">
-          <a href="/">检测工具</a>
-          <a href="/platforms/">平台指南</a>
-          <a href="/about/">关于</a>
+          <a href={homeHref}>检测工具</a>
+          <a href={platformsHref}>平台指南</a>
+          <a href={aboutHref}>关于</a>
         </div>
         <p class="footer-note">
           © {new Date().getFullYear()} AICheck365 · 图片仅在本地浏览器分析，不上传服务器

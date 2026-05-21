@@ -39,7 +39,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('shows trust indicators, selected file metadata, and accessible controls', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/zh-CN/');
 
   await expect(page.getByRole('heading', { name: 'AI 图片来源信号检测' })).toBeVisible();
   await expect(page.getByText('本地分析，不上传服务器')).toBeVisible();
@@ -66,7 +66,7 @@ test('shows trust indicators, selected file metadata, and accessible controls', 
 
 test('keeps the primary interface usable on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/zh-CN/');
 
   await expect(page.getByRole('heading', { name: 'AI 图片来源信号检测' })).toBeVisible();
   await expect(page.getByLabel('点击选择图片')).toBeVisible();
@@ -76,4 +76,20 @@ test('keeps the primary interface usable on mobile', async ({ page }) => {
     scrollWidth: document.documentElement.scrollWidth,
   }));
   expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.width);
+});
+
+test('keeps language in the URL and localized links', async ({ page }) => {
+  await page.goto('/en/platforms/midjourney/');
+
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://aicheck365.com/en/platforms/midjourney/'
+  );
+  await expect(page.locator('.site-logo')).toHaveAttribute('href', '/en/');
+  await expect(page.locator('.site-nav a').first()).toHaveAttribute('href', '/en/platforms/');
+  await expect(page.locator('.related-links a').first()).toHaveAttribute('href', '/en/platforms/dall-e/');
+
+  await page.locator('#lang-switch').selectOption('ja');
+  await expect(page).toHaveURL('/ja/platforms/midjourney/');
 });
