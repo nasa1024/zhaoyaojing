@@ -1,0 +1,59 @@
+---
+// No props — all content controlled by i18n.js at runtime
+---
+
+<section class="grid two-col primary-grid">
+  <div class="card upload-card">
+    <h2 data-i18n="upload.title">上传图片</h2>
+    <p class="muted compact" data-i18n="upload.subtitle">选择一张图片后点击检测。所有分析都在本机完成。</p>
+    <label class="upload" for="file-input" id="upload-zone">
+      <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff" />
+      <span class="upload-icon" aria-hidden="true">↥</span>
+      <span class="upload-title" data-i18n="upload.zone.title">点击或拖拽图片到此处</span>
+      <small data-i18n="upload.zone.formats">支持 JPEG / PNG / WebP / GIF / BMP / TIFF</small>
+    </label>
+    <div id="file-meta" class="file-meta hidden" aria-live="polite"></div>
+    <button id="analyze-btn" class="primary" disabled data-i18n="upload.button">开始检测</button>
+    <p id="status" class="status muted" role="status" aria-live="polite" data-i18n="upload.status.init">正在初始化…</p>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="platforms.title">可识别的平台 / 工具</h2>
+    <p class="muted" data-i18n-html="platforms.desc">
+      这里只代表<strong>当前可识别的来源痕迹范围</strong>，不代表支持所有 AI 图片平台。
+    </p>
+    <ul id="platform-list" class="tag-list skeleton-list" aria-label="支持平台列表"></ul>
+  </div>
+</section>
+
+<!-- 广告位 — 检测结果与信号说明之间 -->
+<!-- <div class="ad-slot ad-slot--horizontal">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+</div> -->
+
+<section class="grid two-col">
+  <div class="card">
+    <h2 data-i18n="signals.title">支持的信号类型</h2>
+    <ul id="signal-types" class="bullet-list skeleton-list"></ul>
+  </div>
+  <div class="card">
+    <h2 data-i18n="formats.title">支持格式</h2>
+    <ul id="format-list" class="tag-list skeleton-list"></ul>
+  </div>
+</section>
+
+<section class="card result-card">
+  <div class="section-heading">
+    <div>
+      <h2 data-i18n="results.title">检测结果</h2>
+      <p class="muted compact" data-i18n="results.subtitle">结果会列出命中的信号、置信度和字段详情。</p>
+    </div>
+  </div>
+  <div id="empty-state" class="empty-state" data-i18n="results.empty">
+    选一张原始图片试试。越原始的文件，越容易保留可检测的来源信号。
+  </div>
+  <div id="report" class="report hidden"></div>
+</section>
+
+<!-- 检测器 JS -->
+<script type="module" src="/scripts/main.js"></script>

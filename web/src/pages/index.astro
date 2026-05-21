@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import Detector from '../components/Detector.astro';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AICheck365",
+  "url": "https://aicheck365.com/",
+  "description": "检测图片是否为 AI 生成，基于 EXIF、XMP、C2PA 元数据，完全在浏览器本地运行。",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web Browser",
+  "inLanguage": ["zh-CN", "en"],
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "检测 AI 生成图片的元数据信号",
+    "支持 EXIF、XMP、C2PA、PNG 文本块",
+    "完全在浏览器本地运行，不上传图片",
+    "支持 Midjourney、DALL-E、Stable Diffusion、Firefly 等平台"
+  ]
+};
+---
+
+<Base
+  title="AICheck365 · AI 图片检测 | 免费识别 AI 生成图片"
+  description="免费检测图片是否由 AI 生成。基于 EXIF、XMP、C2PA 元数据分析，支持 Midjourney、DALL-E、Stable Diffusion 等主流平台。完全在浏览器本地运行，不上传图片。"
+  canonical="https://aicheck365.com/"
+  jsonLd={jsonLd}
+>
+  <main class="page">
+    <section class="hero card">
+      <div class="eyebrow" data-i18n="eyebrow">AI 图片来源检测</div>
+      <div class="hero-layout">
+        <div>
+          <h1 data-i18n="hero.h1">AI 图片溯源检测</h1>
+          <p class="lead" data-i18n-html="hero.lead">
+            图片只在你的浏览器里<strong>本地分析，不上传服务器</strong>。识别图片元数据、平台痕迹和文件名来源信号。
+          </p>
+        </div>
+        <div class="hero-panel" aria-label="核心特性">
+          <div class="metric-card">
+            <span class="metric-value" data-i18n="metric.uploads.value">0</span>
+            <span class="metric-label" data-i18n="metric.uploads.label">服务器上传</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-value" data-i18n="metric.local.value">100%</span>
+            <span class="metric-label" data-i18n="metric.local.label">本地运行</span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="trust-list">
+        <li>
+          <strong data-i18n="trust.privacy">隐私优先</strong>
+          <span data-i18n="trust.privacy.desc">文件只在当前浏览器内读取</span>
+        </li>
+        <li>
+          <strong data-i18n="trust.original">适合原图检测</strong>
+          <span data-i18n="trust.original.desc">保留元数据的原始图片命中率更高</span>
+        </li>
+        <li>
+          <strong data-i18n="trust.explain">结果可解释</strong>
+          <span data-i18n="trust.explain.desc">展示命中来源、置信度和具体字段</span>
+        </li>
+      </ul>
+
+      <div class="notice warning" data-i18n-html="notice">
+        <strong>重要提示：</strong>这不是万能 AI 鉴定器。它只基于 EXIF / XMP / PNG 文本块 / 文件名等来源信号做辅助判断。
+      </div>
+    </section>
+
+    <Detector />
+
+    <!-- SEO 内容区（对用户有用，同时提升页面内容量） -->
+    <section class="card content-section">
+      <h2>什么是 AI 图片来源检测？</h2>
+      <p>AI 图片检测工具通过分析图片文件中嵌入的<strong>元数据信号</strong>来判断图片是否由 AI 工具生成。这些信号包括 EXIF 信息、XMP 标签、C2PA 数字签名、PNG 文本块等，是 AI 生成平台在图片生成时自动写入的来源痕迹。</p>
+      <p>AICheck365 目前支持检测来自 <a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/kling/">可灵 Kling</a> 等主流 AI 平台生成的图片。</p>
+      <h3>使用须知</h3>
+      <ul class="content-list">
+        <li>检测基于<strong>元数据信号</strong>，不基于像素分析，无法判断经过元数据清洗的图片</li>
+        <li>经过社交平台（微信、微博、Instagram 等）压缩转发的图片，元数据通常被剥离</li>
+        <li>截图和重新导出的图片也会丢失原始元数据</li>
+        <li>检测结果为辅助参考，不构成法律意义上的鉴定依据</li>
+      </ul>
+    </section>
+  </main>
+</Base>

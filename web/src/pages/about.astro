@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="关于 AICheck365 | 免费 AI 图片来源检测工具"
+  description="AICheck365 是一款完全在浏览器本地运行的 AI 图片来源检测工具，基于 EXIF、XMP、C2PA 元数据分析，不上传图片，保护用户隐私。"
+  canonical="https://aicheck365.com/about/"
+>
+  <main class="page content-page">
+    <article class="card content-article">
+      <h1>关于 AICheck365</h1>
+
+      <p class="lead-text">AICheck365 是一款免费的 AI 图片来源检测工具，帮助你判断一张图片是否由 AI 生成，并识别其来源平台。</p>
+
+      <h2>工作原理</h2>
+      <p>AICheck365 不依赖神经网络或像素分析，而是通过解析图片文件中的<strong>元数据信号</strong>来识别 AI 来源。这些信号包括：</p>
+      <ul class="content-list">
+        <li><strong>EXIF 元数据</strong>：相机或软件在拍摄/生成时写入的设备和软件信息</li>
+        <li><strong>XMP 标签</strong>：Adobe 发起的可扩展元数据平台，许多 AI 工具会在此写入来源信息</li>
+        <li><strong>C2PA 数字签名</strong>：内容真实性倡议（Coalition for Content Provenance and Authenticity）制定的标准，OpenAI、Adobe、微软等厂商均已采用</li>
+        <li><strong>PNG 文本块</strong>：PNG 格式支持在文件中嵌入自定义文本，Stable Diffusion 等开源工具会在此写入生成参数</li>
+        <li><strong>文件名启发式</strong>：某些平台生成的文件名有规律性特征</li>
+      </ul>
+
+      <h2>隐私保护</h2>
+      <p>AICheck365 使用 WebAssembly（WASM）技术，将检测逻辑编译为浏览器可执行的代码，<strong>所有分析完全在你的设备上完成</strong>，图片数据不会上传到任何服务器。</p>
+
+      <h2>适用场景</h2>
+      <ul class="content-list">
+        <li>判断网络图片是否为 AI 生成（需保留原始元数据）</li>
+        <li>验证自己创作的 AI 图片是否包含可追溯的来源信号</li>
+        <li>了解主流 AI 平台在图片中嵌入了哪些元数据</li>
+        <li>媒体核查、内容审核辅助参考</li>
+      </ul>
+
+      <h2>局限性</h2>
+      <p>此工具<strong>不是万能的 AI 鉴定器</strong>。以下情况会导致检测失效：</p>
+      <ul class="content-list">
+        <li>图片经过社交平台压缩（微信、微博、Twitter 等会剥离元数据）</li>
+        <li>截图（截图不携带原始元数据）</li>
+        <li>使用元数据清除工具处理过的图片</li>
+        <li>通过图片编辑软件重新导出的图片</li>
+        <li>部分 AI 平台本身不写入元数据</li>
+      </ul>
+
+      <h2>技术栈</h2>
+      <p>AICheck365 基于开源项目 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener">aicheck</a>，使用 Rust 编写，通过 wasm-pack 编译为 WebAssembly 在浏览器中运行。</p>
+    </article>
+  </main>
+</Base>

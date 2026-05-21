@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "DALL-E 生成的图片都有 C2PA 标记吗？", a: "DALL-E 3（2023年底起）生成的图片几乎都包含 C2PA Manifest。旧版 DALL-E 2 不支持 C2PA。通过 ChatGPT 生成的图片（GPT Image）同样包含 C2PA 信息。" },
+  { q: "C2PA 是什么？为什么重要？", a: "C2PA（Coalition for Content Provenance and Authenticity）是 Adobe、微软、OpenAI、Intel 等公司联合制定的内容溯源标准。C2PA Manifest 包含数字签名，可以验证内容来源的真实性。" },
+  { q: "下载 ChatGPT 生成的图片后能被检测到吗？", a: "可以。从 ChatGPT 界面下载的原始图片通常包含 OpenAI 的 C2PA 签名和 XMP 元数据，AICheck365 可以识别。" },
+  { q: "DALL-E 图片上传到社交媒体后还能检测吗？", a: "大多数情况下不能。社交平台会在上传时剥离元数据，C2PA Manifest 也会被移除。建议检测原始下载文件。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 DALL-E / ChatGPT AI 生成图片？C2PA 元数据指南",
+    "description": "详解 OpenAI DALL-E 3、GPT Image 图片中的 C2PA 数字签名和 XMP 元数据，以及 AICheck365 的检测原理。",
+    "url": "https://aicheck365.com/platforms/dall-e/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 DALL-E / ChatGPT AI 图片？C2PA 元数据指南 | AICheck365"
+  description="了解 OpenAI DALL-E 3 和 GPT Image 图片中的 C2PA 数字签名。掌握识别 ChatGPT 生成图片的方法及局限性。"
+  canonical="https://aicheck365.com/platforms/dall-e/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › DALL-E / GPT Image
+    </nav>
+
+    <article class="card content-article">
+      <h1>DALL-E / GPT Image 检测：C2PA 数字签名解析</h1>
+      <p class="article-meta">信号类型：C2PA · XMP · IPTC</p>
+
+      <p class="lead-text">OpenAI 的 DALL-E 3 及 ChatGPT 绘图功能（GPT Image）是目前使用最广泛的商业 AI 图片生成服务。与其他平台不同，OpenAI 对 <strong>C2PA（内容真实性倡议）</strong>标准有深度支持，使得检测相对可靠。</p>
+
+      <h2>C2PA 标准：AI 图片溯源的行业基础</h2>
+      <p>C2PA（Coalition for Content Provenance and Authenticity）是由 Adobe、微软、OpenAI、Intel、ARM 等公司联合制定的<strong>内容溯源行业标准</strong>。C2PA Manifest 是嵌入在图片文件中的一段加密数据，包含：</p>
+      <ul class="content-list">
+        <li>内容创建者（或生成工具）的<strong>数字签名</strong></li>
+        <li>内容的生成时间和生成方式</li>
+        <li>后续编辑操作的历史记录</li>
+      </ul>
+      <p>由于 C2PA Manifest 经过加密签名，<strong>伪造成本极高</strong>，是目前最可靠的 AI 内容溯源信号之一。</p>
+
+      <h2>DALL-E 图片的可检测信号</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>C2PA Manifest</h3>
+          <p>DALL-E 3 生成的图片包含 OpenAI 数字签名的 C2PA Manifest，标注了 AI 生成来源。这是最强的检测信号。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>XMP 元数据</h3>
+          <p><code>xmp:CreatorTool</code> 字段标注 OpenAI 相关软件信息，<code>Iptc4xmpExt:DigitalSourceType</code> 标注为算法生成媒体。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>文件名规律</h3>
+          <p>从 ChatGPT 界面下载的图片文件名通常遵循特定命名格式，可作为辅助识别信号。</p>
+        </div>
+      </div>
+
+      <h2>DALL-E 2 vs DALL-E 3</h2>
+      <p>需要注意版本差异：</p>
+      <ul class="content-list">
+        <li><strong>DALL-E 3（2023 年 10 月后）</strong>：完整的 C2PA 支持，检测可靠性高</li>
+        <li><strong>DALL-E 2</strong>：无 C2PA，但可能包含其他 XMP 元数据</li>
+        <li><strong>GPT Image（ChatGPT 界面生成）</strong>：同 DALL-E 3，包含 C2PA</li>
+      </ul>
+
+      <div class="cta-box">
+        <p>立即上传 DALL-E 图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/stable-diffusion/">Stable Diffusion →</a>
+        <a href="/platforms/firefly/">Adobe Firefly →</a>
+        <a href="/platforms/kling/">可灵 Kling →</a>
+      </div>
+    </div>
+  </main>
+</Base>

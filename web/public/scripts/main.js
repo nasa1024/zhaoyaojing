@@ -1,4 +1,4 @@
-import { t, applyI18n, getCurrentLang, setLang } from './i18n.js';
+import { t, applyI18n, getCurrentLang, setLang } from '/scripts/i18n.js';
 
 const fileInput    = document.querySelector('#file-input');
 const analyzeBtn   = document.querySelector('#analyze-btn');
@@ -40,7 +40,7 @@ boot();
 
 async function boot() {
   try {
-    const pkg = await import('./pkg/aicheck.js');
+    const pkg = await import('/pkg/aicheck.js');
     if (typeof pkg.default === 'function') await pkg.default();
     pkg.initPanicHook?.();
     wasmApi = pkg;

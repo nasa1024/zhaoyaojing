@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Midjourney 图片一定能被检测到吗？", a: "不一定。检测成功率取决于图片是否保留了原始元数据。直接从 Midjourney 下载的原图通常可以被检测，但经过微信、微博等社交平台转发后，元数据往往被剥离，检测会失败。" },
+  { q: "Midjourney 在图片里写入了哪些信息？", a: "主要包括：XMP 字段中的 CreatorTool（含 Midjourney 字样）、IPTC 数字来源类型（trainedAlgorithmicMedia）、以及部分版本的 PNG 文本块参数。" },
+  { q: "截图的 Midjourney 图片能被检测到吗？", a: "通常不能。截图会生成全新的图片文件，不会继承原图的元数据。" },
+  { q: "Midjourney v6 和 v5 的元数据有什么区别？", a: "不同版本的元数据写入策略有所不同，但核心 XMP CreatorTool 字段在主要版本中都存在。v6 起部分图片还会包含更详细的生成参数信息。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 Midjourney AI 生成图片？元数据识别完整指南",
+    "description": "详解 Midjourney 图片中的元数据特征，包括 XMP、IPTC 信号，以及如何使用 AICheck365 进行检测。",
+    "url": "https://aicheck365.com/platforms/midjourney/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Midjourney AI 图片？元数据识别指南 | AICheck365"
+  description="详解 Midjourney 图片的元数据特征：XMP CreatorTool、IPTC 数字来源类型。了解如何识别 Midjourney 生成的图片，以及检测的局限性。"
+  canonical="https://aicheck365.com/platforms/midjourney/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Midjourney
+    </nav>
+
+    <article class="card content-article">
+      <h1>Midjourney 图片检测：元数据识别完整指南</h1>
+      <p class="article-meta">信号类型：XMP · IPTC · PNG 文本块</p>
+
+      <p class="lead-text">Midjourney 是目前全球使用最广泛的 AI 图片生成服务之一，运行在 Discord 平台上。它生成的图片通常包含多种可识别的元数据特征，使 AI 检测工具能够识别其来源。</p>
+
+      <h2>Midjourney 图片中的元数据信号</h2>
+      <p>Midjourney 在生成图片时会自动写入多种元数据，以下是主要的可检测信号：</p>
+
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>XMP CreatorTool</h3>
+          <p>XMP（可扩展元数据平台）字段中的 <code>xmp:CreatorTool</code> 会标注包含 "Midjourney" 字样的软件名称。这是最直接的来源信号。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>IPTC 数字来源类型</h3>
+          <p><code>Iptc4xmpExt:DigitalSourceType</code> 字段会被设置为 <code>trainedAlgorithmicMedia</code>（算法训练媒体），符合 IPTC 新闻行业元数据标准。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>PNG 文本块</h3>
+          <p>部分版本会在 PNG 文件的 <code>tEXt</code> 或 <code>iTXt</code> 块中写入包含 "midjourney" 字样的描述信息。</p>
+        </div>
+      </div>
+
+      <h2>检测准确性与局限性</h2>
+      <p>Midjourney 图片的检测效果很大程度上取决于<strong>图片是否保留了原始元数据</strong>：</p>
+      <ul class="content-list">
+        <li><strong>高命中率</strong>：直接从 Midjourney 或 Discord 下载的原始 PNG/JPEG 文件</li>
+        <li><strong>低命中率</strong>：经过微信、微博、Twitter/X 等社交平台压缩转发的图片</li>
+        <li><strong>无法检测</strong>：截图、重新导出、或使用 ExifTool 等工具清除元数据后的图片</li>
+      </ul>
+
+      <h2>如何获取可检测的 Midjourney 原图？</h2>
+      <ol class="content-list">
+        <li>在 Discord 中直接右键保存图片（不要截图）</li>
+        <li>通过 Midjourney 官网下载原图</li>
+        <li>避免通过社交平台二次转发后再保存</li>
+      </ol>
+
+      <div class="cta-box">
+        <p>立即上传 Midjourney 图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/dall-e/">DALL-E / GPT Image →</a>
+        <a href="/platforms/stable-diffusion/">Stable Diffusion →</a>
+        <a href="/platforms/firefly/">Adobe Firefly →</a>
+        <a href="/platforms/kling/">可灵 Kling →</a>
+      </div>
+    </div>
+  </main>
+</Base>

@@ -1,10 +1,16 @@
 {
-  "name": "aicheck-web-demo",
+  "name": "aicheck365-web",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build:wasm": "wasm-pack build --target web --out-dir web/pkg",
-    "serve": "python3 -m http.server 4173 -d web",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
     "test": "playwright test"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "@astrojs/sitemap": "^3.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0"

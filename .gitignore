@@ -7,3 +7,6 @@
 .env*
 *.pem
 *.key
+web/dist/
+web/node_modules/
+web/.astro/

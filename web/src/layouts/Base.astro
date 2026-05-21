@@ -1,0 +1,84 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  jsonLd?: object | object[];
+}
+
+const {
+  title,
+  description,
+  canonical = 'https://aicheck365.com',
+  ogImage = 'https://aicheck365.com/og.png',
+  jsonLd,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content={canonical} />
+    <meta property="og:title"       content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image"       content={ogImage} />
+    <meta property="og:site_name"   content="AICheck365" />
+    <meta property="og:locale"      content="zh_CN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={ogImage} />
+
+    <!-- JSON-LD -->
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
+    )}
+
+    <!-- Google AdSense — 申请通过后取消注释并替换 ca-pub-XXXXXXXXXXXXXXXX -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="site-logo">AICheck365</a>
+      <nav class="site-nav">
+        <a href="/platforms/" class="nav-link">平台指南</a>
+        <a href="/about/" class="nav-link">关于</a>
+      </nav>
+      <button id="lang-switch" class="lang-btn" aria-label="Switch language">EN</button>
+    </header>
+
+    <slot />
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href="/">检测工具</a>
+          <a href="/platforms/">平台指南</a>
+          <a href="/about/">关于</a>
+        </div>
+        <p class="footer-note">
+          © {new Date().getFullYear()} AICheck365 · 图片仅在本地浏览器分析，不上传服务器
+        </p>
+      </div>
+    </footer>
+
+    <!-- 语言切换逻辑 (仅含 lang-switch 按钮的页面需要) -->
+    <script type="module" src="/scripts/lang-init.js"></script>
+  </body>
+</html>

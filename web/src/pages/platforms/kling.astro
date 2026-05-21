@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "可灵生成的图片可以被检测到吗？", a: "可以。可灵生成的图片通常包含 XMP 元数据，标注了 AI 生成来源。直接下载的原图命中率较高，经过社交平台转发后可能失效。" },
+  { q: "可灵视频也支持检测吗？", a: "AICheck365 目前重点支持图片检测。视频检测功能正在开发中，未来将支持可灵等平台生成的视频。" },
+  { q: "可灵和即梦的元数据有什么区别？", a: "可灵（快手出品）和即梦（字节跳动出品）的元数据写入策略各有差异，但都属于国产 AI 生成平台，元数据规范相对统一。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "可灵 Kling AI 图片检测：快手 AI 生成内容元数据识别",
+    "description": "了解快手可灵（Kling）AI 生成图片的元数据特征，以及如何使用 AICheck365 进行检测。",
+    "url": "https://aicheck365.com/platforms/kling/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="可灵 Kling AI 图片检测：快手 AI 生成内容元数据指南 | AICheck365"
+  description="了解快手可灵（Kling）AI 生成图片的 XMP 元数据特征，以及如何识别可灵生成的图片和视频内容。"
+  canonical="https://aicheck365.com/platforms/kling/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › 可灵 Kling
+    </nav>
+
+    <article class="card content-article">
+      <h1>可灵（Kling）AI 图片检测</h1>
+      <p class="article-meta">信号类型：XMP · EXIF · 文件名特征</p>
+
+      <p class="lead-text">可灵（Kling）是快手推出的 AI 图片和视频生成平台，以其强大的视频生成能力著称，同时也提供高质量的 AI 图片生成功能。</p>
+
+      <h2>可灵图片的元数据特征</h2>
+      <p>可灵生成的图片通常包含以下可检测信号：</p>
+      <ul class="content-list">
+        <li><strong>XMP 软件信息</strong>：标注 Kling 相关软件来源</li>
+        <li><strong>EXIF 创建工具</strong>：记录 AI 生成软件信息</li>
+        <li><strong>文件名特征</strong>：可灵生成图片的文件名通常有规律性格式</li>
+      </ul>
+
+      <h2>图片 vs 视频检测</h2>
+      <p>可灵以视频生成能力闻名，其静态图片检测已有较好支持。视频文件的 AI 来源检测（基于 MP4 元数据）功能正在持续完善中。</p>
+
+      <div class="cta-box">
+        <p>立即检测可灵生成的图片</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/dall-e/">DALL-E / GPT Image →</a>
+        <a href="/platforms/stable-diffusion/">Stable Diffusion →</a>
+        <a href="/platforms/firefly/">Adobe Firefly →</a>
+      </div>
+    </div>
+  </main>
+</Base>

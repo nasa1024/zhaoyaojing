@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "如何识别 Stable Diffusion 生成的图片？", a: "原生 Stable Diffusion（通过 AUTOMATIC1111 或 ComfyUI 等工具）生成的 PNG 图片通常在文件的 tEXt 块中包含完整的生成参数，包括提示词、负向提示词、步数等。AICheck365 可以检测这些特征。" },
+  { q: "ComfyUI 和 AUTOMATIC1111 的元数据格式一样吗？", a: "不完全相同。AUTOMATIC1111（WebUI）将生成参数写入 PNG tEXt 块的特定格式；ComfyUI 则会写入完整的工作流 JSON。两者都可以被检测，但字段名称有所不同。" },
+  { q: "SDXL、SD3 等新版本的元数据特征和老版本一样吗？", a: "基本一致，主要区别在于模型名称字段。新版本（SDXL、SD3、Flux 等）同样会写入生成参数，但模型名称会标注对应版本。" },
+  { q: "为什么部分 SD 图片检测不到？", a: "原因可能包括：使用了去除元数据的工具（如 ExifTool 清除）、图片从 JPEG 格式生成（JPEG 的 SD 参数保留较差）、或某些在线 SD 服务选择不写入元数据。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Stable Diffusion 图片检测：PNG 文本块与生成参数识别",
+    "description": "解析 AUTOMATIC1111、ComfyUI 等 Stable Diffusion 前端生成图片的 PNG 文本块元数据，了解如何识别 SD 生成图片。",
+    "url": "https://aicheck365.com/platforms/stable-diffusion/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="Stable Diffusion 图片检测：PNG 元数据与生成参数识别 | AICheck365"
+  description="解析 AUTOMATIC1111、ComfyUI 等工具生成的 Stable Diffusion 图片中的 PNG 文本块元数据，包括提示词、步数、模型等生成参数的检测方法。"
+  canonical="https://aicheck365.com/platforms/stable-diffusion/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Stable Diffusion
+    </nav>
+
+    <article class="card content-article">
+      <h1>Stable Diffusion 图片检测：PNG 文本块解析</h1>
+      <p class="article-meta">信号类型：PNG tEXt · EXIF · XMP</p>
+
+      <p class="lead-text">Stable Diffusion（SD）是目前最流行的开源 AI 图片生成模型，被广泛部署在 <strong>AUTOMATIC1111 WebUI</strong>、<strong>ComfyUI</strong>、<strong>InvokeAI</strong> 等工具中。SD 生成的 PNG 图片通常在文件中嵌入完整的生成参数。</p>
+
+      <h2>PNG 文本块：SD 的"元数据指纹"</h2>
+      <p>PNG 格式允许在文件中嵌入自定义文本数据块（tEXt / iTXt）。Stable Diffusion 的各种前端工具会利用这一特性写入生成参数，包括：</p>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>正向提示词</h3>
+          <code>parameters</code> 或 <code>prompt</code> 字段，包含完整的图片生成描述文本。
+        </div>
+        <div class="signal-detail-card">
+          <h3>负向提示词</h3>
+          <code>negative_prompt</code> 字段，通常是一长串希望图片排除的元素描述。
+        </div>
+        <div class="signal-detail-card">
+          <h3>生成参数</h3>
+          包含步数（Steps）、CFG 值、采样器（Sampler）、随机种子（Seed）、图片尺寸等完整参数。
+        </div>
+        <div class="signal-detail-card">
+          <h3>模型信息</h3>
+          <code>Model</code> 和 <code>Model hash</code> 字段记录使用的 checkpoint 名称。
+        </div>
+      </div>
+
+      <h2>AUTOMATIC1111 vs ComfyUI 元数据对比</h2>
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>工具</th><th>元数据位置</th><th>格式特点</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>AUTOMATIC1111</td><td>PNG tEXt "parameters"</td><td>纯文本，换行分隔</td></tr>
+            <tr><td>ComfyUI</td><td>PNG tEXt "workflow" + "prompt"</td><td>完整工作流 JSON</td></tr>
+            <tr><td>InvokeAI</td><td>PNG iTXt "invokeai_metadata"</td><td>JSON 格式</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>检测局限性</h2>
+      <p>由于 Stable Diffusion 是开源的，元数据写入行为可能被修改：</p>
+      <ul class="content-list">
+        <li>用户可以手动关闭元数据写入功能</li>
+        <li>JPEG 格式保存的图片元数据保留率较 PNG 低</li>
+        <li>经过压缩或社交平台转发后，元数据会被剥离</li>
+        <li>部分商业化 SD 服务（如某些在线 API）默认不写入元数据</li>
+      </ul>
+
+      <div class="cta-box">
+        <p>立即检测 Stable Diffusion 生成的图片</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/dall-e/">DALL-E / GPT Image →</a>
+        <a href="/platforms/firefly/">Adobe Firefly →</a>
+        <a href="/platforms/kling/">可灵 Kling →</a>
+      </div>
+    </div>
+  </main>
+</Base>

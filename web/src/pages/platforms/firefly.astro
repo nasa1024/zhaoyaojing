@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Adobe Firefly 图片的 C2PA 签名和 DALL-E 的一样吗？", a: "C2PA 是通用标准，但签名密钥不同。DALL-E 的 C2PA Manifest 由 OpenAI 签名，Firefly 的由 Adobe 签名。两者都能被检测，但签发机构不同。" },
+  { q: "Photoshop 的生成式填充也会有 C2PA 吗？", a: "是的。Photoshop 使用 Firefly 技术的「生成式填充」和「生成式扩展」功能同样会写入 C2PA 记录，标注 AI 辅助编辑信息。" },
+  { q: "Firefly 的检测可靠性如何？", a: "相对较高。Adobe 是 C2PA 标准的主要推动者，对 Firefly 生成的内容有严格的元数据策略，检测成功率在原图上通常很高。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Adobe Firefly AI 图片检测：C2PA 数字签名与企业级内容溯源",
+    "description": "解析 Adobe Firefly 生成图片的 C2PA 标准实现，了解 Adobe 如何在图片中嵌入 AI 来源信息。",
+    "url": "https://aicheck365.com/platforms/firefly/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="Adobe Firefly AI 图片检测：C2PA 企业级溯源标准 | AICheck365"
+  description="了解 Adobe Firefly 图片中的 C2PA 数字签名和 XMP 元数据。Adobe 作为 C2PA 标准推动者，Firefly 生成图片的检测可靠性最高。"
+  canonical="https://aicheck365.com/platforms/firefly/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Adobe Firefly
+    </nav>
+
+    <article class="card content-article">
+      <h1>Adobe Firefly 图片检测：C2PA 企业级内容溯源</h1>
+      <p class="article-meta">信号类型：C2PA · XMP · IPTC</p>
+
+      <p class="lead-text">Adobe Firefly 是 Adobe 推出的 AI 图片生成服务，集成在 Adobe Express、Photoshop、Illustrator 等产品中。作为 <strong>C2PA 标准的主要推动者</strong>，Adobe 对所有 Firefly 生成的内容实施严格的元数据策略。</p>
+
+      <h2>Adobe 的内容溯源策略</h2>
+      <p>Adobe 是 C2PA（内容真实性倡议）的创始成员和核心推动者，也是 Content Credentials 功能的主要开发者。Firefly 生成的所有图片均默认嵌入：</p>
+      <ul class="content-list">
+        <li>Adobe 数字签名的 <strong>C2PA Manifest</strong></li>
+        <li>标注 AI 生成来源的 <strong>XMP 元数据</strong></li>
+        <li>符合 IPTC 标准的数字来源类型标记</li>
+      </ul>
+
+      <h2>Photoshop 生成式填充的元数据</h2>
+      <p>使用 Photoshop"生成式填充"或"生成式扩展"功能编辑的图片，即使只有局部 AI 生成，C2PA Manifest 也会记录 AI 辅助编辑的历史，是目前<strong>元数据保留最完整的 AI 图片平台</strong>之一。</p>
+
+      <div class="cta-box">
+        <p>立即检测 Adobe Firefly 生成的图片</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/dall-e/">DALL-E / GPT Image →</a>
+        <a href="/platforms/stable-diffusion/">Stable Diffusion →</a>
+        <a href="/platforms/kling/">可灵 Kling →</a>
+      </div>
+    </div>
+  </main>
+</Base>

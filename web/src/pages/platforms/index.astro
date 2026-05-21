@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const platforms = [
+  { slug: 'midjourney',         name: 'Midjourney',          desc: '全球用户最多的 AI 图片生成服务，元数据特征显著', tags: ['XMP', 'IPTC'] },
+  { slug: 'dall-e',             name: 'DALL-E / GPT Image',  desc: 'OpenAI 出品，支持 C2PA 数字签名，检测可靠性高', tags: ['C2PA', 'XMP'] },
+  { slug: 'stable-diffusion',   name: 'Stable Diffusion',    desc: '最流行的开源 AI 图片模型，PNG 文本块包含生成参数', tags: ['PNG tEXt', 'EXIF'] },
+  { slug: 'firefly',            name: 'Adobe Firefly',        desc: 'Adobe 出品，C2PA 标准深度支持，企业级内容溯源', tags: ['C2PA', 'XMP'] },
+  { slug: 'kling',              name: '可灵 Kling',            desc: '快手出品的 AI 图片/视频生成平台', tags: ['EXIF', 'XMP'] },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "AI 图片生成平台检测指南",
+  "url": "https://aicheck365.com/platforms/",
+  "description": "各主流 AI 图片生成平台的元数据特征与检测方法，包括 Midjourney、DALL-E、Stable Diffusion、Adobe Firefly 等。"
+};
+---
+
+<Base
+  title="AI 图片平台检测指南 | Midjourney、DALL-E、Stable Diffusion | AICheck365"
+  description="了解各主流 AI 图片生成平台的元数据特征：Midjourney、DALL-E 3、Stable Diffusion、Adobe Firefly、可灵 Kling。掌握识别 AI 生成图片的关键信号。"
+  canonical="https://aicheck365.com/platforms/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <div class="content-hero card">
+      <h1>AI 图片平台检测指南</h1>
+      <p class="lead-text">每个 AI 图片生成平台都有自己独特的元数据"指纹"。了解这些特征，有助于判断图片的 AI 来源。</p>
+    </div>
+
+    <div class="platform-grid">
+      {platforms.map(p => (
+        <a href={`/platforms/${p.slug}/`} class="platform-card card">
+          <div class="platform-card-header">
+            <h2>{p.name}</h2>
+            <div class="tag-row">
+              {p.tags.map(t => <span class="tag-inline">{t}</span>)}
+            </div>
+          </div>
+          <p>{p.desc}</p>
+          <span class="card-link">查看检测指南 →</span>
+        </a>
+      ))}
+    </div>
+
+    <div class="card content-section">
+      <h2>为什么不同平台的检测方法不同？</h2>
+      <p>不同 AI 生成平台采用不同的元数据标准和写入策略。商业平台（如 OpenAI 的 DALL-E）通常会主动遵循 C2PA 等内容溯源标准；开源平台（如 Stable Diffusion）的元数据则取决于用户使用的前端工具；而一些平台可能根本不写入可识别的元数据。</p>
+      <p>这也是为什么 AICheck365 的检测结果只能作为<strong>辅助参考</strong>，而非绝对结论。</p>
+      <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">立即检测图片 →</a></p>
+    </div>
+  </main>
+</Base>
