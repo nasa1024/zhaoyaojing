@@ -35,6 +35,7 @@ pub mod known_tools;
 pub mod scanner;
 #[cfg(target_arch = "wasm32")]
 pub mod web;
+mod web_c2pa;
 
 #[cfg(not(target_arch = "wasm32"))]
 rust_i18n::i18n!("locales", fallback = "en");

@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::io::Cursor;
 use wasm_bindgen::prelude::*;
 
-use crate::known_tools;
+use crate::{known_tools, web_c2pa};
 
 const IMAGE_PLATFORMS: &[&str] = &[
     "DALL-E / OpenAI",
@@ -86,6 +86,10 @@ const FILENAME_PATTERNS: &[(&str, &str)] = &[
     ("comfyui", "comfyui"),
     ("stability_", "stable diffusion"),
     ("novelai", "novelai"),
+    ("gemini", "gemini"),
+    ("imagen", "imagen"),
+    ("google-ai", "google ai"),
+    ("google_ai", "google ai"),
     ("dreamina", "dreamina"),
     ("jimeng", "jimeng"),
     ("qwen", "qwen"),
@@ -178,6 +182,7 @@ pub fn analyze_image(bytes: &[u8], file_name: Option<String>) -> Result<JsValue,
     };
 
     let mut signals = Vec::new();
+    signals.extend(detect_c2pa(bytes));
     signals.extend(detect_xmp(bytes));
     signals.extend(detect_exif(bytes));
 
@@ -215,10 +220,10 @@ pub fn analyze_image(bytes: &[u8], file_name: Option<String>) -> Result<JsValue,
         limitations: vec![
             "这不是万能 AI 鉴定器，只基于元数据和启发式信号判断。".to_string(),
             "如果图片经过平台压缩、截图、转存或清洗元数据，很多信号会消失。".to_string(),
+            "浏览器版会读取 C2PA Content Credentials / JUMBF 中的来源文本，但不做完整签名和证书链验证。".to_string(),
             "当前浏览器版优先支持图片元数据检测，不包含完整的桌面 CLI 能力。".to_string(),
             "未检测到 AI 信号，不等于图片一定不是 AI 生成。".to_string(),
-            "当前仅支持检测上方列出的平台/工具相关来源信号，不应外推到所有生成模型。"
-                .to_string(),
+            "当前仅支持检测上方列出的平台/工具相关来源信号，不应外推到所有生成模型。".to_string(),
         ],
     };
 
@@ -226,11 +231,12 @@ pub fn analyze_image(bytes: &[u8], file_name: Option<String>) -> Result<JsValue,
 }
 
 fn browser_disclaimer() -> String {
-    "当前浏览器版只检测图片里的 EXIF / XMP / PNG 文本块 / 文件名等来源信号。它不是万能 AI 鉴定器，只能覆盖已知、且仍然保留在文件中的平台痕迹。".to_string()
+    "当前浏览器版只检测图片里的 C2PA Content Credentials / EXIF / XMP / PNG 文本块 / 文件名等来源信号。它不是万能 AI 鉴定器，只能覆盖已知、且仍然保留在文件中的平台痕迹。".to_string()
 }
 
 fn supported_signal_types() -> Vec<String> {
     vec![
+        "C2PA Content Credentials / JUMBF".to_string(),
         "EXIF metadata".to_string(),
         "XMP / IPTC metadata".to_string(),
         "PNG tEXt / iTXt chunks".to_string(),
@@ -325,6 +331,23 @@ fn detect_filename(file_name: &str) -> Vec<BrowserSignal> {
         }
     }
     Vec::new()
+}
+
+fn detect_c2pa(bytes: &[u8]) -> Vec<BrowserSignal> {
+    web_c2pa::detect(bytes)
+        .into_iter()
+        .map(|signal| BrowserSignal {
+            source: signal.source.to_string(),
+            confidence: signal.confidence.to_string(),
+            description: signal.description,
+            tool: signal.tool,
+            details: signal
+                .details
+                .into_iter()
+                .map(|(key, value)| Detail { key, value })
+                .collect(),
+        })
+        .collect()
 }
 
 fn detect_xmp(bytes: &[u8]) -> Vec<BrowserSignal> {
@@ -479,7 +502,8 @@ fn detect_exif(bytes: &[u8]) -> Vec<BrowserSignal> {
 
     if let Some(field) = exif.get_field(Tag::Artist, In::PRIMARY) {
         let value = field.display_value().to_string().replace('"', "");
-        let is_hex_hash = value.len() >= 32 && value.chars().all(|c| c.is_ascii_hexdigit() || c == '-');
+        let is_hex_hash =
+            value.len() >= 32 && value.chars().all(|c| c.is_ascii_hexdigit() || c == '-');
         if is_hex_hash {
             signals.push(make_signal(
                 "EXIF",
@@ -520,7 +544,9 @@ fn detect_png_text(bytes: &[u8]) -> Vec<BrowserSignal> {
     let mut pos = 8usize;
 
     while pos + 12 <= bytes.len() {
-        let length = u32::from_be_bytes([bytes[pos], bytes[pos + 1], bytes[pos + 2], bytes[pos + 3]]) as usize;
+        let length =
+            u32::from_be_bytes([bytes[pos], bytes[pos + 1], bytes[pos + 2], bytes[pos + 3]])
+                as usize;
         let chunk_type = &bytes[pos + 4..pos + 8];
         let chunk_data_end = pos + 8 + length;
         if chunk_data_end > bytes.len() {
@@ -673,7 +699,9 @@ fn extract_json_field(json: &str, field: &str) -> Option<String> {
 }
 
 fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
-    haystack.windows(needle.len()).position(|window| window == needle)
+    haystack
+        .windows(needle.len())
+        .position(|window| window == needle)
 }
 
 fn truncate(text: &str, max: usize) -> String {
