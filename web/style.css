@@ -38,10 +38,44 @@ input {
   font: inherit;
 }
 
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 18px 20px 0;
+}
+
+.site-logo {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.lang-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(110, 168, 255, 0.08);
+  color: #cfe1ff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  letter-spacing: 0.04em;
+}
+
+.lang-btn:hover {
+  background: rgba(110, 168, 255, 0.18);
+  transform: translateY(-1px);
+}
+
 .page {
   max-width: 1160px;
   margin: 0 auto;
-  padding: clamp(24px, 5vw, 48px) 20px 80px;
+  padding: clamp(16px, 3vw, 28px) 20px 80px;
 }
 
 .card {

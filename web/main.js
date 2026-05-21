@@ -1,36 +1,57 @@
-const fileInput = document.querySelector('#file-input');
-const analyzeBtn = document.querySelector('#analyze-btn');
-const statusEl = document.querySelector('#status');
-const reportEl = document.querySelector('#report');
+import { t, applyI18n, getCurrentLang, setLang } from './i18n.js';
+
+const fileInput    = document.querySelector('#file-input');
+const analyzeBtn   = document.querySelector('#analyze-btn');
+const statusEl     = document.querySelector('#status');
+const reportEl     = document.querySelector('#report');
 const emptyStateEl = document.querySelector('#empty-state');
 const platformListEl = document.querySelector('#platform-list');
-const formatListEl = document.querySelector('#format-list');
-const signalTypesEl = document.querySelector('#signal-types');
-const fileMetaEl = document.querySelector('#file-meta');
-const uploadZoneEl = document.querySelector('#upload-zone');
+const formatListEl   = document.querySelector('#format-list');
+const signalTypesEl  = document.querySelector('#signal-types');
+const fileMetaEl     = document.querySelector('#file-meta');
+const uploadZoneEl   = document.querySelector('#upload-zone');
+const langBtn        = document.querySelector('#lang-switch');
 
 let wasmApi = null;
 let selectedFile = null;
 let isAnalyzing = false;
+
+// Apply saved/detected language on load
+applyI18n();
+
+// Language switcher
+langBtn?.addEventListener('click', () => {
+  setLang(getCurrentLang() === 'zh-CN' ? 'en' : 'zh-CN');
+});
+
+// Re-render dynamic UI when language changes
+document.addEventListener('langchange', () => {
+  syncAnalyzeButton();
+  if (selectedFile) {
+    renderSelectedFile(selectedFile);
+  }
+  // Re-render report if visible
+  if (!reportEl.classList.contains('hidden') && reportEl._lastReport) {
+    renderReport(reportEl._lastReport);
+  }
+});
 
 boot();
 
 async function boot() {
   try {
     const pkg = await import('./pkg/aicheck.js');
-    if (typeof pkg.default === 'function') {
-      await pkg.default();
-    }
+    if (typeof pkg.default === 'function') await pkg.default();
     pkg.initPanicHook?.();
     wasmApi = pkg;
 
     const capabilities = await wasmApi.supportedImageCapabilities();
     renderCapabilities(capabilities);
-    setStatus('WASM 已就绪，可以开始检测。');
+    setStatus(t('status.ready'));
     syncAnalyzeButton();
   } catch (error) {
     console.error(error);
-    setStatus('WASM 包尚未构建。先运行 wasm-pack build --target web --out-dir web/pkg。', true);
+    setStatus(t('status.error'), true);
   }
 }
 
@@ -40,16 +61,15 @@ fileInput.addEventListener('change', (event) => {
   syncAnalyzeButton();
 });
 
-['dragenter', 'dragover'].forEach((eventName) => {
-  uploadZoneEl.addEventListener(eventName, (event) => {
-    event.preventDefault();
+['dragenter', 'dragover'].forEach((name) => {
+  uploadZoneEl.addEventListener(name, (e) => {
+    e.preventDefault();
     uploadZoneEl.classList.add('drag-over');
   });
 });
-
-['dragleave', 'drop'].forEach((eventName) => {
-  uploadZoneEl.addEventListener(eventName, (event) => {
-    event.preventDefault();
+['dragleave', 'drop'].forEach((name) => {
+  uploadZoneEl.addEventListener(name, (e) => {
+    e.preventDefault();
     uploadZoneEl.classList.remove('drag-over');
   });
 });
@@ -57,12 +77,10 @@ fileInput.addEventListener('change', (event) => {
 uploadZoneEl.addEventListener('drop', (event) => {
   const file = event.dataTransfer?.files?.[0];
   if (!file) return;
-
   if (!isSupportedImage(file)) {
-    setStatus('请选择 JPEG / PNG / WebP / GIF / BMP / TIFF 图片文件。', true);
+    setStatus(t('status.unsupported'), true);
     return;
   }
-
   selectedFile = file;
   fileInput.value = '';
   renderSelectedFile(file);
@@ -70,23 +88,17 @@ uploadZoneEl.addEventListener('drop', (event) => {
 });
 
 analyzeBtn.addEventListener('click', async () => {
-  if (!wasmApi) {
-    setStatus('WASM 还没加载成功。', true);
-    return;
-  }
-  if (!selectedFile) {
-    setStatus('先选一张图片。', true);
-    return;
-  }
+  if (!wasmApi)      { setStatus(t('status.error'), true); return; }
+  if (!selectedFile) { setStatus(t('status.no_file'), true); return; }
 
   try {
     isAnalyzing = true;
     syncAnalyzeButton();
-    setStatus('正在本地分析图片…');
+    setStatus(t('status.analyzing'));
     const bytes = new Uint8Array(await selectedFile.arrayBuffer());
     const report = await wasmApi.analyzeImage(bytes, selectedFile.name);
     renderReport(report);
-    setStatus('分析完成。');
+    setStatus(t('status.done'));
   } catch (error) {
     console.error(error);
     setStatus(error?.message || String(error), true);
@@ -100,7 +112,6 @@ function renderCapabilities(capabilities) {
   platformListEl.classList.remove('skeleton-list');
   formatListEl.classList.remove('skeleton-list');
   signalTypesEl.classList.remove('skeleton-list');
-
   renderTags(platformListEl, capabilities.supported_platforms || []);
   renderTags(formatListEl, capabilities.supported_formats || []);
   renderBullets(signalTypesEl, capabilities.supported_signal_types || []);
@@ -110,72 +121,68 @@ function renderSelectedFile(file) {
   if (!file) {
     fileMetaEl.classList.add('hidden');
     fileMetaEl.innerHTML = '';
-    setStatus('还没有选择文件。');
+    setStatus(t('status.no_file'));
     return;
   }
-
   fileMetaEl.classList.remove('hidden');
   fileMetaEl.innerHTML = `
     <div>
       <strong>${escapeHtml(file.name)}</strong>
-      <span>${escapeHtml(file.type || '未知类型')}</span>
+      <span>${escapeHtml(file.type || 'unknown')}</span>
     </div>
     <span>${escapeHtml(formatBytes(file.size))}</span>
   `;
-  setStatus(`已选择：${file.name}`);
+  setStatus(t('status.selected') + file.name);
 }
 
 function renderReport(report) {
+  reportEl._lastReport = report;
   emptyStateEl.classList.add('hidden');
   reportEl.classList.remove('hidden');
 
   const signals = report.signals || [];
   const signalCards = signals.length
     ? signals.map(renderSignalCard).join('')
-    : '<div class="empty-state success-state">没检测到已知 AI 来源信号。注意：这不等于图片一定不是 AI 生成。</div>';
+    : `<div class="empty-state success-state">${escapeHtml(t('report.no_signals'))}</div>`;
 
   const limitations = (report.limitations || [])
     .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join('') || '<li>没有额外限制说明。</li>';
+    .join('') || `<li>${escapeHtml(t('report.no_limitations'))}</li>`;
 
   reportEl.innerHTML = `
     <div class="report-header">
       <span class="badge ${escapeHtml(report.overall_confidence || 'none')}">${escapeHtml(labelForConfidence(report.overall_confidence))}</span>
-      <strong>${report.ai_generated ? '检测到 AI 来源信号' : '未检测到已知 AI 来源信号'}</strong>
+      <strong>${escapeHtml(report.ai_generated ? t('report.ai_yes') : t('report.ai_no'))}</strong>
     </div>
-
     <div class="summary-grid">
       <div class="summary-item">
-        <div class="label">文件名</div>
-        <div class="value">${escapeHtml(report.file_name || '未提供')}</div>
+        <div class="label">${escapeHtml(t('report.label.filename'))}</div>
+        <div class="value">${escapeHtml(report.file_name || '—')}</div>
       </div>
       <div class="summary-item">
-        <div class="label">MIME 类型</div>
+        <div class="label">${escapeHtml(t('report.label.mime'))}</div>
         <div class="value">${escapeHtml(report.mime_type || 'unknown')}</div>
       </div>
       <div class="summary-item">
-        <div class="label">模式</div>
-        <div class="value">${escapeHtml(report.mode || 'browser-image-alpha')}</div>
+        <div class="label">${escapeHtml(t('report.label.mode'))}</div>
+        <div class="value">${escapeHtml(report.mode || 'browser-image')}</div>
       </div>
       <div class="summary-item">
-        <div class="label">信号数量</div>
+        <div class="label">${escapeHtml(t('report.label.signals'))}</div>
         <div class="value">${signals.length}</div>
       </div>
     </div>
-
-    <h3>命中的信号</h3>
+    <h3>${escapeHtml(t('report.heading.signals'))}</h3>
     <div class="signal-list">${signalCards}</div>
-
-    <h3>限制与风险提示</h3>
+    <h3>${escapeHtml(t('report.heading.limits'))}</h3>
     <ul class="limitation-list">${limitations}</ul>
   `;
 }
 
 function renderSignalCard(signal) {
   const detailItems = (signal.details || [])
-    .map((detail) => `<li><strong>${escapeHtml(detail.key)}：</strong>${escapeHtml(detail.value)}</li>`)
+    .map((d) => `<li><strong>${escapeHtml(d.key)}：</strong>${escapeHtml(d.value)}</li>`)
     .join('');
-
   return `
     <article class="signal-card">
       <div class="signal-meta">
@@ -192,47 +199,40 @@ function renderSignalCard(signal) {
 function renderTags(container, items) {
   container.innerHTML = items.length
     ? items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
-    : '<li>待加载</li>';
+    : `<li>${escapeHtml(t('skeleton'))}</li>`;
 }
 
 function renderBullets(container, items) {
   container.innerHTML = items.length
     ? items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
-    : '<li>待加载</li>';
+    : `<li>${escapeHtml(t('skeleton'))}</li>`;
 }
 
 function syncAnalyzeButton() {
   analyzeBtn.disabled = !wasmApi || !selectedFile || isAnalyzing;
-  analyzeBtn.textContent = isAnalyzing ? '检测中…' : '开始检测';
+  analyzeBtn.textContent = isAnalyzing ? t('btn.running') : t('btn.idle');
 }
 
 function isSupportedImage(file) {
-  return /^image\/(jpeg|png|webp|gif|bmp|tiff)$/.test(file.type) || /\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(file.name);
+  return /^image\/(jpeg|png|webp|gif|bmp|tiff)$/.test(file.type)
+    || /\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(file.name);
 }
 
 function formatBytes(bytes) {
-  if (!Number.isFinite(bytes) || bytes < 0) return '未知大小';
+  if (!Number.isFinite(bytes) || bytes < 0) return '—';
   if (bytes < 1024) return `${bytes} B`;
   const units = ['KB', 'MB', 'GB'];
-  let value = bytes / 1024;
-  let unitIndex = 0;
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024;
-    unitIndex += 1;
-  }
-  return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[unitIndex]}`;
+  let value = bytes / 1024, i = 0;
+  while (value >= 1024 && i < units.length - 1) { value /= 1024; i++; }
+  return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[i]}`;
 }
 
 function labelForConfidence(confidence) {
   switch ((confidence || '').toLowerCase()) {
-    case 'high':
-      return 'HIGH';
-    case 'medium':
-      return 'MEDIUM';
-    case 'low':
-      return 'LOW';
-    default:
-      return 'NONE';
+    case 'high':   return 'HIGH';
+    case 'medium': return 'MEDIUM';
+    case 'low':    return 'LOW';
+    default:       return 'NONE';
   }
 }
 
