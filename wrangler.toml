@@ -1,9 +1,6 @@
 name = "aicheck365"
 compatibility_date = "2026-05-19"
 
-[build]
-command = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --target wasm32-unknown-unknown && source $HOME/.cargo/env && cargo install wasm-pack --locked && wasm-pack build --target web --out-dir web/pkg"
-
 [assets]
 directory = "web"
 not_found_handling = "single-page-application"

@@ -1,0 +1,29 @@
+{
+  "name": "aicheck",
+  "type": "module",
+  "description": "Detect AI-generated content via metadata and watermarks (C2PA, XMP, EXIF, MP4, ID3, WAV, PNG, filename, spectral, watermark)",
+  "version": "0.2.0",
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MatrixA/aicheck"
+  },
+  "files": [
+    "aicheck_bg.wasm",
+    "aicheck.js",
+    "aicheck.d.ts"
+  ],
+  "main": "aicheck.js",
+  "homepage": "https://github.com/MatrixA/aicheck",
+  "types": "aicheck.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ],
+  "keywords": [
+    "ai-detection",
+    "c2pa",
+    "watermark",
+    "metadata",
+    "forensics"
+  ]
+}
