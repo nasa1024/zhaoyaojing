@@ -3,6 +3,14 @@ const translations = {
 
   // ── Simplified Chinese ──────────────────────────────────────────
   'zh-CN': {
+    'nav.tool':         '检测工具',
+    'nav.platforms':    '平台指南',
+    'nav.blog':         '知识库',
+    'nav.about':        '关于',
+    'nav.privacy':      '隐私政策',
+    'nav.terms':        '服务条款',
+    'nav.contact':      '联系',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · 图片仅在本地浏览器分析，不上传服务器`,
     'page.title':       'AICheck365 · AI 图片检测 | 免费识别 AI 生成图片',
     'page.description': '免费检测图片是否由 AI 生成。基于 EXIF、XMP、C2PA 元数据分析，支持 Midjourney、DALL-E、Stable Diffusion 等主流平台。完全在浏览器本地运行，不上传图片。',
     'eyebrow':               'AI 图片来源检测',
@@ -42,6 +50,14 @@ const translations = {
     'status.unsupported':    '请选择 JPEG / PNG / WebP / GIF / BMP / TIFF 图片文件。',
     'btn.idle':              '开始检测',
     'btn.running':           '检测中…',
+    'upload.files.selected': '张图片已选择',
+    'history.title':         '最近检测',
+    'history.subtitle':      '点击可重新查看结果（仅保存在本地浏览器）',
+    'history.empty':         '暂无检测记录。',
+    'share.button':          '📋 复制报告',
+    'share.copied':          '✓ 已复制',
+    'batch.files':           '个文件',
+    'batch.ai_detected':     '个检测到 AI 信号',
     'report.ai_yes':         '检测到 AI 来源信号',
     'report.ai_no':          '未检测到已知 AI 来源信号',
     'report.no_signals':     '没检测到已知 AI 来源信号。注意：这不等于图片一定不是 AI 生成。',
@@ -56,6 +72,14 @@ const translations = {
 
   // ── Traditional Chinese ─────────────────────────────────────────
   'zh-TW': {
+    'nav.tool':         '檢測工具',
+    'nav.platforms':    '平台指南',
+    'nav.blog':         '知識庫',
+    'nav.about':        '關於',
+    'nav.privacy':      '隱私政策',
+    'nav.terms':        '服務條款',
+    'nav.contact':      '聯繫',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · 圖片僅在本地瀏覽器分析，不上傳伺服器`,
     'page.title':       'AICheck365 · AI 圖片檢測 | 免費識別 AI 生成圖片',
     'page.description': '免費檢測圖片是否由 AI 生成。基於 EXIF、XMP、C2PA 元數據分析，支援 Midjourney、DALL-E、Stable Diffusion 等主流平台。完全在瀏覽器本地執行，不上傳圖片。',
     'eyebrow':               'AI 圖片來源偵測',
@@ -95,6 +119,14 @@ const translations = {
     'status.unsupported':    '請選擇 JPEG / PNG / WebP / GIF / BMP / TIFF 圖片檔案。',
     'btn.idle':              '開始偵測',
     'btn.running':           '偵測中…',
+    'upload.files.selected': '張圖片已選擇',
+    'history.title':         '最近偵測',
+    'history.subtitle':      '點擊可重新查看結果（僅保存在本地瀏覽器）',
+    'history.empty':         '暫無偵測記錄。',
+    'share.button':          '📋 複製報告',
+    'share.copied':          '✓ 已複製',
+    'batch.files':           '個檔案',
+    'batch.ai_detected':     '個偵測到 AI 訊號',
     'report.ai_yes':         '偵測到 AI 來源訊號',
     'report.ai_no':          '未偵測到已知 AI 來源訊號',
     'report.no_signals':     '未偵測到已知 AI 來源訊號。注意：這不等於圖片一定不是 AI 生成。',
@@ -109,6 +141,14 @@ const translations = {
 
   // ── English ─────────────────────────────────────────────────────
   'en': {
+    'nav.tool':         'Detector',
+    'nav.platforms':    'Platform Guides',
+    'nav.blog':         'Blog',
+    'nav.about':        'About',
+    'nav.privacy':      'Privacy Policy',
+    'nav.terms':        'Terms',
+    'nav.contact':      'Contact',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · Images are analyzed locally in your browser, never uploaded`,
     'page.title':       'AICheck365 · AI Image Detector | Free AI-Generated Image Detection',
     'page.description': 'Free tool to detect AI-generated images. Analyzes EXIF, XMP, and C2PA metadata. Supports Midjourney, DALL-E, Stable Diffusion, and more. Runs entirely in your browser — no uploads.',
     'eyebrow':               'AI Image Origin Detection',
@@ -148,6 +188,14 @@ const translations = {
     'status.unsupported':    'Please select a JPEG / PNG / WebP / GIF / BMP / TIFF image.',
     'btn.idle':              'Analyze',
     'btn.running':           'Analyzing…',
+    'upload.files.selected': 'files selected',
+    'history.title':         'Recent Detections',
+    'history.subtitle':      'Click to review past results (stored locally only)',
+    'history.empty':         'No recent detections yet.',
+    'share.button':          '📋 Copy Report',
+    'share.copied':          '✓ Copied!',
+    'batch.files':           'files',
+    'batch.ai_detected':     'with AI signals',
     'report.ai_yes':         'AI Origin Signals Detected',
     'report.ai_no':          'No Known AI Origin Signals Found',
     'report.no_signals':     'No known AI origin signals detected. Note: this does not mean the image is not AI-generated.',
@@ -162,6 +210,14 @@ const translations = {
 
   // ── Japanese ─────────────────────────────────────────────────────
   'ja': {
+    'nav.tool':         '検出ツール',
+    'nav.platforms':    'プラットフォーム',
+    'nav.blog':         'ブログ',
+    'nav.about':        'について',
+    'nav.privacy':      'プライバシー',
+    'nav.terms':        '利用規約',
+    'nav.contact':      'お問い合わせ',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · 画像はブラウザ内でローカル分析されます`,
     'page.title':       'AICheck365 · AI画像検出 | AI生成画像を無料で識別',
     'page.description': 'AI生成画像を無料で検出。EXIF・XMP・C2PAメタデータを解析し、Midjourney・DALL-E・Stable Diffusionなど主要プラットフォームに対応。ブラウザ内で完全ローカル処理、画像のアップロード不要。',
     'eyebrow':               'AI画像の出所検出',
@@ -215,6 +271,14 @@ const translations = {
 
   // ── Korean ───────────────────────────────────────────────────────
   'ko': {
+    'nav.tool':         '감지 도구',
+    'nav.platforms':    '플랫폼 가이드',
+    'nav.blog':         '블로그',
+    'nav.about':        '소개',
+    'nav.privacy':      '개인정보처리방침',
+    'nav.terms':        '이용약관',
+    'nav.contact':      '문의',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · 이미지는 브라우저에서 로컬로 분석됩니다`,
     'page.title':       'AICheck365 · AI 이미지 감지 | AI 생성 이미지 무료 식별',
     'page.description': 'AI 생성 이미지를 무료로 감지하세요. EXIF, XMP, C2PA 메타데이터 분석. Midjourney, DALL-E, Stable Diffusion 등 지원. 브라우저에서 완전 로컬 실행, 업로드 없음.',
     'eyebrow':               'AI 이미지 출처 감지',
@@ -268,6 +332,14 @@ const translations = {
 
   // ── German ───────────────────────────────────────────────────────
   'de': {
+    'nav.tool':         'Detektor',
+    'nav.platforms':    'Plattform-Guides',
+    'nav.blog':         'Blog',
+    'nav.about':        'Über uns',
+    'nav.privacy':      'Datenschutz',
+    'nav.terms':        'Nutzungsbedingungen',
+    'nav.contact':      'Kontakt',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · Bilder werden lokal im Browser analysiert`,
     'page.title':       'AICheck365 · KI-Bilderkennung | KI-generierte Bilder kostenlos erkennen',
     'page.description': 'Erkennen Sie kostenlos KI-generierte Bilder. Analysiert EXIF-, XMP- und C2PA-Metadaten. Unterstützt Midjourney, DALL-E, Stable Diffusion und mehr. Läuft vollständig lokal im Browser.',
     'eyebrow':               'KI-Bildherkunft erkennen',
@@ -321,6 +393,14 @@ const translations = {
 
   // ── French ───────────────────────────────────────────────────────
   'fr': {
+    'nav.tool':         'Détecteur',
+    'nav.platforms':    'Guides Plateformes',
+    'nav.blog':         'Blog',
+    'nav.about':        'À propos',
+    'nav.privacy':      'Confidentialité',
+    'nav.terms':        'Conditions',
+    'nav.contact':      'Contact',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · Les images sont analysées localement dans votre navigateur`,
     'page.title':       'AICheck365 · Détecteur IA | Identifier les images générées par IA gratuitement',
     'page.description': "Détectez gratuitement les images générées par IA. Analyse les métadonnées EXIF, XMP et C2PA. Compatible Midjourney, DALL-E, Stable Diffusion et plus. Traitement 100% local dans le navigateur, sans upload.",
     'eyebrow':               "Détection d'origine IA",
@@ -374,6 +454,14 @@ const translations = {
 
   // ── Spanish ──────────────────────────────────────────────────────
   'es': {
+    'nav.tool':         'Detector',
+    'nav.platforms':    'Guías de Plataformas',
+    'nav.blog':         'Blog',
+    'nav.about':        'Acerca de',
+    'nav.privacy':      'Privacidad',
+    'nav.terms':        'Términos',
+    'nav.contact':      'Contacto',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · Las imágenes se analizan localmente en tu navegador`,
     'page.title':       'AICheck365 · Detector de IA | Identificar imágenes generadas por IA gratis',
     'page.description': 'Detecta gratis imágenes generadas por IA. Analiza metadatos EXIF, XMP y C2PA. Compatible con Midjourney, DALL-E, Stable Diffusion y más. Totalmente local en el navegador, sin subidas.',
     'eyebrow':               'Detección de origen IA',
@@ -427,6 +515,14 @@ const translations = {
 
   // ── Portuguese (Brazil) ──────────────────────────────────────────
   'pt-BR': {
+    'nav.tool':         'Detector',
+    'nav.platforms':    'Guias de Plataformas',
+    'nav.blog':         'Blog',
+    'nav.about':        'Sobre',
+    'nav.privacy':      'Privacidade',
+    'nav.terms':        'Termos',
+    'nav.contact':      'Contato',
+    'footer.note':      `© ${new Date().getFullYear()} AICheck365 · As imagens são analisadas localmente no seu navegador`,
     'page.title':       'AICheck365 · Detector de IA | Identificar imagens geradas por IA de graça',
     'page.description': 'Detecte gratuitamente imagens geradas por IA. Analisa metadados EXIF, XMP e C2PA. Compatível com Midjourney, DALL-E, Stable Diffusion e mais. Totalmente local no navegador, sem uploads.',
     'eyebrow':               'Detecção de origem IA',

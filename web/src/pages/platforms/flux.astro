@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Flux 生成的图片有什么特定的元数据？", a: "Flux（Black Forest Labs）生成的图片通常在 XMP 的 CreatorTool 字段或 PNG tEXt 块中包含 'FLUX' 字样，部分前端工具（如 ComfyUI + Flux）还会写入完整的生成参数。" },
+  { q: "Flux 1.1 Pro 和 Flux Dev 的元数据有区别吗？", a: "有区别。通过 API 直接使用 Flux 时，元数据写入与否取决于调用方（如 Replicate、FAL.ai 等平台）。在 ComfyUI 中使用 Flux 模型，ComfyUI 会在 PNG tEXt 块写入工作流信息。" },
+  { q: "Flux 图片经过压缩后还能被检测到吗？", a: "如果图片经过社交媒体压缩或重新导出，元数据通常会被剥离，检测会失败。建议使用直接从生成平台下载的原始文件。" },
+  { q: "Flux 和 Stable Diffusion 的检测方式相同吗？", a: "Flux 是新一代独立模型，不属于 Stable Diffusion 体系。但两者都可以通过 ComfyUI 运行，因此元数据特征可能相似，主要通过模型名称字段区分。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Flux", "item": "https://aicheck365.com/platforms/flux/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Detect Flux AI Generated Images | Metadata Guide",
+    "description": "Detect Flux (Black Forest Labs) AI-generated images using XMP, PNG tEXt metadata signals. Learn what metadata Flux writes and how AICheck365 identifies it.",
+    "url": "https://aicheck365.com/platforms/flux/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Flux AI 生成图片？元数据识别指南 | AICheck365"
+  description="详解 Flux（Black Forest Labs）图片的元数据特征：XMP CreatorTool、PNG tEXt 块。了解如何识别 Flux 生成的图片及其检测局限性。"
+  canonical="https://aicheck365.com/platforms/flux/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Flux
+    </nav>
+
+    <article class="card content-article">
+      <h1>Flux 图片检测：元数据识别完整指南</h1>
+      <p class="article-meta">信号类型：XMP · PNG tEXt · EXIF</p>
+
+      <p class="lead-text">Flux 是由 Black Forest Labs 开发的新一代文生图 AI 模型，包含 Flux.1 Dev、Flux.1 Schnell 和 Flux.1 Pro 等版本，正在快速成为 Stable Diffusion 的主要替代品。Flux 生成的图片可通过多种元数据信号进行检测。</p>
+
+      <h2>Flux 图片的元数据信号</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>XMP CreatorTool</h3>
+          <p>部分 Flux 前端工具会在 <code>xmp:CreatorTool</code> 字段写入包含 "FLUX" 或 "Black Forest Labs" 字样的软件名称。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>PNG tEXt 块</h3>
+          <p>通过 ComfyUI 或 A1111 使用 Flux 模型时，PNG 文件的 <code>tEXt</code>/<code>iTXt</code> 块会包含完整的工作流 JSON，其中含有模型名称（如 <code>flux1-dev.safetensors</code>）。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>EXIF Software 字段</h3>
+          <p>部分 Flux 前端或 API 服务会在 EXIF <code>Software</code> 字段写入生成工具名称，可用于辅助判断。</p>
+        </div>
+      </div>
+
+      <h2>Flux 的部署方式与检测可靠性</h2>
+      <p>Flux 的元数据写入高度依赖使用的前端工具：</p>
+
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>部署方式</th><th>元数据写入</th><th>检测可靠性</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ComfyUI + Flux</td><td>PNG tEXt 工作流 JSON</td><td>高</td></tr>
+            <tr><td>AUTOMATIC1111 + Flux</td><td>PNG tEXt 参数</td><td>高</td></tr>
+            <tr><td>Replicate API</td><td>取决于设置</td><td>中</td></tr>
+            <tr><td>FAL.ai API</td><td>通常无元数据</td><td>低</td></tr>
+            <tr><td>第三方 Web 界面</td><td>不确定</td><td>低-中</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>为什么 Flux 越来越重要？</h2>
+      <p>Flux.1 系列模型在真实感、文字渲染和遵循提示词方面显著优于早期模型。自 2024 年发布以来，Flux 已被大量商业平台和创作者采用，了解其检测方法对于内容核查至关重要。</p>
+
+      <div class="cta-box">
+        <p>立即上传 Flux 生成的图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/stable-diffusion/">Stable Diffusion →</a>
+        <a href="/platforms/comfyui/">ComfyUI →</a>
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/dall-e/">DALL-E →</a>
+      </div>
+    </div>
+  </main>
+</Base>

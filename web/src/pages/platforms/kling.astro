@@ -10,6 +10,15 @@ const faq = [
 const jsonLd = [
   {
     "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "可灵 Kling", "item": "https://aicheck365.com/platforms/kling/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "Article",
     "headline": "可灵 Kling AI 图片检测：快手 AI 生成内容元数据识别",
     "description": "了解快手可灵（Kling）AI 生成图片的元数据特征，以及如何使用 AICheck365 进行检测。",

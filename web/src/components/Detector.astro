@@ -5,12 +5,12 @@
 <section class="grid two-col primary-grid">
   <div class="card upload-card">
     <h2 data-i18n="upload.title">上传图片</h2>
-    <p class="muted compact" data-i18n="upload.subtitle">选择一张图片后点击检测。所有分析都在本机完成。</p>
+    <p class="muted compact" data-i18n="upload.subtitle">选择一张或多张图片后点击检测。所有分析都在本机完成。</p>
     <label class="upload" for="file-input" id="upload-zone">
-      <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff" aria-label="点击选择图片" />
+      <input id="file-input" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff" aria-label="点击选择图片" />
       <span class="upload-icon" aria-hidden="true">↥</span>
       <span class="upload-title" data-i18n="upload.zone.title">点击或拖拽图片到此处</span>
-      <small data-i18n="upload.zone.formats">支持 JPEG / PNG / WebP / GIF / BMP / TIFF</small>
+      <small data-i18n="upload.zone.formats">支持 JPEG / PNG / WebP / GIF / BMP / TIFF · 可多选</small>
     </label>
     <div id="file-meta" class="file-meta hidden" aria-live="polite"></div>
     <button id="analyze-btn" class="primary" disabled data-i18n="upload.button">开始检测</button>
@@ -25,11 +25,6 @@
     <ul id="platform-list" class="tag-list skeleton-list" aria-label="支持平台列表"></ul>
   </div>
 </section>
-
-<!-- 广告位 — 检测结果与信号说明之间 -->
-<!-- <div class="ad-slot ad-slot--horizontal">
-  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-</div> -->
 
 <section class="grid two-col">
   <div class="card">
@@ -53,6 +48,26 @@
     选一张原始图片试试。越原始的文件，越容易保留可检测的来源信号。
   </div>
   <div id="report" class="report hidden"></div>
+</section>
+
+<!-- 广告位 — 检测结果下方，用户读完结果后自然滚动到此 -->
+<div class="ad-slot ad-slot--horizontal">
+  <!-- 申请 AdSense 通过后替换以下内容：
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="XXXXXXXXXX"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  -->
+</div>
+
+<!-- 历史记录区 -->
+<section class="card history-section">
+  <h2 data-i18n="history.title">最近检测</h2>
+  <p class="muted compact" data-i18n="history.subtitle">点击可重新查看结果（仅保存在本地浏览器）。</p>
+  <div id="history-list" class="history-list"></div>
 </section>
 
 <!-- 检测器 JS -->

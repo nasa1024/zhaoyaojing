@@ -1,0 +1,129 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "ComfyUI 生成的图片有什么特征元数据？", a: "ComfyUI 生成的 PNG 图片通常在 PNG tEXt 或 iTXt 块中嵌入完整的工作流 JSON（prompt、workflow 字段）。这些数据包含模型名称、节点配置和生成参数，是最强的可检测信号。" },
+  { q: "可以从 ComfyUI 的元数据中知道使用了哪个模型吗？", a: "可以。工作流 JSON 中通常包含 checkpoint 模型名称（如 sd_xl_base_1.0.safetensors、flux1-dev.safetensors 等），可以精确识别使用的基础模型。" },
+  { q: "如何防止 ComfyUI 写入元数据？", a: "在 ComfyUI 的 Save Image 节点中，可以通过修改节点设置来控制是否嵌入 prompt 信息。使用 SaveImageWebsocket 节点或第三方节点也可能跳过元数据写入。" },
+  { q: "ComfyUI 生成的 JPEG 文件有元数据吗？", a: "ComfyUI 默认输出 PNG 格式。如果转换为 JPEG，元数据写入方式取决于转换工具。直接从 ComfyUI 输出的 PNG 文件元数据最完整。" },
+  { q: "ComfyUI 和 AUTOMATIC1111 的元数据格式相同吗？", a: "不相同。AUTOMATIC1111（A1111/WebUI）使用纯文本格式写入参数字符串，而 ComfyUI 使用 JSON 格式的工作流数据。两者都在 PNG tEXt 块中写入，但键名和格式不同。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "ComfyUI", "item": "https://aicheck365.com/platforms/comfyui/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "ComfyUI 图片检测：PNG 工作流元数据完整指南",
+    "description": "详解 ComfyUI 生成图片的 PNG tEXt 元数据结构，包括工作流 JSON、模型信息的识别方法。",
+    "url": "https://aicheck365.com/platforms/comfyui/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="ComfyUI 图片检测：PNG 工作流元数据指南 | AICheck365"
+  description="ComfyUI 生成的 PNG 图片在 tEXt 块中嵌入完整工作流 JSON。了解如何读取模型名称、生成参数，以及 AICheck365 的识别方法。"
+  canonical="https://aicheck365.com/platforms/comfyui/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › ComfyUI
+    </nav>
+
+    <article class="card content-article">
+      <h1>ComfyUI 图片检测：PNG 工作流元数据完整指南</h1>
+      <p class="article-meta">信号类型：PNG tEXt · iTXt · 工作流 JSON</p>
+
+      <p class="lead-text">ComfyUI 是最流行的开源 AI 图像生成界面，基于节点式工作流设计。它支持几乎所有主流模型（SD、SDXL、Flux、ControlNet 等）。ComfyUI 生成的 PNG 图片包含业界最丰富的元数据，是可检测性最高的 AI 图片之一。</p>
+
+      <h2>ComfyUI 的元数据结构</h2>
+      <p>ComfyUI 将完整的工作流信息嵌入 PNG 文件的文本块：</p>
+
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>PNG tEXt: prompt</h3>
+          <p>包含节点图（workflow）的 JSON 序列化，其中含有：模型名称、LoRA 路径、采样参数、ControlNet 配置、正负提示词等完整信息。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>PNG tEXt: workflow</h3>
+          <p>完整工作流结构，包含所有节点的连接关系和配置。即使工作流较复杂，全部信息都会嵌入图片。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>模型指纹</h3>
+          <p>checkpoint 文件名（如 <code>v1-5-pruned.safetensors</code>、<code>flux1-dev.safetensors</code>）直接写入 JSON，可以精确识别使用的模型。</p>
+        </div>
+      </div>
+
+      <h2>从 ComfyUI 元数据中可以提取什么信息</h2>
+      <ul class="content-list">
+        <li>完整的<strong>生成提示词</strong>（正面和负面）</li>
+        <li>使用的<strong>基础模型</strong>（checkpoint 文件名）</li>
+        <li>使用的 <strong>LoRA 模型</strong>及权重</li>
+        <li><strong>采样器</strong>（Euler、DPM++、DDIM 等）和步数</li>
+        <li>图像<strong>尺寸、CFG Scale</strong>、随机种子</li>
+        <li>ControlNet 或其他扩展的配置</li>
+      </ul>
+
+      <h2>ComfyUI vs AUTOMATIC1111 元数据对比</h2>
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>特征</th><th>ComfyUI</th><th>AUTOMATIC1111</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>元数据格式</td><td>JSON 工作流</td><td>纯文本参数字符串</td></tr>
+            <tr><td>PNG tEXt 键名</td><td>prompt, workflow</td><td>parameters</td></tr>
+            <tr><td>信息完整度</td><td>极高（含节点图）</td><td>高（含主要参数）</td></tr>
+            <tr><td>可读性</td><td>需解析 JSON</td><td>直接可读</td></tr>
+            <tr><td>默认输出格式</td><td>PNG</td><td>PNG / JPEG</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cta-box">
+        <p>立即上传 ComfyUI 生成的图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/stable-diffusion/">Stable Diffusion / A1111 →</a>
+        <a href="/platforms/flux/">Flux →</a>
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/dall-e/">DALL-E →</a>
+      </div>
+    </div>
+  </main>
+</Base>

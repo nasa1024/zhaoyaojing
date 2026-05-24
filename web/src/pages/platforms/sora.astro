@@ -1,0 +1,120 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Sora 生成的视频帧截图能被检测到吗？", a: "截图通常无法检测，因为截图不包含原始文件的元数据。如果你有 Sora 输出的原始视频文件，可以尝试提取单帧图片进行检测。" },
+  { q: "Sora 是否支持 C2PA 标准？", a: "OpenAI 是 C2PA 标准的主要推动者，DALL-E 3 已全面支持 C2PA。Sora 作为 OpenAI 产品，预计也会遵循相同标准，但具体实现可能随平台迭代更新。" },
+  { q: "如何判断一张图片是否来自 Sora 视频？", a: "直接从 Sora 平台下载的视频文件或其中提取的帧图片，可能包含 OpenAI 的元数据标识。但经过转码、截图或社交媒体处理后，这些信号会消失。" },
+  { q: "Sora 生成的图片和 DALL-E 生成的图片有什么区别？", a: "Sora 是视频生成模型，DALL-E 是图片生成模型。两者都由 OpenAI 出品，可能共享部分 C2PA 元数据标准，但具体字段和签名者（claim generator）不同。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Sora", "item": "https://aicheck365.com/platforms/sora/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 Sora AI 生成图片/视频帧？元数据指南",
+    "description": "了解 OpenAI Sora 生成内容的元数据特征，包括 C2PA 标准支持情况，以及如何识别 Sora 来源的图片和视频帧。",
+    "url": "https://aicheck365.com/platforms/sora/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Sora AI 生成内容？C2PA 元数据指南 | AICheck365"
+  description="了解 OpenAI Sora 生成视频和图片的元数据特征，包括 C2PA 标准支持情况及识别方法。"
+  canonical="https://aicheck365.com/platforms/sora/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Sora
+    </nav>
+
+    <article class="card content-article">
+      <h1>Sora 内容检测：C2PA 元数据完整指南</h1>
+      <p class="article-meta">信号类型：C2PA · XMP · EXIF</p>
+
+      <p class="lead-text">Sora 是 OpenAI 于 2024 年发布的文生视频 AI 模型，能够生成长达 60 秒的高质量视频。作为 OpenAI 产品，Sora 遵循该公司在内容真实性方面的标准，预计支持 C2PA 内容溯源体系。</p>
+
+      <h2>Sora 与 C2PA 标准</h2>
+      <p>OpenAI 是 <strong>C2PA（内容真实性倡议）</strong>的核心推动者，已在 DALL-E 3 中全面实施 C2PA 数字签名。Sora 作为 OpenAI 的旗舰视频产品，同样预期遵循这一标准：</p>
+      <ul class="content-list">
+        <li><strong>视频文件</strong>：C2PA Manifest 可能嵌入视频容器（MP4）中</li>
+        <li><strong>导出图片帧</strong>：从 Sora 界面导出的静态图片可能包含 C2PA 签名</li>
+        <li><strong>数字签名</strong>：OpenAI 的 C2PA 签名包含内容生成时间和生成工具信息</li>
+      </ul>
+
+      <h2>Sora 内容的可检测信号</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>C2PA Manifest</h3>
+          <p>类似 DALL-E 3，Sora 生成的内容预期包含 OpenAI 数字签名的 C2PA Manifest，标注 AI 生成来源。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>XMP 元数据</h3>
+          <p>导出的静态帧可能在 XMP 字段中包含 OpenAI 软件标识，与 DALL-E 3 的元数据格式类似。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>视频容器元数据</h3>
+          <p>MP4 视频文件的元数据（tool/software 标签）可能包含 Sora 或 OpenAI 的标识信息。</p>
+        </div>
+      </div>
+
+      <h2>检测局限性</h2>
+      <p>检测 Sora 生成内容时需要注意以下限制：</p>
+      <ul class="content-list">
+        <li>AICheck365 目前主要针对图片文件；Sora 视频文件需要提取帧后检测</li>
+        <li>截图或屏幕录制会完全丢失元数据信号</li>
+        <li>经过视频编辑软件处理的内容，元数据可能被覆盖</li>
+        <li>Sora 的 C2PA 实现细节可能随平台更新变化</li>
+      </ul>
+
+      <h2>与 DALL-E 的关系</h2>
+      <p>Sora 和 DALL-E 都是 OpenAI 的生成式 AI 产品，共享公司的内容溯源政策。如果你需要检测 OpenAI 图片生成产品，参考 <a href="/platforms/dall-e/">DALL-E 检测指南</a>也会有所帮助。</p>
+
+      <div class="cta-box">
+        <p>上传从 Sora 导出的图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/dall-e/">DALL-E / GPT Image →</a>
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/firefly/">Adobe Firefly →</a>
+        <a href="/platforms/kling/">可灵 Kling →</a>
+      </div>
+    </div>
+  </main>
+</Base>

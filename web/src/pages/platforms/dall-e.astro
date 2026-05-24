@@ -11,6 +11,15 @@ const faq = [
 const jsonLd = [
   {
     "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "DALL-E / GPT Image", "item": "https://aicheck365.com/platforms/dall-e/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "Article",
     "headline": "如何检测 DALL-E / ChatGPT AI 生成图片？C2PA 元数据指南",
     "description": "详解 OpenAI DALL-E 3、GPT Image 图片中的 C2PA 数字签名和 XMP 元数据，以及 AICheck365 的检测原理。",

@@ -1,0 +1,133 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "为什么有些 AI 图片完全检测不出来？", a: "元数据检测依赖于图片中嵌入的来源信号。如果图片经过社交媒体压缩、截图、重新导出或专门清除元数据，这些信号就会消失。没有信号不代表图片不是 AI 生成的，只代表无法通过元数据方式证明。" },
+  { q: "像素分析方法和元数据分析哪个更准确？", a: "各有优劣。元数据分析准确性极高（有信号即可确认），但无法覆盖没有信号的图片。像素分析（AI 特征检测）覆盖面更广，但误判率更高，且难以应对高质量 AI 图片。两种方法互补，而非替代。" },
+  { q: "C2PA 标准普及后，AI 图片检测会变得更容易吗？", a: "是的。随着 OpenAI、Adobe、微软、Google 等主要平台全面实施 C2PA，未来 AI 生成内容的溯源会越来越可靠。C2PA 的优势在于数字签名难以伪造，且可以追踪编辑历史。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aicheck365.com/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "如何判断 AI 图片", "item": "https://aicheck365.com/blog/how-to-detect-ai-images/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何判断一张图片是否 AI 生成？2025 完整指南",
+    "description": "从元数据分析到视觉识别，全面介绍判断 AI 生成图片的方法、工具和局限性。",
+    "url": "https://aicheck365.com/blog/how-to-detect-ai-images/",
+    "datePublished": "2025-05-01",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何判断一张图片是否 AI 生成？2025 完整指南 | AICheck365"
+  description="从元数据分析到视觉识别，全面介绍判断 AI 生成图片的方法、工具和局限性。涵盖 EXIF、XMP、C2PA 检测原理。"
+  canonical="https://aicheck365.com/blog/how-to-detect-ai-images/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/blog/">知识库</a> › 如何判断 AI 图片
+    </nav>
+
+    <article class="card content-article">
+      <h1>如何判断一张图片是否 AI 生成？2025 完整指南</h1>
+      <p class="article-meta">2025年5月 · 元数据分析 · AI 图片检测</p>
+
+      <p class="lead-text">随着 Midjourney、DALL-E、Stable Diffusion 等 AI 生成工具的普及，鉴别图片是否 AI 生成变得越来越重要。本文从多个维度提供系统性的判断方法。</p>
+
+      <h2>方法一：元数据分析（最可靠）</h2>
+      <p>许多 AI 生成工具在图片文件中嵌入可识别的来源信号，这是目前<strong>最可靠、误判率最低</strong>的检测方法。</p>
+      <p>主要元数据信号类型：</p>
+      <ul class="content-list">
+        <li><strong>EXIF Software/CreatorTool</strong>：记录生成工具名称（如 "Midjourney"、"DALL-E"）</li>
+        <li><strong>XMP DigitalSourceType</strong>：标注内容为 <code>trainedAlgorithmicMedia</code>（算法训练媒体）</li>
+        <li><strong>C2PA Manifest</strong>：数字签名的溯源记录，由 OpenAI、Adobe 等采用</li>
+        <li><strong>PNG tEXt 块</strong>：Stable Diffusion、ComfyUI 写入的完整生成参数</li>
+      </ul>
+      <p><strong>局限性</strong>：经过社交平台压缩、截图或元数据清除后，这些信号会消失。</p>
+
+      <p>使用 <a href="/">AICheck365</a> 可以免费检测这些元数据信号，所有分析在浏览器本地完成。</p>
+
+      <h2>方法二：视觉特征识别</h2>
+      <p>AI 生成图片通常存在以下视觉规律，但随着技术进步，这些特征越来越不明显：</p>
+      <ul class="content-list">
+        <li><strong>手指异常</strong>：手部细节是 AI 最难处理的，可能出现多余、缺失或融合的手指</li>
+        <li><strong>文字扭曲</strong>：AI 生成的图片中的文字通常是乱码或语义不通的随机字符（Ideogram 是例外）</li>
+        <li><strong>对称过度</strong>：AI 图片常有过于完美的对称，缺乏真实照片的随机性</li>
+        <li><strong>背景不一致</strong>：复杂背景中可能出现物体突然消失、透视错误等</li>
+        <li><strong>光线和反射异常</strong>：反光面（眼镜、水面）的光线可能不合物理规律</li>
+      </ul>
+
+      <h2>方法三：AI 鉴别工具（像素分析）</h2>
+      <p>一些工具通过分析图片的像素统计特征来判断是否 AI 生成：</p>
+      <ul class="content-list">
+        <li>Hive Moderation AI Detector</li>
+        <li>Illuminarty</li>
+        <li>AI or Not</li>
+        <li>Google SynthID（仅适用于 Google AI 生成内容）</li>
+      </ul>
+      <p>这类工具的准确率通常在 70–90% 之间，高质量 AI 图片可能会骗过这类检测。</p>
+
+      <h2>方法四：来源核查</h2>
+      <ul class="content-list">
+        <li>通过 Google Images、Bing Visual Search 反向搜索图片来源</li>
+        <li>查看图片的发布上下文和账号历史</li>
+        <li>对于新闻图片，核查是否有其他媒体同场景的照片</li>
+        <li>使用 TinEye 检查图片首次出现的时间和位置</li>
+      </ul>
+
+      <h2>综合建议</h2>
+      <p>单一方法的准确率都有限，建议结合多种方法：</p>
+      <ol class="content-list">
+        <li><strong>首先</strong>用 AICheck365 检测元数据信号（5 秒内出结果）</li>
+        <li>有结果：参考置信度和信号详情做判断</li>
+        <li>无结果：结合视觉特征和来源核查综合判断</li>
+        <li>重要场合：使用多个 AI 检测工具交叉验证</li>
+      </ol>
+
+      <div class="cta-box">
+        <p>立即免费检测图片的 AI 来源信号</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>相关文章</h2>
+      <div class="related-links">
+        <a href="/blog/what-is-c2pa/">C2PA 标准解读 →</a>
+        <a href="/blog/ai-image-metadata-guide/">AI 图片元数据指南 →</a>
+        <a href="/platforms/">平台检测指南 →</a>
+      </div>
+    </div>
+  </main>
+</Base>

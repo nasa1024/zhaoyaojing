@@ -1,0 +1,139 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "C2PA 签名可以被伪造吗？", a: "理论上极难伪造。C2PA 使用 PKI（公钥基础设施）数字签名，验证者可以通过签名方的公钥证书确认真实性。伪造需要攻破签名方的私钥，与伪造 SSL 证书难度相当。" },
+  { q: "所有 AI 平台都会使用 C2PA 吗？", a: "不是所有平台都已实现 C2PA。目前主要支持者包括 OpenAI（DALL-E 3、Sora）、Adobe（Firefly）、微软、Google、Sony 等。开源工具（如 Stable Diffusion）通常不默认写入 C2PA。" },
+  { q: "如何查看一张图片的 C2PA 信息？", a: "可以使用 AICheck365 检测 C2PA 信号，也可以使用 Adobe 的 Content Credentials 官方验证工具（contentcredentials.org）查看详细的 C2PA Manifest 内容。" },
+  { q: "C2PA 只用于 AI 图片吗？", a: "不是。C2PA 是通用内容溯源标准，也用于标注真实照片（相机拍摄）、视频、音频的来源。例如某些 Sony 相机型号已支持在拍照时写入 C2PA 签名。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aicheck365.com/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "C2PA 标准解读", "item": "https://aicheck365.com/blog/what-is-c2pa/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "C2PA 是什么？AI 图片溯源标准完整解读",
+    "description": "深入了解 C2PA（内容真实性倡议）标准：谁制定的、如何工作、哪些平台支持、为什么重要。",
+    "url": "https://aicheck365.com/blog/what-is-c2pa/",
+    "datePublished": "2025-04-01",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="C2PA 是什么？AI 图片溯源标准完整解读 | AICheck365"
+  description="深入了解 C2PA（内容真实性倡议）标准：OpenAI、Adobe、微软如何通过数字签名实现 AI 内容溯源，以及其对 AI 图片检测的意义。"
+  canonical="https://aicheck365.com/blog/what-is-c2pa/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/blog/">知识库</a> › C2PA 标准解读
+    </nav>
+
+    <article class="card content-article">
+      <h1>C2PA 是什么？AI 图片溯源标准完整解读</h1>
+      <p class="article-meta">2025年4月 · 内容溯源 · 行业标准</p>
+
+      <p class="lead-text">C2PA（Coalition for Content Provenance and Authenticity，内容来源和真实性联盟）是由科技行业主要参与者联合制定的开放标准，旨在为数字内容提供可验证的来源信息，是目前 AI 生成内容溯源最可靠的技术方案。</p>
+
+      <h2>谁制定了 C2PA？</h2>
+      <p>C2PA 于 2021 年由以下组织联合发起：</p>
+      <ul class="content-list">
+        <li><strong>Adobe</strong>：Content Credentials 功能的主要开发者</li>
+        <li><strong>Microsoft</strong>：Windows 平台和 Azure AI 服务的集成方</li>
+        <li><strong>Intel</strong>：硬件层面的信任根支持</li>
+        <li><strong>BBC、Reuters</strong>：新闻媒体行业代表</li>
+        <li><strong>OpenAI</strong>：DALL-E 3 和 Sora 的 C2PA 实施方</li>
+        <li><strong>Google、Sony、Qualcomm</strong>（后续加入）</li>
+      </ul>
+      <p>该标准已发展为行业主流规范，目前已有 100+ 家公司加入 C2PA 联盟。</p>
+
+      <h2>C2PA 的工作原理</h2>
+      <p>C2PA 采用 <strong>PKI（公钥基础设施）数字签名</strong>技术，在内容创建或编辑时嵌入加密签名的 Manifest：</p>
+      <ol class="content-list">
+        <li>内容创建者（AI 工具或相机）使用私钥对内容信息进行数字签名</li>
+        <li>签名后的 Manifest 嵌入图片文件（JPEG、PNG、MP4 等）</li>
+        <li>任何人都可以用签名方的公钥验证 Manifest 的真实性</li>
+        <li>Manifest 包含内容的创建时间、创建工具、编辑历史等信息</li>
+      </ol>
+
+      <h2>C2PA Manifest 包含什么信息？</h2>
+      <ul class="content-list">
+        <li><strong>claim_generator</strong>：生成内容的工具名称（如 "OpenAI DALL-E"）</li>
+        <li><strong>digitalSourceType</strong>：内容类型（如 <code>trainedAlgorithmicMedia</code> 表示 AI 生成）</li>
+        <li><strong>created</strong>：内容创建时间戳</li>
+        <li><strong>actions</strong>：内容处理历史（创建、编辑等操作记录）</li>
+        <li><strong>数字签名</strong>：签名方的证书链和签名数据</li>
+      </ul>
+
+      <h2>哪些平台已支持 C2PA？</h2>
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>平台/工具</th><th>支持状态</th><th>备注</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>OpenAI DALL-E 3</td><td>✅ 全面支持</td><td>2023年10月起</td></tr>
+            <tr><td>Adobe Firefly</td><td>✅ 全面支持</td><td>C2PA 创始成员</td></tr>
+            <tr><td>Microsoft Copilot Image</td><td>✅ 支持</td><td>Bing Image Creator</td></tr>
+            <tr><td>Google Imagen</td><td>🔄 部分支持</td><td>SynthID + C2PA</td></tr>
+            <tr><td>Midjourney</td><td>❌ 暂不支持</td><td>使用 XMP 替代</td></tr>
+            <tr><td>Stable Diffusion</td><td>❌ 默认不支持</td><td>可通过插件实现</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>C2PA 的局限性</h2>
+      <ul class="content-list">
+        <li>签名在图片经过压缩、重新保存或格式转换后可能失效</li>
+        <li>截图不保留 C2PA 信息</li>
+        <li>只能证明"是 AI 生成"，无法证明"不是 AI 生成"</li>
+        <li>恶意行为者可以选择不使用 C2PA 的工具生成内容</li>
+      </ul>
+
+      <div class="cta-box">
+        <p>使用 AICheck365 检测图片是否包含 C2PA 信号</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>相关内容</h2>
+      <div class="related-links">
+        <a href="/blog/how-to-detect-ai-images/">如何检测 AI 图片 →</a>
+        <a href="/platforms/dall-e/">DALL-E C2PA 指南 →</a>
+        <a href="/platforms/firefly/">Adobe Firefly C2PA →</a>
+      </div>
+    </div>
+  </main>
+</Base>

@@ -11,6 +11,15 @@ const faq = [
 const jsonLd = [
   {
     "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Stable Diffusion", "item": "https://aicheck365.com/platforms/stable-diffusion/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "Article",
     "headline": "Stable Diffusion 图片检测：PNG 文本块与生成参数识别",
     "description": "解析 AUTOMATIC1111、ComfyUI 等 Stable Diffusion 前端生成图片的 PNG 文本块元数据，了解如何识别 SD 生成图片。",

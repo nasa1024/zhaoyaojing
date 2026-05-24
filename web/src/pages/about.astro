@@ -1,17 +1,50 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "关于 AICheck365",
+  "url": "https://aicheck365.com/about/",
+  "description": "AICheck365 是免费的 AI 图片来源检测工具，基于 EXIF、XMP、C2PA 元数据分析，完全在浏览器本地运行。"
+};
 ---
 
 <Base
   title="关于 AICheck365 | 免费 AI 图片来源检测工具"
   description="AICheck365 是一款完全在浏览器本地运行的 AI 图片来源检测工具，基于 EXIF、XMP、C2PA 元数据分析，不上传图片，保护用户隐私。"
   canonical="https://aicheck365.com/about/"
+  jsonLd={jsonLd}
 >
   <main class="page content-page">
     <article class="card content-article">
       <h1>关于 AICheck365</h1>
 
       <p class="lead-text">AICheck365 是一款免费的 AI 图片来源检测工具，帮助你判断一张图片是否由 AI 生成，并识别其来源平台。</p>
+
+      <!-- GitHub badge 和快速统计 -->
+      <div class="about-stats">
+        <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener" class="stat-card">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-label">GitHub 开源</span>
+          <span class="stat-desc">基于 aicheck 项目</span>
+        </a>
+        <div class="stat-card">
+          <span class="stat-icon">🌐</span>
+          <span class="stat-label">9 种语言</span>
+          <span class="stat-desc">中英日韩德法西葡繁</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🔒</span>
+          <span class="stat-label">完全本地</span>
+          <span class="stat-desc">图片不上传服务器</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🆓</span>
+          <span class="stat-label">永久免费</span>
+          <span class="stat-desc">核心功能无限使用</span>
+        </div>
+      </div>
 
       <h2>工作原理</h2>
       <p>AICheck365 不依赖神经网络或像素分析，而是通过解析图片文件中的<strong>元数据信号</strong>来识别 AI 来源。这些信号包括：</p>
@@ -23,8 +56,23 @@ import Base from '../layouts/Base.astro';
         <li><strong>文件名启发式</strong>：某些平台生成的文件名有规律性特征</li>
       </ul>
 
+      <h2>支持的平台</h2>
+      <p>AICheck365 当前可检测来自以下平台的图片来源信号：</p>
+      <ul class="content-list">
+        <li><a href="/platforms/midjourney/">Midjourney</a> — XMP、IPTC 元数据</li>
+        <li><a href="/platforms/dall-e/">DALL-E 3 / GPT Image</a> — C2PA 数字签名</li>
+        <li><a href="/platforms/stable-diffusion/">Stable Diffusion</a> — PNG tEXt 生成参数</li>
+        <li><a href="/platforms/firefly/">Adobe Firefly</a> — C2PA、XMP 企业级溯源</li>
+        <li><a href="/platforms/flux/">Flux (Black Forest Labs)</a> — XMP、PNG 工作流</li>
+        <li><a href="/platforms/comfyui/">ComfyUI</a> — PNG tEXt 工作流 JSON</li>
+        <li><a href="/platforms/leonardo/">Leonardo AI</a> — XMP、EXIF 标识</li>
+        <li><a href="/platforms/kling/">可灵 Kling</a> — EXIF、XMP 元数据</li>
+        <li>及更多平台持续更新中...</li>
+      </ul>
+
       <h2>隐私保护</h2>
       <p>AICheck365 使用 WebAssembly（WASM）技术，将检测逻辑编译为浏览器可执行的代码，<strong>所有分析完全在你的设备上完成</strong>，图片数据不会上传到任何服务器。</p>
+      <p>我们收集匿名的页面访问统计（通过 Google Analytics 4），但不收集任何图片内容或检测结果。详见 <a href="/privacy/">隐私政策</a>。</p>
 
       <h2>适用场景</h2>
       <ul class="content-list">
@@ -32,6 +80,7 @@ import Base from '../layouts/Base.astro';
         <li>验证自己创作的 AI 图片是否包含可追溯的来源信号</li>
         <li>了解主流 AI 平台在图片中嵌入了哪些元数据</li>
         <li>媒体核查、内容审核辅助参考</li>
+        <li>研究 AI 图片生成平台的元数据标准</li>
       </ul>
 
       <h2>局限性</h2>
@@ -45,7 +94,50 @@ import Base from '../layouts/Base.astro';
       </ul>
 
       <h2>技术栈</h2>
-      <p>AICheck365 基于开源项目 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener">aicheck</a>，使用 Rust 编写，通过 wasm-pack 编译为 WebAssembly 在浏览器中运行。</p>
+      <p>AICheck365 基于开源项目 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener">aicheck</a>，使用 Rust 编写，通过 wasm-pack 编译为 WebAssembly 在浏览器中运行。网站使用 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> 静态生成，部署在 Cloudflare Pages。</p>
     </article>
   </main>
 </Base>
+
+<style>
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 18px 14px;
+  border-radius: 16px;
+  background: rgba(110, 168, 255, 0.07);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.stat-icon {
+  font-size: 28px;
+}
+
+.stat-label {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.stat-desc {
+  font-size: 12px;
+  color: var(--muted);
+}
+</style>

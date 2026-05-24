@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const articles = [
+  {
+    slug: 'how-to-detect-ai-images',
+    title: '如何判断一张图片是否 AI 生成？2025 完整指南',
+    desc: '从元数据分析到视觉识别，全面介绍判断 AI 生成图片的方法、工具和局限性。',
+    date: '2025-05',
+    tags: ['检测方法', 'AI 图片'],
+  },
+  {
+    slug: 'what-is-c2pa',
+    title: 'C2PA 是什么？AI 图片溯源标准完整解读',
+    desc: '深入了解 C2PA（内容真实性倡议）标准：谁制定的、如何工作、为什么重要。',
+    date: '2025-04',
+    tags: ['C2PA', '标准'],
+  },
+  {
+    slug: 'ai-image-metadata-guide',
+    title: 'AI 图片元数据完整指南：EXIF、XMP、C2PA、PNG tEXt',
+    desc: '图片元数据类型大全，详解各种 AI 平台在图片中写入的元数据格式与内容。',
+    date: '2025-04',
+    tags: ['元数据', 'EXIF', 'XMP'],
+  },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aicheck365.com/blog/" },
+    ]
+  }
+];
+---
+
+<Base
+  title="AI 图片检测知识库 | AICheck365 Blog"
+  description="AICheck365 知识库：AI 图片检测方法、元数据解析、C2PA 标准解读、各平台检测指南。"
+  canonical="https://aicheck365.com/blog/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <div class="content-hero card">
+      <h1>AI 图片检测知识库</h1>
+      <p class="lead-text">深入了解 AI 图片检测的原理、方法和各平台的元数据特征。</p>
+    </div>
+
+    <div class="blog-grid">
+      {articles.map(a => (
+        <a href={`/blog/${a.slug}/`} class="blog-card card">
+          <div class="tag-row">
+            {a.tags.map(t => <span class="tag-inline">{t}</span>)}
+          </div>
+          <h2>{a.title}</h2>
+          <p class="muted">{a.desc}</p>
+          <span class="blog-meta">{a.date} · AICheck365</span>
+        </a>
+      ))}
+    </div>
+  </main>
+</Base>

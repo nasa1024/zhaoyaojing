@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Ideogram 生成的图片能被检测到吗？", a: "Ideogram 生成的图片通常在 XMP 或 EXIF 元数据中包含来源信号。具体字段因版本和下载方式而异，直接从 Ideogram 网站下载的原始文件检测率较高。" },
+  { q: "Ideogram 最大的特点是什么，为什么值得关注？", a: "Ideogram 在 AI 图片文字渲染方面表现卓越，是目前能够准确生成图片内嵌文字的少数几个 AI 工具之一。这使其在海报、广告、商业设计等场景中被大量使用。" },
+  { q: "Ideogram v2 和 v1 的元数据有区别吗？", a: "Ideogram v2（2024 年发布）改进了文字渲染和整体质量，元数据写入策略可能随版本迭代有所变化。建议在 AICheck365 中测试你的具体图片。" },
+  { q: "如何区分 Ideogram 和其他文生图工具的输出？", a: "除元数据信号外，Ideogram 图片的一个视觉特征是其独特的文字渲染风格和特定的图片比例。结合元数据分析和视觉判断可以提高识别准确率。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Ideogram", "item": "https://aicheck365.com/platforms/ideogram/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 Ideogram AI 生成图片？元数据识别指南",
+    "description": "了解 Ideogram AI 图片的元数据特征及检测方法。Ideogram 以卓越的文字渲染能力著称，了解其可识别的来源信号。",
+    "url": "https://aicheck365.com/platforms/ideogram/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Ideogram AI 生成图片？元数据识别指南 | AICheck365"
+  description="Ideogram 是最擅长图片文字渲染的 AI 工具。了解如何通过 XMP、EXIF 元数据信号识别 Ideogram 生成的图片。"
+  canonical="https://aicheck365.com/platforms/ideogram/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Ideogram
+    </nav>
+
+    <article class="card content-article">
+      <h1>Ideogram 图片检测：元数据识别完整指南</h1>
+      <p class="article-meta">信号类型：XMP · EXIF · 文件名</p>
+
+      <p class="lead-text">Ideogram 是一款以<strong>文字渲染</strong>能力著称的 AI 图像生成工具，能够在图片中精确生成可读的文字内容。这一独特能力使其在海报、商标、广告设计等场景中被大量使用，识别 Ideogram 生成的图片也因此具有重要意义。</p>
+
+      <h2>Ideogram 的核心特征</h2>
+      <p>在技术层面，Ideogram 是少数几个能够可靠生成图片内嵌文字的 AI 工具：</p>
+      <ul class="content-list">
+        <li>支持在图片中生成符合语法的英文和部分语言文字</li>
+        <li>多种画幅比例（方形、横向、竖向、海报）</li>
+        <li>支持 Magic Prompt 功能自动扩充提示词</li>
+        <li>v2 版本支持实景风格（Photorealism）和设计风格</li>
+      </ul>
+
+      <h2>Ideogram 图片的元数据信号</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>XMP 元数据</h3>
+          <p>Ideogram 生成的图片可能在 <code>xmp:CreatorTool</code> 或相关 XMP 字段中写入来源标识，指向 Ideogram 平台。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>EXIF Software</h3>
+          <p>EXIF <code>Software</code> 标签可能包含 Ideogram 相关字符串，用于辅助识别生成工具。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>文件名规律</h3>
+          <p>从 Ideogram 平台直接下载的图片通常遵循特定的命名格式，可作为辅助识别信号。</p>
+        </div>
+      </div>
+
+      <h2>检测注意事项</h2>
+      <ul class="content-list">
+        <li>直接从 Ideogram 网站下载的图片检测成功率最高</li>
+        <li>经过社交媒体转发或截图后，元数据通常被剥离</li>
+        <li>Ideogram 的文字渲染特征在视觉上较为明显，可配合人工判断</li>
+        <li>不同版本的 Ideogram 元数据写入策略可能有所变化</li>
+      </ul>
+
+      <div class="cta-box">
+        <p>立即上传 Ideogram 生成的图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/dall-e/">DALL-E →</a>
+        <a href="/platforms/leonardo/">Leonardo AI →</a>
+        <a href="/platforms/firefly/">Adobe Firefly →</a>
+      </div>
+    </div>
+  </main>
+</Base>

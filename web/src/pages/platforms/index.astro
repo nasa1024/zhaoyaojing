@@ -2,25 +2,40 @@
 import Base from '../../layouts/Base.astro';
 
 const platforms = [
-  { slug: 'midjourney',         name: 'Midjourney',          desc: '全球用户最多的 AI 图片生成服务，元数据特征显著', tags: ['XMP', 'IPTC'] },
-  { slug: 'dall-e',             name: 'DALL-E / GPT Image',  desc: 'OpenAI 出品，支持 C2PA 数字签名，检测可靠性高', tags: ['C2PA', 'XMP'] },
-  { slug: 'stable-diffusion',   name: 'Stable Diffusion',    desc: '最流行的开源 AI 图片模型，PNG 文本块包含生成参数', tags: ['PNG tEXt', 'EXIF'] },
-  { slug: 'firefly',            name: 'Adobe Firefly',        desc: 'Adobe 出品，C2PA 标准深度支持，企业级内容溯源', tags: ['C2PA', 'XMP'] },
-  { slug: 'kling',              name: '可灵 Kling',            desc: '快手出品的 AI 图片/视频生成平台', tags: ['EXIF', 'XMP'] },
+  { slug: 'midjourney',       name: 'Midjourney',         desc: '全球用户最多的 AI 图片生成服务，元数据特征显著', tags: ['XMP', 'IPTC'] },
+  { slug: 'dall-e',           name: 'DALL-E / GPT Image', desc: 'OpenAI 出品，支持 C2PA 数字签名，检测可靠性最高', tags: ['C2PA', 'XMP'] },
+  { slug: 'stable-diffusion', name: 'Stable Diffusion',   desc: '最流行的开源 AI 图片模型，PNG 文本块包含生成参数', tags: ['PNG tEXt', 'EXIF'] },
+  { slug: 'firefly',          name: 'Adobe Firefly',       desc: 'Adobe 出品，C2PA 标准深度支持，企业级内容溯源', tags: ['C2PA', 'XMP'] },
+  { slug: 'flux',             name: 'Flux (BFL)',          desc: 'Black Forest Labs 新一代文生图模型，正快速取代 SD', tags: ['PNG tEXt', 'XMP'] },
+  { slug: 'comfyui',          name: 'ComfyUI',             desc: '最流行的开源 AI 图像界面，PNG 工作流 JSON 元数据最丰富', tags: ['PNG tEXt', 'JSON'] },
+  { slug: 'leonardo',         name: 'Leonardo AI',         desc: '月活超千万的商业 AI 图片平台，支持 Phoenix 等自研模型', tags: ['XMP', 'EXIF'] },
+  { slug: 'ideogram',         name: 'Ideogram',            desc: '文字渲染能力最强的 AI 工具，广泛用于海报和商业设计', tags: ['XMP', 'EXIF'] },
+  { slug: 'sora',             name: 'Sora (OpenAI)',       desc: 'OpenAI 旗舰视频生成模型，预期支持 C2PA 内容溯源', tags: ['C2PA', 'XMP'] },
+  { slug: 'kling',            name: '可灵 Kling',           desc: '快手出品的 AI 图片/视频生成平台，国内领先', tags: ['EXIF', 'XMP'] },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "AI 图片生成平台检测指南",
-  "url": "https://aicheck365.com/platforms/",
-  "description": "各主流 AI 图片生成平台的元数据特征与检测方法，包括 Midjourney、DALL-E、Stable Diffusion、Adobe Firefly 等。"
-};
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "AI 图片生成平台检测指南",
+    "url": "https://aicheck365.com/platforms/",
+    "description": "各主流 AI 图片生成平台的元数据特征与检测方法，包括 Midjourney、DALL-E、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Leonardo AI 等。"
+  }
+];
 ---
 
 <Base
-  title="AI 图片平台检测指南 | Midjourney、DALL-E、Stable Diffusion | AICheck365"
-  description="了解各主流 AI 图片生成平台的元数据特征：Midjourney、DALL-E 3、Stable Diffusion、Adobe Firefly、可灵 Kling。掌握识别 AI 生成图片的关键信号。"
+  title="AI 图片平台检测指南 | Midjourney、DALL-E、Flux、ComfyUI | AICheck365"
+  description="了解各主流 AI 图片生成平台的元数据特征：Midjourney、DALL-E 3、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Leonardo AI、Ideogram、Sora。掌握识别 AI 生成图片的关键信号。"
   canonical="https://aicheck365.com/platforms/"
   jsonLd={jsonLd}
 >
@@ -47,7 +62,7 @@ const jsonLd = {
 
     <div class="card content-section">
       <h2>为什么不同平台的检测方法不同？</h2>
-      <p>不同 AI 生成平台采用不同的元数据标准和写入策略。商业平台（如 OpenAI 的 DALL-E）通常会主动遵循 C2PA 等内容溯源标准；开源平台（如 Stable Diffusion）的元数据则取决于用户使用的前端工具；而一些平台可能根本不写入可识别的元数据。</p>
+      <p>不同 AI 生成平台采用不同的元数据标准和写入策略。商业平台（如 OpenAI 的 DALL-E、Adobe Firefly）通常会主动遵循 C2PA 等内容溯源标准；开源平台（如 Stable Diffusion、ComfyUI）的元数据则取决于用户使用的前端工具；而一些平台可能根本不写入可识别的元数据。</p>
       <p>这也是为什么 AICheck365 的检测结果只能作为<strong>辅助参考</strong>，而非绝对结论。</p>
       <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">立即检测图片 →</a></p>
     </div>

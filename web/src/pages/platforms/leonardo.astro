@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Leonardo AI 生成的图片有可检测的元数据吗？", a: "Leonardo AI 生成的图片通常在 XMP 的 CreatorTool 字段或 EXIF Software 字段包含 'Leonardo' 相关字样。部分版本还会写入 IPTC DigitalSourceType 字段。" },
+  { q: "Leonardo AI 的图片和 Stable Diffusion 的图片如何区分？", a: "Leonardo AI 基于 Stable Diffusion 架构，但作为 SaaS 平台会写入自己的元数据标识。通过 XMP CreatorTool 或 EXIF Software 字段中的 'Leonardo' 字样可以区分。" },
+  { q: "Leonardo Phoenix 模型有不同的元数据吗？", a: "Leonardo Phoenix 是 Leonardo AI 的自研基础模型，与 SD 系模型相比可能有不同的元数据写入策略。具体字段因平台版本而异。" },
+  { q: "通过 Leonardo AI API 生成的图片能被检测到吗？", a: "能否检测取决于 API 返回的图片是否附带元数据。建议检测直接从 Leonardo AI 平台下载的原始文件。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Leonardo AI", "item": "https://aicheck365.com/platforms/leonardo/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 Leonardo AI 生成图片？元数据识别指南",
+    "description": "了解 Leonardo AI 图片的元数据特征，包括 XMP CreatorTool、EXIF Software 信号，及使用 AICheck365 进行检测的方法。",
+    "url": "https://aicheck365.com/platforms/leonardo/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Leonardo AI 生成图片？元数据识别指南 | AICheck365"
+  description="详解 Leonardo AI 图片的元数据特征：XMP CreatorTool、EXIF Software。了解如何识别 Leonardo AI 生成的图片及其检测局限性。"
+  canonical="https://aicheck365.com/platforms/leonardo/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Leonardo AI
+    </nav>
+
+    <article class="card content-article">
+      <h1>Leonardo AI 图片检测：元数据识别完整指南</h1>
+      <p class="article-meta">信号类型：XMP · EXIF · IPTC</p>
+
+      <p class="lead-text">Leonardo AI 是目前最受欢迎的商业 AI 图片生成平台之一，月活用户超过 1900 万。它提供基于 Stable Diffusion 架构的多种模型，包括自研的 Leonardo Phoenix 和 Lightning XL。</p>
+
+      <h2>Leonardo AI 图片的元数据信号</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>XMP CreatorTool</h3>
+          <p><code>xmp:CreatorTool</code> 字段通常包含 "Leonardo" 相关字符串，是最直接的来源识别信号。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>EXIF Software</h3>
+          <p>EXIF <code>Software</code> 标签可能写入生成工具名称，辅助确认 Leonardo AI 来源。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>IPTC 数字来源</h3>
+          <p><code>Iptc4xmpExt:DigitalSourceType</code> 字段可能被设置为 <code>trainedAlgorithmicMedia</code>，符合行业内容溯源标准。</p>
+        </div>
+      </div>
+
+      <h2>Leonardo AI 的主要模型与检测</h2>
+      <p>Leonardo AI 提供多种模型，不同模型的元数据写入可能有所差异：</p>
+      <ul class="content-list">
+        <li><strong>Leonardo Phoenix</strong>：Leonardo 自研模型，元数据写入最为规范</li>
+        <li><strong>Leonardo Lightning XL</strong>：速度优化版，元数据与 Phoenix 类似</li>
+        <li><strong>Stable Diffusion XL（通过 Leonardo）</strong>：沿用 SD 元数据格式，但附加 Leonardo 平台标识</li>
+        <li><strong>自定义微调模型</strong>：元数据取决于基础模型和微调设置</li>
+      </ul>
+
+      <h2>为什么 Leonardo AI 检测很重要？</h2>
+      <p>Leonardo AI 因其高质量输出和免费套餐被大量用户使用，在电商、游戏、社交媒体等领域的 AI 生成内容中占有较大比例。准确识别 Leonardo AI 生成的图片有助于内容核查和版权鉴定。</p>
+
+      <div class="cta-box">
+        <p>立即上传 Leonardo AI 图片进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/stable-diffusion/">Stable Diffusion →</a>
+        <a href="/platforms/flux/">Flux →</a>
+        <a href="/platforms/midjourney/">Midjourney →</a>
+        <a href="/platforms/ideogram/">Ideogram →</a>
+      </div>
+    </div>
+  </main>
+</Base>
