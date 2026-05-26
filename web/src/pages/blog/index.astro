@@ -3,23 +3,30 @@ import Base from '../../layouts/Base.astro';
 
 const articles = [
   {
+    slug: 'how-to-detect-gemini-generated-images',
+    title: '如何通过 C2PA 元数据检测 Gemini 生成图片？',
+    desc: '用一张真实 Gemini 原图解释 C2PA、PNG caBX/JUMBF 和 trainedAlgorithmicMedia。',
+    date: '2026-05',
+    tags: ['Gemini', 'C2PA'],
+  },
+  {
     slug: 'how-to-detect-ai-images',
-    title: '如何判断一张图片是否 AI 生成？2025 完整指南',
-    desc: '从元数据分析到视觉识别，全面介绍判断 AI 生成图片的方法、工具和局限性。',
+    title: '如何判断一张图片是否 AI 生成？先看这些线索',
+    desc: '先查元数据，再看上下文。也说明为什么有些图片查不出来。',
     date: '2025-05',
     tags: ['检测方法', 'AI 图片'],
   },
   {
     slug: 'what-is-c2pa',
-    title: 'C2PA 是什么？AI 图片溯源标准完整解读',
-    desc: '深入了解 C2PA（内容真实性倡议）标准：谁制定的、如何工作、为什么重要。',
+    title: 'C2PA 是什么？它在 AI 图片里记录了什么',
+    desc: '解释 C2PA、Content Credentials、claim 和来源字段的关系。',
     date: '2025-04',
     tags: ['C2PA', '标准'],
   },
   {
     slug: 'ai-image-metadata-guide',
-    title: 'AI 图片元数据完整指南：EXIF、XMP、C2PA、PNG tEXt',
-    desc: '图片元数据类型大全，详解各种 AI 平台在图片中写入的元数据格式与内容。',
+    title: 'AI 图片元数据：EXIF、XMP、C2PA、PNG tEXt',
+    desc: '整理常见图片元数据格式，以及 AI 工具可能写进去的内容。',
     date: '2025-04',
     tags: ['元数据', 'EXIF', 'XMP'],
   },
@@ -38,15 +45,15 @@ const jsonLd = [
 ---
 
 <Base
-  title="AI 图片检测知识库 | AICheck365 Blog"
-  description="AICheck365 知识库：AI 图片检测方法、元数据解析、C2PA 标准解读、各平台检测指南。"
+  title="AI 图片检测笔记 | AICheck365 Blog"
+  description="AICheck365 知识库：记录 AI 图片检测方法、Gemini C2PA 案例、Content Credentials 字段和常见平台线索。"
   canonical="https://aicheck365.com/blog/"
   jsonLd={jsonLd}
 >
   <main class="page content-page">
     <div class="content-hero card">
-      <h1>AI 图片检测知识库</h1>
-      <p class="lead-text">深入了解 AI 图片检测的原理、方法和各平台的元数据特征。</p>
+      <h1>AI 图片检测笔记</h1>
+      <p class="lead-text">这里记录一些实际会用到的检测方法：看元数据、看 C2PA、看平台留下的字段，也说明这些方法的边界。</p>
     </div>
 
     <div class="blog-grid">

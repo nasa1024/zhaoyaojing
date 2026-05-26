@@ -16,14 +16,14 @@ const jsonLd = {
     "检测 AI 生成图片的元数据信号",
     "支持 EXIF、XMP、C2PA、PNG 文本块",
     "完全在浏览器本地运行，不上传图片",
-    "支持 Midjourney、DALL-E、Stable Diffusion、Firefly 等平台"
+    "支持 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Firefly 等平台"
   ]
 };
 ---
 
 <Base
   title="AICheck365 · AI 图片检测 | 免费识别 AI 生成图片"
-  description="免费检测图片是否由 AI 生成。基于 EXIF、XMP、C2PA 元数据分析，支持 Midjourney、DALL-E、Stable Diffusion 等主流平台。完全在浏览器本地运行，不上传图片。"
+  description="在浏览器本地检测图片里的 AI 来源线索。支持 EXIF、XMP、C2PA、PNG 文本块，可识别 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion 等常见平台痕迹，不上传图片。"
   canonical="https://aicheck365.com/"
   jsonLd={jsonLd}
 >
@@ -60,28 +60,28 @@ const jsonLd = {
         </li>
         <li>
           <strong data-i18n="trust.explain">结果可解释</strong>
-          <span data-i18n="trust.explain.desc">展示命中来源、置信度和具体字段</span>
+          <span data-i18n="trust.explain.desc">列出命中的字段和置信度</span>
         </li>
       </ul>
 
       <div class="notice warning" data-i18n-html="notice">
-        <strong>重要提示：</strong>这不是万能 AI 鉴定器。它只基于 EXIF / XMP / PNG 文本块 / 文件名等来源信号做辅助判断。
+        <strong>重要提示：</strong>这不是万能 AI 鉴定器。它只读取当前文件里还保留的 EXIF / XMP / C2PA / PNG 文本块 / 文件名等线索。
       </div>
     </section>
 
     <Detector />
 
-    <!-- SEO 内容区（对用户有用，同时提升页面内容量） -->
+    <!-- SEO 内容区：解释工具能做什么，也说明边界 -->
     <section class="card content-section">
-      <h2>什么是 AI 图片来源检测？</h2>
-      <p>AI 图片检测工具通过分析图片文件中嵌入的<strong>元数据信号</strong>来判断图片是否由 AI 工具生成。这些信号包括 EXIF 信息、XMP 标签、C2PA 数字签名、PNG 文本块等，是 AI 生成平台在图片生成时自动写入的来源痕迹。</p>
-      <p>AICheck365 目前支持检测来自 <a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/kling/">可灵 Kling</a> 等主流 AI 平台生成的图片。</p>
+      <h2>这个工具到底在查什么？</h2>
+      <p>AICheck365 主要查图片文件里保留下来的<strong>来源线索</strong>，比如 EXIF、XMP、C2PA、PNG 文本块和文件名。这些信息有时会记录生成工具、模型或内容来源类型。</p>
+      <p>目前可以识别 <a href="/platforms/gemini/">Gemini</a>、<a href="/platforms/imagen/">Google Imagen</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/kling/">可灵 Kling</a> 等平台留下的常见痕迹。</p>
       <h3>使用须知</h3>
       <ul class="content-list">
-        <li>检测基于<strong>元数据信号</strong>，不基于像素分析，无法判断经过元数据清洗的图片</li>
+        <li>检测基于<strong>元数据信号</strong>，不是看像素猜图，所以不适合判断被清洗过的文件</li>
         <li>经过社交平台（微信、微博、Instagram 等）压缩转发的图片，元数据通常被剥离</li>
         <li>截图和重新导出的图片也会丢失原始元数据</li>
-        <li>检测结果为辅助参考，不构成法律意义上的鉴定依据</li>
+        <li>结果适合做快速判断，不适合作为法律鉴定结论</li>
       </ul>
     </section>
   </main>

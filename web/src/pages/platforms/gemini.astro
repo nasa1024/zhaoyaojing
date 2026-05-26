@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Gemini 生成的图片可以检测出来吗？", a: "可以，但最好用从 Gemini 直接下载的原图。部分 Gemini / Google AI PNG 会带 C2PA Content Credentials，里面可能有 caBX/JUMBF、digitalSourceType、claim_generator_info 等字段。" },
+  { q: "为什么截图或微信转发后的 Gemini 图片可能检测不到？", a: "截图、微信转发、压缩和重新保存都会改写文件。C2PA、EXIF、XMP 这些元数据经常在这个过程中丢掉。检测不到信号，只能说明当前文件里没有可读证据。" },
+  { q: "AICheck365 会上传我的 Gemini 图片吗？", a: "不会。图片在浏览器里本地分析，不会传到服务器。" },
+  { q: "Gemini 图片里最值得看的字段是什么？", a: "优先看 C2PA/JUMBF 里的 digitalSourceType = trainedAlgorithmicMedia，其次是 Google、Gemini、Imagen 相关的 claim_generator_info。文件名只能当辅助线索。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Gemini", "item": "https://aicheck365.com/platforms/gemini/" }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 Gemini 生成图片？看 C2PA 和 caBX 元数据",
+    "description": "说明 Gemini / Google AI 原图里常见的 C2PA Content Credentials、PNG caBX/JUMBF 和 digitalSourceType 线索。",
+    "url": "https://aicheck365.com/platforms/gemini/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Gemini 生成图片？看 C2PA 和 caBX 元数据 | AICheck365"
+  description="查看 Gemini 原图里的 C2PA Content Credentials、PNG caBX/JUMBF、digitalSourceType=trainedAlgorithmicMedia 等 Google AI 来源线索。"
+  canonical="https://aicheck365.com/platforms/gemini/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Gemini
+    </nav>
+
+    <article class="card content-article">
+      <h1>Gemini 图片检测：先看原图里的 C2PA</h1>
+      <p class="article-meta">信号类型：C2PA · JUMBF · PNG caBX · 文件名</p>
+
+      <p class="lead-text">Gemini 下载的原图，有时会带 Google 写入的 <strong>C2PA Content Credentials</strong>。AICheck365 会在浏览器本地读取 PNG/JPEG 里的 C2PA/JUMBF 数据，不需要把图片上传到服务器。</p>
+
+      <h2>为什么 Gemini 原图能被识别？</h2>
+      <p>Gemini 图片的来源线索通常不在画面本身，而在文件内部。PNG 里可能有 <code>caBX</code> 这样的 chunk，里面保存了 C2PA/JUMBF 数据。</p>
+      <p>如果 manifest 里出现 <code>digitalSourceType = trainedAlgorithmicMedia</code>，基本可以判断这张图带有 AI 生成来源标记。这个字段比文件名可靠得多。</p>
+
+      <h2>页面会检查哪些内容？</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>C2PA Content Credentials</h3>
+          <p>读取 PNG/JPEG 内嵌的 C2PA/JUMBF manifest，查找 Google、Gemini、Imagen 相关字段。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>digitalSourceType</h3>
+          <p><code>trainedAlgorithmicMedia</code> 表示内容由训练算法生成。看到它，置信度会明显高一些。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>文件名</h3>
+          <p><code>Gemini_Generated_Image</code> 这类文件名只能作为旁证。文件名可以被随手改掉，所以权重较低。</p>
+        </div>
+      </div>
+
+      <h2>检测时尽量用原图</h2>
+      <ul class="content-list">
+        <li>优先使用从 Gemini 直接下载的 PNG/JPEG 文件</li>
+        <li>不要拿截图当样本，截图一般没有 C2PA</li>
+        <li>微信、微博、Instagram、X 转发后，元数据很可能被清掉</li>
+        <li>没有检测到信号，不代表图片一定不是 AI 生成</li>
+      </ul>
+
+      <div class="cta-box">
+        <p>有 Gemini 原图的话，可以直接在本地检测 C2PA 来源信息。</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">检测这张图片 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>相关内容</h2>
+      <div class="related-links">
+        <a href="/platforms/imagen/">Google Imagen 怎么查 →</a>
+        <a href="/blog/how-to-detect-gemini-generated-images/">用真实 Gemini 图看 C2PA →</a>
+        <a href="/blog/what-is-c2pa/">C2PA 是什么 →</a>
+        <a href="/platforms/dall-e/">DALL-E 的 C2PA 线索 →</a>
+      </div>
+    </div>
+  </main>
+</Base>

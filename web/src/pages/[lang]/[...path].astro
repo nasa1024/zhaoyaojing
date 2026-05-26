@@ -3,6 +3,8 @@ import HomePage from '../index.astro';
 import AboutPage from '../about.astro';
 import PlatformsPage from '../platforms/index.astro';
 import DallEPage from '../platforms/dall-e.astro';
+import GeminiPage from '../platforms/gemini.astro';
+import ImagenPage from '../platforms/imagen.astro';
 import FireflyPage from '../platforms/firefly.astro';
 import KlingPage from '../platforms/kling.astro';
 import MidjourneyPage from '../platforms/midjourney.astro';
@@ -13,6 +15,8 @@ const routes = [
   { path: 'about', component: AboutPage },
   { path: 'platforms', component: PlatformsPage },
   { path: 'platforms/dall-e', component: DallEPage },
+  { path: 'platforms/gemini', component: GeminiPage },
+  { path: 'platforms/imagen', component: ImagenPage },
   { path: 'platforms/firefly', component: FireflyPage },
   { path: 'platforms/kling', component: KlingPage },
   { path: 'platforms/midjourney', component: MidjourneyPage },
@@ -26,6 +30,8 @@ export function getStaticPaths() {
     'about',
     'platforms',
     'platforms/dall-e',
+    'platforms/gemini',
+    'platforms/imagen',
     'platforms/firefly',
     'platforms/kling',
     'platforms/midjourney',

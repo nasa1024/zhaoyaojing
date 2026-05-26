@@ -2,16 +2,18 @@
 import Base from '../../layouts/Base.astro';
 
 const platforms = [
-  { slug: 'midjourney',       name: 'Midjourney',         desc: '全球用户最多的 AI 图片生成服务，元数据特征显著', tags: ['XMP', 'IPTC'] },
-  { slug: 'dall-e',           name: 'DALL-E / GPT Image', desc: 'OpenAI 出品，支持 C2PA 数字签名，检测可靠性最高', tags: ['C2PA', 'XMP'] },
-  { slug: 'stable-diffusion', name: 'Stable Diffusion',   desc: '最流行的开源 AI 图片模型，PNG 文本块包含生成参数', tags: ['PNG tEXt', 'EXIF'] },
-  { slug: 'firefly',          name: 'Adobe Firefly',       desc: 'Adobe 出品，C2PA 标准深度支持，企业级内容溯源', tags: ['C2PA', 'XMP'] },
-  { slug: 'flux',             name: 'Flux (BFL)',          desc: 'Black Forest Labs 新一代文生图模型，正快速取代 SD', tags: ['PNG tEXt', 'XMP'] },
-  { slug: 'comfyui',          name: 'ComfyUI',             desc: '最流行的开源 AI 图像界面，PNG 工作流 JSON 元数据最丰富', tags: ['PNG tEXt', 'JSON'] },
+  { slug: 'gemini',           name: 'Gemini',              desc: '从 Gemini 下载的原图，常见线索在 C2PA/JUMBF 和 digitalSourceType 里', tags: ['C2PA', 'JUMBF'] },
+  { slug: 'imagen',           name: 'Google Imagen',       desc: 'Google 图像生成模型，原图可能保留 Content Credentials 和 Imagen 工具信息', tags: ['C2PA', 'Google AI'] },
+  { slug: 'midjourney',       name: 'Midjourney',         desc: '常见于设计图和社交图，部分文件会留下 XMP/IPTC 线索', tags: ['XMP', 'IPTC'] },
+  { slug: 'dall-e',           name: 'DALL-E / GPT Image', desc: 'OpenAI 图片可能带 C2PA，原图比转发图更容易判断', tags: ['C2PA', 'XMP'] },
+  { slug: 'stable-diffusion', name: 'Stable Diffusion',   desc: '很多生成图会把 prompt、seed 或工具信息写进 PNG 文本块', tags: ['PNG tEXt', 'EXIF'] },
+  { slug: 'firefly',          name: 'Adobe Firefly',       desc: 'Adobe 系产品常见 Content Credentials，适合用 C2PA 查来源', tags: ['C2PA', 'XMP'] },
+  { slug: 'flux',             name: 'Flux (BFL)',          desc: '不同前端导出的 Flux 图片，保留的元数据差异较大', tags: ['PNG tEXt', 'XMP'] },
+  { slug: 'comfyui',          name: 'ComfyUI',             desc: 'PNG 里经常保留 workflow JSON，能看到节点和生成参数', tags: ['PNG tEXt', 'JSON'] },
   { slug: 'leonardo',         name: 'Leonardo AI',         desc: '月活超千万的商业 AI 图片平台，支持 Phoenix 等自研模型', tags: ['XMP', 'EXIF'] },
-  { slug: 'ideogram',         name: 'Ideogram',            desc: '文字渲染能力最强的 AI 工具，广泛用于海报和商业设计', tags: ['XMP', 'EXIF'] },
-  { slug: 'sora',             name: 'Sora (OpenAI)',       desc: 'OpenAI 旗舰视频生成模型，预期支持 C2PA 内容溯源', tags: ['C2PA', 'XMP'] },
-  { slug: 'kling',            name: '可灵 Kling',           desc: '快手出品的 AI 图片/视频生成平台，国内领先', tags: ['EXIF', 'XMP'] },
+  { slug: 'ideogram',         name: 'Ideogram',            desc: '常用于海报和文字图，部分文件会留下 XMP 或 EXIF 信息', tags: ['XMP', 'EXIF'] },
+  { slug: 'sora',             name: 'Sora (OpenAI)',       desc: 'OpenAI 视频生成内容，原始文件和帧图可能会保留 C2PA 线索', tags: ['C2PA', 'XMP'] },
+  { slug: 'kling',            name: '可灵 Kling',           desc: '可灵导出的图片和视频帧，部分文件可能保留 EXIF 或 XMP 线索', tags: ['EXIF', 'XMP'] },
 ];
 
 const jsonLd = [
@@ -28,21 +30,21 @@ const jsonLd = [
     "@type": "CollectionPage",
     "name": "AI 图片生成平台检测指南",
     "url": "https://aicheck365.com/platforms/",
-    "description": "各主流 AI 图片生成平台的元数据特征与检测方法，包括 Midjourney、DALL-E、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Leonardo AI 等。"
+    "description": "整理常见 AI 图片平台会留下哪些元数据线索，包括 Gemini、Imagen、Midjourney、DALL-E、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Leonardo AI 等。"
   }
 ];
 ---
 
 <Base
-  title="AI 图片平台检测指南 | Midjourney、DALL-E、Flux、ComfyUI | AICheck365"
-  description="了解各主流 AI 图片生成平台的元数据特征：Midjourney、DALL-E 3、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Leonardo AI、Ideogram、Sora。掌握识别 AI 生成图片的关键信号。"
+  title="AI 图片平台检测指南 | Gemini、Imagen、DALL-E、Midjourney | AICheck365"
+  description="查看 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Sora 等平台常见的图片元数据线索。"
   canonical="https://aicheck365.com/platforms/"
   jsonLd={jsonLd}
 >
   <main class="page content-page">
     <div class="content-hero card">
       <h1>AI 图片平台检测指南</h1>
-      <p class="lead-text">每个 AI 图片生成平台都有自己独特的元数据"指纹"。了解这些特征，有助于判断图片的 AI 来源。</p>
+      <p class="lead-text">不同平台留下的线索不一样。有的写 C2PA，有的写 PNG 参数，也有的几乎什么都不留。这里按平台整理可检查的字段。</p>
     </div>
 
     <div class="platform-grid">
@@ -55,16 +57,16 @@ const jsonLd = [
             </div>
           </div>
           <p>{p.desc}</p>
-          <span class="card-link">查看检测指南 →</span>
+          <span class="card-link">查看可检测线索 →</span>
         </a>
       ))}
     </div>
 
     <div class="card content-section">
       <h2>为什么不同平台的检测方法不同？</h2>
-      <p>不同 AI 生成平台采用不同的元数据标准和写入策略。商业平台（如 OpenAI 的 DALL-E、Adobe Firefly）通常会主动遵循 C2PA 等内容溯源标准；开源平台（如 Stable Diffusion、ComfyUI）的元数据则取决于用户使用的前端工具；而一些平台可能根本不写入可识别的元数据。</p>
-      <p>这也是为什么 AICheck365 的检测结果只能作为<strong>辅助参考</strong>，而非绝对结论。</p>
-      <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">立即检测图片 →</a></p>
+      <p>平台写入元数据的方式并不统一。OpenAI、Adobe、Google 这类产品更可能使用 C2PA；Stable Diffusion、ComfyUI 这类工作流则取决于用户使用的前端和导出设置。有些平台导出的文件可能没有可读线索。</p>
+      <p>所以检测结果只能作为<strong>辅助参考</strong>。没检测到，不代表图片一定不是 AI 生成。</p>
+      <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">检测一张图片 →</a></p>
     </div>
   </main>
 </Base>

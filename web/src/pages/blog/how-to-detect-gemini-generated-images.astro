@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Gemini 图片一定包含 C2PA 吗？", a: "不一定。部分 Gemini / Google AI 原图会带 C2PA Content Credentials，但不同入口、格式和下载方式会有差异。测试时尽量用刚下载的原始文件。" },
+  { q: "为什么原图能检测，转发后不能检测？", a: "社交平台、截图和二次导出经常会删除 C2PA、EXIF、XMP。检测工具只能读取当前文件里还保留的内容。" },
+  { q: "digitalSourceType = trainedAlgorithmicMedia 是什么意思？", a: "这是 C2PA/IPTC 里的来源类型，意思是内容由训练算法生成。看到这个字段，通常可以认为 AI 来源证据比较强。" },
+  { q: "本地检测比上传检测有什么好处？", a: "图片不会离开你的浏览器，更适合检查私有素材、客户文件或还没公开的设计图。缺点是浏览器端更适合快速读取信号，不适合替代完整法证审计。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aicheck365.com/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Gemini C2PA Detection", "item": "https://aicheck365.com/blog/how-to-detect-gemini-generated-images/" }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何通过 C2PA 元数据检测 Gemini 生成图片？",
+    "description": "用一张真实 Gemini 原图解释 C2PA Content Credentials、PNG caBX/JUMBF 和 digitalSourceType=trainedAlgorithmicMedia。",
+    "url": "https://aicheck365.com/blog/how-to-detect-gemini-generated-images/",
+    "datePublished": "2026-05-26",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何通过 C2PA 元数据检测 Gemini 生成图片？ | AICheck365"
+  description="用真实 Gemini 原图解释 C2PA Content Credentials、PNG caBX/JUMBF、Google claim_generator_info 与 digitalSourceType=trainedAlgorithmicMedia。"
+  canonical="https://aicheck365.com/blog/how-to-detect-gemini-generated-images/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/blog/">知识库</a> › Gemini C2PA 检测
+    </nav>
+
+    <article class="card content-article">
+      <h1>如何通过 C2PA 元数据检测 Gemini 生成图片？</h1>
+      <p class="article-meta">2026年5月 · Gemini · C2PA · Content Credentials</p>
+
+      <p class="lead-text">Gemini 生成图能不能识别，很多时候取决于你手里的文件是不是原图。原始 PNG 里可能带着 Google 写入的 C2PA / Content Credentials；截图或转发图通常就没有了。</p>
+
+      <h2>先确认文件是不是原图</h2>
+      <p>如果图片来自截图、微信转发、压缩包预览图，检测结果很容易是空的。这不是工具失灵，而是元数据已经被清掉了。最好的样本是从 Gemini 页面直接下载的 PNG/JPEG。</p>
+
+      <h2>Gemini 的线索藏在哪里？</h2>
+      <p>在一些 Gemini 原图里，来源数据会放在 PNG 的 <code>caBX</code> chunk，或 JPEG 的 APP11 C2PA 段中。这些位置保存的是 JUMBF 结构和 C2PA manifest。普通图片查看器通常不会显示它们。</p>
+
+      <p>AICheck365 会在浏览器里直接读这些二进制区域，找 Google、Gemini、Imagen、<code>digitalSourceType</code>、<code>trainedAlgorithmicMedia</code> 这类字段。图片不需要上传。</p>
+
+      <h2>几个字段怎么理解？</h2>
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>字段/信号</th><th>含义</th><th>参考权重</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>digitalSourceType</code></td><td>文件声明的数字来源类型</td><td>高</td></tr>
+            <tr><td><code>trainedAlgorithmicMedia</code></td><td>表示由训练算法生成</td><td>高</td></tr>
+            <tr><td><code>claim_generator_info</code></td><td>生成工具或组件信息，如 Google/Imagen</td><td>中到高</td></tr>
+            <tr><td><code>Gemini_Generated_Image</code></td><td>文件名里留下的来源痕迹</td><td>低</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>什么结果最有参考价值？</h2>
+      <p>如果 C2PA manifest 里同时出现 Google/Gemini/Imagen 和 <code>trainedAlgorithmicMedia</code>，这比单纯文件名靠谱得多。文件名可以改，C2PA manifest 至少说明这份文件里确实留下了来源记录。</p>
+
+      <h2>为什么坚持本地检测？</h2>
+      <p>很多人检测的不是公开图片，而是客户素材、设计稿、聊天里收到的文件。AICheck365 的浏览器版直接在本机读取 EXIF、XMP、PNG 文本块和 C2PA/JUMBF，不把图片发到服务器。</p>
+
+      <div class="cta-box">
+        <p>如果你手里有 Gemini 原图，可以先用 AICheck365 看看是否保留了 C2PA。</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">检测这张图片 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="related-platforms card">
+      <h2>继续阅读</h2>
+      <div class="related-links">
+        <a href="/platforms/gemini/">Gemini 页面怎么查 →</a>
+        <a href="/platforms/imagen/">Google Imagen 页面怎么查 →</a>
+        <a href="/blog/what-is-c2pa/">C2PA 是什么？→</a>
+        <a href="/blog/ai-image-metadata-guide/">EXIF、XMP、C2PA 都是什么 →</a>
+      </div>
+    </div>
+  </main>
+</Base>
