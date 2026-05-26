@@ -2,7 +2,10 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export const analyzeImage: (a: number, b: number, c: number, d: number) => [number, number, number];
+export const analyzeMedia: (a: number, b: number, c: number, d: number) => [number, number, number];
+export const analyzeVideoFrameRgba: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
 export const supportedImageCapabilities: () => [number, number, number];
+export const supportedMediaCapabilities: () => [number, number, number];
 export const initPanicHook: () => void;
 export const start: () => void;
 export const __wbindgen_malloc: (a: number, b: number) => number;

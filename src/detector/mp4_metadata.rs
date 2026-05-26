@@ -4,6 +4,7 @@ use std::path::Path;
 
 use super::{Confidence, Signal, SignalBuilder, SignalSource};
 use crate::known_tools;
+use crate::mp4_metadata_core::{self, CoreConfidence, Mp4HitKind, Mp4MetadataHit};
 
 const MP4_TOOL_MAPPINGS: &[(&str, &str, Confidence)] =
     &[("google", "google veo", Confidence::Medium)];
@@ -309,44 +310,68 @@ fn extract_json_field(json: &str, field: &str) -> Option<String> {
     Some(after[..end].to_string())
 }
 
-fn detect_sei_markers(data: &[u8]) -> Vec<Signal> {
-    let mut signals = Vec::new();
-    let mdat = match get_box(data, 0, data.len(), b"mdat") {
-        Some(m) => m,
-        None => return signals,
-    };
-    let scan_end = mdat.1.min(mdat.0 + 1_048_576);
-    let scan_data = &data[mdat.0..scan_end];
-    for &(marker, tool_name) in SEI_MARKERS {
-        if scan_data.windows(marker.len()).any(|w| w == marker) {
-            let marker_str = String::from_utf8_lossy(marker);
-            signals.push(
-                SignalBuilder::new(
-                    SignalSource::Mp4Metadata,
-                    Confidence::Medium,
-                    "signal_mp4_sei_watermark",
-                )
-                .param("marker", &*marker_str)
-                .tool(tool_name)
-                .detail("SEI marker", &*marker_str)
-                .build(),
-            );
-        }
-    }
-    signals
+pub fn detect_bytes(data: &[u8]) -> Vec<Signal> {
+    mp4_metadata_core::detect(data)
+        .into_iter()
+        .map(signal_from_hit)
+        .collect()
 }
 
 pub fn detect(path: &Path) -> Result<Vec<Signal>> {
     let data = fs::read(path)?;
-    if get_box(&data, 0, data.len().min(64), b"ftyp").is_none() {
-        return Ok(vec![]);
+    Ok(detect_bytes(&data))
+}
+
+fn signal_from_hit(hit: Mp4MetadataHit) -> Signal {
+    let confidence = match hit.confidence {
+        CoreConfidence::Low => Confidence::Low,
+        CoreConfidence::Medium => Confidence::Medium,
+        CoreConfidence::High => Confidence::High,
+    };
+
+    match hit.kind {
+        Mp4HitKind::ToolMatch { label, value } => SignalBuilder::new(
+            SignalSource::Mp4Metadata,
+            confidence,
+            "signal_mp4_tool_match",
+        )
+        .param("label", label)
+        .param("value", value)
+        .tool_opt(hit.tool)
+        .details(hit.details)
+        .build(),
+        Mp4HitKind::AigcLabel { produce_id } => {
+            if let Some(pid) = produce_id {
+                SignalBuilder::new(
+                    SignalSource::Mp4Metadata,
+                    confidence,
+                    "signal_mp4_aigc_label_id",
+                )
+                .param("id", pid)
+                .tool_opt(hit.tool)
+                .details(hit.details)
+                .build()
+            } else {
+                SignalBuilder::new(
+                    SignalSource::Mp4Metadata,
+                    confidence,
+                    "signal_mp4_aigc_label",
+                )
+                .tool_opt(hit.tool)
+                .details(hit.details)
+                .build()
+            }
+        }
+        Mp4HitKind::SeiMarker { marker } => SignalBuilder::new(
+            SignalSource::Mp4Metadata,
+            confidence,
+            "signal_mp4_sei_watermark",
+        )
+        .param("marker", marker)
+        .tool_opt(hit.tool)
+        .details(hit.details)
+        .build(),
     }
-    let entries = extract_ilst_entries(&data);
-    let mut signals = Vec::new();
-    signals.extend(detect_ilst_tools(&entries));
-    signals.extend(detect_aigc_label(&entries));
-    signals.extend(detect_sei_markers(&data));
-    Ok(signals)
 }
 
 /// Known non-AI creation software patterns for informational reporting.
@@ -538,5 +563,29 @@ mod tests {
         assert_eq!(entries.len(), 1);
         assert_eq!(entries[0].0, "\u{a9}too");
         assert_eq!(entries[0].1, "Google");
+    }
+
+    fn mp4_with_box(box_type: &[u8; 4], payload: &[u8]) -> Vec<u8> {
+        let mut out = Vec::new();
+        let size = (8 + payload.len()) as u32;
+        out.extend_from_slice(&size.to_be_bytes());
+        out.extend_from_slice(box_type);
+        out.extend_from_slice(payload);
+        out
+    }
+
+    fn minimal_mp4_with_mdat(payload: &[u8]) -> Vec<u8> {
+        let mut out = mp4_with_box(b"ftyp", b"isom\0\0\0\0isommp42");
+        out.extend_from_slice(&mp4_with_box(b"mdat", payload));
+        out
+    }
+
+    #[test]
+    fn test_detect_bytes_sei_marker_for_wasm() {
+        let data = minimal_mp4_with_mdat(b"prefix kling-ai suffix");
+        let signals = detect_bytes(&data);
+        assert_eq!(signals.len(), 1);
+        assert_eq!(signals[0].tool.as_deref(), Some("kling"));
+        assert_eq!(signals[0].confidence, Confidence::Medium);
     }
 }

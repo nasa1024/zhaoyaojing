@@ -1,4 +1,10 @@
-import { t, applyI18n, setLang } from '/scripts/i18n.js';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import coreURL from '@ffmpeg/core?url';
+import wasmURL from '@ffmpeg/core/wasm?url';
+
+const i18nModuleUrl = '/scripts/i18n.js';
+const { t, applyI18n, setLang } = await import(/* @vite-ignore */ i18nModuleUrl);
+const wasmModuleUrl = '/pkg/aicheck.js';
 
 // ─── DOM refs ────────────────────────────────────────────────────
 const fileInput      = document.querySelector('#file-input');
@@ -20,6 +26,7 @@ const mobileMenu     = document.getElementById('mobile-menu');
 let wasmApi       = null;
 let selectedFiles = [];
 let isAnalyzing   = false;
+let ffmpegLoader  = null;
 
 // ─── Init ────────────────────────────────────────────────────────
 applyI18n();
@@ -40,12 +47,14 @@ boot();
 
 async function boot() {
   try {
-    const pkg = await import('/pkg/aicheck.js');
+    const pkg = await import(/* @vite-ignore */ wasmModuleUrl);
     if (typeof pkg.default === 'function') await pkg.default();
     pkg.initPanicHook?.();
     wasmApi = pkg;
 
-    const capabilities = await wasmApi.supportedImageCapabilities();
+    const capabilities = wasmApi.supportedMediaCapabilities
+      ? await wasmApi.supportedMediaCapabilities()
+      : await wasmApi.supportedImageCapabilities();
     renderCapabilities(capabilities);
     setStatus(t('status.ready'));
     syncAnalyzeButton();
@@ -63,9 +72,9 @@ function ga(name, params = {}) {
 // ─── File selection ──────────────────────────────────────────────
 fileInput.addEventListener('change', (event) => {
   const files = Array.from(event.target.files || []);
-  selectedFiles = files.filter(isSupportedImage);
+  selectedFiles = files.filter(isSupportedMedia);
   if (selectedFiles.length) {
-    ga('file_select', { file_count: selectedFiles.length, file_type: selectedFiles[0].type });
+    ga('file_select', { file_count: selectedFiles.length, file_type: selectedFiles[0].type || mediaTypeFromName(selectedFiles[0].name) });
   }
   renderSelectedFiles(selectedFiles);
   syncAnalyzeButton();
@@ -86,7 +95,7 @@ fileInput.addEventListener('change', (event) => {
 
 uploadZoneEl.addEventListener('drop', (event) => {
   const files = Array.from(event.dataTransfer?.files || []);
-  const valid = files.filter(isSupportedImage);
+  const valid = files.filter(isSupportedMedia);
   if (!valid.length) { setStatus(t('status.unsupported'), true); return; }
   selectedFiles = valid;
   fileInput.value = '';
@@ -110,7 +119,7 @@ analyzeBtn.addEventListener('click', async () => {
       const file = selectedFiles[i];
       setStatus(`${t('status.analyzing')} (${i + 1}/${selectedFiles.length})`);
       const bytes = new Uint8Array(await file.arrayBuffer());
-      const report = await wasmApi.analyzeImage(bytes, file.name);
+      const report = await analyzeFile(file, bytes);
       results.push({ file, report });
     }
 
@@ -133,6 +142,150 @@ analyzeBtn.addEventListener('click', async () => {
     syncAnalyzeButton();
   }
 });
+
+async function analyzeFile(file, bytes) {
+  const report = wasmApi.analyzeMedia
+    ? await wasmApi.analyzeMedia(bytes, file.name)
+    : await wasmApi.analyzeImage(bytes, file.name);
+
+  if (!shouldAnalyzeVideoFrames(file, report)) {
+    return report;
+  }
+
+  try {
+    const frameReports = await analyzeVideoFrames(file, bytes);
+    return mergeFrameReports(report, frameReports);
+  } catch (error) {
+    console.warn('Video frame analysis failed', error);
+    return withLimitation(report, `${t('video.frame_failed') || 'Video frame analysis was not completed'}: ${error?.message || String(error)}`);
+  }
+}
+
+function shouldAnalyzeVideoFrames(file, report) {
+  return isSupportedVideo(file)
+    && wasmApi?.analyzeVideoFrameRgba
+    && !(report.signals || []).length;
+}
+
+async function analyzeVideoFrames(file, bytes) {
+  const frames = await extractVideoFrames(file, bytes);
+  const reports = [];
+  for (const frame of frames) {
+    if (!frame?.rgba || !frame.width || !frame.height) continue;
+    reports.push(await wasmApi.analyzeVideoFrameRgba(
+      frame.rgba,
+      Number(frame.width),
+      Number(frame.height),
+      Number(frame.timestamp ?? frame.timestamp_seconds ?? 0),
+    ));
+  }
+  return reports;
+}
+
+async function extractVideoFrames(file, bytes) {
+  if (typeof window.__AICHECK_TEST_FRAME_EXTRACTOR__ === 'function') {
+    return await window.__AICHECK_TEST_FRAME_EXTRACTOR__(file, bytes);
+  }
+
+  const ffmpeg = await getFfmpeg();
+  const inputName = `input-${Date.now()}-${safeFfmpegName(file.name)}`;
+  const outputWidth = 320;
+  const outputHeight = 180;
+  const duration = await getVideoDuration(file);
+  const timestamps = Number.isFinite(duration) && duration > 0
+    ? [duration * 0.25, duration * 0.5, duration * 0.75]
+    : [1, 2, 3];
+  const frames = [];
+
+  await ffmpeg.writeFile(inputName, bytes);
+  try {
+    for (const timestampSeconds of timestamps) {
+      const timestamp = Math.max(0, Math.round(timestampSeconds * 10) / 10);
+      const outputName = `frame-${String(timestamp).replace('.', '-')}-${Date.now()}.rgba`;
+      const args = [
+        '-ss', String(timestamp),
+        '-i', inputName,
+        '-frames:v', '1',
+        '-vf', `scale=${outputWidth}:${outputHeight},format=rgba`,
+        '-f', 'rawvideo',
+        outputName,
+      ];
+      const code = await ffmpeg.exec(args);
+      if (code !== 0) continue;
+      const data = await ffmpeg.readFile(outputName);
+      if (data?.length === outputWidth * outputHeight * 4) {
+        frames.push({ rgba: data, width: outputWidth, height: outputHeight, timestamp });
+      }
+      try { await ffmpeg.deleteFile(outputName); } catch {}
+    }
+  } finally {
+    try { await ffmpeg.deleteFile(inputName); } catch {}
+  }
+
+  if (!frames.length) {
+    throw new Error(t('video.no_frames') || 'No decodable video frames were extracted');
+  }
+  return frames;
+}
+
+async function getFfmpeg() {
+  if (!ffmpegLoader) {
+    ffmpegLoader = (async () => {
+      const ffmpeg = new FFmpeg();
+      await ffmpeg.load({ coreURL, wasmURL });
+      return ffmpeg;
+    })();
+  }
+  return ffmpegLoader;
+}
+
+function getVideoDuration(file) {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    const url = URL.createObjectURL(file);
+    let done = false;
+    const timer = window.setTimeout(() => cleanup(Number.NaN), 3000);
+    const cleanup = (value) => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(timer);
+      URL.revokeObjectURL(url);
+      video.removeAttribute('src');
+      video.load();
+      resolve(value);
+    };
+    video.preload = 'metadata';
+    video.muted = true;
+    video.onloadedmetadata = () => cleanup(video.duration);
+    video.onerror = () => cleanup(Number.NaN);
+    video.src = url;
+  });
+}
+
+function mergeFrameReports(baseReport, frameReports) {
+  const frameSignals = frameReports.flatMap((report) => report.signals || []);
+  if (!frameSignals.length) return baseReport;
+
+  const signals = [...(baseReport.signals || []), ...frameSignals];
+  const limitations = [
+    ...(baseReport.limitations || []),
+    ...frameReports.flatMap((report) => report.limitations || []),
+  ];
+  return {
+    ...baseReport,
+    signals,
+    limitations: dedupe(limitations),
+    ai_generated: true,
+    overall_confidence: strongestConfidence(signals),
+  };
+}
+
+function withLimitation(report, limitation) {
+  return {
+    ...report,
+    limitations: dedupe([...(report.limitations || []), limitation]),
+  };
+}
 
 // ─── Render: capabilities ────────────────────────────────────────
 function renderCapabilities(capabilities) {
@@ -241,6 +394,10 @@ function buildReportHtml(report) {
       <div class="summary-item">
         <div class="label">${escapeHtml(t('report.label.mime'))}</div>
         <div class="value">${escapeHtml(report.mime_type || 'unknown')}</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">${escapeHtml(t('report.label.media_type') || 'Media')}</div>
+        <div class="value">${escapeHtml(report.media_type || 'image')}</div>
       </div>
       <div class="summary-item">
         <div class="label">${escapeHtml(t('report.label.mode'))}</div>
@@ -371,9 +528,43 @@ function syncAnalyzeButton() {
   analyzeBtn.textContent = isAnalyzing ? t('btn.running') : t('btn.idle');
 }
 
+function isSupportedMedia(file) {
+  return isSupportedImage(file) || isSupportedVideo(file);
+}
+
 function isSupportedImage(file) {
   return /^image\/(jpeg|png|webp|gif|bmp|tiff)$/.test(file.type)
     || /\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(file.name);
+}
+
+function isSupportedVideo(file) {
+  return /^video\/(mp4|quicktime|x-m4v|webm|x-msvideo|avi)$/.test(file.type)
+    || /\.(mp4|mov|m4v|webm|avi)$/i.test(file.name);
+}
+
+function mediaTypeFromName(name) {
+  if (/\.(mp4|mov|m4v|webm|avi)$/i.test(name)) return 'video';
+  if (/\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(name)) return 'image';
+  return 'unknown';
+}
+
+function safeFfmpegName(name) {
+  return (name || 'video')
+    .replace(/[^a-z0-9._-]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    || 'video';
+}
+
+function strongestConfidence(signals) {
+  const rank = { high: 3, medium: 2, low: 1 };
+  return signals.reduce((best, signal) => {
+    const current = (signal.confidence || '').toLowerCase();
+    return (rank[current] || 0) > (rank[best] || 0) ? current : best;
+  }, 'none');
+}
+
+function dedupe(items) {
+  return Array.from(new Set(items.filter(Boolean)));
 }
 
 function formatBytes(bytes) {

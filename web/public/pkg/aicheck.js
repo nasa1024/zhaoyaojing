@@ -17,6 +17,40 @@ export function analyzeImage(bytes, file_name) {
     return takeFromExternrefTable0(ret[0]);
 }
 
+/**
+ * @param {Uint8Array} bytes
+ * @param {string | null} [file_name]
+ * @returns {any}
+ */
+export function analyzeMedia(bytes, file_name) {
+    const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    var ptr1 = isLikeNone(file_name) ? 0 : passStringToWasm0(file_name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var len1 = WASM_VECTOR_LEN;
+    const ret = wasm.analyzeMedia(ptr0, len0, ptr1, len1);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return takeFromExternrefTable0(ret[0]);
+}
+
+/**
+ * @param {Uint8Array} rgba
+ * @param {number} width
+ * @param {number} height
+ * @param {number} timestamp_seconds
+ * @returns {any}
+ */
+export function analyzeVideoFrameRgba(rgba, width, height, timestamp_seconds) {
+    const ptr0 = passArray8ToWasm0(rgba, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.analyzeVideoFrameRgba(ptr0, len0, width, height, timestamp_seconds);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return takeFromExternrefTable0(ret[0]);
+}
+
 export function initPanicHook() {
     wasm.initPanicHook();
 }
@@ -30,6 +64,17 @@ export function start() {
  */
 export function supportedImageCapabilities() {
     const ret = wasm.supportedImageCapabilities();
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return takeFromExternrefTable0(ret[0]);
+}
+
+/**
+ * @returns {any}
+ */
+export function supportedMediaCapabilities() {
+    const ret = wasm.supportedMediaCapabilities();
     if (ret[2]) {
         throw takeFromExternrefTable0(ret[1]);
     }

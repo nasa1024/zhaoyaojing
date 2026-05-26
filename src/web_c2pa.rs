@@ -111,6 +111,24 @@ fn extract_manifest_blocks(bytes: &[u8]) -> Vec<Vec<u8>> {
         extract_png_c2pa_chunks(bytes)
     } else if bytes.starts_with(&[0xFF, 0xD8]) {
         extract_jpeg_c2pa_segments(bytes)
+    } else if crate::mp4_metadata_core::is_mp4_like(bytes) {
+        extract_mp4_c2pa_blocks(bytes)
+    } else {
+        Vec::new()
+    }
+}
+
+fn extract_mp4_c2pa_blocks(bytes: &[u8]) -> Vec<Vec<u8>> {
+    let scan_end = bytes.len().min(2 * 1_048_576);
+    let scan = &bytes[..scan_end];
+    let lower = String::from_utf8_lossy(scan).to_lowercase();
+    let has_c2pa_text = lower.contains("c2pa")
+        || lower.contains("digital sourcetype")
+        || lower.contains("digitalsourcetype")
+        || lower.contains("claim_generator")
+        || lower.contains("contentauth");
+    if has_c2pa_text {
+        vec![scan.to_vec()]
     } else {
         Vec::new()
     }
@@ -345,5 +363,30 @@ mod tests {
     fn ignores_git_lfs_pointer_text() {
         let pointer = b"version https://git-lfs.github.com/spec/v1\noid sha256:abc\nsize 1202004\n";
         assert!(detect(pointer).is_empty());
+    }
+
+    fn mp4_box(box_type: &[u8; 4], payload: &[u8]) -> Vec<u8> {
+        let mut out = Vec::new();
+        let size = (8 + payload.len()) as u32;
+        out.extend_from_slice(&size.to_be_bytes());
+        out.extend_from_slice(box_type);
+        out.extend_from_slice(payload);
+        out
+    }
+
+    #[test]
+    fn detects_video_c2pa_text_in_mp4_container() {
+        let mut mp4 = mp4_box(b"ftyp", b"isom\0\0\0\0isommp42");
+        mp4.extend_from_slice(&mp4_box(
+            b"uuid",
+            br#"c2pa.actions.v2 digitalSourceType trainedAlgorithmicMedia claim_generator Sora"#,
+        ));
+
+        let signals = detect(&mp4);
+
+        assert_eq!(signals.len(), 1);
+        assert_eq!(signals[0].source, "C2PA");
+        assert_eq!(signals[0].confidence, "high");
+        assert_eq!(signals[0].tool.as_deref(), Some("sora"));
     }
 }

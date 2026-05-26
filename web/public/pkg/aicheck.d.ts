@@ -3,18 +3,27 @@
 
 export function analyzeImage(bytes: Uint8Array, file_name?: string | null): any;
 
+export function analyzeMedia(bytes: Uint8Array, file_name?: string | null): any;
+
+export function analyzeVideoFrameRgba(rgba: Uint8Array, width: number, height: number, timestamp_seconds: number): any;
+
 export function initPanicHook(): void;
 
 export function start(): void;
 
 export function supportedImageCapabilities(): any;
 
+export function supportedMediaCapabilities(): any;
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly analyzeImage: (a: number, b: number, c: number, d: number) => [number, number, number];
+    readonly analyzeMedia: (a: number, b: number, c: number, d: number) => [number, number, number];
+    readonly analyzeVideoFrameRgba: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
     readonly supportedImageCapabilities: () => [number, number, number];
+    readonly supportedMediaCapabilities: () => [number, number, number];
     readonly initPanicHook: () => void;
     readonly start: () => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;

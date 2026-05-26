@@ -31,11 +31,13 @@ pub mod detector;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod i18n;
 pub mod known_tools;
+mod mp4_metadata_core;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod scanner;
 #[cfg(target_arch = "wasm32")]
 pub mod web;
 mod web_c2pa;
+mod web_watermark;
 
 #[cfg(not(target_arch = "wasm32"))]
 rust_i18n::i18n!("locales", fallback = "en");

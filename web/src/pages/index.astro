@@ -7,34 +7,35 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "AICheck365",
   "url": "https://aicheck365.com/",
-  "description": "检测图片是否为 AI 生成，基于 EXIF、XMP、C2PA 元数据，完全在浏览器本地运行。",
+  "description": "检测图片/视频是否为 AI 生成，基于 EXIF、XMP、C2PA、MP4 元数据和视频帧水印线索，完全在浏览器本地运行。",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Web Browser",
   "inLanguage": ["zh-CN", "en"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "featureList": [
-    "检测 AI 生成图片的元数据信号",
-    "支持 EXIF、XMP、C2PA、PNG 文本块",
-    "完全在浏览器本地运行，不上传图片",
-    "支持 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Firefly 等平台"
+    "检测 AI 生成图片/视频的来源信号",
+    "支持 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据",
+    "视频无元数据信号时可在本地抽帧分析水印",
+    "完全在浏览器本地运行，不上传图片或视频",
+    "支持 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Firefly、Sora、Kling 等平台"
   ]
 };
 ---
 
 <Base
-  title="AICheck365 · AI 图片检测 | 免费识别 AI 生成图片"
-  description="在浏览器本地检测图片里的 AI 来源线索。支持 EXIF、XMP、C2PA、PNG 文本块，可识别 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion 等常见平台痕迹，不上传图片。"
+  title="AICheck365 · AI 图片/视频检测 | 免费识别 AI 生成内容"
+  description="在浏览器本地检测图片/视频里的 AI 来源线索。支持 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据和视频帧水印线索，不上传文件。"
   canonical="https://aicheck365.com/"
   jsonLd={jsonLd}
 >
   <main class="page">
     <section class="hero card">
-      <div class="eyebrow" data-i18n="eyebrow">AI 图片来源检测</div>
+      <div class="eyebrow" data-i18n="eyebrow">AI 图片/视频来源检测</div>
       <div class="hero-layout">
         <div>
-          <h1 data-i18n="hero.h1">AI 图片来源信号检测</h1>
+          <h1 data-i18n="hero.h1">AI 图片/视频来源信号检测</h1>
           <p class="lead" data-i18n-html="hero.lead">
-            图片只在你的浏览器里<strong>本地分析，不上传服务器</strong>。识别图片元数据、平台痕迹和文件名来源信号。
+            图片和视频只在你的浏览器里<strong>本地分析，不上传服务器</strong>。重点读取元数据、平台痕迹、文件名线索和视频帧水印。
           </p>
         </div>
         <div class="hero-panel" aria-label="核心特性">
@@ -56,7 +57,7 @@ const jsonLd = {
         </li>
         <li>
           <strong data-i18n="trust.original">适合原图检测</strong>
-          <span data-i18n="trust.original.desc">保留元数据的原始图片命中率更高</span>
+          <span data-i18n="trust.original.desc">保留元数据的原始文件命中率更高</span>
         </li>
         <li>
           <strong data-i18n="trust.explain">结果可解释</strong>
@@ -65,7 +66,7 @@ const jsonLd = {
       </ul>
 
       <div class="notice warning" data-i18n-html="notice">
-        <strong>重要提示：</strong>这不是万能 AI 鉴定器。它只读取当前文件里还保留的 EXIF / XMP / C2PA / PNG 文本块 / 文件名等线索。
+        <strong>重要提示：</strong>这不是万能 AI 鉴定器。它只读取当前文件里还保留的 EXIF / XMP / C2PA / PNG 文本块 / MP4/MOV 元数据 / 文件名等线索。视频帧分析会在本地浏览器执行，可能较慢。
       </div>
     </section>
 
@@ -74,13 +75,13 @@ const jsonLd = {
     <!-- SEO 内容区：解释工具能做什么，也说明边界 -->
     <section class="card content-section">
       <h2>这个工具到底在查什么？</h2>
-      <p>AICheck365 主要查图片文件里保留下来的<strong>来源线索</strong>，比如 EXIF、XMP、C2PA、PNG 文本块和文件名。这些信息有时会记录生成工具、模型或内容来源类型。</p>
-      <p>目前可以识别 <a href="/platforms/gemini/">Gemini</a>、<a href="/platforms/imagen/">Google Imagen</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/kling/">可灵 Kling</a> 等平台留下的常见痕迹。</p>
+      <p>AICheck365 主要查图片/视频文件里保留下来的<strong>来源线索</strong>，比如 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据、文件名和抽样视频帧水印。这些信息有时会记录生成工具、模型或内容来源类型。</p>
+      <p>目前可以识别 <a href="/platforms/gemini/">Gemini</a>、<a href="/platforms/imagen/">Google Imagen</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/kling/">可灵 Kling</a>、Sora、Runway、Pika 等平台留下的常见痕迹。</p>
       <h3>使用须知</h3>
       <ul class="content-list">
         <li>检测基于<strong>元数据信号</strong>，不是看像素猜图，所以不适合判断被清洗过的文件</li>
-        <li>经过社交平台（微信、微博、Instagram 等）压缩转发的图片，元数据通常被剥离</li>
-        <li>截图和重新导出的图片也会丢失原始元数据</li>
+        <li>经过社交平台（微信、微博、Instagram 等）压缩转发的文件，元数据通常被剥离</li>
+        <li>截图、转码和重新导出的文件也会丢失原始元数据</li>
         <li>结果适合做快速判断，不适合作为法律鉴定结论</li>
       </ul>
     </section>

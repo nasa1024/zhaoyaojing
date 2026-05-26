@@ -6,7 +6,11 @@ use std::collections::HashSet;
 use std::io::Cursor;
 use wasm_bindgen::prelude::*;
 
-use crate::{known_tools, web_c2pa};
+use crate::{
+    known_tools,
+    mp4_metadata_core::{self, CoreConfidence, Mp4HitKind, Mp4MetadataHit},
+    web_c2pa, web_watermark,
+};
 
 const IMAGE_PLATFORMS: &[&str] = &[
     "DALL-E / OpenAI",
@@ -39,6 +43,21 @@ const IMAGE_PLATFORMS: &[&str] = &[
     "Recraft",
 ];
 
+const VIDEO_PLATFORMS: &[&str] = &[
+    "Sora",
+    "Google Veo",
+    "Runway",
+    "Pika",
+    "Kling",
+    "Vidu",
+    "Luma",
+    "Hailuo / 海螺",
+    "Pixverse",
+    "Genmo",
+    "Haiper",
+    "Wan",
+];
+
 const SUPPORTED_IMAGE_FORMATS: &[&str] = &[
     "image/jpeg",
     "image/png",
@@ -46,6 +65,14 @@ const SUPPORTED_IMAGE_FORMATS: &[&str] = &[
     "image/gif",
     "image/bmp",
     "image/tiff",
+];
+
+const SUPPORTED_VIDEO_FORMATS: &[&str] = &[
+    "video/mp4",
+    "video/quicktime",
+    "video/x-m4v",
+    "video/webm",
+    "video/x-msvideo",
 ];
 
 const XMP_AI_PROPERTIES: &[&str] = &[
@@ -93,6 +120,16 @@ const FILENAME_PATTERNS: &[(&str, &str)] = &[
     ("dreamina", "dreamina"),
     ("jimeng", "jimeng"),
     ("qwen", "qwen"),
+    ("sora", "sora"),
+    ("kling", "kling"),
+    ("wan", "wan"),
+    ("runway", "runway"),
+    ("pika", "pika"),
+    ("veo", "veo"),
+    ("vidu", "vidu"),
+    ("luma", "luma"),
+    ("hailuo", "hailuo"),
+    ("pixverse", "pixverse"),
 ];
 
 const EXIF_AIGC_PRODUCER_PREFIXES: &[(&str, &str)] = &[("001191110000802100433B", "qwen")];
@@ -130,6 +167,7 @@ struct BrowserReport {
     mode: String,
     file_name: Option<String>,
     mime_type: String,
+    media_type: String,
     supported: bool,
     ai_generated: bool,
     overall_confidence: String,
@@ -146,6 +184,8 @@ struct BrowserCapabilities {
     supported_formats: Vec<String>,
     supported_signal_types: Vec<String>,
     disclaimer: String,
+    media_types: Vec<String>,
+    limitations: Vec<String>,
 }
 
 #[wasm_bindgen(start)]
@@ -160,14 +200,29 @@ pub fn init_panic_hook() {
 
 #[wasm_bindgen(js_name = supportedImageCapabilities)]
 pub fn supported_image_capabilities() -> Result<JsValue, JsValue> {
+    supported_media_capabilities()
+}
+
+#[wasm_bindgen(js_name = supportedMediaCapabilities)]
+pub fn supported_media_capabilities() -> Result<JsValue, JsValue> {
+    let mut platforms: Vec<String> = IMAGE_PLATFORMS.iter().map(|s| s.to_string()).collect();
+    platforms.extend(VIDEO_PLATFORMS.iter().map(|s| s.to_string()));
+    platforms.sort();
+    platforms.dedup();
+
+    let mut formats: Vec<String> = SUPPORTED_IMAGE_FORMATS
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    formats.extend(SUPPORTED_VIDEO_FORMATS.iter().map(|s| s.to_string()));
+
     let payload = BrowserCapabilities {
-        supported_platforms: IMAGE_PLATFORMS.iter().map(|s| s.to_string()).collect(),
-        supported_formats: SUPPORTED_IMAGE_FORMATS
-            .iter()
-            .map(|s| s.to_string())
-            .collect(),
+        supported_platforms: platforms,
+        supported_formats: formats,
         supported_signal_types: supported_signal_types(),
         disclaimer: browser_disclaimer(),
+        media_types: vec!["image".to_string(), "video".to_string()],
+        limitations: media_limitations("media"),
     };
 
     serde_wasm_bindgen::to_value(&payload).map_err(js_err)
@@ -175,6 +230,72 @@ pub fn supported_image_capabilities() -> Result<JsValue, JsValue> {
 
 #[wasm_bindgen(js_name = analyzeImage)]
 pub fn analyze_image(bytes: &[u8], file_name: Option<String>) -> Result<JsValue, JsValue> {
+    let report = analyze_image_report(bytes, file_name)?;
+    serde_wasm_bindgen::to_value(&report).map_err(js_err)
+}
+
+#[wasm_bindgen(js_name = analyzeMedia)]
+pub fn analyze_media(bytes: &[u8], file_name: Option<String>) -> Result<JsValue, JsValue> {
+    let report = if detect_image_mime(bytes).is_some() {
+        analyze_image_report(bytes, file_name)?
+    } else if let Some(mime_type) = detect_video_mime(bytes, file_name.as_deref()) {
+        analyze_video_report(bytes, file_name, mime_type)
+    } else {
+        return Err(JsValue::from_str(
+            "当前浏览器版仅支持常见图片和 MP4 / MOV / M4V / WebM / AVI 视频文件。",
+        ));
+    };
+    serde_wasm_bindgen::to_value(&report).map_err(js_err)
+}
+
+#[wasm_bindgen(js_name = analyzeVideoFrameRgba)]
+pub fn analyze_video_frame_rgba(
+    rgba: &[u8],
+    width: u32,
+    height: u32,
+    timestamp_seconds: f64,
+) -> Result<JsValue, JsValue> {
+    let mut signals = Vec::new();
+    signals.extend(
+        web_watermark::detect_invisible_rgba(rgba, width, height, Some(timestamp_seconds))
+            .into_iter()
+            .map(browser_signal_from_watermark),
+    );
+    signals.extend(
+        web_watermark::detect_visible_rgba(rgba, width, height)
+            .into_iter()
+            .map(browser_signal_from_watermark),
+    );
+
+    dedupe_signals(&mut signals);
+    signals.sort_by(|a, b| confidence_rank(&b.confidence).cmp(&confidence_rank(&a.confidence)));
+    let overall_confidence = overall_confidence(&signals);
+
+    let report = BrowserReport {
+        mode: "browser-video-frame".to_string(),
+        file_name: None,
+        mime_type: "video/frame-rgba".to_string(),
+        media_type: "video-frame".to_string(),
+        supported: true,
+        ai_generated: overall_confidence != "none",
+        overall_confidence,
+        signals,
+        supported_platforms: VIDEO_PLATFORMS.iter().map(|s| s.to_string()).collect(),
+        supported_formats: vec!["video/frame-rgba".to_string()],
+        supported_signal_types: vec![
+            "Invisible frame watermark".to_string(),
+            "Visible frame watermark".to_string(),
+        ],
+        limitations: vec![
+            "视频帧分析只检查抽样帧，不代表逐帧完整检测。".to_string(),
+            "浏览器端帧分析可能受转码、缩放和抽帧质量影响。".to_string(),
+        ],
+    };
+
+    serde_wasm_bindgen::to_value(&report).map_err(js_err)
+}
+
+fn analyze_image_report(bytes: &[u8], file_name: Option<String>) -> Result<BrowserReport, JsValue> {
     let Some(mime_type) = detect_image_mime(bytes) else {
         return Err(JsValue::from_str(
             "当前浏览器版仅支持 JPEG / PNG / WebP / GIF / BMP / TIFF 图片。",
@@ -197,16 +318,13 @@ pub fn analyze_image(bytes: &[u8], file_name: Option<String>) -> Result<JsValue,
     dedupe_signals(&mut signals);
     signals.sort_by(|a, b| confidence_rank(&b.confidence).cmp(&confidence_rank(&a.confidence)));
 
-    let overall_confidence = signals
-        .iter()
-        .map(|signal| signal.confidence.clone())
-        .max_by_key(|confidence| confidence_rank(confidence))
-        .unwrap_or_else(|| "none".to_string());
+    let overall_confidence = overall_confidence(&signals);
 
-    let report = BrowserReport {
+    Ok(BrowserReport {
         mode: "browser-image-alpha".to_string(),
         file_name,
         mime_type: mime_type.to_string(),
+        media_type: "image".to_string(),
         supported: true,
         ai_generated: overall_confidence != "none",
         overall_confidence,
@@ -217,21 +335,48 @@ pub fn analyze_image(bytes: &[u8], file_name: Option<String>) -> Result<JsValue,
             .map(|s| s.to_string())
             .collect(),
         supported_signal_types: supported_signal_types(),
-        limitations: vec![
-            "这不是万能 AI 鉴定器，只基于元数据和启发式信号判断。".to_string(),
-            "如果图片经过平台压缩、截图、转存或清洗元数据，很多信号会消失。".to_string(),
-            "浏览器版会读取 C2PA Content Credentials / JUMBF 中的来源文本，但不做完整签名和证书链验证。".to_string(),
-            "当前浏览器版优先支持图片元数据检测，不包含完整的桌面 CLI 能力。".to_string(),
-            "未检测到 AI 信号，不等于图片一定不是 AI 生成。".to_string(),
-            "当前仅支持检测上方列出的平台/工具相关来源信号，不应外推到所有生成模型。".to_string(),
-        ],
-    };
+        limitations: media_limitations("image"),
+    })
+}
 
-    serde_wasm_bindgen::to_value(&report).map_err(js_err)
+fn analyze_video_report(
+    bytes: &[u8],
+    file_name: Option<String>,
+    mime_type: &'static str,
+) -> BrowserReport {
+    let mut signals = Vec::new();
+    signals.extend(detect_c2pa(bytes));
+    signals.extend(detect_mp4_metadata(bytes));
+
+    if let Some(name) = file_name.as_deref() {
+        signals.extend(detect_filename(name));
+    }
+
+    dedupe_signals(&mut signals);
+    signals.sort_by(|a, b| confidence_rank(&b.confidence).cmp(&confidence_rank(&a.confidence)));
+    let overall_confidence = overall_confidence(&signals);
+
+    BrowserReport {
+        mode: "browser-video-alpha".to_string(),
+        file_name,
+        mime_type: mime_type.to_string(),
+        media_type: "video".to_string(),
+        supported: true,
+        ai_generated: overall_confidence != "none",
+        overall_confidence,
+        signals,
+        supported_platforms: VIDEO_PLATFORMS.iter().map(|s| s.to_string()).collect(),
+        supported_formats: SUPPORTED_VIDEO_FORMATS
+            .iter()
+            .map(|s| s.to_string())
+            .collect(),
+        supported_signal_types: supported_signal_types(),
+        limitations: media_limitations("video"),
+    }
 }
 
 fn browser_disclaimer() -> String {
-    "当前浏览器版只检测图片里的 C2PA Content Credentials / EXIF / XMP / PNG 文本块 / 文件名等来源信号。它不是万能 AI 鉴定器，只能覆盖已知、且仍然保留在文件中的平台痕迹。".to_string()
+    "当前浏览器版检测图片和视频里的 C2PA Content Credentials / EXIF / XMP / PNG 文本块 / MP4 元数据 / 文件名 / 抽样视频帧水印等来源信号。它不是万能 AI 鉴定器，只能覆盖已知、且仍然保留在文件中的平台痕迹。".to_string()
 }
 
 fn supported_signal_types() -> Vec<String> {
@@ -240,8 +385,26 @@ fn supported_signal_types() -> Vec<String> {
         "EXIF metadata".to_string(),
         "XMP / IPTC metadata".to_string(),
         "PNG tEXt / iTXt chunks".to_string(),
+        "MP4 container metadata / AIGC labels / SEI markers".to_string(),
+        "Sampled video frame watermark analysis".to_string(),
         "Filename heuristics".to_string(),
     ]
+}
+
+fn media_limitations(media_type: &str) -> Vec<String> {
+    let mut limitations = vec![
+        "这不是万能 AI 鉴定器，只基于元数据、水印和启发式信号判断。".to_string(),
+        "如果文件经过平台压缩、截图、转存、转码或清洗元数据，很多信号会消失。".to_string(),
+        "浏览器版会读取 C2PA Content Credentials / JUMBF 中的来源文本，但不做完整签名和证书链验证。".to_string(),
+        "未检测到 AI 信号，不等于文件一定不是 AI 生成。".to_string(),
+        "当前仅支持检测上方列出的平台/工具相关来源信号，不应外推到所有生成模型。".to_string(),
+    ];
+    if media_type == "video" || media_type == "media" {
+        limitations.push(
+            "视频帧分析会抽样少量帧，结果可能受浏览器内转码、抽帧和文件大小影响。".to_string(),
+        );
+    }
+    limitations
 }
 
 fn js_err<E: ToString>(error: E) -> JsValue {
@@ -255,6 +418,14 @@ fn confidence_rank(confidence: &str) -> usize {
         "low" => 1,
         _ => 0,
     }
+}
+
+fn overall_confidence(signals: &[BrowserSignal]) -> String {
+    signals
+        .iter()
+        .map(|signal| signal.confidence.clone())
+        .max_by_key(|confidence| confidence_rank(confidence))
+        .unwrap_or_else(|| "none".to_string())
 }
 
 fn dedupe_signals(signals: &mut Vec<BrowserSignal>) {
@@ -286,6 +457,33 @@ fn detect_image_mime(bytes: &[u8]) -> Option<&'static str> {
         || bytes.starts_with(&[0x4D, 0x4D, 0x00, 0x2A])
     {
         Some("image/tiff")
+    } else {
+        None
+    }
+}
+
+fn detect_video_mime(bytes: &[u8], file_name: Option<&str>) -> Option<&'static str> {
+    let lower_name = file_name.unwrap_or_default().to_lowercase();
+    if mp4_metadata_core::is_mp4_like(bytes) {
+        if lower_name.ends_with(".mov") {
+            Some("video/quicktime")
+        } else if lower_name.ends_with(".m4v") {
+            Some("video/x-m4v")
+        } else {
+            Some("video/mp4")
+        }
+    } else if bytes.starts_with(&[0x1A, 0x45, 0xDF, 0xA3]) || lower_name.ends_with(".webm") {
+        Some("video/webm")
+    } else if bytes.starts_with(b"RIFF") && bytes.len() >= 12 && &bytes[8..12] == b"AVI " {
+        Some("video/x-msvideo")
+    } else if lower_name.ends_with(".mp4") {
+        Some("video/mp4")
+    } else if lower_name.ends_with(".mov") {
+        Some("video/quicktime")
+    } else if lower_name.ends_with(".m4v") {
+        Some("video/x-m4v")
+    } else if lower_name.ends_with(".avi") {
+        Some("video/x-msvideo")
     } else {
         None
     }
@@ -348,6 +546,58 @@ fn detect_c2pa(bytes: &[u8]) -> Vec<BrowserSignal> {
                 .collect(),
         })
         .collect()
+}
+
+fn detect_mp4_metadata(bytes: &[u8]) -> Vec<BrowserSignal> {
+    mp4_metadata_core::detect(bytes)
+        .into_iter()
+        .map(browser_signal_from_mp4_hit)
+        .collect()
+}
+
+fn browser_signal_from_mp4_hit(hit: Mp4MetadataHit) -> BrowserSignal {
+    let confidence = match hit.confidence {
+        CoreConfidence::Low => "low",
+        CoreConfidence::Medium => "medium",
+        CoreConfidence::High => "high",
+    };
+    let description = match &hit.kind {
+        Mp4HitKind::ToolMatch { label, value } => {
+            format!("MP4 {label} 命中已知 AI 视频工具：{value}")
+        }
+        Mp4HitKind::AigcLabel {
+            produce_id: Some(id),
+        } => format!("MP4 AIGC 标签标记为 AI 生成，ProduceID：{id}"),
+        Mp4HitKind::AigcLabel { produce_id: None } => "MP4 AIGC 标签标记为 AI 生成。".to_string(),
+        Mp4HitKind::SeiMarker { marker } => {
+            format!("MP4 SEI marker 命中已知 AI 视频工具：{marker}")
+        }
+    };
+    BrowserSignal {
+        source: "MP4".to_string(),
+        confidence: confidence.to_string(),
+        description,
+        tool: hit.tool,
+        details: hit
+            .details
+            .into_iter()
+            .map(|(key, value)| Detail { key, value })
+            .collect(),
+    }
+}
+
+fn browser_signal_from_watermark(signal: web_watermark::WebWatermarkSignal) -> BrowserSignal {
+    BrowserSignal {
+        source: signal.source.to_string(),
+        confidence: signal.confidence.to_string(),
+        description: signal.description,
+        tool: None,
+        details: signal
+            .details
+            .into_iter()
+            .map(|(key, value)| Detail { key, value })
+            .collect(),
+    }
 }
 
 fn detect_xmp(bytes: &[u8]) -> Vec<BrowserSignal> {
