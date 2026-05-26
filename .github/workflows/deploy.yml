@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        # 不加 lfs: true，默认跳过 LFS 文件下载
+        # 默认跳过 LFS 文件下载（已在 .lfsconfig 中配置）
         # 测试 fixtures 对 Web 部署无用，无需下载
 
       - uses: dtolnay/rust-toolchain@stable
