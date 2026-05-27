@@ -612,6 +612,9 @@ function stripLangFromPathname(pathname = window.location.pathname) {
 
 function withLangInPathname(pathname, lang) {
   const cleanPath = stripLangFromPathname(pathname);
+  if (lang === 'zh-CN') {
+    return cleanPath;
+  }
   return cleanPath === '/' ? `/${lang}/` : `/${lang}${cleanPath}`;
 }
 

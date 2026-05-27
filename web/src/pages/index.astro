@@ -5,7 +5,7 @@ import Detector from '../components/Detector.astro';
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
 const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
 const pageLang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
-const prefix = pageLang === 'zh-CN' && !Astro.url.pathname.startsWith('/zh-CN/') ? '' : `/${pageLang}`;
+const prefix = pageLang === 'zh-CN' ? '' : `/${pageLang}`;
 
 const homeCopy = {
   'zh-CN': {
@@ -214,7 +214,7 @@ const jsonLd = {
   "description": copy.description,
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Web Browser",
-  "inLanguage": ["zh-CN", "en"],
+  "inLanguage": ["zh-CN", "zh-TW", "en", "ja", "ko", "de", "fr", "es", "pt-BR"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "featureList": [
     "AI image/video origin signals",

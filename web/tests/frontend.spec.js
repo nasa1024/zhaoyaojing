@@ -100,7 +100,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('shows trust indicators, selected file metadata, and accessible controls', async ({ page }) => {
-  await page.goto('/zh-CN/');
+  await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'AI 图片/视频来源信号检测' })).toBeVisible();
   await expect(page.getByText('本地分析，不上传服务器')).toBeVisible();
@@ -126,7 +126,7 @@ test('shows trust indicators, selected file metadata, and accessible controls', 
 });
 
 test('accepts and renders video metadata reports', async ({ page }) => {
-  await page.goto('/zh-CN/');
+  await page.goto('/');
 
   await page.setInputFiles('#file-input', {
     name: 'sample.mp4',
@@ -149,7 +149,7 @@ test('merges video frame watermark analysis when video metadata has no signals',
       { rgba: new Uint8Array([128, 128, 128, 255]), width: 1, height: 1, timestamp: 1 },
     ];
   });
-  await page.goto('/zh-CN/');
+  await page.goto('/');
 
   await page.setInputFiles('#file-input', {
     name: 'clean-video.mp4',
@@ -164,7 +164,7 @@ test('merges video frame watermark analysis when video metadata has no signals',
 
 test('keeps the primary interface usable on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/zh-CN/');
+  await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'AI 图片/视频来源信号检测' })).toBeVisible();
   await expect(page.getByLabel('点击选择图片或视频')).toBeVisible();
@@ -205,5 +205,5 @@ test('serves sitemap entrypoint and includes localized routes', async ({ request
 
   const urlsetText = await urlset.text();
   expect(urlsetText).toContain('https://www.aicheck365.com/en/platforms/midjourney/');
-  expect(urlsetText).toContain('https://www.aicheck365.com/zh-CN/blog/how-to-detect-ai-videos/');
+  expect(urlsetText).toContain('https://www.aicheck365.com/blog/how-to-detect-ai-videos/');
 });
