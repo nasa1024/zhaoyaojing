@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://aicheck365.com',
+  site: 'https://www.aicheck365.com',
   integrations: [
     sitemap({
       changefreq: 'weekly',

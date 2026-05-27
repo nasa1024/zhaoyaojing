@@ -182,7 +182,7 @@ test('keeps language in the URL and localized links', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     'href',
-    'https://aicheck365.com/en/platforms/midjourney/'
+    'https://www.aicheck365.com/en/platforms/midjourney/'
   );
   await expect(page.locator('.site-logo')).toHaveAttribute('href', '/en/');
   await expect(page.locator('.site-nav a').first()).toHaveAttribute('href', '/en/platforms/');
@@ -198,12 +198,12 @@ test('serves sitemap entrypoint and includes localized routes', async ({ request
   expect(sitemap.headers()['content-type']).toMatch(/xml/);
 
   const sitemapText = await sitemap.text();
-  expect(sitemapText).toContain('https://aicheck365.com/sitemap-0.xml');
+  expect(sitemapText).toContain('https://www.aicheck365.com/sitemap-0.xml');
 
   const urlset = await request.get('/sitemap-0.xml');
   expect(urlset.ok()).toBeTruthy();
 
   const urlsetText = await urlset.text();
-  expect(urlsetText).toContain('https://aicheck365.com/en/platforms/midjourney/');
-  expect(urlsetText).toContain('https://aicheck365.com/zh-CN/blog/how-to-detect-ai-videos/');
+  expect(urlsetText).toContain('https://www.aicheck365.com/en/platforms/midjourney/');
+  expect(urlsetText).toContain('https://www.aicheck365.com/zh-CN/blog/how-to-detect-ai-videos/');
 });
