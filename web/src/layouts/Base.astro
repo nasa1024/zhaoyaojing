@@ -29,6 +29,98 @@ const OG_LOCALE: Record<string, string> = {
   es: 'es_ES',
   'pt-BR': 'pt_BR',
 };
+const NAV_LABELS: Record<string, Record<string, string>> = {
+  'zh-CN': {
+    tool: '检测工具',
+    platforms: '平台指南',
+    blog: '知识库',
+    about: '关于',
+    privacy: '隐私政策',
+    terms: '服务条款',
+    contact: '联系',
+    footer: `© ${new Date().getFullYear()} AICheck365 · 图片/视频仅在本地浏览器分析，不上传服务器`,
+  },
+  'zh-TW': {
+    tool: '檢測工具',
+    platforms: '平台指南',
+    blog: '知識庫',
+    about: '關於',
+    privacy: '隱私權政策',
+    terms: '服務條款',
+    contact: '聯絡',
+    footer: `© ${new Date().getFullYear()} AICheck365 · 圖片/影片僅在本機瀏覽器分析，不上傳伺服器`,
+  },
+  en: {
+    tool: 'Detector',
+    platforms: 'Platform Guides',
+    blog: 'Knowledge Base',
+    about: 'About',
+    privacy: 'Privacy',
+    terms: 'Terms',
+    contact: 'Contact',
+    footer: `© ${new Date().getFullYear()} AICheck365 · Images and videos are analyzed locally in your browser`,
+  },
+  ja: {
+    tool: '検出ツール',
+    platforms: 'プラットフォームガイド',
+    blog: 'ナレッジベース',
+    about: '概要',
+    privacy: 'プライバシー',
+    terms: '利用規約',
+    contact: 'お問い合わせ',
+    footer: `© ${new Date().getFullYear()} AICheck365 · 画像と動画はブラウザ内でローカル分析されます`,
+  },
+  ko: {
+    tool: '검사 도구',
+    platforms: '플랫폼 가이드',
+    blog: '지식 베이스',
+    about: '소개',
+    privacy: '개인정보',
+    terms: '약관',
+    contact: '문의',
+    footer: `© ${new Date().getFullYear()} AICheck365 · 이미지와 비디오는 브라우저에서 로컬로 분석됩니다`,
+  },
+  de: {
+    tool: 'Detektor',
+    platforms: 'Plattform-Guides',
+    blog: 'Wissensbasis',
+    about: 'Über uns',
+    privacy: 'Datenschutz',
+    terms: 'Bedingungen',
+    contact: 'Kontakt',
+    footer: `© ${new Date().getFullYear()} AICheck365 · Bilder und Videos werden lokal im Browser analysiert`,
+  },
+  fr: {
+    tool: 'Détecteur',
+    platforms: 'Guides plateformes',
+    blog: 'Base de connaissances',
+    about: 'À propos',
+    privacy: 'Confidentialité',
+    terms: 'Conditions',
+    contact: 'Contact',
+    footer: `© ${new Date().getFullYear()} AICheck365 · Images et vidéos sont analysées localement dans le navigateur`,
+  },
+  es: {
+    tool: 'Detector',
+    platforms: 'Guías de plataformas',
+    blog: 'Base de conocimiento',
+    about: 'Acerca de',
+    privacy: 'Privacidad',
+    terms: 'Términos',
+    contact: 'Contacto',
+    footer: `© ${new Date().getFullYear()} AICheck365 · Las imágenes y videos se analizan localmente en el navegador`,
+  },
+  'pt-BR': {
+    tool: 'Detector',
+    platforms: 'Guias de plataformas',
+    blog: 'Base de conhecimento',
+    about: 'Sobre',
+    privacy: 'Privacidade',
+    terms: 'Termos',
+    contact: 'Contato',
+    footer: `© ${new Date().getFullYear()} AICheck365 · Imagens e vídeos são analisados localmente no navegador`,
+  },
+};
 
 function getUrlLang(pathname: string) {
   const segment = pathname.split('/').filter(Boolean)[0];
@@ -65,6 +157,7 @@ const homeHref = navPrefix ? `${navPrefix}/` : '/';
 const platformsHref = `${navPrefix}/platforms/`;
 const aboutHref = `${navPrefix}/about/`;
 const i18nPage = canonicalPath === '/' ? 'home' : 'content';
+const navLabels = NAV_LABELS[pageLang] ?? NAV_LABELS[DEFAULT_LANG];
 ---
 
 <!doctype html>
@@ -103,7 +196,7 @@ const i18nPage = canonicalPath === '/' ? 'home' : 'content';
       <script type="application/ld+json" set:html={JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd])} />
     )}
 
-    <!-- Google AdSense — 申请通过后取消注释并替换 ca-pub-XXXXXXXXXXXXXXXX -->
+    <!-- Google AdSense placeholder -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
     <!-- Google Analytics 4 -->
@@ -125,36 +218,33 @@ const i18nPage = canonicalPath === '/' ? 'home' : 'content';
     <header class="site-header">
       <a href={homeHref} class="site-logo">AICheck365</a>
       <nav class="site-nav" id="site-nav">
-        <a href={platformsHref} class="nav-link" data-i18n="nav.platforms">平台指南</a>
-        <a href={`${navPrefix}/blog/`} class="nav-link" data-i18n="nav.blog">知识库</a>
-        <a href={aboutHref} class="nav-link" data-i18n="nav.about">关于</a>
+        <a href={platformsHref} class="nav-link" data-i18n="nav.platforms">{navLabels.platforms}</a>
+        <a href={`${navPrefix}/blog/`} class="nav-link" data-i18n="nav.blog">{navLabels.blog}</a>
+        <a href={aboutHref} class="nav-link" data-i18n="nav.about">{navLabels.about}</a>
       </nav>
       <select id="lang-switch" class="lang-select" aria-label="Select language">
-        <option value="zh-CN">中文（简）</option>
-        <option value="zh-TW">中文（繁）</option>
-        <option value="en">English</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-        <option value="de">Deutsch</option>
-        <option value="fr">Français</option>
-        <option value="es">Español</option>
-        <option value="pt-BR">Português</option>
+        <option value="zh-CN" selected={pageLang === 'zh-CN'}>中文（简）</option>
+        <option value="zh-TW" selected={pageLang === 'zh-TW'}>中文（繁）</option>
+        <option value="en" selected={pageLang === 'en'}>English</option>
+        <option value="ja" selected={pageLang === 'ja'}>日本語</option>
+        <option value="ko" selected={pageLang === 'ko'}>한국어</option>
+        <option value="de" selected={pageLang === 'de'}>Deutsch</option>
+        <option value="fr" selected={pageLang === 'fr'}>Français</option>
+        <option value="es" selected={pageLang === 'es'}>Español</option>
+        <option value="pt-BR" selected={pageLang === 'pt-BR'}>Português</option>
       </select>
-      <!-- 主题切换按钮 -->
       <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Toggle light/dark theme">☀</button>
-      <!-- 移动端汉堡菜单 -->
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
         <span></span><span></span><span></span>
       </button>
     </header>
-    <!-- 移动端菜单 -->
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-      <a href={homeHref} class="mobile-link" data-i18n="nav.tool">检测工具</a>
-      <a href={platformsHref} class="mobile-link" data-i18n="nav.platforms">平台指南</a>
-      <a href={`${navPrefix}/blog/`} class="mobile-link" data-i18n="nav.blog">知识库</a>
-      <a href={aboutHref} class="mobile-link" data-i18n="nav.about">关于</a>
-      <a href={`${navPrefix}/privacy/`} class="mobile-link" data-i18n="nav.privacy">隐私政策</a>
-      <a href={`${navPrefix}/contact/`} class="mobile-link" data-i18n="nav.contact">联系</a>
+      <a href={homeHref} class="mobile-link" data-i18n="nav.tool">{navLabels.tool}</a>
+      <a href={platformsHref} class="mobile-link" data-i18n="nav.platforms">{navLabels.platforms}</a>
+      <a href={`${navPrefix}/blog/`} class="mobile-link" data-i18n="nav.blog">{navLabels.blog}</a>
+      <a href={aboutHref} class="mobile-link" data-i18n="nav.about">{navLabels.about}</a>
+      <a href={`${navPrefix}/privacy/`} class="mobile-link" data-i18n="nav.privacy">{navLabels.privacy}</a>
+      <a href={`${navPrefix}/contact/`} class="mobile-link" data-i18n="nav.contact">{navLabels.contact}</a>
     </div>
 
     <slot />
@@ -162,20 +252,19 @@ const i18nPage = canonicalPath === '/' ? 'home' : 'content';
     <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-links">
-          <a href={homeHref} data-i18n="nav.tool">检测工具</a>
-          <a href={platformsHref} data-i18n="nav.platforms">平台指南</a>
-          <a href={aboutHref} data-i18n="nav.about">关于</a>
-          <a href={`${navPrefix}/privacy/`} data-i18n="nav.privacy">隐私政策</a>
-          <a href={`${navPrefix}/terms/`} data-i18n="nav.terms">服务条款</a>
-          <a href={`${navPrefix}/contact/`} data-i18n="nav.contact">联系</a>
+          <a href={homeHref} data-i18n="nav.tool">{navLabels.tool}</a>
+          <a href={platformsHref} data-i18n="nav.platforms">{navLabels.platforms}</a>
+          <a href={aboutHref} data-i18n="nav.about">{navLabels.about}</a>
+          <a href={`${navPrefix}/privacy/`} data-i18n="nav.privacy">{navLabels.privacy}</a>
+          <a href={`${navPrefix}/terms/`} data-i18n="nav.terms">{navLabels.terms}</a>
+          <a href={`${navPrefix}/contact/`} data-i18n="nav.contact">{navLabels.contact}</a>
         </div>
         <p class="footer-note" data-i18n="footer.note">
-          © {new Date().getFullYear()} AICheck365 · 图片仅在本地浏览器分析，不上传服务器
+          {navLabels.footer}
         </p>
       </div>
     </footer>
 
-    <!-- 语言切换逻辑 (仅含 lang-switch 按钮的页面需要) -->
     <script type="module" src="/scripts/lang-init.js"></script>
   </body>
 </html>

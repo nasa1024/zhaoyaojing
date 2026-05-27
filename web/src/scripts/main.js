@@ -1,10 +1,13 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import coreURL from '@ffmpeg/core?url';
-import wasmURL from '@ffmpeg/core/wasm?url';
 
 const i18nModuleUrl = '/scripts/i18n.js';
 const { t, applyI18n, setLang } = await import(/* @vite-ignore */ i18nModuleUrl);
 const wasmModuleUrl = '/pkg/aicheck.js';
+const ffmpegCoreBaseUrl = 'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd';
+const ffmpegCoreFiles = {
+  coreURL: `${ffmpegCoreBaseUrl}/ffmpeg-core.js`,
+  wasmURL: `${ffmpegCoreBaseUrl}/ffmpeg-core.wasm`,
+};
 
 // ─── DOM refs ────────────────────────────────────────────────────
 const fileInput      = document.querySelector('#file-input');
@@ -27,6 +30,7 @@ let wasmApi       = null;
 let selectedFiles = [];
 let isAnalyzing   = false;
 let ffmpegLoader  = null;
+let ffmpegCoreAssetUrls = null;
 
 // ─── Init ────────────────────────────────────────────────────────
 applyI18n();
@@ -232,11 +236,29 @@ async function getFfmpeg() {
   if (!ffmpegLoader) {
     ffmpegLoader = (async () => {
       const ffmpeg = new FFmpeg();
-      await ffmpeg.load({ coreURL, wasmURL });
+      await ffmpeg.load(await getFfmpegCoreAssetUrls());
       return ffmpeg;
     })();
   }
   return ffmpegLoader;
+}
+
+function getFfmpegCoreAssetUrls() {
+  if (!ffmpegCoreAssetUrls) {
+    ffmpegCoreAssetUrls = Promise.all([
+      toBlobUrl(ffmpegCoreFiles.coreURL, 'text/javascript'),
+      toBlobUrl(ffmpegCoreFiles.wasmURL, 'application/wasm'),
+    ]).then(([coreURL, wasmURL]) => ({ coreURL, wasmURL }));
+  }
+  return ffmpegCoreAssetUrls;
+}
+
+async function toBlobUrl(url, mimeType) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to load FFmpeg asset: ${response.status} ${response.statusText}`);
+  }
+  return URL.createObjectURL(new Blob([await response.arrayBuffer()], { type: mimeType }));
 }
 
 function getVideoDuration(file) {

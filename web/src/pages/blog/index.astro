@@ -3,30 +3,37 @@ import Base from '../../layouts/Base.astro';
 
 const articles = [
   {
+    slug: 'how-to-detect-ai-videos',
+    title: '如何检测 AI 生成视频？MP4 元数据、C2PA 与帧水印指南',
+    desc: '解释 Sora、可灵、Runway、Pika 等视频生成工具可能留下的容器元数据、C2PA-lite、SEI marker 和抽样帧水印。',
+    date: '2026-05',
+    tags: ['AI 视频', 'MP4', 'C2PA'],
+  },
+  {
     slug: 'how-to-detect-gemini-generated-images',
-    title: '如何通过 C2PA 元数据检测 Gemini 生成图片？',
-    desc: '用一张真实 Gemini 原图解释 C2PA、PNG caBX/JUMBF 和 trainedAlgorithmicMedia。',
+    title: '如何通过 C2PA 元数据检测 Gemini 生成图片/视频？',
+    desc: '用真实 Gemini 原图解释 C2PA、PNG caBX/JUMBF 和 trainedAlgorithmicMedia，并补充 Google AI 视频检测线索。',
     date: '2026-05',
     tags: ['Gemini', 'C2PA'],
   },
   {
     slug: 'how-to-detect-ai-images',
-    title: '如何判断一张图片是否 AI 生成？先看这些线索',
-    desc: '先查元数据，再看上下文。也说明为什么有些图片查不出来。',
+    title: '如何判断图片或视频是否 AI 生成？先看这些线索',
+    desc: '先查元数据和视频容器，再看上下文。也说明为什么有些文件查不出来。',
     date: '2025-05',
     tags: ['检测方法', 'AI 图片'],
   },
   {
     slug: 'what-is-c2pa',
-    title: 'C2PA 是什么？它在 AI 图片里记录了什么',
+    title: 'C2PA 是什么？它在 AI 图片/视频里记录了什么',
     desc: '解释 C2PA、Content Credentials、claim 和来源字段的关系。',
     date: '2025-04',
     tags: ['C2PA', '标准'],
   },
   {
     slug: 'ai-image-metadata-guide',
-    title: 'AI 图片元数据：EXIF、XMP、C2PA、PNG tEXt',
-    desc: '整理常见图片元数据格式，以及 AI 工具可能写进去的内容。',
+    title: 'AI 媒体元数据：EXIF、XMP、C2PA、PNG tEXt、MP4',
+    desc: '整理常见图片/视频元数据格式，以及 AI 工具可能写进去的内容。',
     date: '2025-04',
     tags: ['元数据', 'EXIF', 'XMP'],
   },
@@ -45,15 +52,15 @@ const jsonLd = [
 ---
 
 <Base
-  title="AI 图片检测笔记 | AICheck365 Blog"
-  description="AICheck365 知识库：记录 AI 图片检测方法、Gemini C2PA 案例、Content Credentials 字段和常见平台线索。"
+  title="AI 图片/视频检测知识库 | AICheck365 Blog"
+  description="AICheck365 知识库：记录 AI 图片和视频检测方法、Gemini C2PA 案例、MP4 元数据、Content Credentials 字段和常见平台线索。"
   canonical="https://aicheck365.com/blog/"
   jsonLd={jsonLd}
 >
   <main class="page content-page">
     <div class="content-hero card">
-      <h1>AI 图片检测笔记</h1>
-      <p class="lead-text">这里记录一些实际会用到的检测方法：看元数据、看 C2PA、看平台留下的字段，也说明这些方法的边界。</p>
+      <h1>AI 图片/视频检测知识库</h1>
+      <p class="lead-text">这里记录一些实际会用到的检测方法：看图片元数据、看视频容器、看 C2PA、看平台留下的字段，也说明这些方法的边界。</p>
     </div>
 
     <div class="blog-grid">

@@ -1,0 +1,861 @@
+---
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  lang: string;
+  pagePath?: string;
+}
+
+const SITE_URL = 'https://aicheck365.com';
+const { lang, pagePath = 'about' } = Astro.props;
+
+const localizedCopy = {
+  'zh-CN': {
+    locale: 'zh-CN',
+    home: '首页',
+    blog: '知识库',
+    platforms: '平台指南',
+    read: '阅读全文',
+    inspect: '开始检测图片/视频',
+    updated: '2026年5月',
+    metaSuffix: 'AICheck365',
+    aboutTitle: '关于 AICheck365',
+    aboutDesc: 'AICheck365 是一款在浏览器本地运行的 AI 图片/视频来源检测工具，检查 EXIF、XMP、C2PA、MP4/MOV 元数据和视频帧水印线索。',
+    aboutLead: 'AICheck365 帮助你判断原始图片或视频是否保留了 AI 生成来源线索，并识别可能的平台或工具。',
+    contactTitle: '联系 AICheck365',
+    contactDesc: '联系 AICheck365，反馈 AI 图片/视频检测问题、平台识别线索或产品建议。',
+    privacyTitle: '隐私政策',
+    privacyDesc: 'AICheck365 在浏览器本地分析图片和视频，不上传文件内容或检测结果。',
+    termsTitle: '服务条款',
+    termsDesc: '使用 AICheck365 AI 图片/视频检测工具时需要了解的服务范围、限制和免责声明。',
+    platformsTitle: 'AI 图片/视频平台检测指南',
+    platformsDesc: '查看 Sora、Kling、Gemini、DALL-E、Stable Diffusion、Firefly、Runway、Pika 等平台常见的图片/视频来源线索。',
+    blogTitle: 'AI 图片/视频检测知识库',
+    blogDesc: '记录 AI 图片和视频检测方法、C2PA 案例、MP4 元数据、Content Credentials 字段和常见平台线索。',
+    sections: {
+      signals: '可检查的来源线索',
+      limits: '检测边界',
+      privacy: '隐私和性能',
+      next: '下一步',
+      faq: '常见问题',
+      include: '反馈时请包含',
+    },
+    signalIntro: '浏览器版会优先读取原始文件里的来源信号，而不是只凭画面猜测。视频文件会额外检查容器元数据、SEI marker、文件名和抽样帧水印。',
+    limitText: '如果文件经过社交平台转码、截图、录屏、剪辑软件重新导出或清理元数据，很多来源信号都会消失。没有检测到信号，不等于一定不是 AI 生成。',
+    privacyText: '图片和视频文件在本地浏览器中分析，不上传到服务器。视频抽帧会懒加载 ffmpeg.wasm，大文件可能需要更长时间。',
+    contactLead: '如果你发现误判、漏判或希望增加新的 AI 平台线索，可以通过邮件或 GitHub 反馈。',
+    privacyLead: 'AICheck365 的核心原则是：文件留在你的设备上。检测逻辑通过 WebAssembly 在浏览器内运行。',
+    termsLead: 'AICheck365 提供基于元数据、容器字段、文件名和抽样帧水印的辅助判断，不提供法证级真实性结论。',
+    platformLead: (name) => `${name} 原始文件可能保留平台名、C2PA、XMP/EXIF、MP4/MOV 元数据、SEI marker、文件名或视频帧水印。请尽量上传从平台直接下载的原图或原始视频。`,
+    platformCta: (name) => `检测 ${name} 原始文件`,
+    aboutSignals: [
+      'EXIF、XMP、C2PA、PNG tEXt 和工作流 JSON',
+      'MP4/MOV 元数据、AIGC 标签、SEI marker 和文件名线索',
+      '当元数据未命中时，对视频帧进行抽样水印检查'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF、XMP、PNG tEXt、PNG caBX 和工作流 JSON',
+      'MP4、MOV 和 M4V 元数据、AIGC 标签、SEI marker 和文件名线索',
+      '用于隐形水印和角落可见标识检查的视频抽样帧'
+    ],
+    contactInclude: [
+      'AI 平台名称，例如 Midjourney、DALL-E、Sora、Kling、Runway 或 Pika',
+      '该文件是原始平台下载、副本、截图还是录屏',
+      '你获得的检测结果以及使用的浏览器和操作系统'
+    ],
+  },
+  'zh-TW': {
+    locale: 'zh-TW',
+    home: '首頁',
+    blog: '知識庫',
+    platforms: '平台指南',
+    read: '閱讀全文',
+    inspect: '開始檢測圖片/影片',
+    updated: '2026年5月',
+    metaSuffix: 'AICheck365',
+    aboutTitle: '關於 AICheck365',
+    aboutDesc: 'AICheck365 是在瀏覽器本機執行的 AI 圖片/影片來源檢測工具，檢查 EXIF、XMP、C2PA、MP4/MOV metadata 和影片幀浮水印線索。',
+    aboutLead: 'AICheck365 協助判斷原始圖片或影片是否保留 AI 生成來源線索，並識別可能的平台或工具。',
+    contactTitle: '聯絡 AICheck365',
+    contactDesc: '聯絡 AICheck365，回報 AI 圖片/影片檢測問題、平台識別線索或產品建議。',
+    privacyTitle: '隱私權政策',
+    privacyDesc: 'AICheck365 在瀏覽器本機分析圖片和影片，不上傳檔案內容或檢測結果。',
+    termsTitle: '服務條款',
+    termsDesc: '使用 AICheck365 AI 圖片/影片檢測工具時需要了解的服務範圍、限制和免責聲明。',
+    platformsTitle: 'AI 圖片/影片平台檢測指南',
+    platformsDesc: '查看 Sora、Kling、Gemini、DALL-E、Stable Diffusion、Firefly、Runway、Pika 等平台常見的圖片/影片來源線索。',
+    blogTitle: 'AI 圖片/影片檢測知識庫',
+    blogDesc: '記錄 AI 圖片和影片檢測方法、C2PA 案例、MP4 metadata、Content Credentials 欄位和常見平台線索。',
+    sections: { signals: '可檢查的來源線索', limits: '檢測邊界', privacy: '隱私和效能', next: '下一步', faq: '常見問題', include: '回報時請包含' },
+    signalIntro: '瀏覽器版會優先讀取原始檔案中的來源信號，而不是只憑畫面猜測。影片會額外檢查容器 metadata、SEI marker、檔名和抽樣幀浮水印。',
+    limitText: '如果檔案經過社群平台轉碼、截圖、錄影、剪輯軟體重新輸出或清除 metadata，許多來源信號都會消失。沒有檢測到信號，不等於一定不是 AI 生成。',
+    privacyText: '圖片和影片檔案都在本機瀏覽器中分析，不會上傳到伺服器。影片抽幀會懶載入 ffmpeg.wasm，大檔案可能需要更久。',
+    contactLead: '如果你發現誤判、漏判或希望增加新的 AI 平台線索，可以透過 Email 或 GitHub 回饋。',
+    privacyLead: 'AICheck365 的核心原則是：檔案留在你的裝置上。檢測邏輯透過 WebAssembly 在瀏覽器內執行。',
+    termsLead: 'AICheck365 提供基於 metadata、容器欄位、檔名和抽樣幀浮水印的輔助判斷，不提供鑑識級真實性結論。',
+    platformLead: (name) => `${name} 原始檔案可能保留平台名、C2PA、XMP/EXIF、MP4/MOV metadata、SEI marker、檔名或影片幀浮水印。請盡量上傳從平台直接下載的原圖或原始影片。`,
+    platformCta: (name) => `檢測 ${name} 原始檔案`,
+    aboutSignals: [
+      'EXIF、XMP、C2PA、PNG tEXt 和工作流 JSON',
+      'MP4/MOV metadata、AIGC 標籤、SEI marker 和檔名線索',
+      '當 metadata 未命中時，對影片幀進行抽樣浮水印檢查'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF、XMP、PNG tEXt、PNG caBX 和工作流 JSON',
+      'MP4、MOV 和 M4V metadata、AIGC 標籤、SEI marker 和檔名線索',
+      '用於隱形浮水印和角落可見標識檢查的影片抽樣幀'
+    ],
+    contactInclude: [
+      'AI 平台名稱，例如 Midjourney、DALL-E、Sora、Kling、Runway 或 Pika',
+      '該檔案是原始平台下載、副本、截圖還是錄影',
+      '你獲得的檢測結果以及使用的瀏覽器和作業系統'
+    ],
+  },
+  en: {
+    locale: 'en',
+    home: 'Home',
+    blog: 'Knowledge Base',
+    platforms: 'Platform Guides',
+    read: 'Read the guide',
+    inspect: 'Check an image or video',
+    updated: 'May 2026',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'About AICheck365',
+    aboutDesc: 'AICheck365 is a local AI image and video origin detector for EXIF, XMP, C2PA, MP4/MOV metadata, file-name hints, and sampled frame watermarks.',
+    aboutLead: 'AICheck365 helps you inspect original images and videos for AI-origin signals and possible generator platforms.',
+    contactTitle: 'Contact AICheck365',
+    contactDesc: 'Contact AICheck365 for support, platform-signal feedback, or questions about AI image and video detection.',
+    privacyTitle: 'Privacy Policy',
+    privacyDesc: 'AICheck365 analyzes images and videos in your browser and does not upload file content or detection results.',
+    termsTitle: 'Terms of Service',
+    termsDesc: 'Service scope, limitations, and disclaimers for using the AICheck365 AI image and video detector.',
+    platformsTitle: 'AI Image and Video Platform Detection Guide',
+    platformsDesc: 'Compare common source signals from Sora, Kling, Gemini, DALL-E, Stable Diffusion, Firefly, Runway, Pika, and other AI platforms.',
+    blogTitle: 'AI Image and Video Detection Knowledge Base',
+    blogDesc: 'Guides to AI image and video detection, C2PA examples, MP4 metadata, Content Credentials, and platform-specific signals.',
+    sections: { signals: 'Signals to Check', limits: 'Limits', privacy: 'Privacy and Performance', next: 'Next Step', faq: 'FAQ', include: 'What to Include' },
+    signalIntro: 'The browser version reads source signals preserved in the original file instead of judging only by pixels. Video files add container metadata, SEI markers, file-name hints, and sampled frame watermark checks.',
+    limitText: 'Social-media transcoding, screenshots, screen recordings, editing exports, and metadata cleaners can remove many signals. No signal found does not prove the file is human-made.',
+    privacyText: 'Images and videos are analyzed locally in the browser. Video frame extraction lazy-loads ffmpeg.wasm and can take longer for large files.',
+    contactLead: 'If you find a false positive, a missed signal, or want a new AI platform added, send feedback by email or GitHub.',
+    privacyLead: 'The core rule is simple: your files stay on your device. The detector runs through WebAssembly inside the browser.',
+    termsLead: 'AICheck365 provides an assistive reading of metadata, container fields, file names, and sampled frame watermarks. It is not a forensic authenticity verdict.',
+    platformLead: (name) => `Original ${name} files may keep platform names, C2PA, XMP/EXIF, MP4/MOV metadata, SEI markers, file-name patterns, or video frame watermarks. Upload the direct platform download whenever possible.`,
+    platformCta: (name) => `Check an original ${name} file`,
+    aboutSignals: [
+      'EXIF, XMP, C2PA, PNG tEXt and workflow JSON',
+      'MP4/MOV metadata, AIGC labels, SEI marker and file name clues',
+      'Sampled video frame watermark checks when metadata does not match'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF, XMP, PNG tEXt, PNG caBX and workflow JSON',
+      'MP4, MOV and M4V metadata, AIGC labels, SEI marker and file-name hints',
+      'Sampled video frames for invisible watermark and visible corner watermark checks'
+    ],
+    contactInclude: [
+      'AI platform name, such as Midjourney, DALL-E, Sora, Kling, Runway or Pika',
+      'Whether the file is the original platform download, a copy, a screenshot or a screen recording',
+      'The detection result you received, and your browser/operating system'
+    ],
+  },
+  ja: {
+    locale: 'ja',
+    home: 'ホーム',
+    blog: 'ナレッジベース',
+    platforms: 'プラットフォームガイド',
+    read: '続きを読む',
+    inspect: '画像/動画をチェック',
+    updated: '2026年5月',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'AICheck365 について',
+    aboutDesc: 'AICheck365 は、EXIF、XMP、C2PA、MP4/MOV メタデータ、ファイル名、抽出フレームの透かしをブラウザ内で確認する AI 画像/動画検出ツールです。',
+    aboutLead: 'AICheck365 は、元の画像や動画に残った AI 生成元の手がかりと、可能性のある生成プラットフォームを確認するためのツールです。',
+    contactTitle: 'お問い合わせ',
+    contactDesc: 'AI 画像/動画検出の不具合、プラットフォーム手がかり、改善提案について AICheck365 に連絡できます。',
+    privacyTitle: 'プライバシーポリシー',
+    privacyDesc: 'AICheck365 は画像と動画をブラウザ内で分析し、ファイル内容や検出結果をアップロードしません。',
+    termsTitle: '利用規約',
+    termsDesc: 'AICheck365 の AI 画像/動画検出ツールを使う際の範囲、制限、免責事項です。',
+    platformsTitle: 'AI 画像/動画プラットフォーム検出ガイド',
+    platformsDesc: 'Sora、Kling、Gemini、DALL-E、Stable Diffusion、Firefly、Runway、Pika などの一般的な生成元シグナルを整理します。',
+    blogTitle: 'AI 画像/動画検出ナレッジベース',
+    blogDesc: 'AI 画像と動画の検出方法、C2PA 事例、MP4 メタデータ、Content Credentials、プラットフォーム別シグナルを解説します。',
+    sections: { signals: '確認できるシグナル', limits: '制限', privacy: 'プライバシーと性能', next: '次のステップ', faq: 'よくある質問', include: '報告に含める情報' },
+    signalIntro: 'ブラウザ版は画面だけで判断せず、元ファイルに残った生成元シグナルを優先して読み取ります。動画ではコンテナメタデータ、SEI marker、ファイル名、抽出フレームの透かしも確認します。',
+    limitText: 'SNS の再エンコード、スクリーンショット、画面録画、編集ソフトの再書き出し、メタデータ削除で多くのシグナルは失われます。シグナルがないことは、人間制作の証明ではありません。',
+    privacyText: '画像と動画はブラウザ内でローカル分析されます。動画フレーム抽出では ffmpeg.wasm を遅延読み込みするため、大きなファイルでは時間がかかる場合があります。',
+    contactLead: '誤検出、未検出、新しい AI プラットフォームの追加要望があれば、メールまたは GitHub でお知らせください。',
+    privacyLead: '基本方針は、ファイルをあなたの端末に留めることです。検出ロジックは WebAssembly としてブラウザ内で動作します。',
+    termsLead: 'AICheck365 はメタデータ、コンテナ項目、ファイル名、抽出フレーム透かしに基づく補助的な判断を提供します。法科学的な真偽判定ではありません。',
+    platformLead: (name) => `${name} の元ファイルには、プラットフォーム名、C2PA、XMP/EXIF、MP4/MOV メタデータ、SEI marker、ファイル名パターン、動画フレーム透かしが残る場合があります。可能な限り直接ダウンロードした原本を使ってください。`,
+    platformCta: (name) => `${name} の元ファイルをチェック`,
+    aboutSignals: [
+      'EXIF、XMP、C2PA、PNG tEXt、ワークフロー JSON',
+      'MP4/MOV メタデータ、AIGC ラベル、SEI marker、ファイル名',
+      'メタデータが一致しない場合の抽出フレーム透かしチェック'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF、XMP、PNG tEXt、PNG caBX、ワークフロー JSON',
+      'MP4、MOV、M4V メタデータ、AIGC ラベル、SEI marker、ファイル名',
+      '見えない透かしと目に見えるコーナーロゴを確認するための抽出フレーム'
+    ],
+    contactInclude: [
+      'AI プラットフォーム名（Midjourney、DALL-E、Sora、Kling、Runway、Pika など）',
+      '原本ファイル、コピー、スクリーンショット、または画面録画のいずれであるか',
+      '表示された検出結果、および使用しているブラウザと OS'
+    ],
+  },
+  ko: {
+    locale: 'ko',
+    home: '홈',
+    blog: '지식 베이스',
+    platforms: '플랫폼 가이드',
+    read: '가이드 읽기',
+    inspect: '이미지/비디오 검사',
+    updated: '2026년 5월',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'AICheck365 소개',
+    aboutDesc: 'AICheck365는 EXIF, XMP, C2PA, MP4/MOV 메타데이터, 파일명, 샘플 프레임 워터마크를 브라우저에서 확인하는 AI 이미지/비디오 출처 감지 도구입니다.',
+    aboutLead: 'AICheck365는 원본 이미지와 비디오에 남아 있는 AI 생성 출처 신호와 가능한 생성 플랫폼을 확인하도록 돕습니다.',
+    contactTitle: '문의하기',
+    contactDesc: 'AI 이미지/비디오 감지 문제, 플랫폼 신호 피드백, 제품 제안에 대해 AICheck365에 문의하세요.',
+    privacyTitle: '개인정보 처리방침',
+    privacyDesc: 'AICheck365는 이미지와 비디오를 브라우저 안에서 분석하며 파일 내용이나 결과를 업로드하지 않습니다.',
+    termsTitle: '서비스 약관',
+    termsDesc: 'AICheck365 AI 이미지/비디오 감지 도구의 사용 범위, 제한, 면책 사항입니다.',
+    platformsTitle: 'AI 이미지/비디오 플랫폼 감지 가이드',
+    platformsDesc: 'Sora, Kling, Gemini, DALL-E, Stable Diffusion, Firefly, Runway, Pika 등의 일반적인 출처 신호를 비교합니다.',
+    blogTitle: 'AI 이미지/비디오 감지 지식 베이스',
+    blogDesc: 'AI 이미지와 비디오 감지 방법, C2PA 사례, MP4 메타데이터, Content Credentials, 플랫폼별 신호를 정리합니다.',
+    sections: { signals: '확인할 신호', limits: '한계', privacy: '개인정보와 성능', next: '다음 단계', faq: 'FAQ', include: '포함할 정보' },
+    signalIntro: '브라우저 버전은 화면만 보고 판단하지 않고 원본 파일에 보존된 출처 신호를 먼저 읽습니다. 비디오는 컨테이너 메타데이터, SEI marker, 파일명, 샘플 프레임 워터마크도 확인합니다.',
+    limitText: '소셜 미디어 인코딩, 스크린샷, 화면 녹화, 편집 앱 재내보내기, 메타데이터 삭제는 많은 신호를 제거할 수 있습니다. 신호가 없다는 것은 사람이 만든 파일이라는 증명이 아닙니다.',
+    privacyText: '이미지와 비디오는 브라우저에서 로컬로 분석됩니다. 비디오 프레임 추출은 ffmpeg.wasm을 지연 로드하며 큰 파일은 시간이 더 걸릴 수 있습니다.',
+    contactLead: '오탐, 누락된 신호, 새 AI 플랫폼 추가 요청은 이메일이나 GitHub로 알려주세요.',
+    privacyLead: '핵심 원칙은 파일이 사용자의 기기에 남는 것입니다. 감지 로직은 WebAssembly로 브라우저 안에서 실행됩니다.',
+    termsLead: 'AICheck365는 메타데이터, 컨테이너 필드, 파일명, 샘플 프레임 워터마크를 기반으로 보조 판단을 제공합니다. 포렌식 진위 판정은 아닙니다.',
+    platformLead: (name) => `${name} 원본 파일에는 플랫폼 이름, C2PA, XMP/EXIF, MP4/MOV 메타데이터, SEI marker, 파일명 패턴, 비디오 프레임 워터마크가 남을 수 있습니다. 가능하면 플랫폼에서 직접 받은 원본을 업로드하세요.`,
+    platformCta: (name) => `${name} 원본 파일 검사`,
+    aboutSignals: [
+      'EXIF, XMP, C2PA, PNG tEXt 및 워크플로 JSON',
+      'MP4/MOV 메타데이터, AIGC 라벨, SEI marker 및 파일명 단서',
+      '메타데이터가 일치하지 않을 때 샘플 비디오 프레임 워터마크 검사'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF, XMP, PNG tEXt, PNG caBX 및 워크플로 JSON',
+      'MP4, MOV 및 M4V 메타데이터, AIGC 라벨, SEI marker 및 파일명 단서',
+      '보이지 않는 워터마크 및 모퉁이 표시 검사를 위한 샘플 비디오 프레임'
+    ],
+    contactInclude: [
+      'AI 플랫폼 이름 (Midjourney, DALL-E, Sora, Kling, Runway, Pika 등)',
+      '원본 파일 다운로드, 복사본, 스크린샷 또는 화면 녹화 여부',
+      '수신된 감지 결과 및 사용 중인 브라우저/운영 체제'
+    ],
+  },
+  de: {
+    locale: 'de',
+    home: 'Startseite',
+    blog: 'Wissensbasis',
+    platforms: 'Plattform-Guides',
+    read: 'Guide lesen',
+    inspect: 'Bild oder Video prüfen',
+    updated: 'Mai 2026',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'Über AICheck365',
+    aboutDesc: 'AICheck365 prüft AI-Bilder und -Videos lokal im Browser auf EXIF, XMP, C2PA, MP4/MOV-Metadaten, Dateinamen und Frame-Wasserzeichen.',
+    aboutLead: 'AICheck365 hilft, Originalbilder und Originalvideos auf AI-Herkunftssignale und mögliche Generatorplattformen zu prüfen.',
+    contactTitle: 'Kontakt',
+    contactDesc: 'Kontaktiere AICheck365 für Support, Hinweise zu Plattformsignalen oder Fragen zur AI-Bild- und Videoprüfung.',
+    privacyTitle: 'Datenschutzerklärung',
+    privacyDesc: 'AICheck365 analysiert Bilder und Videos im Browser und lädt keine Dateiinhalte oder Prüfergebnisse hoch.',
+    termsTitle: 'Nutzungsbedingungen',
+    termsDesc: 'Leistungsumfang, Grenzen und Haftungsausschlüsse für den AICheck365 AI-Bild- und Videodetektor.',
+    platformsTitle: 'Guide zur Erkennung von AI-Bild- und Videoplattformen',
+    platformsDesc: 'Vergleiche typische Herkunftssignale von Sora, Kling, Gemini, DALL-E, Stable Diffusion, Firefly, Runway, Pika und weiteren Plattformen.',
+    blogTitle: 'Wissensbasis zur AI-Bild- und Videoprüfung',
+    blogDesc: 'Anleitungen zu AI-Bild- und Videoprüfung, C2PA-Beispielen, MP4-Metadaten, Content Credentials und Plattformsignalen.',
+    sections: { signals: 'Prüfbare Signale', limits: 'Grenzen', privacy: 'Datenschutz und Leistung', next: 'Nächster Schritt', faq: 'FAQ', include: 'Bitte angeben' },
+    signalIntro: 'Die Browser-Version liest zuerst Signale aus der Originaldatei, statt nur Pixel zu bewerten. Videos werden zusätzlich auf Container-Metadaten, SEI marker, Dateinamen und Frame-Wasserzeichen geprüft.',
+    limitText: 'Transcoding durch soziale Netzwerke, Screenshots, Bildschirmaufnahmen, erneuter Export und Metadaten-Reiniger können viele Signale entfernen. Kein Signal bedeutet nicht, dass die Datei sicher menschlich erstellt wurde.',
+    privacyText: 'Bilder und Videos werden lokal im Browser analysiert. Für Video-Frames wird ffmpeg.wasm bei Bedarf geladen; große Dateien können länger dauern.',
+    contactLead: 'Melde falsche Treffer, fehlende Signale oder neue Plattformen per E-Mail oder GitHub.',
+    privacyLead: 'Die Grundregel lautet: Deine Dateien bleiben auf deinem Gerät. Die Prüflogik läuft als WebAssembly im Browser.',
+    termsLead: 'AICheck365 bietet eine unterstützende Auswertung von Metadaten, Containerfeldern, Dateinamen und Frame-Wasserzeichen. Es ist kein forensisches Echtheitsgutachten.',
+    platformLead: (name) => `Originaldateien von ${name} können Plattformnamen, C2PA, XMP/EXIF, MP4/MOV-Metadaten, SEI marker, Dateinamenmuster oder Video-Frame-Wasserzeichen enthalten. Nutze möglichst den direkten Plattform-Download.`,
+    platformCta: (name) => `Originaldatei von ${name} prüfen`,
+    aboutSignals: [
+      'EXIF, XMP, C2PA, PNG tEXt und Workflow-JSON',
+      'MP4/MOV-Metadaten, AIGC-Labels, SEI marker und Dateinamen',
+      'Video-Frame-Wasserzeichenprüfung bei fehlenden Metadaten'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF, XMP, PNG tEXt, PNG caBX und Workflow-JSON',
+      'MP4-, MOV- und M4V-Metadaten, AIGC-Labels, SEI marker und Dateinamen',
+      'Extrahiere Video-Frames zur Prüfung auf unsichtbare und sichtbare Wasserzeichen'
+    ],
+    contactInclude: [
+      'Name der KI-Plattform, z. B. Midjourney, DALL-E, Sora, Kling, Runway oder Pika',
+      'Ob es sich um den Original-Download, eine Kopie, einen Screenshot oder eine Bildschirmaufnahme handelt',
+      'Das erhaltene Erkennungsergebnis sowie Ihr Browser und Betriebssystem'
+    ],
+  },
+  fr: {
+    locale: 'fr',
+    home: 'Accueil',
+    blog: 'Base de connaissances',
+    platforms: 'Guides plateformes',
+    read: 'Lire le guide',
+    inspect: 'Vérifier une image ou une vidéo',
+    updated: 'mai 2026',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'À propos de AICheck365',
+    aboutDesc: 'AICheck365 vérifie localement les images et vidéos IA avec EXIF, XMP, C2PA, métadonnées MP4/MOV, noms de fichier et filigranes de frames.',
+    aboutLead: 'AICheck365 aide à inspecter les images et vidéos originales pour trouver des signaux d’origine IA et des plateformes possibles.',
+    contactTitle: 'Contact',
+    contactDesc: 'Contactez AICheck365 pour le support, des retours sur les signaux de plateformes ou des questions sur la détection image/vidéo IA.',
+    privacyTitle: 'Politique de confidentialité',
+    privacyDesc: 'AICheck365 analyse images et vidéos dans le navigateur sans téléverser les fichiers ni les résultats.',
+    termsTitle: 'Conditions d’utilisation',
+    termsDesc: 'Portée, limites et avertissements liés au détecteur d’images et de vidéos IA AICheck365.',
+    platformsTitle: 'Guide de détection des plateformes image et vidéo IA',
+    platformsDesc: 'Comparez les signaux d’origine courants de Sora, Kling, Gemini, DALL-E, Stable Diffusion, Firefly, Runway, Pika et autres plateformes.',
+    blogTitle: 'Base de connaissances sur la détection image et vidéo IA',
+    blogDesc: 'Guides sur la détection image/vidéo IA, exemples C2PA, métadonnées MP4, Content Credentials et signaux par plateforme.',
+    sections: { signals: 'Signaux à vérifier', limits: 'Limites', privacy: 'Confidentialité et performance', next: 'Étape suivante', faq: 'FAQ', include: 'À inclure' },
+    signalIntro: 'La version navigateur lit d’abord les signaux conservés dans le fichier original au lieu de juger seulement les pixels. Les vidéos ajoutent métadonnées de conteneur, SEI marker, noms de fichier et filigranes de frames échantillonnées.',
+    limitText: 'Le transcodage social, les captures d’écran, les enregistrements d’écran, les exports d’éditeur et les nettoyeurs de métadonnées peuvent supprimer les signaux. Aucun signal ne prouve pas une création humaine.',
+    privacyText: 'Images et vidéos sont analysées localement dans le navigateur. L’extraction de frames charge ffmpeg.wasm à la demande et peut être plus lente pour les gros fichiers.',
+    contactLead: 'Signalez les faux positifs, signaux manqués ou nouvelles plateformes par e-mail ou GitHub.',
+    privacyLead: 'Principe clé : vos fichiers restent sur votre appareil. Le détecteur s’exécute en WebAssembly dans le navigateur.',
+    termsLead: 'AICheck365 fournit une lecture assistive des métadonnées, champs de conteneur, noms de fichier et filigranes de frames. Ce n’est pas une conclusion forensique.',
+    platformLead: (name) => `Les fichiers originaux ${name} peuvent conserver le nom de plateforme, C2PA, XMP/EXIF, métadonnées MP4/MOV, SEI marker, noms de fichier ou filigranes de frames vidéo. Utilisez si possible le téléchargement direct de la plateforme.`,
+    platformCta: (name) => `Vérifier un fichier original ${name}`,
+    aboutSignals: [
+      'EXIF, XMP, C2PA, PNG tEXt et JSON de workflow',
+      'Métadonnées MP4/MOV, labels AIGC, SEI marker et noms de fichier',
+      'Analyse des filigranes de frames vidéo si les métadonnées ne correspondent pas'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF, XMP, PNG tEXt, PNG caBX et JSON de workflow',
+      'Métadonnées MP4, MOV et M4V, labels AIGC, SEI marker et noms de fichier',
+      'Frames vidéo pour la détection de filigranes invisibles et logos visibles'
+    ],
+    contactInclude: [
+      'Le nom de la plateforme IA, comme Midjourney, DALL-E, Sora, Kling, Runway ou Pika',
+      'Si le fichier est le téléchargement original, une copie, une capture d’écran ou un enregistrement d’écran',
+      'Le résultat de la détection et votre navigateur/système d’exploitation'
+    ],
+  },
+  es: {
+    locale: 'es',
+    home: 'Inicio',
+    blog: 'Base de conocimiento',
+    platforms: 'Guías de plataformas',
+    read: 'Leer guía',
+    inspect: 'Analizar imagen o video',
+    updated: 'mayo de 2026',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'Acerca de AICheck365',
+    aboutDesc: 'AICheck365 detecta señales de origen IA en imágenes y videos localmente: EXIF, XMP, C2PA, metadatos MP4/MOV, nombres de archivo y marcas de agua en frames.',
+    aboutLead: 'AICheck365 ayuda a inspeccionar imágenes y videos originales para encontrar señales de origen IA y posibles plataformas generadoras.',
+    contactTitle: 'Contacto',
+    contactDesc: 'Contacta con AICheck365 para soporte, señales de plataformas o preguntas sobre detección de imágenes y videos IA.',
+    privacyTitle: 'Política de privacidad',
+    privacyDesc: 'AICheck365 analiza imágenes y videos en el navegador sin subir el contenido ni los resultados.',
+    termsTitle: 'Términos de servicio',
+    termsDesc: 'Alcance, límites y avisos del detector de imágenes y videos IA de AICheck365.',
+    platformsTitle: 'Guía de detección de plataformas de imagen y video IA',
+    platformsDesc: 'Compara señales comunes de Sora, Kling, Gemini, DALL-E, Stable Diffusion, Firefly, Runway, Pika y otras plataformas.',
+    blogTitle: 'Base de conocimiento sobre detección de imágenes y videos IA',
+    blogDesc: 'Guías de detección IA, ejemplos C2PA, metadatos MP4, Content Credentials y señales por plataforma.',
+    sections: { signals: 'Señales a revisar', limits: 'Límites', privacy: 'Privacidad y rendimiento', next: 'Siguiente paso', faq: 'FAQ', include: 'Qué incluir' },
+    signalIntro: 'La versión del navegador lee primero señales conservadas en el archivo original en lugar de juzgar solo píxeles. En video también revisa metadatos de contenedor, SEI marker, nombre de archivo y marcas de agua en frames muestreados.',
+    limitText: 'La recodificación social, capturas, grabaciones de pantalla, exportaciones de editores y limpiadores de metadatos pueden eliminar señales. No encontrar señales no demuestra que el archivo sea humano.',
+    privacyText: 'Las imágenes y videos se analizan localmente en el navegador. La extracción de frames carga ffmpeg.wasm cuando hace falta y puede tardar más con archivos grandes.',
+    contactLead: 'Envía falsos positivos, señales perdidas o nuevas plataformas por correo o GitHub.',
+    privacyLead: 'La regla central es simple: tus archivos se quedan en tu dispositivo. El detector corre con WebAssembly dentro del navegador.',
+    termsLead: 'AICheck365 ofrece una lectura auxiliar de metadatos, campos de contenedor, nombres de archivo y marcas de agua en frames. No es una conclusión forense.',
+    platformLead: (name) => `Los archivos originales de ${name} pueden conservar nombres de plataforma, C2PA, XMP/EXIF, metadatos MP4/MOV, SEI marker, patrones de nombre o marcas de agua en frames de video. Usa la descarga directa de la plataforma siempre que sea posible.`,
+    platformCta: (name) => `Analizar archivo original de ${name}`,
+    aboutSignals: [
+      'EXIF, XMP, C2PA, PNG tEXt y JSON de flujo de trabajo',
+      'Metadatos MP4/MOV, etiquetas AIGC, SEI marker y nombres de archivo',
+      'Análisis de marcas de agua en frames de video si los metadatos no coinciden'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF, XMP, PNG tEXt, PNG caBX y JSON de flujo de trabajo',
+      'Metadatos MP4, MOV y M4V, etiquetas AIGC, SEI marker y nombres de archivo',
+      'Frames de video para la verificación de marcas de agua invisibles y logos visibles'
+    ],
+    contactInclude: [
+      'El nombre de la plataforma IA, como Midjourney, DALL-E, Sora, Kling, Runway o Pika',
+      'Si el archivo es la descarga original de la plataforma, una copia, captura o grabación de pantalla',
+      'El resultado de la detección que recibió, así como su navegador y sistema operativo'
+    ],
+  },
+  'pt-BR': {
+    locale: 'pt-BR',
+    home: 'Início',
+    blog: 'Base de conhecimento',
+    platforms: 'Guias de plataformas',
+    read: 'Ler guia',
+    inspect: 'Verificar imagem ou vídeo',
+    updated: 'maio de 2026',
+    metaSuffix: 'AICheck365',
+    aboutTitle: 'Sobre o AICheck365',
+    aboutDesc: 'O AICheck365 verifica imagens e vídeos de IA localmente no navegador usando EXIF, XMP, C2PA, metadados MP4/MOV, nomes de arquivo e marcas d’água em frames.',
+    aboutLead: 'O AICheck365 ajuda a inspecionar imagens e vídeos originais em busca de sinais de origem de IA e possíveis plataformas geradoras.',
+    contactTitle: 'Contato',
+    contactDesc: 'Fale com o AICheck365 para suporte, sinais de plataformas ou dúvidas sobre detecção de imagens e vídeos de IA.',
+    privacyTitle: 'Política de privacidade',
+    privacyDesc: 'O AICheck365 analisa imagens e vídeos no navegador sem enviar arquivos ou resultados.',
+    termsTitle: 'Termos de serviço',
+    termsDesc: 'Escopo, limites e avisos do detector de imagens e vídeos de IA do AICheck365.',
+    platformsTitle: 'Guia de detecção de plataformas de imagem e vídeo de IA',
+    platformsDesc: 'Compare sinais comuns de Sora, Kling, Gemini, DALL-E, Stable Diffusion, Firefly, Runway, Pika e outras plataformas.',
+    blogTitle: 'Base de conhecimento sobre detecção de imagens e vídeos de IA',
+    blogDesc: 'Guias de detecção de IA, exemplos C2PA, metadados MP4, Content Credentials e sinais por plataforma.',
+    sections: { signals: 'Sinais para verificar', limits: 'Limites', privacy: 'Privacidade e desempenho', next: 'Próximo passo', faq: 'FAQ', include: 'O que incluir' },
+    signalIntro: 'A versão de navegador lê primeiro sinais preservados no arquivo original em vez de julgar apenas pixels. Vídeos também usam metadados de contêiner, SEI marker, nomes de arquivo e marcas d’água em frames amostrados.',
+    limitText: 'Transcodificação em redes sociais, capturas, gravações de tela, reexportação por editores e removedores de metadados podem apagar sinais. Não encontrar sinais não prova criação humana.',
+    privacyText: 'Imagens e vídeos são analisados localmente no navegador. A extração de frames carrega ffmpeg.wasm sob demanda e pode levar mais tempo em arquivos grandes.',
+    contactLead: 'Envie falsos positivos, sinais ausentes ou novas plataformas por e-mail ou GitHub.',
+    privacyLead: 'A regra principal é simples: seus arquivos ficam no seu dispositivo. O detector roda em WebAssembly dentro do navegador.',
+    termsLead: 'O AICheck365 oferece uma leitura auxiliar de metadados, campos de contêiner, nomes de arquivo e marcas d’água em frames. Não é uma conclusão forense.',
+    platformLead: (name) => `Arquivos originais do ${name} podem manter nomes de plataforma, C2PA, XMP/EXIF, metadados MP4/MOV, SEI marker, padrões de nome ou marcas d’água em frames de vídeo. Use o download direto da plataforma sempre que possível.`,
+    platformCta: (name) => `Verificar arquivo original do ${name}`,
+    aboutSignals: [
+      'EXIF, XMP, C2PA, PNG tEXt e JSON de fluxo de trabalho',
+      'Metadados MP4/MOV, rótulos AIGC, SEI marker e nomes de arquivo',
+      'Verificação de marcas d’água em frames de vídeo se os metadatos não coincidirem'
+    ],
+    blogSignals: [
+      'C2PA / Content Credentials / JUMBF',
+      'EXIF, XMP, PNG tEXt, PNG caBX e JSON de fluxo de trabalho',
+      'Metadados MP4, MOV e M4V, rótulos AIGC, SEI marker e nomes de arquivo',
+      'Frames de vídeo para verificação de marcas d’água invisíveis e logotipos visíveis'
+    ],
+    contactInclude: [
+      'O nome da plataforma de IA, como Midjourney, DALL-E, Sora, Kling, Runway ou Pika',
+      'Se o arquivo é o download original da plataforma, uma cópia, captura ou gravação de tela',
+      'O resultado da detecção que você recebeu, e seu navegador/sistema operacional'
+    ],
+  },
+};
+
+const pageTitles = {
+  'blog/how-to-detect-ai-videos': {
+    'zh-CN': '如何检测 AI 生成视频？MP4 元数据、C2PA 与帧水印指南',
+    'zh-TW': '如何檢測 AI 生成影片？MP4 metadata、C2PA 與幀浮水印指南',
+    en: 'How to Detect AI-Generated Videos: MP4 Metadata, C2PA, and Frame Watermarks',
+    ja: 'AI 生成動画の検出方法：MP4 メタデータ、C2PA、フレーム透かし',
+    ko: 'AI 생성 비디오 감지 방법: MP4 메타데이터, C2PA, 프레임 워터마크',
+    de: 'AI-generierte Videos erkennen: MP4-Metadaten, C2PA und Frame-Wasserzeichen',
+    fr: 'Détecter les vidéos générées par IA : métadonnées MP4, C2PA et filigranes',
+    es: 'Cómo detectar videos generados por IA: metadatos MP4, C2PA y marcas de agua',
+    'pt-BR': 'Como detectar vídeos gerados por IA: metadados MP4, C2PA e marcas d’água',
+  },
+  'blog/how-to-detect-ai-images': {
+    'zh-CN': '如何判断图片或视频是否 AI 生成？先看这些线索',
+    'zh-TW': '如何判斷圖片或影片是否 AI 生成？先看這些線索',
+    en: 'How to Tell Whether an Image or Video Was AI-Generated',
+    ja: '画像や動画が AI 生成か確認する方法',
+    ko: '이미지나 비디오가 AI 생성인지 확인하는 방법',
+    de: 'Erkennen, ob ein Bild oder Video mit AI erstellt wurde',
+    fr: 'Savoir si une image ou une vidéo a été générée par IA',
+    es: 'Cómo saber si una imagen o video fue generado por IA',
+    'pt-BR': 'Como saber se uma imagem ou vídeo foi gerado por IA',
+  },
+  'blog/how-to-detect-gemini-generated-images': {
+    'zh-CN': '如何通过 C2PA 元数据检测 Gemini 生成图片/视频？',
+    'zh-TW': '如何透過 C2PA metadata 檢測 Gemini 生成圖片/影片？',
+    en: 'Detect Gemini Images and Videos with C2PA Metadata',
+    ja: 'C2PA メタデータで Gemini 画像と動画を検出する',
+    ko: 'C2PA 메타데이터로 Gemini 이미지와 비디오 감지',
+    de: 'Gemini-Bilder und -Videos mit C2PA-Metadaten erkennen',
+    fr: 'Détecter les images et vidéos Gemini avec les métadonnées C2PA',
+    es: 'Detectar imágenes y videos de Gemini con metadatos C2PA',
+    'pt-BR': 'Detectar imagens e vídeos do Gemini com metadados C2PA',
+  },
+  'blog/what-is-c2pa': {
+    'zh-CN': 'C2PA 是什么？它在 AI 图片/视频里记录了什么',
+    'zh-TW': 'C2PA 是什麼？它在 AI 圖片/影片裡記錄了什麼',
+    en: 'What Is C2PA and What Does It Record in AI Images and Videos?',
+    ja: 'C2PA とは？AI 画像/動画に何を記録するのか',
+    ko: 'C2PA란 무엇이며 AI 이미지/비디오에 무엇을 기록하나',
+    de: 'Was ist C2PA und was speichert es in AI-Bildern und -Videos?',
+    fr: 'Qu’est-ce que C2PA et que contient-il dans les images et vidéos IA ?',
+    es: 'Qué es C2PA y qué registra en imágenes y videos de IA',
+    'pt-BR': 'O que é C2PA e o que ele registra em imagens e vídeos de IA?',
+  },
+  'blog/ai-image-metadata-guide': {
+    'zh-CN': 'AI 媒体元数据指南：EXIF、XMP、C2PA、PNG tEXt、MP4',
+    'zh-TW': 'AI 媒體 metadata 指南：EXIF、XMP、C2PA、PNG tEXt、MP4',
+    en: 'AI Media Metadata Guide: EXIF, XMP, C2PA, PNG tEXt, and MP4',
+    ja: 'AI メディアメタデータガイド：EXIF、XMP、C2PA、PNG tEXt、MP4',
+    ko: 'AI 미디어 메타데이터 가이드: EXIF, XMP, C2PA, PNG tEXt, MP4',
+    de: 'AI-Medienmetadaten: EXIF, XMP, C2PA, PNG tEXt und MP4',
+    fr: 'Guide des métadonnées média IA : EXIF, XMP, C2PA, PNG tEXt et MP4',
+    es: 'Guía de metadatos de medios IA: EXIF, XMP, C2PA, PNG tEXt y MP4',
+    'pt-BR': 'Guia de metadados de mídia de IA: EXIF, XMP, C2PA, PNG tEXt e MP4',
+  },
+};
+
+const articleDescriptions = {
+  'blog/how-to-detect-ai-videos': {
+    'zh-CN': '在浏览器本地检查 AI 视频的 C2PA-lite、MP4/MOV 元数据、SEI marker、文件名与视频帧水印线索。',
+    'zh-TW': '在瀏覽器本機檢查 AI 影片的 C2PA-lite、MP4/MOV metadata、SEI marker、檔名與影片幀浮水印線索。',
+    en: 'Check original AI videos for C2PA-lite, MP4/MOV metadata, SEI markers, file-name hints, and sampled frame watermarks locally in the browser.',
+    ja: '元の AI 動画から C2PA-lite、MP4/MOV メタデータ、SEI marker、ファイル名、抽出フレーム透かしをブラウザ内で確認します。',
+    ko: '원본 AI 비디오에서 C2PA-lite, MP4/MOV 메타데이터, SEI marker, 파일명, 샘플 프레임 워터마크를 브라우저에서 확인합니다.',
+    de: 'Prüfe originale AI-Videos lokal auf C2PA-lite, MP4/MOV-Metadaten, SEI marker, Dateinamen und Frame-Wasserzeichen.',
+    fr: 'Vérifiez localement les vidéos IA originales avec C2PA-lite, métadonnées MP4/MOV, SEI marker, noms de fichier et filigranes de frames.',
+    es: 'Analiza videos IA originales localmente con C2PA-lite, metadatos MP4/MOV, SEI marker, nombres de archivo y marcas de agua en frames.',
+    'pt-BR': 'Verifique vídeos de IA originais localmente com C2PA-lite, metadados MP4/MOV, SEI marker, nomes de arquivo e marcas d’água em frames.',
+  },
+  'blog/how-to-detect-gemini-generated-images': {
+    'zh-CN': '用真实 Gemini 原图解释 C2PA Content Credentials、PNG caBX/JUMBF、Google claim_generator_info 与 digitalSourceType，并补充视频检测线索。',
+    'zh-TW': '用真實 Gemini 原圖解釋 C2PA Content Credentials、PNG caBX/JUMBF、Google claim_generator_info 與 digitalSourceType，並補充影片檢測線索。',
+    en: 'Analyze C2PA Content Credentials, PNG caBX/JUMBF, Google claim_generator_info and digitalSourceType in original Gemini images and videos.',
+    ja: '実際の Gemini 元画像を使って C2PA Content Credentials、PNG caBX/JUMBF、Google claim_generator_info、digitalSourceType を解説します。',
+    ko: '실제 Gemini 원본 이미지를 사용하여 C2PA Content Credentials, PNG caBX/JUMBF, Google claim_generator_info 및 digitalSourceType을 해석합니다.',
+    de: 'Analysiere C2PA Content Credentials, PNG caBX/JUMBF, Google claim_generator_info und digitalSourceType in originalen Gemini-Bildern und -Videos.',
+    fr: 'Analysez les Content Credentials C2PA, PNG caBX/JUMBF, Google claim_generator_info et digitalSourceType dans les images et vidéos Gemini.',
+    es: 'Analice Content Credentials de C2PA, PNG caBX/JUMBF, Google claim_generator_info y digitalSourceType en imágenes y videos originales de Gemini.',
+    'pt-BR': 'Analise C2PA Content Credentials, PNG caBX/JUMBF, Google claim_generator_info e digitalSourceType em imagens e vídeos originais do Gemini.',
+  },
+  'blog/how-to-detect-ai-images': {
+    'zh-CN': '从元数据分析到视觉识别，全面介绍判断 AI 生成图片的方法、工具和局限性。涵盖 EXIF、XMP、C2PA 检测原理。',
+    'zh-TW': '從元數據分析到視覺識別，全面介紹判斷 AI 生成圖片的方法、工具和局限性。涵蓋 EXIF、XMP、C2PA 檢測原理。',
+    en: 'A comprehensive guide to identifying AI-generated images, from metadata analysis to visual hints. Covers EXIF, XMP, and C2PA.',
+    ja: 'メタデータ分析から視覚的特徴まで、AI 生成画像を見分ける方法、ツール、限界について解説します。EXIF、XMP、C2PA 対応。',
+    ko: '메타데이터 분석부터 시각적 식별까지, AI 생성 이미지를 판단하는 방법, 도구 및 한계를 소개합니다. EXIF, XMP, C2PA 포함.',
+    de: 'Ein umfassender Leitfaden zur Identifizierung von KI-Bildern, von Metadatenanalysen bis zu visuellen Hinweisen. Deckt EXIF, XMP und C2PA ab.',
+    fr: 'Guide complet pour identifier les images générées par IA, de l’analyse des métadonnées aux indices visuels. Couvre EXIF, XMP et C2PA.',
+    es: 'Una guía completa para identificar imágenes generadas por IA, desde el análisis de metadatos hasta pistas visuales. Cubre EXIF, XMP y C2PA.',
+    'pt-BR': 'Um guia completo para identificar imagens geradas por IA, desde a análise de metadados até pistas visuais. Cobre EXIF, XMP e C2PA.',
+  },
+  'blog/ai-image-metadata-guide': {
+    'zh-CN': '图片/视频元数据类型详解，包括 EXIF、XMP、C2PA、PNG tEXt 和 MP4 格式，以及主流 AI 平台的写入策略 and 检测方法。',
+    'zh-TW': '圖片/影片元數據類型詳計，包括 EXIF、XMP、C2PA、PNG tEXt 和 MP4 格式，以及主流 AI 平台的寫入策略 and 檢測方法。',
+    en: 'A guide to media metadata formats including EXIF, XMP, C2PA, PNG tEXt, and MP4, along with AI platform writing policies.',
+    ja: 'EXIF、XMP、C2PA、PNG tEXt、MP4 メタデータの解説と、主要 AI プラットフォームの書き込みポリシーおよび検出方法。',
+    ko: 'EXIF, XMP, C2PA, PNG tEXt 및 MP4 메타데이터 규격과 주요 AI 플랫폼의 기록 정책 및 감지 방법 안내.',
+    de: 'Erklärung von Metadatenformaten wie EXIF, XMP, C2PA, PNG tEXt und MP4, sowie den Schreibrichtlinien von KI-Plattformen.',
+    fr: 'Guide des formats de métadonnées incluant EXIF, XMP, C2PA, PNG tEXt et MP4, et les politiques d’écriture des plateformes IA.',
+    es: 'Guía de formatos de metadatos que incluye EXIF, XMP, C2PA, PNG tEXt y MP4, junto con las políticas de escritura de las plataformas de IA.',
+    'pt-BR': 'Um guia para formatos de metadados, incluindo EXIF, XMP, C2PA, PNG tEXt e MP4, além das políticas de gravação das plataformas de IA.',
+  },
+  'blog/what-is-c2pa': {
+    'zh-CN': '深入了解 C2PA 内容凭证标准：OpenAI、Adobe、微软如何通过数字签名实现 AI 内容溯源，及其对检测的意义。',
+    'zh-TW': '深入了解 C2PA 內容憑證標準：OpenAI、Adobe、微軟如何透過數位簽章實現 AI 內容溯源，及其對檢測的意義。',
+    en: 'Understand the C2PA Content Credentials standard: How OpenAI, Adobe, and Microsoft use digital signatures for AI provenance.',
+    ja: 'C2PA コンテンツ認証資格情報の解説。OpenAI、Adobe、Microsoft がデジタル署名で AI 履歴を追跡する方法。',
+    ko: 'C2PA 콘텐츠 자격 증명 표준 이해: OpenAI, Adobe, Microsoft가 디지털 서명으로 AI 출처를 추적하는 방법.',
+    de: 'Verstehen Sie den C2PA-Standard für Inhaltsanmeldeinformationen: Wie OpenAI, Adobe und Microsoft digitale Signaturen verwenden.',
+    fr: 'Comprendre la norme Content Credentials C2PA : comment OpenAI, Adobe et Microsoft utilisent des signatures numériques pour l’origine IA.',
+    es: 'Comprender el estándar Content Credentials de C2PA: cómo OpenAI, Adobe y Microsoft usan firmas digitales para el origen de la IA.',
+    'pt-BR': 'Entenda o padrão C2PA Content Credentials: como OpenAI, Adobe e Microsoft usam assinaturas digitais para procedência de IA.',
+  },
+};
+
+const defaultArticleLead = {
+  'zh-CN': '这篇指南说明如何用原始文件里的可读线索辅助判断 AI 来源，并解释哪些场景会让检测失效。',
+  'zh-TW': '這篇指南說明如何用原始檔案中的可讀線索輔助判斷 AI 來源，並解釋哪些情境會讓檢測失效。',
+  en: 'This guide explains how to use readable signals from the original file to assess AI origin, and why some files lose those signals.',
+  ja: 'このガイドでは、元ファイルに残る読み取り可能なシグナルで AI 由来を判断する方法と、シグナルが失われる条件を説明します。',
+  ko: '이 가이드는 원본 파일의 읽을 수 있는 신호로 AI 출처를 판단하는 방법과 신호가 사라지는 경우를 설명합니다.',
+  de: 'Dieser Guide erklärt, wie lesbare Signale aus der Originaldatei zur Einschätzung der AI-Herkunft helfen und wann sie verloren gehen.',
+  fr: 'Ce guide explique comment utiliser les signaux lisibles du fichier original pour évaluer une origine IA, et pourquoi ils peuvent disparaître.',
+  es: 'Esta guía explica cómo usar señales legibles del archivo original para evaluar origen IA y por qué algunas señales desaparecen.',
+  'pt-BR': 'Este guia explica como usar sinais legíveis do arquivo original para avaliar origem de IA e por que alguns sinais desaparecem.',
+};
+
+const platforms = [
+  { slug: 'gemini', name: 'Gemini', signals: ['C2PA', 'JUMBF', 'Google AI', 'MP4/MOV'] },
+  { slug: 'imagen', name: 'Google Imagen', signals: ['C2PA', 'Content Credentials', 'Google AI', 'MP4/MOV'] },
+  { slug: 'midjourney', name: 'Midjourney', signals: ['XMP', 'IPTC', 'file name'] },
+  { slug: 'dall-e', name: 'DALL-E / GPT Image', signals: ['C2PA', 'XMP', 'OpenAI', 'Sora video'] },
+  { slug: 'stable-diffusion', name: 'Stable Diffusion', signals: ['PNG tEXt', 'prompt', 'seed', 'frame export'] },
+  { slug: 'firefly', name: 'Adobe Firefly', signals: ['C2PA', 'Content Credentials', 'XMP', 'MP4/MOV'] },
+  { slug: 'flux', name: 'Flux (BFL)', signals: ['PNG tEXt', 'XMP', 'workflow', 'frame watermark'] },
+  { slug: 'comfyui', name: 'ComfyUI', signals: ['workflow JSON', 'PNG tEXt', 'nodes', 'frame export'] },
+  { slug: 'leonardo', name: 'Leonardo AI', signals: ['XMP', 'EXIF', 'Phoenix', 'video metadata'] },
+  { slug: 'ideogram', name: 'Ideogram', signals: ['XMP', 'EXIF', 'text rendering', 'file name'] },
+  { slug: 'sora', name: 'Sora', signals: ['C2PA-lite', 'MP4/MOV', 'OpenAI', 'frame watermark'] },
+  { slug: 'kling', name: 'Kling', signals: ['MP4/MOV', 'SEI marker', 'AIGC label', 'frame watermark'] },
+];
+
+const videoPlatforms = ['Runway', 'Pika', 'Google Veo', 'Vidu', 'Luma', 'Hailuo', 'Pixverse', 'Wan'];
+
+const c = localizedCopy[lang] ?? localizedCopy.en;
+const path = pagePath.replace(/^\/|\/$/g, '');
+const prefix = `/${lang}`;
+const canonicalPath = `/${path}/`;
+const canonical = `${SITE_URL}${canonicalPath}`;
+const localHref = (target) => `${prefix}${target}`;
+const titleFor = (key) => pageTitles[key]?.[lang] ?? pageTitles[key]?.en;
+const articleTitle = titleFor(path);
+const articleDesc = articleDescriptions[path]?.[lang] ?? articleDescriptions[path]?.en ?? c.blogDesc;
+const platformSlug = path.startsWith('platforms/') ? path.split('/')[1] : null;
+const platform = platforms.find((item) => item.slug === platformSlug);
+const platformSeoName = platform?.name.endsWith('AI') ? platform.name : `${platform?.name} AI`;
+const relatedPlatforms = ['dall-e', 'gemini', 'sora', 'kling']
+  .map((slug) => platforms.find((item) => item.slug === slug))
+  .filter((item) => item && item.slug !== platformSlug);
+
+function titleWithSuffix(title) {
+  return `${title} | ${c.metaSuffix}`;
+}
+
+function jsonLdBase(type, name, description) {
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: c.home, item: `${SITE_URL}${prefix}/` },
+        { '@type': 'ListItem', position: 2, name, item: `${SITE_URL}${prefix}/${path}/` },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': type,
+      name,
+      headline: name,
+      description,
+      url: `${SITE_URL}${prefix}/${path}/`,
+      publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    },
+  ];
+}
+
+let pageTitle = c.aboutTitle;
+let pageDescription = c.aboutDesc;
+let jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
+
+if (path === 'blog') {
+  pageTitle = c.blogTitle;
+  pageDescription = c.blogDesc;
+  jsonLd = jsonLdBase('CollectionPage', pageTitle, pageDescription);
+} else if (path.startsWith('blog/')) {
+  pageTitle = articleTitle;
+  pageDescription = articleDesc;
+  jsonLd = jsonLdBase('Article', pageTitle, pageDescription);
+} else if (path === 'platforms') {
+  pageTitle = c.platformsTitle;
+  pageDescription = c.platformsDesc;
+  jsonLd = jsonLdBase('CollectionPage', pageTitle, pageDescription);
+} else if (platform) {
+  pageTitle = `${platformSeoName} Image/Video Detection Guide`;
+  if (lang === 'zh-CN') pageTitle = `${platformSeoName} 图片/视频检测指南`;
+  if (lang === 'zh-TW') pageTitle = `${platformSeoName} 圖片/影片檢測指南`;
+  if (lang === 'ja') pageTitle = `${platformSeoName} 画像/動画検出ガイド`;
+  if (lang === 'ko') pageTitle = `${platformSeoName} 이미지/비디오 감지 가이드`;
+  if (lang === 'de') pageTitle = `${platform.name} AI-Bild- und Videoprüfung`;
+  if (lang === 'fr') pageTitle = `Guide de détection image/vidéo IA ${platform.name}`;
+  if (lang === 'es') pageTitle = `Guía de detección de imagen/video IA de ${platform.name}`;
+  if (lang === 'pt-BR') pageTitle = `Guia de detecção de imagem/vídeo de IA do ${platform.name}`;
+  pageDescription = c.platformLead(platform.name);
+  jsonLd = jsonLdBase('Article', pageTitle, pageDescription);
+} else if (path === 'contact') {
+  pageTitle = c.contactTitle;
+  pageDescription = c.contactDesc;
+  jsonLd = jsonLdBase('ContactPage', pageTitle, pageDescription);
+} else if (path === 'privacy') {
+  pageTitle = c.privacyTitle;
+  pageDescription = c.privacyDesc;
+  jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
+} else if (path === 'terms') {
+  pageTitle = c.termsTitle;
+  pageDescription = c.termsDesc;
+  jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
+}
+
+const articles = Object.keys(pageTitles).map((slug) => ({
+  slug: slug.replace('blog/', ''),
+  title: titleFor(slug),
+  desc: articleDescriptions[slug]?.[lang] ?? articleDescriptions[slug]?.en ?? defaultArticleLead[lang],
+  tags: slug.includes('videos') ? ['AI video', 'MP4', 'C2PA'] : slug.includes('c2pa') ? ['C2PA', 'metadata'] : ['AI media', 'metadata'],
+}));
+---
+
+<Base title={titleWithSuffix(pageTitle)} description={pageDescription} canonical={canonical} jsonLd={jsonLd}>
+  <main class="page content-page">
+    {path !== 'blog' && path !== 'platforms' && (
+      <nav class="breadcrumb">
+        <a href={localHref('/')}>{c.home}</a>
+        {path.startsWith('blog/') && <> › <a href={localHref('/blog/')}>{c.blog}</a></>}
+        {path.startsWith('platforms/') && <> › <a href={localHref('/platforms/')}>{c.platforms}</a></>}
+        {' '}› {pageTitle}
+      </nav>
+    )}
+
+    {path === 'blog' && (
+      <>
+        <div class="content-hero card">
+          <h1>{c.blogTitle}</h1>
+          <p class="lead-text">{c.blogDesc}</p>
+        </div>
+        <div class="blog-grid">
+          {articles.map((article) => (
+            <a href={localHref(`/blog/${article.slug}/`)} class="blog-card card">
+              <div class="tag-row">
+                {article.tags.map((tag) => <span class="tag-inline">{tag}</span>)}
+              </div>
+              <h2>{article.title}</h2>
+              <p class="muted">{article.desc}</p>
+              <span class="blog-meta">{c.updated} · AICheck365</span>
+            </a>
+          ))}
+        </div>
+      </>
+    )}
+
+    {path === 'platforms' && (
+      <>
+        <div class="content-hero card">
+          <h1>{c.platformsTitle}</h1>
+          <p class="lead-text">{c.platformsDesc}</p>
+        </div>
+        <div class="platform-grid">
+          {platforms.map((item) => (
+            <a href={localHref(`/platforms/${item.slug}/`)} class="platform-card card">
+              <div class="platform-card-header">
+                <h2>{item.name}</h2>
+                <div class="tag-row">
+                  {item.signals.slice(0, 3).map((tag) => <span class="tag-inline">{tag}</span>)}
+                </div>
+              </div>
+              <p>{c.platformLead(item.name)}</p>
+              <span class="card-link">{c.read} -></span>
+            </a>
+          ))}
+        </div>
+        <div class="card content-section">
+          <h2>{c.sections.signals}</h2>
+          <p>{c.signalIntro}</p>
+          <p>{videoPlatforms.join(', ')}: MP4/MOV, C2PA-lite, SEI marker, file-name hints, sampled frame watermarks.</p>
+        </div>
+      </>
+    )}
+
+    {path.startsWith('blog/') && (
+      <article class="card content-article">
+        <h1>{pageTitle}</h1>
+        <p class="article-meta">{c.updated} · AI media detection · AICheck365</p>
+        <p class="lead-text">{articleDesc === c.blogDesc ? defaultArticleLead[lang] : articleDesc}</p>
+        <h2>{c.sections.signals}</h2>
+        <p>{c.signalIntro}</p>
+        <ul class="content-list">
+          {c.blogSignals.map((item) => <li>{item}</li>)}
+        </ul>
+        <h2>{c.sections.limits}</h2>
+        <p>{c.limitText}</p>
+        <h2>{c.sections.privacy}</h2>
+        <p>{c.privacyText}</p>
+        <div class="cta-box">
+          <p>{c.inspect}</p>
+          <a href={localHref('/')} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{c.inspect} -></a>
+        </div>
+      </article>
+    )}
+
+    {platform && (
+      <>
+        <article class="card content-article">
+          <h1>{pageTitle}</h1>
+          <p class="lead-text">{c.platformLead(platform.name)}</p>
+          <h2>{c.sections.signals}</h2>
+          <p>{c.signalIntro}</p>
+          <ul class="content-list">
+            {platform.signals.map((signal) => <li><strong>{signal}</strong>: {platform.name}</li>)}
+          </ul>
+          <h2>{c.sections.limits}</h2>
+          <p>{c.limitText}</p>
+          <h2>{c.sections.next}</h2>
+          <p>{c.platformCta(platform.name)}.</p>
+          <div class="cta-box">
+            <a href={localHref('/')} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{c.inspect} -></a>
+          </div>
+        </article>
+        <div class="related-platforms card">
+          <h2>{c.platforms}</h2>
+          <div class="related-links">
+            {relatedPlatforms.map((item) => (
+              <a href={localHref(`/platforms/${item.slug}/`)}>{item.name} -></a>
+            ))}
+          </div>
+        </div>
+      </>
+    )}
+
+    {path === 'about' && (
+      <article class="card content-article">
+        <h1>{c.aboutTitle}</h1>
+        <p class="lead-text">{c.aboutLead}</p>
+        <h2>{c.sections.signals}</h2>
+        <p>{c.signalIntro}</p>
+        <ul class="content-list">
+          {c.aboutSignals.map((item) => <li>{item}</li>)}
+        </ul>
+        <h2>{c.sections.privacy}</h2>
+        <p>{c.privacyLead}</p>
+        <h2>{c.sections.limits}</h2>
+        <p>{c.limitText}</p>
+      </article>
+    )}
+
+    {path === 'contact' && (
+      <article class="card content-article">
+        <h1>{c.contactTitle}</h1>
+        <p class="lead-text">{c.contactLead}</p>
+        <h2>Email</h2>
+        <p><a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a></p>
+        <h2>GitHub</h2>
+        <ul class="content-list">
+          <li><a href="https://github.com/MatrixA/aicheck/issues" target="_blank" rel="noopener">GitHub Issues</a></li>
+          <li><a href="https://github.com/MatrixA/aicheck/discussions" target="_blank" rel="noopener">GitHub Discussions</a></li>
+        </ul>
+        <h2>{c.sections.include}</h2>
+        <ul class="content-list">
+          {c.contactInclude.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+    )}
+
+    {path === 'privacy' && (
+      <article class="card content-article">
+        <h1>{c.privacyTitle}</h1>
+        <p class="lead-text">{c.privacyLead}</p>
+        <h2>{c.sections.privacy}</h2>
+        <p>{c.privacyText}</p>
+        <h2>{c.sections.signals}</h2>
+        <p>{c.signalIntro}</p>
+        <h2>{c.sections.limits}</h2>
+        <p>{c.limitText}</p>
+      </article>
+    )}
+
+    {path === 'terms' && (
+      <article class="card content-article">
+        <h1>{c.termsTitle}</h1>
+        <p class="lead-text">{c.termsLead}</p>
+        <h2>{c.sections.signals}</h2>
+        <p>{c.signalIntro}</p>
+        <h2>{c.sections.limits}</h2>
+        <p>{c.limitText}</p>
+        <h2>{c.sections.privacy}</h2>
+        <p>{c.privacyText}</p>
+      </article>
+    )}
+  </main>
+</Base>

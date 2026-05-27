@@ -5,6 +5,7 @@ const faq = [
   { q: "Adobe Firefly 图片的 C2PA 签名和 DALL-E 的一样吗？", a: "C2PA 是通用标准，但签名密钥不同。DALL-E 的 C2PA Manifest 由 OpenAI 签名，Firefly 的由 Adobe 签名。两者都能被检测，但签发机构不同。" },
   { q: "Photoshop 的生成式填充也会有 C2PA 吗？", a: "是的。Photoshop 使用 Firefly 技术的「生成式填充」和「生成式扩展」功能同样会写入 C2PA 记录，标注 AI 辅助编辑信息。" },
   { q: "Firefly 的检测可靠性如何？", a: "相对较高。Adobe 是 C2PA 标准的主要推动者，对 Firefly 生成的内容有严格的元数据策略，检测成功率在原图上通常很高。" },
+  { q: "Adobe 相关视频或动效文件能检测吗？", a: "可以上传原始视频文件尝试检测。浏览器版会检查 C2PA-lite、MP4/MOV 元数据、文件名和抽样视频帧水印，但经过导出、转码或剪辑后的文件可能丢失来源线索。" },
 ];
 
 const jsonLd = [
@@ -20,8 +21,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Adobe Firefly AI 图片检测：C2PA 数字签名与企业级内容溯源",
-    "description": "解析 Adobe Firefly 生成图片的 C2PA 标准实现，了解 Adobe 如何在图片中嵌入 AI 来源信息。",
+    "headline": "Adobe Firefly AI 图片/视频检测：C2PA 数字签名与企业级内容溯源",
+    "description": "解析 Adobe Firefly 生成内容的 C2PA 标准实现，了解 Adobe 如何在图片和视频文件中嵌入 AI 来源信息。",
     "url": "https://aicheck365.com/platforms/firefly/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -38,8 +39,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="Adobe Firefly AI 图片检测：C2PA 企业级溯源标准 | AICheck365"
-  description="了解 Adobe Firefly 图片中的 C2PA 数字签名和 XMP 元数据。Adobe 作为 C2PA 标准推动者，Firefly 生成图片的检测可靠性最高。"
+  title="Adobe Firefly AI 图片/视频检测：C2PA 企业级溯源标准 | AICheck365"
+  description="了解 Adobe Firefly 图片和视频文件中的 C2PA 数字签名、XMP 元数据与内容凭证线索。"
   canonical="https://aicheck365.com/platforms/firefly/"
   jsonLd={jsonLd}
 >
@@ -49,13 +50,13 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>Adobe Firefly 图片检测：C2PA 企业级内容溯源</h1>
-      <p class="article-meta">信号类型：C2PA · XMP · IPTC</p>
+      <h1>Adobe Firefly 图片/视频检测：C2PA 企业级内容溯源</h1>
+      <p class="article-meta">信号类型：C2PA · XMP · IPTC · MP4/MOV 元数据</p>
 
-      <p class="lead-text">Adobe Firefly 是 Adobe 推出的 AI 图片生成服务，集成在 Adobe Express、Photoshop、Illustrator 等产品中。作为 <strong>C2PA 标准的主要推动者</strong>，Adobe 对所有 Firefly 生成的内容实施严格的元数据策略。</p>
+      <p class="lead-text">Adobe Firefly 是 Adobe 推出的 AI 生成服务，集成在 Adobe Express、Photoshop、Illustrator 等产品中。作为 <strong>C2PA 标准的主要推动者</strong>，Adobe 对 Firefly 生成和编辑的内容实施严格的元数据策略；原始图片和视频文件都值得优先检查 Content Credentials。</p>
 
       <h2>Adobe 的内容溯源策略</h2>
-      <p>Adobe 是 C2PA（内容真实性倡议）的创始成员和核心推动者，也是 Content Credentials 功能的主要开发者。Firefly 生成的所有图片均默认嵌入：</p>
+      <p>Adobe 是 C2PA（内容真实性倡议）的创始成员和核心推动者，也是 Content Credentials 功能的主要开发者。Firefly 生成或编辑的原始媒体文件可能嵌入：</p>
       <ul class="content-list">
         <li>Adobe 数字签名的 <strong>C2PA Manifest</strong></li>
         <li>标注 AI 生成来源的 <strong>XMP 元数据</strong></li>
@@ -63,10 +64,10 @@ const jsonLd = [
       </ul>
 
       <h2>Photoshop 生成式填充的元数据</h2>
-      <p>使用 Photoshop"生成式填充"或"生成式扩展"功能编辑的图片，即使只有局部 AI 生成，C2PA Manifest 也会记录 AI 辅助编辑的历史，是目前<strong>元数据保留最完整的 AI 图片平台</strong>之一。</p>
+      <p>使用 Photoshop"生成式填充"或"生成式扩展"功能编辑的图片，即使只有局部 AI 生成，C2PA Manifest 也会记录 AI 辅助编辑的历史，是目前<strong>元数据保留最完整的 AI 生成内容平台</strong>之一。视频或动效文件则优先检查 C2PA-lite、MP4/MOV 元数据和文件名线索。</p>
 
       <div class="cta-box">
-        <p>立即检测 Adobe Firefly 生成的图片</p>
+        <p>立即检测 Adobe Firefly 生成或编辑的原始图片/视频</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

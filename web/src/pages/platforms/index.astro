@@ -12,8 +12,19 @@ const platforms = [
   { slug: 'comfyui',          name: 'ComfyUI',             desc: 'PNG 里经常保留 workflow JSON，能看到节点和生成参数', tags: ['PNG tEXt', 'JSON'] },
   { slug: 'leonardo',         name: 'Leonardo AI',         desc: '月活超千万的商业 AI 图片平台，支持 Phoenix 等自研模型', tags: ['XMP', 'EXIF'] },
   { slug: 'ideogram',         name: 'Ideogram',            desc: '常用于海报和文字图，部分文件会留下 XMP 或 EXIF 信息', tags: ['XMP', 'EXIF'] },
-  { slug: 'sora',             name: 'Sora (OpenAI)',       desc: 'OpenAI 视频生成内容，原始文件和帧图可能会保留 C2PA 线索', tags: ['C2PA', 'XMP'] },
-  { slug: 'kling',            name: '可灵 Kling',           desc: '可灵导出的图片和视频帧，部分文件可能保留 EXIF 或 XMP 线索', tags: ['EXIF', 'XMP'] },
+  { slug: 'sora',             name: 'Sora (OpenAI)',       desc: 'OpenAI 视频生成内容，原始 MP4 和帧图可能保留 C2PA、容器元数据或文件名线索', tags: ['C2PA', 'MP4'] },
+  { slug: 'kling',            name: '可灵 Kling',           desc: '可灵导出的图片和视频可检查 XMP、EXIF、MP4 SEI marker、文件名和抽样帧水印', tags: ['MP4', 'SEI'] },
+];
+
+const videoPlatforms = [
+  { name: 'Runway', desc: '重点检查 MP4/MOV 容器元数据、文件名和抽样视频帧水印', tags: ['MP4', 'Frame'] },
+  { name: 'Pika', desc: '重点检查视频容器标记、文件名特征和抽帧水印线索', tags: ['MP4', 'Watermark'] },
+  { name: 'Google Veo', desc: '优先检查 Google / C2PA / Content Credentials 相关来源文本', tags: ['C2PA', 'Google'] },
+  { name: 'Vidu', desc: '检查视频文件名、容器文本和 SEI marker 中的已知工具痕迹', tags: ['MP4', 'SEI'] },
+  { name: 'Luma', desc: '检查容器元数据、文件名和少量抽样帧中的可见/隐形水印', tags: ['Metadata', 'Frame'] },
+  { name: 'Hailuo / 海螺', desc: '检查国产视频平台常见的容器标记、文件名和帧水印线索', tags: ['MP4', 'Frame'] },
+  { name: 'Pixverse', desc: '检查容器文本、SEI marker、文件名和抽样帧水印', tags: ['SEI', 'Frame'] },
+  { name: 'Wan / 通义万相视频', desc: '检查 AIGC 标签、ContentProducer 映射和视频容器元数据', tags: ['AIGC', 'MP4'] },
 ];
 
 const jsonLd = [
@@ -28,23 +39,23 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "AI 图片生成平台检测指南",
+    "name": "AI 图片/视频生成平台检测指南",
     "url": "https://aicheck365.com/platforms/",
-    "description": "整理常见 AI 图片平台会留下哪些元数据线索，包括 Gemini、Imagen、Midjourney、DALL-E、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Leonardo AI 等。"
+    "description": "整理常见 AI 图片/视频平台会留下哪些来源线索，包括 Gemini、Imagen、Midjourney、DALL-E、Stable Diffusion、Adobe Firefly、Sora、Kling、Runway、Pika、Veo 等。"
   }
 ];
 ---
 
 <Base
-  title="AI 图片平台检测指南 | Gemini、Imagen、DALL-E、Midjourney | AICheck365"
-  description="查看 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Adobe Firefly、Flux、ComfyUI、Sora 等平台常见的图片元数据线索。"
+  title="AI 图片/视频平台检测指南 | Sora、Kling、Gemini、DALL-E | AICheck365"
+  description="查看 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Adobe Firefly、Sora、Kling、Runway、Pika 等平台常见的图片/视频来源线索。"
   canonical="https://aicheck365.com/platforms/"
   jsonLd={jsonLd}
 >
   <main class="page content-page">
     <div class="content-hero card">
-      <h1>AI 图片平台检测指南</h1>
-      <p class="lead-text">不同平台留下的线索不一样。有的写 C2PA，有的写 PNG 参数，也有的几乎什么都不留。这里按平台整理可检查的字段。</p>
+      <h1>AI 图片/视频平台检测指南</h1>
+      <p class="lead-text">不同平台留下的线索不一样。有的写 C2PA，有的写 PNG 参数，有的只在 MP4 容器、SEI marker、文件名或视频帧里留下痕迹。这里按平台整理可检查的字段。</p>
     </div>
 
     <div class="platform-grid">
@@ -63,10 +74,31 @@ const jsonLd = [
     </div>
 
     <div class="card content-section">
+      <h2>视频生成平台可检查哪些线索？</h2>
+      <p>AICheck365 浏览器版会先读取视频容器里的 C2PA-lite 文本、MP4/MOV/M4V 元数据、AIGC 标签、SEI marker 和文件名特征；如果这些线索没有命中，再在本地用 ffmpeg.wasm 抽样少量视频帧，检查隐形水印和角落可见水印。</p>
+      <p>视频检测仍然依赖原始文件。社交平台转码、录屏、剪辑软件重新导出或清理元数据后，很多来源信号都会消失。</p>
+    </div>
+
+    <div class="platform-grid">
+      {videoPlatforms.map(p => (
+        <div class="platform-card card">
+          <div class="platform-card-header">
+            <h2>{p.name}</h2>
+            <div class="tag-row">
+              {p.tags.map(t => <span class="tag-inline">{t}</span>)}
+            </div>
+          </div>
+          <p>{p.desc}</p>
+          <span class="card-link">可直接上传原始视频检测</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="card content-section">
       <h2>为什么不同平台的检测方法不同？</h2>
-      <p>平台写入元数据的方式并不统一。OpenAI、Adobe、Google 这类产品更可能使用 C2PA；Stable Diffusion、ComfyUI 这类工作流则取决于用户使用的前端和导出设置。有些平台导出的文件可能没有可读线索。</p>
-      <p>所以检测结果只能作为<strong>辅助参考</strong>。没检测到，不代表图片一定不是 AI 生成。</p>
-      <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">检测一张图片 →</a></p>
+      <p>平台写入元数据的方式并不统一。OpenAI、Adobe、Google 这类产品更可能使用 C2PA；Stable Diffusion、ComfyUI 这类工作流则取决于用户使用的前端和导出设置；视频平台还可能把来源线索放在 MP4 容器、SEI marker 或抽样帧水印里。有些平台导出的文件可能没有可读线索。</p>
+      <p>所以检测结果只能作为<strong>辅助参考</strong>。没检测到，不代表文件一定不是 AI 生成。</p>
+      <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">检测图片或视频 →</a></p>
     </div>
   </main>
 </Base>

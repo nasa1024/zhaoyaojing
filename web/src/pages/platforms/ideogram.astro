@@ -6,6 +6,7 @@ const faq = [
   { q: "Ideogram 最大的特点是什么，为什么值得关注？", a: "Ideogram 在 AI 图片文字渲染方面表现卓越，是目前能够准确生成图片内嵌文字的少数几个 AI 工具之一。这使其在海报、广告、商业设计等场景中被大量使用。" },
   { q: "Ideogram v2 和 v1 的元数据有区别吗？", a: "Ideogram v2（2024 年发布）改进了文字渲染和整体质量，元数据写入策略可能随版本迭代有所变化。建议在 AICheck365 中测试你的具体图片。" },
   { q: "如何区分 Ideogram 和其他文生图工具的输出？", a: "除元数据信号外，Ideogram 图片的一个视觉特征是其独特的文字渲染风格和特定的图片比例。结合元数据分析和视觉判断可以提高识别准确率。" },
+  { q: "Ideogram 视频或动效文件能检测吗？", a: "如果你有原始视频文件，可以直接上传。AICheck365 会检查容器元数据、文件名和抽样帧水印；但 Ideogram 页面主要覆盖其图片生成内容的 XMP、EXIF 和文件名线索。" },
 ];
 
 const jsonLd = [
@@ -39,8 +40,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="如何检测 Ideogram AI 生成图片？元数据识别指南 | AICheck365"
-  description="Ideogram 是最擅长图片文字渲染的 AI 工具。了解如何通过 XMP、EXIF 元数据信号识别 Ideogram 生成的图片。"
+  title="如何检测 Ideogram AI 生成图片/视频？元数据识别指南 | AICheck365"
+  description="了解如何通过 XMP、EXIF、文件名识别 Ideogram 图片，并用同一工具检查原始视频文件的容器元数据和抽样帧水印。"
   canonical="https://aicheck365.com/platforms/ideogram/"
   jsonLd={jsonLd}
 >
@@ -50,10 +51,10 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>Ideogram 图片检测：元数据识别完整指南</h1>
-      <p class="article-meta">信号类型：XMP · EXIF · 文件名</p>
+      <h1>Ideogram 图片/视频检测：元数据识别完整指南</h1>
+      <p class="article-meta">信号类型：XMP · EXIF · 文件名 · 视频帧水印</p>
 
-      <p class="lead-text">Ideogram 是一款以<strong>文字渲染</strong>能力著称的 AI 图像生成工具，能够在图片中精确生成可读的文字内容。这一独特能力使其在海报、商标、广告设计等场景中被大量使用，识别 Ideogram 生成的图片也因此具有重要意义。</p>
+      <p class="lead-text">Ideogram 是一款以<strong>文字渲染</strong>能力著称的 AI 图像生成工具，能够在图片中精确生成可读的文字内容。这一独特能力使其在海报、商标、广告设计等场景中被大量使用，识别 Ideogram 生成的图片也因此具有重要意义。原始视频或动效文件也可用同一工具检查容器和抽样帧线索。</p>
 
       <h2>Ideogram 的核心特征</h2>
       <p>在技术层面，Ideogram 是少数几个能够可靠生成图片内嵌文字的 AI 工具：</p>
@@ -89,7 +90,7 @@ const jsonLd = [
       </ul>
 
       <div class="cta-box">
-        <p>立即上传 Ideogram 生成的图片进行检测</p>
+        <p>立即上传 Ideogram 原始图片或视频进行检测</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

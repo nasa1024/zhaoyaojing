@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 const faq = [
   { q: "C2PA 签名可以被伪造吗？", a: "理论上极难伪造。C2PA 使用 PKI（公钥基础设施）数字签名，验证者可以通过签名方的公钥证书确认真实性。伪造需要攻破签名方的私钥，与伪造 SSL 证书难度相当。" },
   { q: "所有 AI 平台都会使用 C2PA 吗？", a: "不是所有平台都已实现 C2PA。目前主要支持者包括 OpenAI（DALL-E 3、Sora）、Adobe（Firefly）、微软、Google、Sony 等。开源工具（如 Stable Diffusion）通常不默认写入 C2PA。" },
-  { q: "如何查看一张图片的 C2PA 信息？", a: "可以使用 AICheck365 检测 C2PA 信号，也可以使用 Adobe 的 Content Credentials 官方验证工具（contentcredentials.org）查看详细的 C2PA Manifest 内容。" },
+  { q: "如何查看图片或视频的 C2PA 信息？", a: "可以使用 AICheck365 检测 C2PA 来源信号，也可以使用 Adobe 的 Content Credentials 官方验证工具（contentcredentials.org）查看详细的 C2PA Manifest 内容。浏览器版适合快速扫描来源文本，不等同于完整签名链审计。" },
   { q: "C2PA 只用于 AI 图片吗？", a: "不是。C2PA 是通用内容溯源标准，也用于标注真实照片（相机拍摄）、视频、音频的来源。例如某些 Sony 相机型号已支持在拍照时写入 C2PA 签名。" },
 ];
 
@@ -21,7 +21,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "C2PA 是什么？AI 图片溯源标准完整解读",
+    "headline": "C2PA 是什么？AI 图片/视频溯源标准完整解读",
     "description": "深入了解 C2PA（内容真实性倡议）标准：谁制定的、如何工作、哪些平台支持、为什么重要。",
     "url": "https://aicheck365.com/blog/what-is-c2pa/",
     "datePublished": "2025-04-01",
@@ -40,8 +40,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="C2PA 是什么？AI 图片溯源标准完整解读 | AICheck365"
-  description="深入了解 C2PA（内容真实性倡议）标准：OpenAI、Adobe、微软如何通过数字签名实现 AI 内容溯源，以及其对 AI 图片检测的意义。"
+  title="C2PA 是什么？AI 图片/视频溯源标准完整解读 | AICheck365"
+  description="深入了解 C2PA（内容真实性倡议）标准：OpenAI、Adobe、微软如何通过数字签名实现 AI 内容溯源，以及其对 AI 图片和视频检测的意义。"
   canonical="https://aicheck365.com/blog/what-is-c2pa/"
   jsonLd={jsonLd}
 >
@@ -51,7 +51,7 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>C2PA 是什么？AI 图片溯源标准完整解读</h1>
+      <h1>C2PA 是什么？AI 图片/视频溯源标准完整解读</h1>
       <p class="article-meta">2025年4月 · 内容溯源 · 行业标准</p>
 
       <p class="lead-text">C2PA（Coalition for Content Provenance and Authenticity，内容来源和真实性联盟）是由科技行业主要参与者联合制定的开放标准，旨在为数字内容提供可验证的来源信息，是目前 AI 生成内容溯源最可靠的技术方案。</p>
@@ -86,6 +86,9 @@ const jsonLd = [
         <li><strong>数字签名</strong>：签名方的证书链和签名数据</li>
       </ul>
 
+      <h2>C2PA 在视频里怎么看？</h2>
+      <p>视频文件通常比图片更容易经历转码和重新封装，因此 C2PA 信息可能存在于 MP4/MOV 容器、JUMBF 数据或可读来源文本中，也可能在平台处理后消失。AICheck365 浏览器版会扫描 C2PA、Content Credentials、digitalSourceType、claim_generator 等来源文本，但不会执行完整签名链和证书链验证。</p>
+
       <h2>哪些平台已支持 C2PA？</h2>
       <div class="comparison-table">
         <table>
@@ -112,7 +115,7 @@ const jsonLd = [
       </ul>
 
       <div class="cta-box">
-        <p>使用 AICheck365 检测图片是否包含 C2PA 信号</p>
+      <p>使用 AICheck365 检测图片或视频是否包含 C2PA 来源信号</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 
@@ -130,6 +133,7 @@ const jsonLd = [
     <div class="related-platforms card">
       <h2>相关内容</h2>
       <div class="related-links">
+        <a href="/blog/how-to-detect-ai-videos/">如何检测 AI 视频 →</a>
         <a href="/blog/how-to-detect-ai-images/">如何检测 AI 图片 →</a>
         <a href="/platforms/dall-e/">DALL-E C2PA 指南 →</a>
         <a href="/platforms/firefly/">Adobe Firefly C2PA →</a>

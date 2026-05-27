@@ -8,7 +8,7 @@
 - 当前重点支持：EXIF / XMP / PNG 文本块 / MP4/MOV 元数据 / C2PA-lite / 文件名启发式 / 视频帧水印
 - 不上传图片或视频到服务器
 - 明确只对站点里列出的平台/工具来源信号负责
-- 视频帧分析使用单线程 `@ffmpeg/ffmpeg` + `@ffmpeg/core`，同源加载 WASM，不要求 COOP/COEP
+- 视频帧分析使用单线程 `@ffmpeg/ffmpeg`，按需从固定版本 CDN 加载 `@ffmpeg/core`，不要求 COOP/COEP
 
 ## 本地运行
 

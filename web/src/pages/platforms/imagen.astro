@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 
 const faq = [
   { q: "Google Imagen 图片可以被检测出来吗？", a: "可以检测一部分原始文件。Imagen / Google AI 图片可能带 C2PA Content Credentials，manifest 里有时会出现 Google、Imagen 或 digitalSourceType 相关字段。" },
-  { q: "Imagen 和 Gemini 图片检测有什么区别？", a: "检测方法很接近。Gemini 是用户常见的生成入口，Imagen 更像底层图像模型。落到文件上，主要还是看 C2PA/JUMBF、digitalSourceType 和 Google/Imagen 工具名。" },
+  { q: "Imagen、Gemini 和 Veo 检测有什么区别？", a: "检测方法很接近。Imagen 和 Gemini 图片主要看 C2PA/JUMBF、digitalSourceType 和 Google/Imagen 工具名；Google Veo 等视频文件还会检查 MP4/MOV 元数据、文件名和抽样帧水印。" },
   { q: "没有 C2PA 就说明不是 Imagen 吗？", a: "不是。图片只要被截图、压缩、转发或重新导出，C2PA/EXIF/XMP 都可能消失。检测不到，只能说明这个文件里没有留下证据。" },
   { q: "AICheck365 会验证 C2PA 签名吗？", a: "浏览器版主要做本地来源信号读取，不等同于完整签名审计。它适合快速看一张原图里有没有可解释的 AI 来源线索。" },
 ];
@@ -21,8 +21,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "如何检测 Google Imagen 图片？重点看 C2PA 来源字段",
-    "description": "说明 Google Imagen 原图里可能出现的 C2PA Content Credentials、claim_generator_info 和 digitalSourceType 字段。",
+    "headline": "如何检测 Google Imagen 图片和 Google AI 视频？重点看 C2PA 来源字段",
+    "description": "说明 Google Imagen 原图和 Google AI 视频里可能出现的 C2PA Content Credentials、claim_generator_info、digitalSourceType 和 MP4 元数据字段。",
     "url": "https://aicheck365.com/platforms/imagen/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -39,8 +39,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="如何检测 Google Imagen 图片？重点看 C2PA 来源字段 | AICheck365"
-  description="查看 Google Imagen 原图里的 C2PA Content Credentials、JUMBF、claim_generator_info 和 digitalSourceType 等来源字段。"
+  title="如何检测 Google Imagen 图片/视频？C2PA 与 MP4 来源字段 | AICheck365"
+  description="查看 Google Imagen 原图和 Google AI 原始视频里的 C2PA Content Credentials、JUMBF、claim_generator_info、digitalSourceType 和 MP4 元数据。"
   canonical="https://aicheck365.com/platforms/imagen/"
   jsonLd={jsonLd}
 >
@@ -50,10 +50,10 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>Google Imagen 图片检测：重点看 C2PA 和工具名</h1>
-      <p class="article-meta">信号类型：C2PA · JUMBF · Google AI · digitalSourceType</p>
+      <h1>Google Imagen 图片/视频检测：重点看 C2PA 和工具名</h1>
+      <p class="article-meta">信号类型：C2PA · JUMBF · Google AI · digitalSourceType · MP4 元数据</p>
 
-      <p class="lead-text">Imagen 是 Google 的图像生成模型。通过 Gemini、Google AI Studio 或其他 Google 产品导出的图片，原图里有时会保留 C2PA / Content Credentials。</p>
+      <p class="lead-text">Imagen 是 Google 的图像生成模型。通过 Gemini、Google AI Studio 或其他 Google 产品导出的图片，原图里有时会保留 C2PA / Content Credentials；Google AI 视频文件则可能留下 C2PA-lite、MP4/MOV 元数据、文件名或抽样帧水印线索。</p>
 
       <h2>Imagen 图片里通常看什么？</h2>
       <p>AICheck365 会在浏览器本地扫描 PNG/JPEG 文件，查找 C2PA/JUMBF manifest。如果里面出现 Google、Imagen 或 <code>trainedAlgorithmicMedia</code>，就会把它作为 AI 来源线索展示出来。</p>
@@ -82,8 +82,8 @@ const jsonLd = [
       </ul>
 
       <div class="cta-box">
-        <p>可以上传 Imagen 或 Gemini 原图，先看看文件里有没有 C2PA 线索。</p>
-        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">检测这张图片 →</a>
+        <p>可以上传 Imagen / Gemini 原图或 Google AI 原始视频，先看看文件里有没有来源线索。</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">检测图片或视频 →</a>
       </div>
 
       <h2>常见问题</h2>

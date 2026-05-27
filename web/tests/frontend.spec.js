@@ -191,3 +191,19 @@ test('keeps language in the URL and localized links', async ({ page }) => {
   await page.locator('#lang-switch').selectOption('ja');
   await expect(page).toHaveURL('/ja/platforms/midjourney/');
 });
+
+test('serves sitemap entrypoint and includes localized routes', async ({ request }) => {
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBeTruthy();
+  expect(sitemap.headers()['content-type']).toMatch(/xml/);
+
+  const sitemapText = await sitemap.text();
+  expect(sitemapText).toContain('https://aicheck365.com/sitemap-0.xml');
+
+  const urlset = await request.get('/sitemap-0.xml');
+  expect(urlset.ok()).toBeTruthy();
+
+  const urlsetText = await urlset.text();
+  expect(urlsetText).toContain('https://aicheck365.com/en/platforms/midjourney/');
+  expect(urlsetText).toContain('https://aicheck365.com/zh-CN/blog/how-to-detect-ai-videos/');
+});

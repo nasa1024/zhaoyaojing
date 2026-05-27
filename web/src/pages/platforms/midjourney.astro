@@ -6,6 +6,7 @@ const faq = [
   { q: "Midjourney 在图片里写入了哪些信息？", a: "主要包括：XMP 字段中的 CreatorTool（含 Midjourney 字样）、IPTC 数字来源类型（trainedAlgorithmicMedia）、以及部分版本的 PNG 文本块参数。" },
   { q: "截图的 Midjourney 图片能被检测到吗？", a: "通常不能。截图会生成全新的图片文件，不会继承原图的元数据。" },
   { q: "Midjourney v6 和 v5 的元数据有什么区别？", a: "不同版本的元数据写入策略有所不同，但核心 XMP CreatorTool 字段在主要版本中都存在。v6 起部分图片还会包含更详细的生成参数信息。" },
+  { q: "AICheck365 也能检测视频吗？", a: "可以。Midjourney 页面重点解释图片元数据，但同一个上传工具也支持 MP4、MOV、M4V、WebM、AVI 视频，会检查容器元数据、文件名和抽样帧水印。" },
 ];
 
 const jsonLd = [
@@ -89,7 +90,7 @@ const jsonLd = [
       </ol>
 
       <div class="cta-box">
-        <p>立即上传 Midjourney 图片进行检测</p>
+        <p>立即上传 Midjourney 原图，或检测其他 AI 视频文件</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

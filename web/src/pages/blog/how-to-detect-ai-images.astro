@@ -5,6 +5,7 @@ const faq = [
   { q: "为什么有些 AI 图片完全检测不出来？", a: "元数据检测依赖于图片中嵌入的来源信号。如果图片经过社交媒体压缩、截图、重新导出或专门清除元数据，这些信号就会消失。没有信号不代表图片不是 AI 生成的，只代表无法通过元数据方式证明。" },
   { q: "像素分析方法和元数据分析哪个更准确？", a: "各有优劣。元数据分析准确性极高（有信号即可确认），但无法覆盖没有信号的图片。像素分析（AI 特征检测）覆盖面更广，但误判率更高，且难以应对高质量 AI 图片。两种方法互补，而非替代。" },
   { q: "C2PA 标准普及后，AI 图片检测会变得更容易吗？", a: "是的。随着 OpenAI、Adobe、微软、Google 等主要平台全面实施 C2PA，未来 AI 生成内容的溯源会越来越可靠。C2PA 的优势在于数字签名难以伪造，且可以追踪编辑历史。" },
+  { q: "AI 视频应该怎么检测？", a: "视频优先看原始 MP4/MOV 文件里的 C2PA-lite、容器元数据、SEI marker 和文件名线索；没有命中时再抽样视频帧检查水印。详见 AI 视频检测指南。" },
 ];
 
 const jsonLd = [
@@ -51,7 +52,7 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>如何判断一张图片是否 AI 生成？2025 完整指南</h1>
-      <p class="article-meta">2025年5月 · 元数据分析 · AI 图片检测</p>
+      <p class="article-meta">2025年5月 · 元数据分析 · AI 图片检测 · 视频检测入口</p>
 
       <p class="lead-text">随着 Midjourney、DALL-E、Stable Diffusion 等 AI 生成工具的普及，鉴别图片是否 AI 生成变得越来越重要。本文从多个维度提供系统性的判断方法。</p>
 
@@ -67,6 +68,7 @@ const jsonLd = [
       <p><strong>局限性</strong>：经过社交平台压缩、截图或元数据清除后，这些信号会消失。</p>
 
       <p>使用 <a href="/">AICheck365</a> 可以免费检测这些元数据信号，所有分析在浏览器本地完成。</p>
+      <p>如果你要检测的是 AI 生成视频，可以参考 <a href="/blog/how-to-detect-ai-videos/">AI 视频检测指南</a>：视频会额外检查 MP4/MOV 容器元数据、SEI marker、文件名和抽样帧水印。</p>
 
       <h2>方法二：视觉特征识别</h2>
       <p>AI 生成图片通常存在以下视觉规律，但随着技术进步，这些特征越来越不明显：</p>
@@ -106,7 +108,7 @@ const jsonLd = [
       </ol>
 
       <div class="cta-box">
-        <p>立即免费检测图片的 AI 来源信号</p>
+        <p>立即免费检测图片或视频的 AI 来源信号</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 
@@ -125,6 +127,7 @@ const jsonLd = [
       <h2>相关文章</h2>
       <div class="related-links">
         <a href="/blog/what-is-c2pa/">C2PA 标准解读 →</a>
+        <a href="/blog/how-to-detect-ai-videos/">AI 视频检测指南 →</a>
         <a href="/blog/ai-image-metadata-guide/">AI 图片元数据指南 →</a>
         <a href="/platforms/">平台检测指南 →</a>
       </div>

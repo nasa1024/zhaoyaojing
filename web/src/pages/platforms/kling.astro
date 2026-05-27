@@ -2,9 +2,9 @@
 import Base from '../../layouts/Base.astro';
 
 const faq = [
-  { q: "可灵生成的图片可以被检测到吗？", a: "可以。可灵生成的图片通常包含 XMP 元数据，标注了 AI 生成来源。直接下载的原图命中率较高，经过社交平台转发后可能失效。" },
-  { q: "可灵视频也支持检测吗？", a: "AICheck365 目前重点支持图片检测。视频检测功能正在开发中，未来将支持可灵等平台生成的视频。" },
-  { q: "可灵和即梦的元数据有什么区别？", a: "可灵（快手出品）和即梦（字节跳动出品）的元数据写入策略各有差异，但都属于国产 AI 生成平台，元数据规范相对统一。" },
+  { q: "可灵生成的图片和视频可以被检测到吗？", a: "可以检测一部分原始文件。图片侧重点是 XMP、EXIF 和文件名；视频侧重点是 MP4/MOV 容器元数据、SEI marker、文件名和抽样视频帧水印。" },
+  { q: "可灵视频现在支持直接上传检测吗？", a: "支持。AICheck365 浏览器版可以直接选择 MP4、MOV、M4V、WebM、AVI 等视频文件，检测过程在本地浏览器完成，不上传服务器。" },
+  { q: "可灵视频为什么可能检测不到？", a: "如果视频经过平台转码、录屏、剪辑软件重新导出或清理元数据，容器标记和水印线索都可能消失。没有信号不等于一定不是 AI 生成。" },
 ];
 
 const jsonLd = [
@@ -20,8 +20,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "可灵 Kling AI 图片检测：快手 AI 生成内容元数据识别",
-    "description": "了解快手可灵（Kling）AI 生成图片的元数据特征，以及如何使用 AICheck365 进行检测。",
+    "headline": "可灵 Kling AI 图片/视频检测：MP4 元数据、SEI 标记与帧水印",
+    "description": "了解快手可灵（Kling）AI 生成图片和视频的来源线索，以及如何使用 AICheck365 检查 XMP、EXIF、MP4 元数据、SEI marker 和视频帧水印。",
     "url": "https://aicheck365.com/platforms/kling/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -38,8 +38,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="可灵 Kling AI 图片检测：快手 AI 生成内容元数据指南 | AICheck365"
-  description="了解快手可灵（Kling）AI 生成图片的 XMP 元数据特征，以及如何识别可灵生成的图片和视频内容。"
+  title="可灵 Kling AI 图片/视频检测：MP4 元数据与帧水印 | AICheck365"
+  description="检测可灵 Kling 原始图片和视频：浏览器本地检查 XMP、EXIF、MP4/MOV 元数据、SEI marker、文件名和视频帧水印。"
   canonical="https://aicheck365.com/platforms/kling/"
   jsonLd={jsonLd}
 >
@@ -49,24 +49,26 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>可灵（Kling）AI 图片检测</h1>
-      <p class="article-meta">信号类型：XMP · EXIF · 文件名特征</p>
+      <h1>可灵（Kling）AI 图片/视频检测</h1>
+      <p class="article-meta">信号类型：XMP · EXIF · MP4 元数据 · SEI marker · 视频帧水印</p>
 
       <p class="lead-text">可灵（Kling）是快手推出的 AI 图片和视频生成平台，以其强大的视频生成能力著称，同时也提供高质量的 AI 图片生成功能。</p>
 
-      <h2>可灵图片的元数据特征</h2>
-      <p>可灵生成的图片通常包含以下可检测信号：</p>
+      <h2>可灵图片和视频的可检测线索</h2>
+      <p>可灵生成内容可能包含以下可检测信号：</p>
       <ul class="content-list">
-        <li><strong>XMP 软件信息</strong>：标注 Kling 相关软件来源</li>
-        <li><strong>EXIF 创建工具</strong>：记录 AI 生成软件信息</li>
-        <li><strong>文件名特征</strong>：可灵生成图片的文件名通常有规律性格式</li>
+        <li><strong>XMP / EXIF 软件信息</strong>：图片文件可能标注 Kling 相关软件来源</li>
+        <li><strong>MP4 / MOV 容器元数据</strong>：视频文件可能保留工具名、AIGC 标签或其他可读来源字段</li>
+        <li><strong>SEI marker</strong>：部分视频编码流可能保留可灵相关标记</li>
+        <li><strong>视频帧水印</strong>：元数据没有命中时，可抽样少量帧检查隐形或可见水印</li>
+        <li><strong>文件名特征</strong>：原始下载文件名可能包含平台或生成工具痕迹</li>
       </ul>
 
       <h2>图片 vs 视频检测</h2>
-      <p>可灵以视频生成能力闻名，其静态图片检测已有较好支持。视频文件的 AI 来源检测（基于 MP4 元数据）功能正在持续完善中。</p>
+      <p>图片通常优先看 XMP、EXIF、PNG 文本块和文件名。视频会先看 C2PA-lite 文本、MP4/MOV/M4V 容器元数据、AIGC 标签、SEI marker 和文件名；如果没有命中，再在浏览器本地抽样视频帧做水印分析。视频越接近原始下载文件，保留线索的概率越高。</p>
 
       <div class="cta-box">
-        <p>立即检测可灵生成的图片</p>
+        <p>立即检测可灵生成的原始图片或视频</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

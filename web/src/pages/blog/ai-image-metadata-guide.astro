@@ -8,14 +8,14 @@ const jsonLd = [
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aicheck365.com/" },
       { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aicheck365.com/blog/" },
-      { "@type": "ListItem", "position": 3, "name": "AI 图片元数据指南", "item": "https://aicheck365.com/blog/ai-image-metadata-guide/" },
+      { "@type": "ListItem", "position": 3, "name": "AI 媒体元数据指南", "item": "https://aicheck365.com/blog/ai-image-metadata-guide/" },
     ]
   },
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "AI 图片元数据完整指南：EXIF、XMP、C2PA、PNG tEXt 全解析",
-    "description": "图片元数据类型大全，详解各种 AI 平台在图片中写入的元数据格式与内容，以及如何读取和验证这些信息。",
+    "headline": "AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 全解析",
+    "description": "图片/视频元数据类型大全，详解各种 AI 平台在文件中写入的元数据格式与内容，以及如何读取和验证这些信息。",
     "url": "https://aicheck365.com/blog/ai-image-metadata-guide/",
     "datePublished": "2025-04-01",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
@@ -24,21 +24,21 @@ const jsonLd = [
 ---
 
 <Base
-  title="AI 图片元数据完整指南：EXIF、XMP、C2PA、PNG tEXt | AICheck365"
-  description="图片元数据类型大全：EXIF、XMP、C2PA、PNG tEXt 格式详解，各 AI 平台的元数据写入策略，以及使用 AICheck365 检测的方法。"
+  title="AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 | AICheck365"
+  description="图片/视频元数据类型大全：EXIF、XMP、C2PA、PNG tEXt、MP4/MOV 格式详解，各 AI 平台的元数据写入策略，以及使用 AICheck365 检测的方法。"
   canonical="https://aicheck365.com/blog/ai-image-metadata-guide/"
   jsonLd={jsonLd}
 >
   <main class="page content-page">
     <nav class="breadcrumb">
-      <a href="/">首页</a> › <a href="/blog/">知识库</a> › AI 图片元数据指南
+      <a href="/">首页</a> › <a href="/blog/">知识库</a> › AI 媒体元数据指南
     </nav>
 
     <article class="card content-article">
-      <h1>AI 图片元数据完整指南：EXIF、XMP、C2PA、PNG tEXt 全解析</h1>
+      <h1>AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 全解析</h1>
       <p class="article-meta">2025年4月 · 技术深度 · 元数据</p>
 
-      <p class="lead-text">图片元数据是嵌入在图片文件中的"隐藏信息"，记录了图片的创建方式、时间、工具和后续处理历史。对于 AI 生成图片检测，元数据是最可靠的来源信号。本文全面解析各类元数据格式。</p>
+      <p class="lead-text">媒体元数据是嵌入在图片或视频文件中的"隐藏信息"，记录了文件的创建方式、时间、工具和后续处理历史。对于 AI 生成内容检测，元数据和视频帧水印是最可靠的来源信号之一。本文全面解析各类元数据格式。</p>
 
       <h2>1. EXIF（可交换图像文件格式）</h2>
       <p>EXIF（Exchangeable Image File Format）是最古老也最广泛支持的图片元数据标准，最初为数码相机设计。</p>
@@ -98,32 +98,43 @@ const jsonLd = [
         <li><code>photoshop:Credit</code>：版权/来源信息，部分 AI 平台写入平台名称</li>
       </ul>
 
+      <h2>6. MP4 / MOV 视频容器元数据</h2>
+      <p>AI 视频平台导出的原始文件可能在 MP4、MOV 或 M4V 容器中保留工具名、AIGC 标签、ContentProducer、SEI marker 或 C2PA/JUMBF 相关文本。Sora、可灵、Runway、Pika、Veo、Vidu、Luma、海螺、Pixverse、Wan 等视频工具，都可能通过容器字段、文件名或抽样帧水印留下线索。</p>
+      <ul class="content-list">
+        <li><strong>C2PA-lite / JUMBF</strong>：查找 digitalSourceType、claim_generator、Content Credentials 等来源文本</li>
+        <li><strong>iTunes 风格原子</strong>：如 tool/software 标签，可记录生成或导出工具</li>
+        <li><strong>AIGC 标签</strong>：部分国产平台可能写入 ProduceID、ContentProducer 等字段</li>
+        <li><strong>SEI marker</strong>：部分编码流可能保留工具相关标记</li>
+        <li><strong>视频帧水印</strong>：当容器元数据没有命中时，可抽样检查隐形或可见水印</li>
+      </ul>
+
       <h2>各平台元数据写入策略对比</h2>
       <div class="comparison-table">
         <table>
           <thead>
-            <tr><th>平台</th><th>EXIF</th><th>XMP</th><th>C2PA</th><th>PNG tEXt</th></tr>
+            <tr><th>平台</th><th>EXIF</th><th>XMP</th><th>C2PA</th><th>PNG tEXt</th><th>MP4/帧</th></tr>
           </thead>
           <tbody>
-            <tr><td>Midjourney</td><td>部分</td><td>✅</td><td>❌</td><td>部分</td></tr>
-            <tr><td>DALL-E 3</td><td>部分</td><td>✅</td><td>✅</td><td>❌</td></tr>
-            <tr><td>Stable Diffusion</td><td>部分</td><td>部分</td><td>❌</td><td>✅</td></tr>
-            <tr><td>Adobe Firefly</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
-            <tr><td>Flux (ComfyUI)</td><td>部分</td><td>部分</td><td>❌</td><td>✅</td></tr>
+            <tr><td>Midjourney</td><td>部分</td><td>✅</td><td>❌</td><td>部分</td><td>少见</td></tr>
+            <tr><td>DALL-E 3</td><td>部分</td><td>✅</td><td>✅</td><td>❌</td><td>相关视频看 Sora</td></tr>
+            <tr><td>Stable Diffusion</td><td>部分</td><td>部分</td><td>❌</td><td>✅</td><td>导出视频可抽帧</td></tr>
+            <tr><td>Adobe Firefly</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>可能有 C2PA/容器线索</td></tr>
+            <tr><td>Flux (ComfyUI)</td><td>部分</td><td>部分</td><td>❌</td><td>✅</td><td>导出视频可抽帧</td></tr>
+            <tr><td>Sora / Kling / Runway</td><td>少见</td><td>少见</td><td>部分</td><td>❌</td><td>✅</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2>如何读取图片元数据？</h2>
+      <h2>如何读取图片/视频元数据？</h2>
       <ul class="content-list">
-        <li><strong>AICheck365</strong>（本站）：浏览器内免费检测，检测 AI 来源信号</li>
+        <li><strong>AICheck365</strong>（本站）：浏览器内免费检测图片/视频 AI 来源信号</li>
         <li><strong>ExifTool</strong>：命令行工具，读取几乎所有元数据格式</li>
         <li><strong>Adobe Bridge / Lightroom</strong>：图形界面，查看 XMP 和 EXIF</li>
         <li><strong>contentcredentials.org</strong>：Adobe 官方，专门查看 C2PA Manifest</li>
       </ul>
 
       <div class="cta-box">
-        <p>立即检测你的图片包含哪些元数据信号</p>
+        <p>立即检测你的图片或视频包含哪些来源信号</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
     </article>
@@ -132,6 +143,7 @@ const jsonLd = [
       <h2>相关内容</h2>
       <div class="related-links">
         <a href="/blog/what-is-c2pa/">C2PA 标准解读 →</a>
+        <a href="/blog/how-to-detect-ai-videos/">如何检测 AI 视频 →</a>
         <a href="/blog/how-to-detect-ai-images/">如何检测 AI 图片 →</a>
         <a href="/platforms/stable-diffusion/">Stable Diffusion 指南 →</a>
       </div>

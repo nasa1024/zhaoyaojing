@@ -6,6 +6,7 @@ const faq = [
   { q: "C2PA 是什么？为什么重要？", a: "C2PA（Coalition for Content Provenance and Authenticity）是 Adobe、微软、OpenAI、Intel 等公司联合制定的内容溯源标准。C2PA Manifest 包含数字签名，可以验证内容来源的真实性。" },
   { q: "下载 ChatGPT 生成的图片后能被检测到吗？", a: "可以。从 ChatGPT 界面下载的原始图片通常包含 OpenAI 的 C2PA 签名和 XMP 元数据，AICheck365 可以识别。" },
   { q: "DALL-E 图片上传到社交媒体后还能检测吗？", a: "大多数情况下不能。社交平台会在上传时剥离元数据，C2PA Manifest 也会被移除。建议检测原始下载文件。" },
+  { q: "OpenAI 的 Sora 视频也能用同一个工具检测吗？", a: "可以上传原始视频文件。Sora 视频检测会优先看 C2PA-lite、MP4/MOV 元数据和文件名，没有命中时再抽样视频帧分析水印；它和 DALL-E 图片检测共享本地浏览器处理流程。" },
 ];
 
 const jsonLd = [
@@ -22,7 +23,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "如何检测 DALL-E / ChatGPT AI 生成图片？C2PA 元数据指南",
-    "description": "详解 OpenAI DALL-E 3、GPT Image 图片中的 C2PA 数字签名和 XMP 元数据，以及 AICheck365 的检测原理。",
+    "description": "详解 OpenAI DALL-E 3、GPT Image 图片中的 C2PA 数字签名和 XMP 元数据，并说明 OpenAI 图片/视频来源检测的浏览器本地流程。",
     "url": "https://aicheck365.com/platforms/dall-e/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -40,7 +41,7 @@ const jsonLd = [
 
 <Base
   title="如何检测 DALL-E / ChatGPT AI 图片？C2PA 元数据指南 | AICheck365"
-  description="了解 OpenAI DALL-E 3 和 GPT Image 图片中的 C2PA 数字签名。掌握识别 ChatGPT 生成图片的方法及局限性。"
+  description="了解 OpenAI DALL-E 3 和 GPT Image 图片中的 C2PA 数字签名，并用同一工具检测 OpenAI 图片/视频来源线索。"
   canonical="https://aicheck365.com/platforms/dall-e/"
   jsonLd={jsonLd}
 >
@@ -53,7 +54,7 @@ const jsonLd = [
       <h1>DALL-E / GPT Image 检测：C2PA 数字签名解析</h1>
       <p class="article-meta">信号类型：C2PA · XMP · IPTC</p>
 
-      <p class="lead-text">OpenAI 的 DALL-E 3 及 ChatGPT 绘图功能（GPT Image）是目前使用最广泛的商业 AI 图片生成服务。与其他平台不同，OpenAI 对 <strong>C2PA（内容真实性倡议）</strong>标准有深度支持，使得检测相对可靠。</p>
+      <p class="lead-text">OpenAI 的 DALL-E 3 及 ChatGPT 绘图功能（GPT Image）是目前使用最广泛的商业 AI 图片生成服务。与其他平台不同，OpenAI 对 <strong>C2PA（内容真实性倡议）</strong>标准有深度支持，使得原始文件的来源检测相对可靠；同一套工具也可用于检查 OpenAI 视频文件里的 C2PA-lite、MP4 元数据和帧水印线索。</p>
 
       <h2>C2PA 标准：AI 图片溯源的行业基础</h2>
       <p>C2PA（Coalition for Content Provenance and Authenticity）是由 Adobe、微软、OpenAI、Intel、ARM 等公司联合制定的<strong>内容溯源行业标准</strong>。C2PA Manifest 是嵌入在图片文件中的一段加密数据，包含：</p>
@@ -89,7 +90,7 @@ const jsonLd = [
       </ul>
 
       <div class="cta-box">
-        <p>立即上传 DALL-E 图片进行检测</p>
+        <p>立即上传 DALL-E / ChatGPT 原始图片，或检查 OpenAI 视频来源线索</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

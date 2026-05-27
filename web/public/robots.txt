@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aicheck365.com/sitemap-index.xml
+Sitemap: https://aicheck365.com/sitemap.xml

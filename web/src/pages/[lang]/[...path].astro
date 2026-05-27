@@ -1,52 +1,44 @@
 ---
 import HomePage from '../index.astro';
-import AboutPage from '../about.astro';
-import PlatformsPage from '../platforms/index.astro';
-import DallEPage from '../platforms/dall-e.astro';
-import GeminiPage from '../platforms/gemini.astro';
-import ImagenPage from '../platforms/imagen.astro';
-import FireflyPage from '../platforms/firefly.astro';
-import KlingPage from '../platforms/kling.astro';
-import MidjourneyPage from '../platforms/midjourney.astro';
-import StableDiffusionPage from '../platforms/stable-diffusion.astro';
-
-const routes = [
-  { path: undefined, component: HomePage },
-  { path: 'about', component: AboutPage },
-  { path: 'platforms', component: PlatformsPage },
-  { path: 'platforms/dall-e', component: DallEPage },
-  { path: 'platforms/gemini', component: GeminiPage },
-  { path: 'platforms/imagen', component: ImagenPage },
-  { path: 'platforms/firefly', component: FireflyPage },
-  { path: 'platforms/kling', component: KlingPage },
-  { path: 'platforms/midjourney', component: MidjourneyPage },
-  { path: 'platforms/stable-diffusion', component: StableDiffusionPage },
-];
+import LocalizedContentPage from '../../components/LocalizedContentPage.astro';
 
 export function getStaticPaths() {
   const supportedLangs = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
   const paths = [
-    undefined,
     'about',
+    'blog',
+    'blog/ai-image-metadata-guide',
+    'blog/how-to-detect-ai-images',
+    'blog/how-to-detect-ai-videos',
+    'blog/how-to-detect-gemini-generated-images',
+    'blog/what-is-c2pa',
+    'contact',
+    'privacy',
+    'terms',
     'platforms',
+    'platforms/comfyui',
     'platforms/dall-e',
+    'platforms/flux',
     'platforms/gemini',
+    'platforms/ideogram',
     'platforms/imagen',
     'platforms/firefly',
     'platforms/kling',
+    'platforms/leonardo',
     'platforms/midjourney',
+    'platforms/sora',
     'platforms/stable-diffusion',
   ];
 
   return supportedLangs.flatMap((lang) =>
-    paths.map((path) => ({
+    [undefined, ...paths].map((path) => ({
       params: { lang, path },
     }))
   );
 }
 
-const route = routes.find(({ path }) => path === Astro.params.path);
-const Page = route?.component ?? HomePage;
+const lang = Astro.params.lang ?? 'en';
+const pagePath = Astro.params.path;
 ---
 
-<Page />
+{pagePath ? <LocalizedContentPage lang={lang} pagePath={pagePath} /> : <HomePage />}

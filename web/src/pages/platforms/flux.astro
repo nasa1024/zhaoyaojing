@@ -6,6 +6,7 @@ const faq = [
   { q: "Flux 1.1 Pro 和 Flux Dev 的元数据有区别吗？", a: "有区别。通过 API 直接使用 Flux 时，元数据写入与否取决于调用方（如 Replicate、FAL.ai 等平台）。在 ComfyUI 中使用 Flux 模型，ComfyUI 会在 PNG tEXt 块写入工作流信息。" },
   { q: "Flux 图片经过压缩后还能被检测到吗？", a: "如果图片经过社交媒体压缩或重新导出，元数据通常会被剥离，检测会失败。建议使用直接从生成平台下载的原始文件。" },
   { q: "Flux 和 Stable Diffusion 的检测方式相同吗？", a: "Flux 是新一代独立模型，不属于 Stable Diffusion 体系。但两者都可以通过 ComfyUI 运行，因此元数据特征可能相似，主要通过模型名称字段区分。" },
+  { q: "Flux 生成的视频或动图可以检测吗？", a: "可以上传原始视频文件尝试检测。视频侧重点是容器元数据、文件名和抽样视频帧水印；如果有原始 PNG 帧，通常更容易从 ComfyUI 工作流里看到 Flux 模型信息。" },
 ];
 
 const jsonLd = [
@@ -39,8 +40,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="如何检测 Flux AI 生成图片？元数据识别指南 | AICheck365"
-  description="详解 Flux（Black Forest Labs）图片的元数据特征：XMP CreatorTool、PNG tEXt 块。了解如何识别 Flux 生成的图片及其检测局限性。"
+  title="如何检测 Flux AI 生成图片/视频？元数据识别指南 | AICheck365"
+  description="详解 Flux 图片的 XMP、PNG tEXt 工作流元数据，以及导出视频时可检查的容器元数据、文件名和抽样帧水印。"
   canonical="https://aicheck365.com/platforms/flux/"
   jsonLd={jsonLd}
 >
@@ -50,10 +51,10 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>Flux 图片检测：元数据识别完整指南</h1>
-      <p class="article-meta">信号类型：XMP · PNG tEXt · EXIF</p>
+      <h1>Flux 图片/视频检测：元数据识别完整指南</h1>
+      <p class="article-meta">信号类型：XMP · PNG tEXt · EXIF · 视频帧水印</p>
 
-      <p class="lead-text">Flux 是由 Black Forest Labs 开发的新一代文生图 AI 模型，包含 Flux.1 Dev、Flux.1 Schnell 和 Flux.1 Pro 等版本，正在快速成为 Stable Diffusion 的主要替代品。Flux 生成的图片可通过多种元数据信号进行检测。</p>
+      <p class="lead-text">Flux 是由 Black Forest Labs 开发的新一代文生图 AI 模型，包含 Flux.1 Dev、Flux.1 Schnell 和 Flux.1 Pro 等版本，正在快速成为 Stable Diffusion 的主要替代品。Flux 生成的图片可通过多种元数据信号进行检测；如果被工作流导出成视频，则优先检查视频容器、文件名和抽样帧水印。</p>
 
       <h2>Flux 图片的元数据信号</h2>
       <div class="signal-detail-grid">
@@ -93,7 +94,7 @@ const jsonLd = [
       <p>Flux.1 系列模型在真实感、文字渲染和遵循提示词方面显著优于早期模型。自 2024 年发布以来，Flux 已被大量商业平台和创作者采用，了解其检测方法对于内容核查至关重要。</p>
 
       <div class="cta-box">
-        <p>立即上传 Flux 生成的图片进行检测</p>
+        <p>立即上传 Flux 生成的原始图片或视频进行检测</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

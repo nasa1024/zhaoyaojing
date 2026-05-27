@@ -2,87 +2,284 @@
 import Base from '../layouts/Base.astro';
 import Detector from '../components/Detector.astro';
 
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
+const pageLang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
+const prefix = pageLang === 'zh-CN' && !Astro.url.pathname.startsWith('/zh-CN/') ? '' : `/${pageLang}`;
+
+const homeCopy = {
+  'zh-CN': {
+    title: 'AICheck365 · AI 图片/视频检测 | 免费识别 AI 生成内容',
+    description: '在浏览器本地检测图片/视频里的 AI 来源线索。支持 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据和视频帧水印线索，不上传文件。',
+    eyebrow: 'AI 图片/视频来源检测',
+    h1: 'AI 图片/视频来源信号检测',
+    lead: '图片和视频只在你的浏览器里<strong>本地分析，不上传服务器</strong>。重点读取元数据、平台痕迹、文件名线索和视频帧水印。',
+    uploads: '服务器上传',
+    local: '本地运行',
+    privacy: '隐私优先',
+    privacyDesc: '文件只在当前浏览器内读取',
+    original: '适合原图检测',
+    originalDesc: '保留元数据的原始文件命中率更高',
+    explain: '结果可解释',
+    explainDesc: '列出命中的字段和置信度',
+    notice: '<strong>重要提示：</strong>这不是万能 AI 鉴定器。它只读取当前文件里还保留的 EXIF / XMP / C2PA / PNG 文本块 / MP4/MOV 元数据 / 文件名等线索。视频帧分析会在本地浏览器执行，可能较慢。',
+    seoTitle: '这个工具到底在查什么？',
+    seoP1: 'AICheck365 主要查图片/视频文件里保留下来的<strong>来源线索</strong>，比如 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据、文件名和抽样视频帧水印。这些信息有时会记录生成工具、模型或内容来源类型。',
+    seoP2: '目前可以识别 Gemini、Google Imagen、DALL-E / GPT Image、Midjourney、Stable Diffusion、Adobe Firefly、可灵 Kling、Sora、Runway、Pika 等平台留下的常见痕迹。',
+    usageTitle: '使用须知',
+    usage: ['检测基于元数据信号，不是看像素猜图，所以不适合判断被清洗过的文件', '经过社交平台压缩或转码的文件，元数据通常被剥离', '截图、录屏和重新导出的文件也会丢失原始元数据', '结果适合做快速判断，不适合作为法律鉴定结论'],
+    platformsLink: '平台检测指南',
+    videoGuideLink: 'AI 视频检测指南',
+  },
+  en: {
+    title: 'AICheck365 · AI Image/Video Detector | Free AI-Generated Media Detection',
+    description: 'Check AI-origin clues in image and video files locally in your browser. Reads EXIF, XMP, C2PA, PNG text chunks, MP4/MOV metadata, and video-frame watermark clues. No uploads.',
+    eyebrow: 'AI Image/Video Origin Detection',
+    h1: 'AI Image/Video Origin Detector',
+    lead: 'Images and videos are analyzed <strong>locally in your browser, with no server upload</strong>. The tool reads metadata, platform traces, file-name hints, and video-frame watermarks.',
+    uploads: 'Server uploads',
+    local: 'Local processing',
+    privacy: 'Privacy first',
+    privacyDesc: 'Files are only read inside your browser',
+    original: 'Best with originals',
+    originalDesc: 'Original files retain more detectable signals',
+    explain: 'Explainable results',
+    explainDesc: 'Matched fields and confidence are listed',
+    notice: '<strong>Important:</strong> This is not a magic AI detector. It only reads EXIF / XMP / C2PA / PNG text chunks / MP4/MOV metadata / file-name signals that still exist in the file. Video-frame analysis runs locally and may be slower.',
+    seoTitle: 'What does this tool actually check?',
+    seoP1: 'AICheck365 looks for <strong>source signals</strong> preserved in image and video files: EXIF, XMP, C2PA, PNG text chunks, MP4/MOV metadata, file names, and sampled video-frame watermarks.',
+    seoP2: 'It can recognize common traces from Gemini, Google Imagen, DALL-E / GPT Image, Midjourney, Stable Diffusion, Adobe Firefly, Kling, Sora, Runway, Pika, and similar platforms.',
+    usageTitle: 'How to interpret results',
+    usage: ['Detection is based on metadata and container signals, not pixel guessing', 'Social-media compression or transcoding often strips metadata', 'Screenshots, screen recordings, and re-exports lose original signals', 'Results are useful for quick triage, not legal attribution'],
+    platformsLink: 'Platform guides',
+    videoGuideLink: 'AI video detection guide',
+  },
+  ja: {
+    title: 'AICheck365 · AI画像/動画検出 | AI生成メディアを無料で識別',
+    description: '画像/動画ファイル内の AI 由来の手がかりをブラウザ内で確認。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、動画フレーム透かしを読み取ります。',
+    eyebrow: 'AI画像/動画の出所検出',
+    h1: 'AI画像/動画 出所検出ツール',
+    lead: '画像と動画は<strong>ブラウザ内でローカル分析され、サーバーへアップロードされません</strong>。メタデータ、プラットフォーム痕跡、ファイル名、動画フレーム透かしを確認します。',
+    uploads: 'サーバーアップロード',
+    local: 'ローカル処理',
+    privacy: 'プライバシー優先',
+    privacyDesc: 'ファイルはブラウザ内でのみ読み込まれます',
+    original: '原本に最適',
+    originalDesc: '原本ほど検出可能なシグナルが残ります',
+    explain: '説明可能な結果',
+    explainDesc: '一致したフィールドと信頼度を表示',
+    notice: '<strong>重要：</strong>万能の AI 判定器ではありません。ファイルに残る EXIF / XMP / C2PA / PNG テキスト / MP4/MOV メタデータ / ファイル名などの手がかりを読み取ります。動画フレーム分析はローカルで実行され、遅くなる場合があります。',
+    seoTitle: 'このツールは何を確認しますか？',
+    seoP1: 'AICheck365 は画像/動画ファイルに残る<strong>出所シグナル</strong>を確認します。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、ファイル名、抽出フレーム透かしなどです。',
+    seoP2: 'Gemini、Google Imagen、DALL-E / GPT Image、Midjourney、Stable Diffusion、Adobe Firefly、Kling、Sora、Runway、Pika などの一般的な痕跡を識別できます。',
+    usageTitle: '利用上の注意',
+    usage: ['検出はメタデータとコンテナ信号に基づき、画素だけで判断しません', 'SNS の圧縮や再エンコードでメタデータは失われやすくなります', 'スクリーンショット、画面録画、再書き出しでは原始シグナルが消えます', '結果は迅速な参考であり、法的鑑定ではありません'],
+    platformsLink: 'プラットフォームガイド',
+    videoGuideLink: 'AI動画検出ガイド',
+  },
+  ko: {
+    title: 'AICheck365 · AI 이미지/비디오 감지 | 무료 AI 생성 미디어 검사',
+    description: '브라우저에서 이미지/비디오 파일의 AI 출처 단서를 로컬로 확인합니다. EXIF, XMP, C2PA, PNG 텍스트, MP4/MOV 메타데이터, 비디오 프레임 워터마크를 읽습니다.',
+    eyebrow: 'AI 이미지/비디오 출처 감지',
+    h1: 'AI 이미지/비디오 출처 감지기',
+    lead: '이미지와 비디오는 <strong>브라우저에서 로컬로 분석되며 서버로 업로드되지 않습니다</strong>. 메타데이터, 플랫폼 흔적, 파일명, 비디오 프레임 워터마크를 확인합니다.',
+    uploads: '서버 업로드',
+    local: '로컬 처리',
+    privacy: '개인정보 우선',
+    privacyDesc: '파일은 브라우저 안에서만 읽힙니다',
+    original: '원본에 최적',
+    originalDesc: '원본 파일일수록 감지 가능한 신호가 많습니다',
+    explain: '설명 가능한 결과',
+    explainDesc: '일치한 필드와 신뢰도를 표시합니다',
+    notice: '<strong>중요:</strong> 만능 AI 판별기가 아닙니다. 파일에 남아 있는 EXIF / XMP / C2PA / PNG 텍스트 / MP4/MOV 메타데이터 / 파일명 단서만 읽습니다. 비디오 프레임 분석은 로컬에서 실행되며 느릴 수 있습니다.',
+    seoTitle: '이 도구는 무엇을 확인하나요?',
+    seoP1: 'AICheck365는 이미지/비디오 파일에 보존된 <strong>출처 신호</strong>를 확인합니다. EXIF, XMP, C2PA, PNG 텍스트, MP4/MOV 메타데이터, 파일명, 샘플 프레임 워터마크가 포함됩니다.',
+    seoP2: 'Gemini, Google Imagen, DALL-E / GPT Image, Midjourney, Stable Diffusion, Adobe Firefly, Kling, Sora, Runway, Pika 등의 흔적을 식별할 수 있습니다.',
+    usageTitle: '결과 해석',
+    usage: ['감지는 픽셀 추측이 아니라 메타데이터와 컨테이너 신호에 기반합니다', '소셜 플랫폼 압축과 전송은 메타데이터를 제거할 수 있습니다', '스크린샷, 화면 녹화, 재내보내기는 원본 신호를 잃게 합니다', '결과는 빠른 참고용이며 법적 감정이 아닙니다'],
+    platformsLink: '플랫폼 가이드',
+    videoGuideLink: 'AI 비디오 감지 가이드',
+  },
+  de: {
+    title: 'AICheck365 · AI-Bild- und Videodetektor | Kostenlose Medienprüfung',
+    description: 'Prüfe AI-Herkunftssignale in Bildern und Videos lokal im Browser: EXIF, XMP, C2PA, PNG-Text, MP4/MOV-Metadaten und Frame-Wasserzeichen.',
+    eyebrow: 'AI-Bild- und Videoherkunft',
+    h1: 'AI-Bild- und Videoherkunft prüfen',
+    lead: 'Bilder und Videos werden <strong>lokal im Browser analysiert und nicht hochgeladen</strong>. Geprüft werden Metadaten, Plattformspuren, Dateinamen und Frame-Wasserzeichen.',
+    uploads: 'Server-Uploads',
+    local: 'Lokale Verarbeitung',
+    privacy: 'Datenschutz zuerst',
+    privacyDesc: 'Dateien werden nur im Browser gelesen',
+    original: 'Ideal mit Originalen',
+    originalDesc: 'Originaldateien enthalten mehr prüfbare Signale',
+    explain: 'Erklärbare Ergebnisse',
+    explainDesc: 'Felder und Konfidenz werden angezeigt',
+    notice: '<strong>Wichtig:</strong> Dies ist kein magischer AI-Detektor. Er liest nur vorhandene EXIF / XMP / C2PA / PNG-Text / MP4/MOV-Metadaten / Dateinamen-Signale. Video-Frame-Analyse läuft lokal und kann langsamer sein.',
+    seoTitle: 'Was prüft dieses Tool?',
+    seoP1: 'AICheck365 sucht nach <strong>Herkunftssignalen</strong> in Bild- und Videodateien: EXIF, XMP, C2PA, PNG-Text, MP4/MOV-Metadaten, Dateinamen und Frame-Wasserzeichen.',
+    seoP2: 'Erkannt werden typische Spuren von Gemini, Google Imagen, DALL-E / GPT Image, Midjourney, Stable Diffusion, Adobe Firefly, Kling, Sora, Runway, Pika und ähnlichen Plattformen.',
+    usageTitle: 'Hinweise',
+    usage: ['Die Prüfung basiert auf Metadaten und Container-Signalen, nicht auf Pixelraten', 'Social-Media-Kompression oder Transcoding entfernt oft Metadaten', 'Screenshots, Bildschirmaufnahmen und Re-Exports verlieren Originalsignale', 'Ergebnisse sind schnelle Hinweise, keine rechtliche Bewertung'],
+    platformsLink: 'Plattform-Guides',
+    videoGuideLink: 'KI-Videoerkennungs-Guide',
+  },
+  fr: {
+    title: 'AICheck365 · Détecteur image/vidéo IA | Analyse gratuite',
+    description: 'Vérifiez localement les signaux d’origine IA dans images et vidéos : EXIF, XMP, C2PA, texte PNG, métadonnées MP4/MOV et filigranes de frames.',
+    eyebrow: 'Détection d’origine image/vidéo IA',
+    h1: 'Détecteur d’origine image/vidéo IA',
+    lead: 'Images et vidéos sont <strong>analysées localement dans le navigateur, sans téléversement</strong>. L’outil lit métadonnées, traces de plateformes, noms de fichier et filigranes de frames.',
+    uploads: 'Téléversements serveur',
+    local: 'Traitement local',
+    privacy: 'Confidentialité d’abord',
+    privacyDesc: 'Les fichiers restent dans le navigateur',
+    original: 'Idéal avec les originaux',
+    originalDesc: 'Les fichiers originaux gardent plus de signaux',
+    explain: 'Résultats explicables',
+    explainDesc: 'Champs trouvés et confiance sont listés',
+    notice: '<strong>Important :</strong> ce n’est pas un détecteur IA magique. Il lit seulement les signaux EXIF / XMP / C2PA / texte PNG / métadonnées MP4/MOV / noms de fichier encore présents. L’analyse de frames vidéo est locale et peut être lente.',
+    seoTitle: 'Que vérifie cet outil ?',
+    seoP1: 'AICheck365 cherche les <strong>signaux d’origine</strong> conservés dans les images et vidéos : EXIF, XMP, C2PA, texte PNG, métadonnées MP4/MOV, noms de fichier et filigranes de frames.',
+    seoP2: 'Il reconnaît des traces courantes de Gemini, Google Imagen, DALL-E / GPT Image, Midjourney, Stable Diffusion, Adobe Firefly, Kling, Sora, Runway, Pika et plateformes similaires.',
+    usageTitle: 'À savoir',
+    usage: ['La détection repose sur métadonnées et conteneurs, pas sur une simple lecture des pixels', 'La compression ou le transcodage social supprime souvent les métadonnées', 'Captures, enregistrements écran et réexports perdent les signaux originaux', 'Les résultats aident au tri rapide, pas à une conclusion juridique'],
+    platformsLink: 'Guides plateformes',
+    videoGuideLink: 'Guide de détection vidéo IA',
+  },
+  es: {
+    title: 'AICheck365 · Detector de imágenes/videos IA | Detección gratuita',
+    description: 'Comprueba señales de origen IA en imágenes y videos localmente: EXIF, XMP, C2PA, texto PNG, metadatos MP4/MOV y marcas de agua en frames.',
+    eyebrow: 'Detección de origen IA en imagen/video',
+    h1: 'Detector de origen de imágenes/videos IA',
+    lead: 'Imágenes y videos se <strong>analizan localmente en el navegador, sin subirlos al servidor</strong>. Lee metadatos, rastros de plataforma, nombres de archivo y marcas de agua en frames.',
+    uploads: 'Subidas al servidor',
+    local: 'Procesamiento local',
+    privacy: 'Privacidad primero',
+    privacyDesc: 'Los archivos solo se leen en tu navegador',
+    original: 'Mejor con originales',
+    originalDesc: 'Los archivos originales conservan más señales',
+    explain: 'Resultados explicables',
+    explainDesc: 'Muestra campos encontrados y confianza',
+    notice: '<strong>Importante:</strong> no es un detector IA mágico. Solo lee señales EXIF / XMP / C2PA / texto PNG / metadatos MP4/MOV / nombres de archivo que aún existan. El análisis de frames de video corre localmente y puede ser lento.',
+    seoTitle: '¿Qué revisa esta herramienta?',
+    seoP1: 'AICheck365 busca <strong>señales de origen</strong> conservadas en imágenes y videos: EXIF, XMP, C2PA, texto PNG, metadatos MP4/MOV, nombres de archivo y marcas de agua en frames.',
+    seoP2: 'Puede reconocer rastros comunes de Gemini, Google Imagen, DALL-E / GPT Image, Midjourney, Stable Diffusion, Adobe Firefly, Kling, Sora, Runway, Pika y plataformas similares.',
+    usageTitle: 'Cómo interpretar resultados',
+    usage: ['La detección se basa en metadatos y señales de contenedor, no en adivinar por píxeles', 'La compresión o transcodificación social suele eliminar metadatos', 'Capturas, grabaciones de pantalla y reexportaciones pierden señales originales', 'Los resultados sirven para revisión rápida, no atribución legal'],
+    platformsLink: 'Guías de plataformas',
+    videoGuideLink: 'Guía de detección de video IA',
+  },
+  'pt-BR': {
+    title: 'AICheck365 · Detector de imagens/vídeos de IA | Detecção gratuita',
+    description: 'Verifique sinais de origem de IA em imagens e vídeos localmente: EXIF, XMP, C2PA, texto PNG, metadados MP4/MOV e marcas d’água em frames.',
+    eyebrow: 'Detecção de origem IA em imagem/vídeo',
+    h1: 'Detector de origem de imagens/vídeos de IA',
+    lead: 'Imagens e vídeos são <strong>analisados localmente no navegador, sem upload para o servidor</strong>. O detector lê metadados, rastros de plataformas, nomes de arquivo e marcas d’água em frames.',
+    uploads: 'Uploads ao servidor',
+    local: 'Processamento local',
+    privacy: 'Privacidade primeiro',
+    privacyDesc: 'Os arquivos são lidos apenas no navegador',
+    original: 'Melhor com originais',
+    originalDesc: 'Arquivos originais preservam mais sinais',
+    explain: 'Resultados explicáveis',
+    explainDesc: 'Campos encontrados e confiança são listados',
+    notice: '<strong>Importante:</strong> não é um detector mágico de IA. Ele lê apenas sinais EXIF / XMP / C2PA / texto PNG / metadados MP4/MOV / nomes de arquivo que ainda existam. A análise de frames de vídeo roda localmente e pode ser lenta.',
+    seoTitle: 'O que esta ferramenta verifica?',
+    seoP1: 'O AICheck365 procura <strong>sinais de origem</strong> preservados em imagens e vídeos: EXIF, XMP, C2PA, texto PNG, metadados MP4/MOV, nomes de arquivo e marcas d’água em frames.',
+    seoP2: 'Ele reconhece rastros comuns de Gemini, Google Imagen, DALL-E / GPT Image, Midjourney, Stable Diffusion, Adobe Firefly, Kling, Sora, Runway, Pika e plataformas semelhantes.',
+    usageTitle: 'Como interpretar resultados',
+    usage: ['A detecção usa metadados e sinais de contêiner, não apenas pixels', 'Compressão ou transcodificação em redes sociais costuma remover metadados', 'Capturas, gravações de tela e reexportações perdem sinais originais', 'Os resultados ajudam na triagem rápida, não em atribuição legal'],
+    platformsLink: 'Guias de plataformas',
+    videoGuideLink: 'Guia de detecção de vídeo de IA',
+  },
+};
+
+homeCopy['zh-TW'] = {
+  ...homeCopy['zh-CN'],
+  title: 'AICheck365 · AI 圖片/影片檢測 | 免費識別 AI 生成內容',
+  description: '在瀏覽器本機檢查圖片/影片裡的 AI 來源線索。支援 EXIF、XMP、C2PA、PNG 文字區塊、MP4/MOV metadata 與影片幀浮水印線索，不上傳檔案。',
+  eyebrow: 'AI 圖片/影片來源檢測',
+  h1: 'AI 圖片/影片來源信號檢測',
+  lead: '圖片和影片只在你的瀏覽器裡<strong>本機分析，不上傳伺服器</strong>。重點讀取 metadata、平台痕跡、檔名線索和影片幀浮水印。',
+  platformsLink: '平台檢測指南',
+  videoGuideLink: 'AI 影片檢測指南',
+};
+
+const copy = homeCopy[pageLang] ?? homeCopy.en;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "AICheck365",
   "url": "https://aicheck365.com/",
-  "description": "检测图片/视频是否为 AI 生成，基于 EXIF、XMP、C2PA、MP4 元数据和视频帧水印线索，完全在浏览器本地运行。",
+  "description": copy.description,
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Web Browser",
   "inLanguage": ["zh-CN", "en"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "featureList": [
-    "检测 AI 生成图片/视频的来源信号",
-    "支持 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据",
-    "视频无元数据信号时可在本地抽帧分析水印",
-    "完全在浏览器本地运行，不上传图片或视频",
-    "支持 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Firefly、Sora、Kling 等平台"
+    "AI image/video origin signals",
+    "EXIF, XMP, C2PA, PNG text chunks, MP4/MOV metadata",
+    "Local video frame watermark analysis when metadata is not enough",
+    "Runs in the browser without uploading images or videos",
+    "Signals for Gemini, Imagen, DALL-E, Midjourney, Stable Diffusion, Firefly, Sora, Kling and more"
   ]
 };
 ---
 
 <Base
-  title="AICheck365 · AI 图片/视频检测 | 免费识别 AI 生成内容"
-  description="在浏览器本地检测图片/视频里的 AI 来源线索。支持 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据和视频帧水印线索，不上传文件。"
+  title={copy.title}
+  description={copy.description}
   canonical="https://aicheck365.com/"
   jsonLd={jsonLd}
 >
   <main class="page">
     <section class="hero card">
-      <div class="eyebrow" data-i18n="eyebrow">AI 图片/视频来源检测</div>
+      <div class="eyebrow" data-i18n="eyebrow">{copy.eyebrow}</div>
       <div class="hero-layout">
         <div>
-          <h1 data-i18n="hero.h1">AI 图片/视频来源信号检测</h1>
-          <p class="lead" data-i18n-html="hero.lead">
-            图片和视频只在你的浏览器里<strong>本地分析，不上传服务器</strong>。重点读取元数据、平台痕迹、文件名线索和视频帧水印。
-          </p>
+          <h1 data-i18n="hero.h1">{copy.h1}</h1>
+          <p class="lead" data-i18n-html="hero.lead" set:html={copy.lead} />
         </div>
         <div class="hero-panel" aria-label="核心特性">
           <div class="metric-card">
             <span class="metric-value" data-i18n="metric.uploads.value">0</span>
-            <span class="metric-label" data-i18n="metric.uploads.label">服务器上传</span>
+            <span class="metric-label" data-i18n="metric.uploads.label">{copy.uploads}</span>
           </div>
           <div class="metric-card">
             <span class="metric-value" data-i18n="metric.local.value">100%</span>
-            <span class="metric-label" data-i18n="metric.local.label">本地运行</span>
+            <span class="metric-label" data-i18n="metric.local.label">{copy.local}</span>
           </div>
         </div>
       </div>
 
       <ul class="trust-list">
         <li>
-          <strong data-i18n="trust.privacy">隐私优先</strong>
-          <span data-i18n="trust.privacy.desc">文件只在当前浏览器内读取</span>
+          <strong data-i18n="trust.privacy">{copy.privacy}</strong>
+          <span data-i18n="trust.privacy.desc">{copy.privacyDesc}</span>
         </li>
         <li>
-          <strong data-i18n="trust.original">适合原图检测</strong>
-          <span data-i18n="trust.original.desc">保留元数据的原始文件命中率更高</span>
+          <strong data-i18n="trust.original">{copy.original}</strong>
+          <span data-i18n="trust.original.desc">{copy.originalDesc}</span>
         </li>
         <li>
-          <strong data-i18n="trust.explain">结果可解释</strong>
-          <span data-i18n="trust.explain.desc">列出命中的字段和置信度</span>
+          <strong data-i18n="trust.explain">{copy.explain}</strong>
+          <span data-i18n="trust.explain.desc">{copy.explainDesc}</span>
         </li>
       </ul>
 
-      <div class="notice warning" data-i18n-html="notice">
-        <strong>重要提示：</strong>这不是万能 AI 鉴定器。它只读取当前文件里还保留的 EXIF / XMP / C2PA / PNG 文本块 / MP4/MOV 元数据 / 文件名等线索。视频帧分析会在本地浏览器执行，可能较慢。
-      </div>
+      <div class="notice warning" data-i18n-html="notice" set:html={copy.notice} />
     </section>
 
     <Detector />
 
-    <!-- SEO 内容区：解释工具能做什么，也说明边界 -->
     <section class="card content-section">
-      <h2>这个工具到底在查什么？</h2>
-      <p>AICheck365 主要查图片/视频文件里保留下来的<strong>来源线索</strong>，比如 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据、文件名和抽样视频帧水印。这些信息有时会记录生成工具、模型或内容来源类型。</p>
-      <p>目前可以识别 <a href="/platforms/gemini/">Gemini</a>、<a href="/platforms/imagen/">Google Imagen</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/kling/">可灵 Kling</a>、Sora、Runway、Pika 等平台留下的常见痕迹。</p>
-      <h3>使用须知</h3>
+      <h2>{copy.seoTitle}</h2>
+      <p set:html={copy.seoP1} />
+      <p>{copy.seoP2}</p>
+      <p><a href={`${prefix}/platforms/`}>{copy.platformsLink}</a> · <a href={`${prefix}/blog/how-to-detect-ai-videos/`}>{copy.videoGuideLink}</a></p>
+      <h3>{copy.usageTitle}</h3>
       <ul class="content-list">
-        <li>检测基于<strong>元数据信号</strong>，不是看像素猜图，所以不适合判断被清洗过的文件</li>
-        <li>经过社交平台（微信、微博、Instagram 等）压缩转发的文件，元数据通常被剥离</li>
-        <li>截图、转码和重新导出的文件也会丢失原始元数据</li>
-        <li>结果适合做快速判断，不适合作为法律鉴定结论</li>
+        {copy.usage.map((item) => <li>{item}</li>)}
       </ul>
     </section>
   </main>

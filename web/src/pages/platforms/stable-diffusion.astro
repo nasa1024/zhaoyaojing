@@ -6,6 +6,7 @@ const faq = [
   { q: "ComfyUI 和 AUTOMATIC1111 的元数据格式一样吗？", a: "不完全相同。AUTOMATIC1111（WebUI）将生成参数写入 PNG tEXt 块的特定格式；ComfyUI 则会写入完整的工作流 JSON。两者都可以被检测，但字段名称有所不同。" },
   { q: "SDXL、SD3 等新版本的元数据特征和老版本一样吗？", a: "基本一致，主要区别在于模型名称字段。新版本（SDXL、SD3、Flux 等）同样会写入生成参数，但模型名称会标注对应版本。" },
   { q: "为什么部分 SD 图片检测不到？", a: "原因可能包括：使用了去除元数据的工具（如 ExifTool 清除）、图片从 JPEG 格式生成（JPEG 的 SD 参数保留较差）、或某些在线 SD 服务选择不写入元数据。" },
+  { q: "Stable Diffusion 动图或视频能检测吗？", a: "可以上传 MP4、MOV、M4V、WebM、AVI 等视频文件。视频检测会检查容器元数据、文件名和抽样帧水印；如果你有生成时导出的原始 PNG 帧，PNG 文本块通常更容易保留完整参数。" },
 ];
 
 const jsonLd = [
@@ -21,8 +22,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Stable Diffusion 图片检测：PNG 文本块与生成参数识别",
-    "description": "解析 AUTOMATIC1111、ComfyUI 等 Stable Diffusion 前端生成图片的 PNG 文本块元数据，了解如何识别 SD 生成图片。",
+    "headline": "Stable Diffusion 图片/视频检测：PNG 文本块、生成参数与帧水印",
+    "description": "解析 AUTOMATIC1111、ComfyUI 等 Stable Diffusion 前端生成图片的 PNG 文本块元数据，并说明导出视频时可检查的容器元数据和抽样帧水印。",
     "url": "https://aicheck365.com/platforms/stable-diffusion/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -39,8 +40,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="Stable Diffusion 图片检测：PNG 元数据与生成参数识别 | AICheck365"
-  description="解析 AUTOMATIC1111、ComfyUI 等工具生成的 Stable Diffusion 图片中的 PNG 文本块元数据，包括提示词、步数、模型等生成参数的检测方法。"
+  title="Stable Diffusion 图片/视频检测：PNG 元数据与帧水印 | AICheck365"
+  description="解析 Stable Diffusion 图片中的 PNG 文本块元数据、提示词、模型参数，以及导出视频的容器元数据和抽样帧水印检测方法。"
   canonical="https://aicheck365.com/platforms/stable-diffusion/"
   jsonLd={jsonLd}
 >
@@ -50,10 +51,10 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>Stable Diffusion 图片检测：PNG 文本块解析</h1>
-      <p class="article-meta">信号类型：PNG tEXt · EXIF · XMP</p>
+      <h1>Stable Diffusion 图片/视频检测：PNG 文本块解析</h1>
+      <p class="article-meta">信号类型：PNG tEXt · EXIF · XMP · 视频帧水印</p>
 
-      <p class="lead-text">Stable Diffusion（SD）是目前最流行的开源 AI 图片生成模型，被广泛部署在 <strong>AUTOMATIC1111 WebUI</strong>、<strong>ComfyUI</strong>、<strong>InvokeAI</strong> 等工具中。SD 生成的 PNG 图片通常在文件中嵌入完整的生成参数。</p>
+      <p class="lead-text">Stable Diffusion（SD）是目前最流行的开源 AI 图片生成模型，被广泛部署在 <strong>AUTOMATIC1111 WebUI</strong>、<strong>ComfyUI</strong>、<strong>InvokeAI</strong> 等工具中。SD 生成的 PNG 图片通常在文件中嵌入完整的生成参数；导出为视频时，则需要结合容器元数据、文件名和抽样视频帧水印判断。</p>
 
       <h2>PNG 文本块：SD 的"元数据指纹"</h2>
       <p>PNG 格式允许在文件中嵌入自定义文本数据块（tEXt / iTXt）。Stable Diffusion 的各种前端工具会利用这一特性写入生成参数，包括：</p>
@@ -100,7 +101,7 @@ const jsonLd = [
       </ul>
 
       <div class="cta-box">
-        <p>立即检测 Stable Diffusion 生成的图片</p>
+        <p>立即检测 Stable Diffusion 生成的原始图片或视频</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

@@ -4,8 +4,9 @@ import Base from '../../layouts/Base.astro';
 const faq = [
   { q: "Gemini 生成的图片可以检测出来吗？", a: "可以，但最好用从 Gemini 直接下载的原图。部分 Gemini / Google AI PNG 会带 C2PA Content Credentials，里面可能有 caBX/JUMBF、digitalSourceType、claim_generator_info 等字段。" },
   { q: "为什么截图或微信转发后的 Gemini 图片可能检测不到？", a: "截图、微信转发、压缩和重新保存都会改写文件。C2PA、EXIF、XMP 这些元数据经常在这个过程中丢掉。检测不到信号，只能说明当前文件里没有可读证据。" },
-  { q: "AICheck365 会上传我的 Gemini 图片吗？", a: "不会。图片在浏览器里本地分析，不会传到服务器。" },
+  { q: "AICheck365 会上传我的 Gemini 图片或视频吗？", a: "不会。图片和视频都在浏览器里本地分析，不会传到服务器。" },
   { q: "Gemini 图片里最值得看的字段是什么？", a: "优先看 C2PA/JUMBF 里的 digitalSourceType = trainedAlgorithmicMedia，其次是 Google、Gemini、Imagen 相关的 claim_generator_info。文件名只能当辅助线索。" },
+  { q: "Google Veo 或 Gemini 相关视频怎么检测？", a: "可以上传原始视频文件。浏览器版会检查 C2PA-lite、MP4/MOV 元数据、文件名和抽样视频帧水印，但转码或录屏后的文件可能没有可读线索。" },
 ];
 
 const jsonLd = [
@@ -21,8 +22,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "如何检测 Gemini 生成图片？看 C2PA 和 caBX 元数据",
-    "description": "说明 Gemini / Google AI 原图里常见的 C2PA Content Credentials、PNG caBX/JUMBF 和 digitalSourceType 线索。",
+    "headline": "如何检测 Gemini 生成图片/视频？看 C2PA、caBX 和 Google AI 来源线索",
+    "description": "说明 Gemini / Google AI 原始图片和视频里常见的 C2PA Content Credentials、PNG caBX/JUMBF、MP4 元数据和 digitalSourceType 线索。",
     "url": "https://aicheck365.com/platforms/gemini/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -39,8 +40,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="如何检测 Gemini 生成图片？看 C2PA 和 caBX 元数据 | AICheck365"
-  description="查看 Gemini 原图里的 C2PA Content Credentials、PNG caBX/JUMBF、digitalSourceType=trainedAlgorithmicMedia 等 Google AI 来源线索。"
+  title="如何检测 Gemini 生成图片/视频？C2PA 与 Google AI 来源线索 | AICheck365"
+  description="查看 Gemini 原图和 Google AI 原始视频里的 C2PA Content Credentials、PNG caBX/JUMBF、MP4 元数据、digitalSourceType 等来源线索。"
   canonical="https://aicheck365.com/platforms/gemini/"
   jsonLd={jsonLd}
 >
@@ -50,10 +51,10 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>Gemini 图片检测：先看原图里的 C2PA</h1>
-      <p class="article-meta">信号类型：C2PA · JUMBF · PNG caBX · 文件名</p>
+      <h1>Gemini 图片/视频检测：先看原始文件里的 C2PA</h1>
+      <p class="article-meta">信号类型：C2PA · JUMBF · PNG caBX · MP4 元数据 · 文件名</p>
 
-      <p class="lead-text">Gemini 下载的原图，有时会带 Google 写入的 <strong>C2PA Content Credentials</strong>。AICheck365 会在浏览器本地读取 PNG/JPEG 里的 C2PA/JUMBF 数据，不需要把图片上传到服务器。</p>
+      <p class="lead-text">Gemini 下载的原图，有时会带 Google 写入的 <strong>C2PA Content Credentials</strong>。AICheck365 会在浏览器本地读取 PNG/JPEG 里的 C2PA/JUMBF 数据，也可以检查 Google AI 原始视频里的 C2PA-lite、MP4 元数据和帧水印线索，不需要把文件上传到服务器。</p>
 
       <h2>为什么 Gemini 原图能被识别？</h2>
       <p>Gemini 图片的来源线索通常不在画面本身，而在文件内部。PNG 里可能有 <code>caBX</code> 这样的 chunk，里面保存了 C2PA/JUMBF 数据。</p>
@@ -84,8 +85,8 @@ const jsonLd = [
       </ul>
 
       <div class="cta-box">
-        <p>有 Gemini 原图的话，可以直接在本地检测 C2PA 来源信息。</p>
-        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">检测这张图片 →</a>
+        <p>有 Gemini 原图或 Google AI 原始视频的话，可以直接在本地检测来源信息。</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">检测图片或视频 →</a>
       </div>
 
       <h2>常见问题</h2>

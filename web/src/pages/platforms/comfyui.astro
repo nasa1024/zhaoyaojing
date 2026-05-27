@@ -7,6 +7,7 @@ const faq = [
   { q: "如何防止 ComfyUI 写入元数据？", a: "在 ComfyUI 的 Save Image 节点中，可以通过修改节点设置来控制是否嵌入 prompt 信息。使用 SaveImageWebsocket 节点或第三方节点也可能跳过元数据写入。" },
   { q: "ComfyUI 生成的 JPEG 文件有元数据吗？", a: "ComfyUI 默认输出 PNG 格式。如果转换为 JPEG，元数据写入方式取决于转换工具。直接从 ComfyUI 输出的 PNG 文件元数据最完整。" },
   { q: "ComfyUI 和 AUTOMATIC1111 的元数据格式相同吗？", a: "不相同。AUTOMATIC1111（A1111/WebUI）使用纯文本格式写入参数字符串，而 ComfyUI 使用 JSON 格式的工作流数据。两者都在 PNG tEXt 块中写入，但键名和格式不同。" },
+  { q: "ComfyUI 输出的视频能检测吗？", a: "如果你导出了 MP4、MOV、M4V、WebM 或 AVI，可以直接上传。浏览器版会检查视频容器元数据、文件名和抽样视频帧水印；但 ComfyUI 最稳定的来源线索仍然是原始 PNG 工作流元数据。" },
 ];
 
 const jsonLd = [
@@ -22,8 +23,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "ComfyUI 图片检测：PNG 工作流元数据完整指南",
-    "description": "详解 ComfyUI 生成图片的 PNG tEXt 元数据结构，包括工作流 JSON、模型信息的识别方法。",
+    "headline": "ComfyUI 图片/视频检测：PNG 工作流元数据与视频帧线索指南",
+    "description": "详解 ComfyUI 生成图片的 PNG tEXt 元数据结构，以及导出视频时可检查的容器元数据、文件名和抽样帧水印线索。",
     "url": "https://aicheck365.com/platforms/comfyui/",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://aicheck365.com" }
   },
@@ -40,8 +41,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="ComfyUI 图片检测：PNG 工作流元数据指南 | AICheck365"
-  description="ComfyUI 生成的 PNG 图片在 tEXt 块中嵌入完整工作流 JSON。了解如何读取模型名称、生成参数，以及 AICheck365 的识别方法。"
+  title="ComfyUI 图片/视频检测：PNG 工作流元数据指南 | AICheck365"
+  description="ComfyUI 生成的 PNG 图片在 tEXt 块中嵌入完整工作流 JSON；导出视频可检查容器元数据、文件名和抽样帧水印。"
   canonical="https://aicheck365.com/platforms/comfyui/"
   jsonLd={jsonLd}
 >
@@ -51,10 +52,10 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>ComfyUI 图片检测：PNG 工作流元数据完整指南</h1>
-      <p class="article-meta">信号类型：PNG tEXt · iTXt · 工作流 JSON</p>
+      <h1>ComfyUI 图片/视频检测：PNG 工作流元数据完整指南</h1>
+      <p class="article-meta">信号类型：PNG tEXt · iTXt · 工作流 JSON · 视频帧水印</p>
 
-      <p class="lead-text">ComfyUI 是最流行的开源 AI 图像生成界面，基于节点式工作流设计。它支持几乎所有主流模型（SD、SDXL、Flux、ControlNet 等）。ComfyUI 生成的 PNG 图片包含业界最丰富的元数据，是可检测性最高的 AI 图片之一。</p>
+      <p class="lead-text">ComfyUI 是最流行的开源 AI 图像生成界面，基于节点式工作流设计。它支持几乎所有主流模型（SD、SDXL、Flux、ControlNet 等）。ComfyUI 生成的 PNG 图片包含业界最丰富的元数据；如果工作流导出视频，AICheck365 也可以检查容器元数据、文件名和抽样视频帧水印。</p>
 
       <h2>ComfyUI 的元数据结构</h2>
       <p>ComfyUI 将完整的工作流信息嵌入 PNG 文件的文本块：</p>
@@ -101,7 +102,7 @@ const jsonLd = [
       </div>
 
       <div class="cta-box">
-        <p>立即上传 ComfyUI 生成的图片进行检测</p>
+        <p>立即上传 ComfyUI 生成的原始图片或视频进行检测</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 
