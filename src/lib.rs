@@ -36,7 +36,9 @@ mod mp4_metadata_core;
 pub mod scanner;
 #[cfg(target_arch = "wasm32")]
 pub mod web;
+#[cfg(target_arch = "wasm32")]
 mod web_c2pa;
+#[cfg(target_arch = "wasm32")]
 mod web_watermark;
 
 #[cfg(not(target_arch = "wasm32"))]

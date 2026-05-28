@@ -346,3 +346,112 @@ fn detect_sei_markers(data: &[u8]) -> Vec<Mp4MetadataHit> {
     }
     hits
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_extract_json_field() {
+        let json = r#"{"Label":"1","ProduceID":"abc-123","Other":"val"}"#;
+        assert_eq!(extract_json_field(json, "Label"), Some("1".to_string()));
+        assert_eq!(
+            extract_json_field(json, "ProduceID"),
+            Some("abc-123".to_string())
+        );
+        assert_eq!(extract_json_field(json, "Missing"), None);
+
+        let json2 = r#"{"Label": "1", "ProduceID": "xyz"}"#;
+        assert_eq!(extract_json_field(json2, "Label"), Some("1".to_string()));
+        assert_eq!(
+            extract_json_field(json2, "ProduceID"),
+            Some("xyz".to_string())
+        );
+    }
+
+    #[test]
+    fn test_detect_ilst_tools_known_tool() {
+        let entries = vec![("\u{a9}too".to_string(), "Runway Gen-3".to_string())];
+        let hits = detect_ilst_tools(&entries);
+
+        assert_eq!(hits.len(), 1);
+        assert_eq!(hits[0].tool.as_deref(), Some("runway"));
+        assert_eq!(hits[0].confidence, CoreConfidence::Medium);
+        assert!(matches!(
+            hits[0].kind,
+            Mp4HitKind::ToolMatch { ref label, .. } if label == "Encoding Tool"
+        ));
+    }
+
+    #[test]
+    fn test_detect_ilst_tools_mp4_mapping() {
+        let entries = vec![("\u{a9}too".to_string(), "Google".to_string())];
+        let hits = detect_ilst_tools(&entries);
+
+        assert_eq!(hits.len(), 1);
+        assert_eq!(hits[0].tool.as_deref(), Some("google veo"));
+    }
+
+    #[test]
+    fn test_detect_ilst_tools_no_match() {
+        let entries = vec![("\u{a9}too".to_string(), "Lavf60.16.100".to_string())];
+        let hits = detect_ilst_tools(&entries);
+
+        assert!(hits.is_empty());
+    }
+
+    #[test]
+    fn test_detect_keyed_encoder() {
+        let entries = vec![("encoder".to_string(), "Sora v2".to_string())];
+        let hits = detect_ilst_tools(&entries);
+
+        assert_eq!(hits.len(), 1);
+        assert_eq!(hits[0].tool.as_deref(), Some("sora"));
+    }
+
+    #[test]
+    fn test_detect_aigc_label() {
+        let entries = vec![(
+            "AIGC".to_string(),
+            r#"{"Label":"1","ProduceID":"test-123"}"#.to_string(),
+        )];
+        let hits = detect_aigc_label(&entries);
+
+        assert_eq!(hits.len(), 1);
+        assert_eq!(hits[0].confidence, CoreConfidence::Medium);
+        assert!(matches!(
+            hits[0].kind,
+            Mp4HitKind::AigcLabel {
+                produce_id: Some(ref id)
+            } if id == "test-123"
+        ));
+        assert!(hits[0]
+            .details
+            .iter()
+            .any(|(key, value)| key == "ProduceID" && value == "test-123"));
+    }
+
+    #[test]
+    fn test_detect_aigc_label_with_wan_producer() {
+        let entries = vec![(
+            "AIGC".to_string(),
+            r#"{"Label":"1","ContentProducer":"001191330106MA2CFLDG4R10001","ProduceID":"abc"}"#
+                .to_string(),
+        )];
+        let hits = detect_aigc_label(&entries);
+
+        assert_eq!(hits.len(), 1);
+        assert_eq!(hits[0].tool.as_deref(), Some("wan"));
+    }
+
+    #[test]
+    fn test_detect_aigc_label_not_ai() {
+        let entries = vec![(
+            "AIGC".to_string(),
+            r#"{"Label":"0","ProduceID":"test"}"#.to_string(),
+        )];
+        let hits = detect_aigc_label(&entries);
+
+        assert!(hits.is_empty());
+    }
+}
