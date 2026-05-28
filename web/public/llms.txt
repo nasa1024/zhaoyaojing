@@ -1,0 +1,22 @@
+# AICheck365
+
+> Browser-based AI image and video origin detector. AICheck365 analyzes files locally and looks for metadata, container fields, file-name hints, C2PA/Content Credentials, and sampled video-frame watermark signals.
+
+## Primary Pages
+
+- [AI image/video detector](https://www.aicheck365.com/): Upload an original image or video and inspect AI-origin signals in the browser.
+- [Platform guides](https://www.aicheck365.com/platforms/): Common source signals for Gemini, Imagen, DALL-E/GPT Image, Midjourney, Stable Diffusion, Firefly, Flux, ComfyUI, Leonardo, Ideogram, Sora, and Kling.
+- [AI video detection guide](https://www.aicheck365.com/blog/how-to-detect-ai-videos/): MP4/MOV metadata, C2PA-lite, SEI marker, file-name hints, and sampled frame watermark checks.
+- [AI media metadata guide](https://www.aicheck365.com/blog/ai-image-metadata-guide/): EXIF, XMP, C2PA, PNG tEXt, MP4/MOV, and AI platform writing patterns.
+- [What is C2PA](https://www.aicheck365.com/blog/what-is-c2pa/): Content Credentials and provenance signals for AI media.
+- [Privacy policy](https://www.aicheck365.com/privacy/): Files are analyzed locally in the browser and are not uploaded.
+
+## Useful Facts
+
+- AICheck365 is best used with direct platform downloads or other original files that still retain metadata.
+- A missing signal does not prove a file is human-made. Social-media transcoding, screenshots, screen recordings, editor exports, and metadata cleaning can remove provenance signals.
+- The browser tool checks images and videos without uploading file contents or detection results to a server.
+
+## Project
+
+- Source project: https://github.com/MatrixA/aicheck

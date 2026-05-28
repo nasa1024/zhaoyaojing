@@ -611,19 +611,37 @@ const platformSeoName = platform?.name.endsWith('AI') ? platform.name : `${platf
 const relatedPlatforms = ['dall-e', 'gemini', 'sora', 'kling']
   .map((slug) => platforms.find((item) => item.slug === slug))
   .filter((item) => item && item.slug !== platformSlug);
+const publishedAt = '2026-05-26';
+const modifiedAt = '2026-05-29';
 
 function titleWithSuffix(title) {
   return `${title} | ${c.metaSuffix}`;
 }
 
+function platformMetaDescription(name) {
+  const descriptions = {
+    'zh-CN': `本地检测 ${name} 原始图片/视频中的 XMP、EXIF、C2PA、MP4/MOV 元数据、文件名和帧水印线索，不上传文件。`,
+    'zh-TW': `本機檢測 ${name} 原始圖片/影片中的 XMP、EXIF、C2PA、MP4/MOV metadata、檔名和幀浮水印線索，不上傳檔案。`,
+    en: `Check original ${name} AI images and videos locally for XMP, EXIF, C2PA, MP4/MOV metadata, file-name clues, and frame watermarks. No uploads.`,
+    ja: `${name} の元画像/動画から XMP、EXIF、C2PA、MP4/MOV メタデータ、ファイル名、フレーム透かしをローカル検出。`,
+    ko: `${name} 원본 이미지/비디오의 XMP, EXIF, C2PA, MP4/MOV 메타데이터, 파일명, 프레임 워터마크를 로컬로 검사합니다.`,
+    de: `Prüfe originale ${name}-Bilder und -Videos lokal auf XMP, EXIF, C2PA, MP4/MOV-Metadaten, Dateinamen und Frame-Wasserzeichen.`,
+    fr: `Vérifiez localement les images et vidéos ${name} avec XMP, EXIF, C2PA, métadonnées MP4/MOV, noms de fichier et filigranes.`,
+    es: `Analiza imágenes y videos originales de ${name} con XMP, EXIF, C2PA, metadatos MP4/MOV, nombres de archivo y marcas de agua.`,
+    'pt-BR': `Verifique imagens e vídeos originais do ${name} com XMP, EXIF, C2PA, metadados MP4/MOV, nomes de arquivo e marcas d'água.`,
+  };
+  return descriptions[lang] ?? descriptions.en;
+}
+
 function jsonLdBase(type, name, description) {
+  const pageUrl = `${SITE_URL}${prefix}/${path}/`;
   return [
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: c.home, item: `${SITE_URL}${prefix}/` },
-        { '@type': 'ListItem', position: 2, name, item: `${SITE_URL}${prefix}/${path}/` },
+        { '@type': 'ListItem', position: 2, name, item: pageUrl },
       ],
     },
     {
@@ -632,7 +650,13 @@ function jsonLdBase(type, name, description) {
       name,
       headline: name,
       description,
-      url: `${SITE_URL}${prefix}/${path}/`,
+      url: pageUrl,
+      inLanguage: lang,
+      isAccessibleForFree: true,
+      datePublished: publishedAt,
+      dateModified: modifiedAt,
+      mainEntityOfPage: pageUrl,
+      author: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
       publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
     },
   ];
@@ -664,7 +688,7 @@ if (path === 'blog') {
   if (lang === 'fr') pageTitle = `Guide de détection image/vidéo IA ${platform.name}`;
   if (lang === 'es') pageTitle = `Guía de detección de imagen/video IA de ${platform.name}`;
   if (lang === 'pt-BR') pageTitle = `Guia de detecção de imagem/vídeo de IA do ${platform.name}`;
-  pageDescription = c.platformLead(platform.name);
+  pageDescription = platformMetaDescription(platform.name);
   jsonLd = jsonLdBase('Article', pageTitle, pageDescription);
 } else if (path === 'contact') {
   pageTitle = c.contactTitle;
@@ -762,6 +786,9 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <p>{c.limitText}</p>
         <h2>{c.sections.privacy}</h2>
         <p>{c.privacyText}</p>
+        <h2>{c.sections.next}</h2>
+        <p>{defaultArticleLead[lang]} {c.signalIntro}</p>
+        <p>{c.limitText}</p>
         <div class="cta-box">
           <p>{c.inspect}</p>
           <a href={localHref('/')} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{c.inspect} -></a>
@@ -781,6 +808,13 @@ const articles = Object.keys(pageTitles).map((slug) => ({
           </ul>
           <h2>{c.sections.limits}</h2>
           <p>{c.limitText}</p>
+          <h2>{c.sections.privacy}</h2>
+          <p>{c.privacyText}</p>
+          <ul class="content-list">
+            <li>{c.platformLead(platform.name)}</li>
+            <li>{c.signalIntro}</li>
+            <li>{c.limitText}</li>
+          </ul>
           <h2>{c.sections.next}</h2>
           <p>{c.platformCta(platform.name)}.</p>
           <div class="cta-box">
@@ -811,6 +845,11 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <p>{c.privacyLead}</p>
         <h2>{c.sections.limits}</h2>
         <p>{c.limitText}</p>
+        <h2>{c.sections.next}</h2>
+        <p>{c.platformsDesc}</p>
+        <p>{c.blogDesc}</p>
+        <p>{c.privacyText}</p>
+        <p>{c.signalIntro}</p>
       </article>
     )}
 
@@ -829,6 +868,15 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <ul class="content-list">
           {c.contactInclude.map((item) => <li>{item}</li>)}
         </ul>
+        <h2>{c.sections.privacy}</h2>
+        <p>{c.privacyText}</p>
+        <h2>{c.sections.limits}</h2>
+        <p>{c.limitText}</p>
+        <h2>{c.sections.next}</h2>
+        <p>{c.platformsDesc}</p>
+        <p>{c.blogDesc}</p>
+        <p>{c.signalIntro}</p>
+        <p>{c.aboutLead}</p>
       </article>
     )}
 
@@ -842,6 +890,12 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <p>{c.signalIntro}</p>
         <h2>{c.sections.limits}</h2>
         <p>{c.limitText}</p>
+        <h2>{c.sections.next}</h2>
+        <p>{c.inspect}</p>
+        <p>{c.platformsDesc}</p>
+        <p>{c.limitText}</p>
+        <p>{c.signalIntro}</p>
+        <p>{c.aboutLead}</p>
       </article>
     )}
 
@@ -855,6 +909,13 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <p>{c.limitText}</p>
         <h2>{c.sections.privacy}</h2>
         <p>{c.privacyText}</p>
+        <h2>{c.sections.next}</h2>
+        <p>{c.inspect}</p>
+        <p>{c.blogDesc}</p>
+        <p>{c.platformsDesc}</p>
+        <p>{c.signalIntro}</p>
+        <p>{c.aboutLead}</p>
+        <p>{c.termsLead}</p>
       </article>
     )}
   </main>
