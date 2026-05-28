@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ locale: 'zh-CN' });
+
 const mockCapabilities = {
   supported_platforms: ['Midjourney', 'OpenAI', 'Adobe Firefly'],
   supported_formats: ['JPEG', 'PNG', 'WebP', 'MP4', 'MOV'],
