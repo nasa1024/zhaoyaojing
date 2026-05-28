@@ -52,20 +52,23 @@ real_photo.jpg
 
 ---
 
-## 🌐 Browser / WASM 图片站 Alpha
+## 🌐 Browser / WASM 图片/视频站 Alpha
 
-仓库现在额外提供一个**浏览器本地执行**的图片检测 demo，目标是把图片来源信号检测搬到前端执行。
+仓库现在额外提供一个**浏览器本地执行**的图片/视频检测 demo，目标是把来源信号检测搬到前端执行。
 
 ### 当前浏览器版范围
 
-- 只做**图片**，不做视频 / 音频
-- 只做**前端本地分析**，不上传图片到服务器
+- 支持**图片和视频**，音频仍以 CLI 为主
+- 只做**前端本地分析**，不上传图片或视频到服务器
 - 当前优先支持这些信号类型：
   - EXIF metadata
   - XMP / IPTC metadata
   - PNG `tEXt` / `iTXt` 文本块
+  - MP4 / MOV / M4V 容器元数据与 SEI 标记
+  - C2PA-lite 文本 / JUMBF 扫描（不做完整签名链验证）
   - 文件名启发式
-- 当前版本**不是完整 CLI 等价移植**，更偏 Browser MVP
+  - 视频无元数据信号时，懒加载 `ffmpeg.wasm` 抽帧做隐形/可见水印分析
+- 当前版本**不是完整 CLI 等价移植**，视频帧分析可能较慢
 
 ### 当前仅支持这些平台 / 工具来源信号
 
@@ -99,14 +102,18 @@ real_photo.jpg
 - Fooocus
 - Seedream
 - Recraft
+- Sora / Kling / Runway / Pika / Veo / Vidu / Luma / Hailuo / Pixverse / Wan（视频容器/文件名/帧水印线索）
 
 ### 本地运行浏览器版
 
 > 需要本机安装 Rust toolchain 和 `wasm-pack`。
 
 ```bash
-wasm-pack build --target web --out-dir web/pkg
-python3 -m http.server 4173 -d web
+wasm-pack build --target web --out-dir web/public/pkg
+cd web
+npm install
+npm run build
+python3 -m http.server 4173 -d dist
 ```
 
 打开 `http://localhost:4173`。
