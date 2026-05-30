@@ -11,11 +11,23 @@
 - [What is C2PA](https://www.aicheck365.com/blog/what-is-c2pa/): Content Credentials and provenance signals for AI media.
 - [Privacy policy](https://www.aicheck365.com/privacy/): Files are analyzed locally in the browser and are not uploaded.
 
+## Platform Guides
+
+- [Gemini AI image/video detection](https://www.aicheck365.com/platforms/gemini/): C2PA Content Credentials, PNG caBX/JUMBF, Google AI fields, MP4/MOV metadata, and filename clues.
+- [Google Imagen detection](https://www.aicheck365.com/platforms/imagen/): C2PA, JUMBF, claim_generator_info, digitalSourceType, and Google AI video metadata.
+- [DALL-E / GPT Image detection](https://www.aicheck365.com/platforms/dall-e/): OpenAI C2PA metadata, XMP fields, and related Sora video provenance clues.
+- [Midjourney detection](https://www.aicheck365.com/platforms/midjourney/): XMP CreatorTool, IPTC digital source fields, and file-name patterns.
+- [Stable Diffusion detection](https://www.aicheck365.com/platforms/stable-diffusion/): PNG tEXt chunks, prompts, seeds, workflow metadata, and frame-export clues.
+- [Sora video detection](https://www.aicheck365.com/platforms/sora/): C2PA-lite text, MP4/MOV container metadata, OpenAI clues, and sampled frame watermarks.
+- [Kling video detection](https://www.aicheck365.com/platforms/kling/): MP4/MOV metadata, SEI markers, AIGC labels, and video frame watermark signals.
+
 ## Useful Facts
 
 - AICheck365 is best used with direct platform downloads or other original files that still retain metadata.
 - A missing signal does not prove a file is human-made. Social-media transcoding, screenshots, screen recordings, editor exports, and metadata cleaning can remove provenance signals.
 - The browser tool checks images and videos without uploading file contents or detection results to a server.
+- Detection is based on readable provenance signals rather than visual guessing alone.
+- The tool can inspect images and videos; video frame extraction runs locally and may be slower for large files.
 
 ## Project
 

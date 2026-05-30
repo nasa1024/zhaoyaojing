@@ -81,7 +81,7 @@ const jsonLd = [
 
     <div class="platform-grid">
       {videoPlatforms.map(p => (
-        <div class="platform-card card">
+        <div class="platform-card platform-card-static card">
           <div class="platform-card-header">
             <h2>{p.name}</h2>
             <div class="tag-row">
@@ -98,7 +98,7 @@ const jsonLd = [
       <h2>为什么不同平台的检测方法不同？</h2>
       <p>平台写入元数据的方式并不统一。OpenAI、Adobe、Google 这类产品更可能使用 C2PA；Stable Diffusion、ComfyUI 这类工作流则取决于用户使用的前端和导出设置；视频平台还可能把来源线索放在 MP4 容器、SEI marker 或抽样帧水印里。有些平台导出的文件可能没有可读线索。</p>
       <p>所以检测结果只能作为<strong>辅助参考</strong>。没检测到，不代表文件一定不是 AI 生成。</p>
-      <p style="margin-top:16px"><a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 24px;">检测图片或视频 →</a></p>
+      <p style="margin-top:16px"><a href="/" class="primary cta-btn">检测图片或视频 →</a></p>
     </div>
   </main>
 </Base>

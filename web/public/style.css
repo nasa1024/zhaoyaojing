@@ -809,6 +809,7 @@ h3 {
   border-radius: 16px;
   background: rgba(110, 168, 255, 0.07);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
 }
 
 .signal-detail-card h3 {
@@ -835,7 +836,7 @@ h3 {
 .comparison-table table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .comparison-table th,
@@ -898,6 +899,8 @@ h3 {
   font-weight: 600;
   line-height: 1.6;
   list-style: none;
+  display: flex;
+  align-items: flex-start;
 }
 
 .faq-item summary::-webkit-details-marker { display: none; }
@@ -905,6 +908,23 @@ h3 {
 .faq-item summary::before {
   content: "Q：";
   color: var(--accent);
+  flex-shrink: 0;
+}
+
+.faq-item summary::after {
+  content: "+";
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 12px;
+  transition: transform 0.2s ease;
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
 }
 
 .faq-item[open] summary {
@@ -925,8 +945,12 @@ h3 {
 }
 
 .related-platforms h2 {
-  font-size: 18px;
-  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
 }
 
 .related-links {
@@ -1269,4 +1293,75 @@ body[data-theme="light"] .theme-btn {
   .cta-box { flex-direction: column; align-items: flex-start; }
   .platform-grid { grid-template-columns: 1fr; }
   .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── CTA anchor button ─── */
+
+.cta-btn {
+  display: inline-block;
+  text-decoration: none;
+  width: auto;
+  padding: 12px 28px;
+}
+
+/* ─── Comparison table alternating rows ─── */
+
+.comparison-table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* ─── Content article section spacing ─── */
+
+.content-article h2 {
+  margin-top: 26px;
+}
+
+/* ─── Keyboard focus states ─── */
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.upload:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── Content area link styling ─── */
+
+.content-article a:not(.primary):not(.cta-btn),
+.content-section a:not(.primary):not(.cta-btn) {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.content-article a:not(.primary):not(.cta-btn):hover,
+.content-section a:not(.primary):not(.cta-btn):hover {
+  text-decoration: underline;
+}
+
+/* ─── Static (non-link) platform cards ─── */
+
+.platform-card-static {
+  cursor: default;
+}
+
+.platform-card-static:hover {
+  transform: none;
+  border-color: var(--border);
 }

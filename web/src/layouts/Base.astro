@@ -15,13 +15,28 @@ const {
   canonical = 'https://www.aicheck365.com',
   ogImage = 'https://www.aicheck365.com/og.png',
   jsonLd,
-  robots = 'index, follow',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   lang: langProp,
 } = Astro.props;
 
 const SITE_URL = 'https://www.aicheck365.com';
+const SITE_NAME = 'AICheck365';
+const SITE_DESCRIPTION = 'A browser-local AI image and video origin detector for C2PA, EXIF, XMP, PNG text chunks, MP4/MOV metadata, file-name clues, and video frame watermark signals.';
 const DEFAULT_LANG = 'zh-CN';
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const SEO_KEYWORDS = [
+  'AI image detector',
+  'AI video detector',
+  'AI generated image detection',
+  'AI generated video detection',
+  'C2PA checker',
+  'Content Credentials',
+  'EXIF AI metadata',
+  'XMP AI metadata',
+  'MP4 metadata AI detection',
+  'AI watermark detection',
+  'AICheck365',
+];
 const OG_LOCALE: Record<string, string> = {
   'zh-CN': 'zh_CN',
   'zh-TW': 'zh_TW',
@@ -224,10 +239,21 @@ const siteJsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'AICheck365',
+    name: SITE_NAME,
     url: SITE_URL,
     logo: `${SITE_URL}/og.png`,
     sameAs: ['https://github.com/MatrixA/aicheck'],
+    description: SITE_DESCRIPTION,
+    foundingDate: '2026',
+    knowsAbout: [
+      'AI-generated media detection',
+      'C2PA Content Credentials',
+      'EXIF metadata',
+      'XMP metadata',
+      'MP4 and MOV metadata',
+      'AI image provenance',
+      'AI video provenance',
+    ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
@@ -238,12 +264,14 @@ const siteJsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'AICheck365',
+    name: SITE_NAME,
+    alternateName: ['AI Check 365', 'AICheck'],
     url: SITE_URL,
+    description: SITE_DESCRIPTION,
     inLanguage: SUPPORTED_LANGS,
     publisher: {
       '@type': 'Organization',
-      name: 'AICheck365',
+      name: SITE_NAME,
       url: SITE_URL,
     },
   },
@@ -263,13 +291,19 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <meta name="robots" content={robots} />
     <meta name="application-name" content="AICheck365" />
     <meta name="author" content="AICheck365" />
+    <meta name="keywords" content={SEO_KEYWORDS.join(', ')} />
+    <meta name="generator" content="Astro" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="theme-color" content="#101727" />
+    <meta name="color-scheme" content="dark light" />
     <link rel="canonical" href={canonicalHref} />
     <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${canonicalPath}`} />
     {SUPPORTED_LANGS.map((lang) => (
       <link rel="alternate" hreflang={lang} href={`${SITE_URL}${localizedPath(canonicalPath, lang)}`} />
     ))}
+    <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
+    <link rel="author" href={`${SITE_URL}/about/`} />
+    <link rel="privacy-policy" href={`${SITE_URL}/privacy/`} />
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website" />
@@ -309,8 +343,8 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     </script>
 
     <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
     <link rel="stylesheet" href="/style.css" />
   </head>
