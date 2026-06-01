@@ -1365,3 +1365,164 @@ select:focus-visible {
   transform: none;
   border-color: var(--border);
 }
+
+/* ─── Mobile refinements: 360–760 px ─── */
+
+@media (max-width: 760px) {
+  /* Header: reduce padding so controls don't overflow narrow screens */
+  .site-header {
+    padding-left: 14px;
+    padding-right: 14px;
+    gap: 6px;
+  }
+
+  /* Lang select: shrink slightly to save header space */
+  .lang-select {
+    font-size: 12px;
+    padding-left: 8px;
+  }
+
+  /* CTA anchor: full-width block, easier to tap */
+  .cta-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* CTA box: tighter padding and gap */
+  .cta-box {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  /* Signal detail grid: single column to avoid cramped cards */
+  .signal-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Comparison table: smooth iOS scrolling; set a min-width so
+     columns aren't squeezed below readable widths */
+  .comparison-table {
+    -webkit-overflow-scrolling: touch;
+  }
+  .comparison-table table {
+    min-width: 440px;
+  }
+
+  /* Related links: ensure comfortable touch targets */
+  .related-links a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Footer links: wrap on narrow screens */
+  .footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 20px;
+  }
+
+  /* Mobile menu links: meet 44 px touch target height */
+  .mobile-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Notice: slightly smaller text for readability in tight cards */
+  .notice {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+}
+
+/* ─── Mobile refinements: ≤ 480 px ─── */
+
+@media (max-width: 480px) {
+  /* Page: tightest edge padding on small phones */
+  .page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Header: minimal padding on small phones */
+  .site-header {
+    padding: 12px 12px 0;
+  }
+
+  /* Cards: slightly smaller radius to reclaim edge space */
+  .card {
+    border-radius: 16px;
+  }
+
+  /* Metric cards: less height and smaller value font */
+  .metric-card {
+    min-height: 88px;
+    padding: 14px 16px;
+    gap: 6px;
+  }
+  .metric-value {
+    font-size: 26px;
+  }
+
+  /* Trust list: tighter spacing and font */
+  .trust-list {
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .trust-list li {
+    padding: 11px 12px;
+  }
+  .trust-list span {
+    font-size: 13px;
+  }
+
+  /* Upload zone: compact for tiny screens */
+  .upload {
+    min-height: 156px;
+    padding: 14px;
+    gap: 6px;
+  }
+  .upload-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+  .upload-title {
+    font-size: 16px;
+  }
+  /* Shrink the long formats list so it doesn't crowd the drop zone */
+  .upload small {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  /* Analyze button: slightly taller tap target */
+  .primary {
+    padding: 15px 18px;
+  }
+
+  /* CTA anchor: larger tap target on tiny screens */
+  .cta-btn {
+    padding: 14px 20px;
+  }
+
+  /* Batch item header: tighter on small screens */
+  .batch-item-header {
+    padding: 10px 12px;
+  }
+
+  /* FAQ items: tighter padding */
+  .faq-item {
+    padding: 12px 14px;
+  }
+
+  /* 404 page */
+  .not-found-card {
+    padding: 40px 20px;
+  }
+  .not-found-card h1 {
+    font-size: 56px;
+  }
+}
