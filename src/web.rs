@@ -601,8 +601,8 @@ fn browser_signal_from_watermark(signal: web_watermark::WebWatermarkSignal) -> B
 }
 
 fn detect_xmp(bytes: &[u8]) -> Vec<BrowserSignal> {
-    let search_data = if bytes.len() > 1_048_576 {
-        &bytes[..1_048_576]
+    let search_data = if bytes.len() > 10 * 1_048_576 {
+        &bytes[..10 * 1_048_576]
     } else {
         bytes
     };
@@ -966,8 +966,8 @@ fn truncate(text: &str, max: usize) -> String {
 
 #[allow(dead_code)]
 fn dump_known_xmp_properties(bytes: &[u8]) -> Vec<(String, String)> {
-    let search_data = if bytes.len() > 1_048_576 {
-        &bytes[..1_048_576]
+    let search_data = if bytes.len() > 10 * 1_048_576 {
+        &bytes[..10 * 1_048_576]
     } else {
         bytes
     };

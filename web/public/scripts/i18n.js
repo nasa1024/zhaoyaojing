@@ -623,19 +623,9 @@ function detectLang() {
   const urlLang = langFromPathname();
   if (urlLang) return urlLang;
 
-  const stored = localStorage.getItem('lang');
-  if (stored && translations[stored]) return stored;
-
-  const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-  if (nav.startsWith('zh-tw') || nav.startsWith('zh-hk') || nav.startsWith('zh-hant')) return 'zh-TW';
-  if (nav.startsWith('zh')) return 'zh-CN';
-  if (nav.startsWith('ja'))  return 'ja';
-  if (nav.startsWith('ko'))  return 'ko';
-  if (nav.startsWith('de'))  return 'de';
-  if (nav.startsWith('fr'))  return 'fr';
-  if (nav.startsWith('es'))  return 'es';
-  if (nav.startsWith('pt'))  return 'pt-BR';
-  return 'en';
+  // 如果 URL 里没有语言前缀，说明访问的是主站默认的简体中文页面
+  // 必须强制返回默认语言 'zh-CN'，防止客户端 JS 将无前缀的根目录页面改写为其他语言而导致 Googlebot 报重定向或内容不一致错误
+  return 'zh-CN';
 }
 
 let currentLang = detectLang();

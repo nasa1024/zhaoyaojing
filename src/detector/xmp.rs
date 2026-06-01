@@ -97,8 +97,8 @@ fn extract_property(xml: &str, prop_name: &str) -> Option<String> {
 /// Detect AI signals from XMP/IPTC metadata embedded in the file.
 pub fn detect(path: &Path) -> Result<Vec<Signal>> {
     let data = fs::read(path)?;
-    let search_data = if data.len() > 1_048_576 {
-        &data[..1_048_576]
+    let search_data = if data.len() > 10 * 1_048_576 {
+        &data[..10 * 1_048_576]
     } else {
         &data
     };
@@ -190,8 +190,8 @@ pub fn detect(path: &Path) -> Result<Vec<Signal>> {
 /// Dump all XMP properties for the `info` subcommand.
 pub fn dump_info(path: &Path) -> Result<Vec<(String, String)>> {
     let data = fs::read(path)?;
-    let search_data = if data.len() > 1_048_576 {
-        &data[..1_048_576]
+    let search_data = if data.len() > 10 * 1_048_576 {
+        &data[..10 * 1_048_576]
     } else {
         &data
     };
