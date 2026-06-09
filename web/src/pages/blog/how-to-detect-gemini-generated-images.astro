@@ -2,11 +2,12 @@
 import Base from '../../layouts/Base.astro';
 
 const faq = [
-  { q: "Gemini 图片一定包含 C2PA 吗？", a: "不一定。部分 Gemini / Google AI 原图会带 C2PA Content Credentials，但不同入口、格式和下载方式会有差异。测试时尽量用刚下载的原始文件。" },
-  { q: "为什么原图能检测，转发后不能检测？", a: "社交平台、截图和二次导出经常会删除 C2PA、EXIF、XMP。检测工具只能读取当前文件里还保留的内容。" },
-  { q: "digitalSourceType = trainedAlgorithmicMedia 是什么意思？", a: "这是 C2PA/IPTC 里的来源类型，意思是内容由训练算法生成。看到这个字段，通常可以认为 AI 来源证据比较强。" },
-  { q: "本地检测比上传检测有什么好处？", a: "图片和视频不会离开你的浏览器，更适合检查私有素材、客户文件或还没公开的设计图。缺点是浏览器端更适合快速读取信号，不适合替代完整法证审计。" },
-  { q: "Gemini 或 Google AI 视频也能检测吗？", a: "可以上传原始视频文件尝试检测。浏览器版会检查 C2PA-lite、MP4/MOV 元数据、文件名和抽样视频帧水印；转码或录屏后的文件可能没有可读线索。" },
+  { q: "Gemini 图片一定包含 C2PA 吗？", a: "不一定。我们实测过的部分 Gemini / Google AI 原图带 C2PA Content Credentials，但不同产品入口（Gemini 应用、AI Studio、API）、不同格式和下载方式行为不一致。测试时尽量用刚从生成页面直接下载的原始文件。" },
+  { q: "为什么原图能检测出来，转发后就检测不出来了？", a: "社交平台转码、截图、修图软件另存为都会丢弃 PNG 的 caBX chunk、JPEG 的 APP11 段以及 EXIF/XMP。检测工具只能读当前文件里还保留的字节，信号被剥离后任何工具都无能为力。" },
+  { q: "digitalSourceType = trainedAlgorithmicMedia 是什么意思？", a: "这是 IPTC 受控词表里的数字来源类型，意思是'完全由训练算法生成'，即纯 AI 生成。它出现在 C2PA manifest 的 actions 断言里时，是目前最规范的 AI 来源声明，证据强度高。" },
+  { q: "SynthID 能用第三方工具检测吗？", a: "不能。SynthID 是 Google DeepMind 的像素级隐形水印，嵌入方式和解码器都不公开，目前只有 Google 自家的检测入口能读。第三方工具（包括本站）能查的是 C2PA、XMP 这类标准化元数据，以及对水印状统计异常的概率性分析。" },
+  { q: "本地检测比上传检测有什么好处？", a: "文件不离开浏览器，适合客户素材、未发布的设计稿这类不方便外传的内容。代价是浏览器版定位于快速信号扫描，不做 C2PA 签名链验证，需要法证级结论时应使用 c2patool 等完整验证工具。" },
+  { q: "Gemini / Veo 生成的视频也能检测吗？", a: "可以试。Veo 部分导出视频的 MP4 容器 ©too 字段写着 'Google'，部分带 C2PA 文本。浏览器版会扫容器元数据、C2PA、SEI marker 和文件名，没命中再抽帧分析水印。转码或录屏后的视频通常查不到容器层线索。" },
 ];
 
 const jsonLd = [
@@ -22,10 +23,11 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "如何通过 C2PA 元数据检测 Gemini 生成图片/视频？",
-    "description": "用真实 Gemini 原图解释 C2PA Content Credentials、PNG caBX/JUMBF 和 digitalSourceType=trainedAlgorithmicMedia，并补充 Google AI 视频检测线索。",
+    "headline": "如何检测 Gemini 生成的图片和视频？C2PA、XMP Credit 与 SynthID 详解",
+    "description": "用真实 Gemini 原图拆解 Google 写入的来源信号：PNG caBX chunk 里的 C2PA manifest、Google C2PA Core Generator Library、XMP Credit、SynthID 的边界，以及 Veo 视频线索。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/",
     "datePublished": "2026-05-26",
+    "dateModified": "2026-06-09",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -41,8 +43,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="如何通过 C2PA 元数据检测 Gemini 生成图片/视频？ | AICheck365"
-  description="用真实 Gemini 原图解释 C2PA Content Credentials、PNG caBX/JUMBF、Google claim_generator_info 与 digitalSourceType，并补充视频检测线索。"
+  title="如何检测 Gemini 生成的图片和视频？C2PA、XMP Credit 与 SynthID 详解 | AICheck365"
+  description="用真实 Gemini 原图拆解 Google 写入的来源信号：PNG caBX chunk 里的 C2PA manifest、claim_generator、XMP Credit='Made with Google AI'、SynthID 的能与不能，以及 Veo 视频线索。"
   canonical="https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/"
   jsonLd={jsonLd}
 >
@@ -52,42 +54,58 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>如何通过 C2PA 元数据检测 Gemini 生成图片/视频？</h1>
-      <p class="article-meta">2026年5月 · Gemini · C2PA · Content Credentials · 视频检测</p>
+      <h1>如何检测 Gemini 生成的图片和视频？C2PA、XMP Credit 与 SynthID 详解</h1>
+      <p class="article-meta">2026年5月发布 · 2026年6月更新 · Gemini · C2PA · Content Credentials</p>
 
-      <p class="lead-text">Gemini 生成图能不能识别，很多时候取决于你手里的文件是不是原图。原始 PNG 里可能带着 Google 写入的 C2PA / Content Credentials；截图或转发图通常就没有了。</p>
+      <p class="lead-text">Google 给 Gemini 生成内容上的"标记"其实有三套：标准化的 C2PA Content Credentials、XMP 里的署名字段，以及只有 Google 自己能读的 SynthID 像素水印。能不能检测出来，主要取决于你手里的文件经历过什么——原始 PNG 里证据相当扎实，截图和微信转图则基本什么都不剩。这篇用真实样本拆解每一套标记长什么样、存在哪、可信度如何。</p>
 
-      <h2>先确认文件是不是原图</h2>
-      <p>如果图片来自截图、微信转发、压缩包预览图，检测结果很容易是空的。这不是工具失灵，而是元数据已经被清掉了。最好的样本是从 Gemini 页面直接下载的 PNG/JPEG。</p>
+      <h2>先判断你手里是不是原图</h2>
+      <p>这是检测前最重要的一步。Gemini 页面直接下载的 PNG/JPEG 是理想样本；以下几种来路的文件，元数据大概率已经被洗掉了：截图（像素重新编码，原文件的任何 chunk 都不存在）、微信/QQ 传图（默认压缩重编码）、社交平台保存的图（平台转码）、压缩包里的"预览图"。用这些文件测出"无信号"不说明图是真的，只说明证据没跟过来。</p>
 
-      <h2>Gemini 的线索藏在哪里？</h2>
-      <p>在一些 Gemini 原图里，来源数据会放在 PNG 的 <code>caBX</code> chunk，或 JPEG 的 APP11 C2PA 段中。这些位置保存的是 JUMBF 结构和 C2PA manifest。普通图片查看器通常不会显示它们。</p>
+      <h2>信号一：C2PA manifest（最硬的证据）</h2>
+      <p>部分 Gemini / Imagen 原图带 Google 签名的 C2PA 记录。它的物理位置取决于格式：PNG 放在类型名为 <code>caBX</code> 的专用 chunk 里（遍历 chunk 链表按名字找就行）；JPEG 放在 APP11 段（标记 <code>0xFFEB</code>），manifest 超过单段 64KB 上限时会按序列号拆成多段，读取时需要重组。chunk/段里装的都是 JUMBF 容器封装的 manifest。</p>
+      <p>在 Gemini 原图的 manifest 里，值得关注的具体内容：</p>
+      <ul class="content-list">
+        <li><code>claim_generator</code> 写的是 <code>Google C2PA Core Generator Library</code>——这是 Google 生成链路的标准签名方标识，正常照片和第三方工具不会出现这个值。</li>
+        <li>actions 断言里 <code>digitalSourceType</code> 为 <code>trainedAlgorithmicMedia</code>（纯 AI 生成）。这是 IPTC 词表里最明确的 AI 来源声明。</li>
+        <li>整个 manifest 经过 COSE 签名，篡改内容会破坏签名——这是它比文件名、XMP 都硬的原因。</li>
+      </ul>
+      <p>普通图片查看器不会显示这些二进制区域。<a href="/">AICheck365</a> 在浏览器本地解析 chunk/段结构、提取 manifest 字节后做匹配：命中 <code>trainedAlgorithmicMedia</code> 或已知工具名（Gemini、Imagen 等）记高置信度；只命中 Google 凭证链路特征记中等。注意这是快速扫描，不做签名链验证，两者的区别见 <a href="/blog/what-is-c2pa/">C2PA 文章</a>。</p>
 
-      <p>AICheck365 会在浏览器里直接读这些二进制区域，找 Google、Gemini、Imagen、<code>digitalSourceType</code>、<code>trainedAlgorithmicMedia</code> 这类字段。图片不需要上传；原始视频也可以在本地检查 C2PA-lite、MP4/MOV 元数据、文件名和抽样帧水印。</p>
+      <h2>信号二：XMP 里的 Google 署名</h2>
+      <p>C2PA 之外，Google 系生成图常带一段 XMP，其中 <code>photoshop:Credit</code> 字段的值是 <code>Made with Google AI</code>。这是纯文本、没有签名，理论上可以伪造，所以证据强度记中等——但配合 C2PA 出现时是很好的旁证。</p>
+      <p>一个容易踩的实战坑：Gemini 图片的 XMP 块不一定在文件开头附近。我们遇到过 XMP 出现在好几 MB 之后的样本，扫描窗口太小就会漏报——AICheck365 为此把 XMP 扫描范围扩到了文件前 10MB。如果你用自己的脚本解析，记得别只读文件头。</p>
 
-      <h2>几个字段怎么理解？</h2>
+      <h2>信号三：SynthID——存在，但你读不了</h2>
+      <p>Google 反复宣传的 SynthID 需要单独说清楚：它是 DeepMind 开发的像素级隐形水印，生成时直接织进像素值里，对转码、裁剪有一定鲁棒性。但它的嵌入算法和解码器都不公开，<strong>目前只有 Google 自己的检测入口能给出 SynthID 判定，任何第三方工具都读不了</strong>。所以指望本地工具"验 SynthID"是不现实的；第三方能做的是对水印状统计异常的概率性分析（小波域指标），性质完全不同，置信度也低得多。</p>
+
+      <h2>信号四：文件名</h2>
+      <p>Gemini 默认下载名形如 <code>Gemini_Generated_Image_xxxxxx.png</code>。文件名人人可改，单独只算低置信度的辅助线索，但在"原图 + 默认文件名 + C2PA 命中"的组合里，它能让整个证据链更顺。</p>
+
+      <h2>各信号强度对照</h2>
       <div class="comparison-table">
         <table>
           <thead>
-            <tr><th>字段/信号</th><th>含义</th><th>参考权重</th></tr>
+            <tr><th>信号</th><th>位置</th><th>可伪造性</th><th>参考权重</th></tr>
           </thead>
           <tbody>
-            <tr><td><code>digitalSourceType</code></td><td>文件声明的数字来源类型</td><td><span class="badge high">高</span></td></tr>
-            <tr><td><code>trainedAlgorithmicMedia</code></td><td>表示由训练算法生成</td><td><span class="badge high">高</span></td></tr>
-            <tr><td><code>claim_generator_info</code></td><td>生成工具或组件信息，如 Google/Imagen</td><td><span class="badge medium">中到高</span></td></tr>
-            <tr><td><code>Gemini_Generated_Image</code></td><td>文件名里留下的来源痕迹</td><td><span class="badge low">低</span></td></tr>
+            <tr><td><code>digitalSourceType=trainedAlgorithmicMedia</code></td><td>C2PA manifest（caBX / APP11）</td><td>受签名保护</td><td><span class="badge high">高</span></td></tr>
+            <tr><td><code>claim_generator</code> 含 Google/Imagen</td><td>C2PA manifest</td><td>受签名保护</td><td><span class="badge high">高</span></td></tr>
+            <tr><td><code>Credit="Made with Google AI"</code></td><td>XMP（可能深至文件 10MB 处）</td><td>纯文本可改</td><td><span class="badge medium">中</span></td></tr>
+            <tr><td>SynthID</td><td>像素</td><td>难，但第三方不可读</td><td>仅 Google 可验证</td></tr>
+            <tr><td><code>Gemini_Generated_Image</code> 文件名</td><td>文件系统</td><td>随手可改</td><td><span class="badge low">低</span></td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2>什么结果最有参考价值？</h2>
-      <p>如果 C2PA manifest 里同时出现 Google/Gemini/Imagen 和 <code>trainedAlgorithmicMedia</code>，这比单纯文件名靠谱得多。文件名可以改，C2PA manifest 至少说明这份文件里确实留下了来源记录。</p>
+      <h2>Veo / Google AI 视频呢？</h2>
+      <p>视频侧的线索少一些但确实存在。部分 Veo 导出视频的 MP4 容器里，<code>moov/udta/meta/ilst</code> 下 <code>&#169;too</code>（编码工具）字段的值就是 "Google"；部分文件能扫到 C2PA 相关文本。浏览器版对视频会依次检查 C2PA 文本（前 2MB）、容器工具字段、码流 SEI marker 和文件名，全部落空再懒加载 ffmpeg.wasm 抽帧分析水印。和图片同理：转码、录屏之后容器层线索基本归零。完整流程见<a href="/blog/how-to-detect-ai-videos/">AI 视频检测指南</a>。</p>
 
-      <h2>为什么坚持本地检测？</h2>
-      <p>很多人检测的不是公开图片，而是客户素材、设计稿、聊天里收到的文件。AICheck365 的浏览器版直接在本机读取 EXIF、XMP、PNG 文本块、C2PA/JUMBF、MP4 元数据和抽样视频帧，不把文件发到服务器。</p>
+      <h2>为什么坚持本地检测</h2>
+      <p>需要鉴别 Gemini 图的场景里，很多文件并不适合上传到别人的服务器——客户给的素材、还没发布的设计稿、聊天里收到的私人图片。AICheck365 的所有解析（EXIF、XMP、PNG chunk、C2PA/JUMBF、MP4 box、抽帧）都在浏览器本机完成，检测过程中没有任何文件字节发往服务器。代价前面说过：快速扫描不等于法证审计，重要场合请保留原始文件做完整验证。</p>
 
       <div class="cta-box">
-        <p>如果你手里有 Gemini 原图或 Google AI 原始视频，可以先用 AICheck365 看看是否保留了来源线索。</p>
+        <p>手里有 Gemini 原图或 Google AI 视频？拖进来看看 Google 留了哪些来源记录</p>
         <a href="/" class="primary cta-btn">检测图片或视频 →</a>
       </div>
 

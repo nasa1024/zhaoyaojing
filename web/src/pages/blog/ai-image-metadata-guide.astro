@@ -15,9 +15,10 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 全解析",
-    "description": "图片/视频元数据类型大全，详解各种 AI 平台在文件中写入的元数据格式与内容，以及如何读取和验证这些信息。",
+    "description": "逐字节拆解 AI 平台写入图片和视频的元数据：EXIF UserComment 里的 AIGC JSON、XMP DigitalSourceType、PNG tEXt 生成参数、MP4 ilst 与 SEI marker。",
     "url": "https://www.aicheck365.com/blog/ai-image-metadata-guide/",
     "datePublished": "2025-04-01",
+    "dateModified": "2026-06-09",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   }
 ];
@@ -25,7 +26,7 @@ const jsonLd = [
 
 <Base
   title="AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 | AICheck365"
-  description="图片/视频元数据类型大全：EXIF、XMP、C2PA、PNG tEXt、MP4/MOV 格式详解，各 AI 平台的元数据写入策略，以及使用 AICheck365 检测的方法。"
+  description="逐字节拆解 AI 平台写入图片和视频的元数据：EXIF UserComment 里的 AIGC JSON、XMP DigitalSourceType、PNG tEXt 生成参数、MP4 ilst 元数据与 SEI marker。"
   canonical="https://www.aicheck365.com/blog/ai-image-metadata-guide/"
   jsonLd={jsonLd}
 >
@@ -36,106 +37,124 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 全解析</h1>
-      <p class="article-meta">2025年4月 · 技术深度 · 元数据</p>
+      <p class="article-meta">2025年4月发布 · 2026年6月更新 · 技术深度 · 元数据</p>
 
-      <p class="lead-text">媒体元数据是嵌入在图片或视频文件中的"隐藏信息"，记录了文件的创建方式、时间、工具和后续处理历史。对于 AI 生成内容检测，元数据和视频帧水印是最可靠的来源信号之一。本文全面解析各类元数据格式。</p>
+      <p class="lead-text">几乎每个 AI 生成平台都会在导出的文件里留下点东西。有的写得大大方方，比如 Stable Diffusion 把完整提示词塞进 PNG 文本块；有的藏得很深，比如 Gemini 的 XMP 块可能出现在文件几 MB 之后的位置；还有的用了加密签名（C2PA）。这篇文章按文件格式逐一拆解这些元数据到底存在哪、长什么样、怎么读。文中提到的字段名、chunk 名和偏移量都来自 AICheck365 检测器的实际实现，不是泛泛而谈。</p>
 
-      <h2>1. EXIF（可交换图像文件格式）</h2>
-      <p>EXIF（Exchangeable Image File Format）是最古老也最广泛支持的图片元数据标准，最初为数码相机设计。</p>
-      <p><strong>AI 检测相关的 EXIF 字段：</strong></p>
+      <h2>先建立一个直觉：元数据存在文件的哪里</h2>
+      <p>一个图片或视频文件，本质上是"像素/帧数据 + 若干个元数据容器"。不同格式的容器机制不一样：JPEG 用<strong>段（segment）</strong>，每段以 <code>0xFF</code> 加一个标记字节开头；PNG 用<strong>块（chunk）</strong>，每块是 4 字节长度 + 4 字节类型名 + 数据 + 4 字节 CRC；MP4/MOV 用<strong>盒（box/atom）</strong>，可以层层嵌套。EXIF、XMP、C2PA 这些标准各自占用其中一块或几块地方。</p>
+      <p>理解这一点之后，"为什么截图会丢失所有元数据"就不难解释了——截图工具只拿到了屏幕上的像素，重新编码成一个全新的文件，原文件里那些 segment、chunk、box 根本没机会跟过来。</p>
+
+      <h2>1. EXIF：最老牌，也最容易被改</h2>
+      <p>EXIF（Exchangeable Image File Format）1995 年就有了，最初是给数码相机记录拍摄参数用的，内部是 TIFF 风格的 IFD（Image File Directory）结构，在 JPEG 里放在 APP1 段。因为历史悠久、工具链成熟，它也是最容易被编辑和伪造的一类元数据。</p>
+      <p>和 AI 检测相关的字段主要有这几个：</p>
       <ul class="content-list">
-        <li><code>Software</code>：生成/处理软件名称，许多 AI 工具会写入自己的名称</li>
-        <li><code>Artist</code>：创建者信息，部分 AI 平台会在此写入账号 ID 或 Hash</li>
-        <li><code>ImageDescription</code>：图片描述，可能包含 AI 生成提示词</li>
-        <li><code>Make</code>/<code>Model</code>：相机型号，AI 生成图片通常缺失这两个字段</li>
-        <li><code>UserComment</code>：用户评论字段，部分 AI 工具会在此写入生成信息</li>
-      </ul>
-      <p><strong>读取工具</strong>：ExifTool（命令行）、Photoshop、在线 Exif Viewer</p>
-
-      <h2>2. XMP（可扩展元数据平台）</h2>
-      <p>XMP（Extensible Metadata Platform）是 Adobe 制定的元数据标准，比 EXIF 更灵活，支持自定义字段和 XML 格式。</p>
-      <p><strong>AI 检测相关的 XMP 字段：</strong></p>
-      <ul class="content-list">
-        <li><code>xmp:CreatorTool</code>：创建工具名称 —— Midjourney、DALL-E 等都会在此写入</li>
-        <li><code>Iptc4xmpExt:DigitalSourceType</code>：IPTC 数字来源类型，AI 生成会标注 <code>trainedAlgorithmicMedia</code></li>
-        <li><code>xmp:AISystemUsed</code>：明确标注使用的 AI 系统</li>
-        <li><code>xmpRights:UsageTerms</code>：使用条款，部分 AI 平台会标注版权限制</li>
-        <li><code>dc:description</code>：内容描述，可能包含生成提示词</li>
+        <li><code>Software</code>：处理软件名。部分 AI 工具会老老实实写上自己的名字。</li>
+        <li><code>Make</code> / <code>Model</code>：相机厂商和型号。真实照片几乎都有，AI 生成图通常没有——个别工具反而会往这两个字段里写工具名。</li>
+        <li><code>ImageDescription</code> / <code>UserComment</code>：描述和注释字段，可能包含提示词或平台标识。</li>
+        <li><code>Artist</code>：创作者。有些平台在这里写入账号 ID 的哈希值——一长串十六进制字符（32 位以上），和正常人名的形态差别很大，本身就是一个弱信号。</li>
       </ul>
 
-      <h2>3. C2PA（内容真实性倡议）</h2>
-      <p>C2PA 是专门为内容溯源设计的新一代标准，使用数字签名确保元数据不可篡改。详见 <a href="/blog/what-is-c2pa/">C2PA 标准完整解读</a>。</p>
-      <p><strong>C2PA Manifest 的主要内容：</strong></p>
-      <ul class="content-list">
-        <li><code>claim_generator</code>：内容生成工具（如 "c2pa-rs/0.x.x OpenAI DALL-E 3"）</li>
-        <li><code>digitalSourceType</code>：来源类型（AI 生成、相机拍摄、编辑等）</li>
-        <li>数字签名：可验证的加密签名，证明 Manifest 未被篡改</li>
-        <li>编辑历史：图片经过哪些工具处理</li>
-      </ul>
+      <h3>UserComment 的一个坑</h3>
+      <p>按 EXIF 规范，<code>UserComment</code> 的前 8 个字节是字符编码标识（比如 <code>ASCII\0\0\0</code>），真正的内容从第 9 个字节开始。很多简易查看器不处理这个前缀，直接把整个字段当十六进制显示，看起来像一堆乱码——实际上跳过前 8 字节再按 UTF-8 解码，内容就出来了。如果你自己写解析代码，这是必踩的坑之一。</p>
 
-      <h2>4. PNG tEXt / iTXt 块</h2>
-      <p>PNG 格式原生支持在文件中嵌入文本数据块。Stable Diffusion 生态系统广泛利用这一特性写入生成参数。</p>
-      <p><strong>常见键名：</strong></p>
+      <h3>国内平台的 AIGC 标识：藏在 UserComment 里的 JSON</h3>
+      <p>这是近一两年才出现、但很值得了解的玩法。按照国内《人工智能生成合成内容标识办法》的隐式标识要求，部分国产平台会在 EXIF <code>UserComment</code> 里写入一段 JSON，形如：</p>
+      <pre><code>&#123;"AIGC":&#123;"Label":"1","ContentProducer":"001191110000802100433B...","ProduceID":"..."&#125;&#125;</code></pre>
+      <p><code>Label</code> 为 <code>"1"</code> 表示 AI 生成；<code>ContentProducer</code> 是内容生产者的注册编码，可以反查到具体平台——例如 <code>001191110000802100433B</code> 开头的编码对应通义（Qwen）生成图。这类标识因为是 JSON 文本，转发时只要 EXIF 没被剥离就还在，是判断国产 AI 图片来源时相当好用的线索。</p>
+
+      <h3>反向启发式：相机字段集体缺失</h3>
+      <p>真实照片的 EXIF 通常带一整套拍摄参数：<code>FocalLength</code>、<code>FNumber</code>、<code>ExposureTime</code>、<code>ISO</code>、<code>Flash</code>、<code>MeteringMode</code>、<code>WhiteBalance</code>……一张图如果 Software 字段命中了 AI 工具名，同时这十来个相机字段一个都没有，AI 来源的判断就更扎实一点。注意这只是辅助信号——经过修图软件导出的真实照片，也可能丢掉大部分拍摄参数。</p>
+
+      <h2>2. XMP：Adobe 主导的 XML 元数据</h2>
+      <p>XMP（Extensible Metadata Platform）是一段 RDF/XML 文档，以 <code>&lt;x:xmpmeta&gt;</code> 或 <code>&lt;rdf:RDF&gt;</code> 包裹，嵌在文件内部。在 JPEG 里它也放在 APP1 段（和 EXIF 共用段类型，靠开头的命名空间字符串区分）；在 PNG 里放在关键字为 <code>XML:com.adobe.xmp</code> 的 iTXt 块中。</p>
+      <p>对 AI 检测来说，最重要的 XMP 属性是这些：</p>
       <div class="comparison-table">
         <table>
           <thead>
-            <tr><th>键名</th><th>使用工具</th><th>内容</th></tr>
+            <tr><th>属性</th><th>典型值</th><th>说明</th></tr>
           </thead>
           <tbody>
-            <tr><td><code>parameters</code></td><td>AUTOMATIC1111</td><td>提示词、参数字符串</td></tr>
-            <tr><td><code>prompt</code></td><td>ComfyUI</td><td>节点图 JSON</td></tr>
-            <tr><td><code>workflow</code></td><td>ComfyUI</td><td>完整工作流 JSON</td></tr>
+            <tr><td><code>Iptc4xmpExt:DigitalSourceType</code></td><td><code>trainedAlgorithmicMedia</code></td><td>IPTC 定义的数字来源类型，AI 生成内容的标准声明方式</td></tr>
+            <tr><td><code>xmp:CreatorTool</code></td><td>工具名，如 Midjourney</td><td>创建工具，多数生成器会写</td></tr>
+            <tr><td><code>photoshop:Credit</code></td><td><code>Made with Google AI</code></td><td>来源署名，Google 系生成图常见</td></tr>
+            <tr><td><code>AISystemUsed</code> / <code>AIPromptInformation</code></td><td>系统名 / 提示词</td><td>较新的专用字段，目前写的平台不多</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>DigitalSourceType</code> 的取值来自 IPTC 的受控词表，和 AI 相关的有六个：<code>trainedAlgorithmicMedia</code>（纯 AI 生成）、<code>compositeWithTrainedAlgorithmicMedia</code>（AI 参与合成/编辑）、<code>compositeSynthetic</code>（包含合成元素）、<code>algorithmicMedia</code>（算法生成，不一定经过训练）、<code>dataDrivenMedia</code>、<code>trainedAlgorithmicData</code>。前三个是强信号，后三个语义上弱一些。</p>
+      <p>一个实战细节：别假设 XMP 一定在文件开头附近。我们实测过 Gemini 导出的图片，XMP 块出现在文件相当靠后的位置，扫描窗口给小了就会漏掉——AICheck365 目前的扫描范围是文件前 10MB，就是被这类样本逼出来的。</p>
+
+      <h2>3. C2PA：带数字签名的溯源记录</h2>
+      <p>C2PA 和上面两类的本质区别在于：EXIF、XMP 是纯文本，谁都能改；C2PA manifest 经过 COSE 数字签名，改一个字节签名就失效。它在文件中以 JUMBF（ISO/IEC 19566-5）容器存放，具体位置取决于格式：JPEG 用 APP11 段（标记 <code>0xFFEB</code>），PNG 用专门的 <code>caBX</code> chunk，MP4 用 uuid box。</p>
+      <p>manifest 里对检测最有用的字段是 <code>claim_generator</code> / <code>claim_generator_info</code>（谁生成的，比如 Google 的图会写 "Google C2PA Core Generator Library"）和 actions 断言里的 <code>digitalSourceType</code>（取值和上面 XMP 用的是同一套 IPTC 词表）。完整的结构拆解和验证方式，单独写了一篇：<a href="/blog/what-is-c2pa/">C2PA 标准解读</a>。</p>
+
+      <h2>4. PNG 文本块：Stable Diffusion 生态的"户口本"</h2>
+      <p>PNG 原生支持三种文本块：<code>tEXt</code>（关键字 + <code>\0</code> + Latin-1 文本）、<code>iTXt</code>（支持 UTF-8 和压缩，关键字后还有压缩标志、语言标签等字段，正文要跳过三个 <code>\0</code> 分隔符才开始）、<code>zTXt</code>（zlib 压缩文本）。本地部署的开源生成工具特别喜欢用它们存生成参数，而且存得非常全：</p>
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>关键字</th><th>写入方</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>parameters</code></td><td>AUTOMATIC1111 WebUI</td><td>正负提示词、Steps、Sampler、CFG scale、Seed、模型哈希，一应俱全</td></tr>
+            <tr><td><code>prompt</code></td><td>ComfyUI</td><td>提示词节点的 JSON</td></tr>
+            <tr><td><code>workflow</code></td><td>ComfyUI</td><td>完整节点图 JSON，可以直接拖回 ComfyUI 复现整个工作流</td></tr>
             <tr><td><code>invokeai_metadata</code></td><td>InvokeAI</td><td>生成参数 JSON</td></tr>
             <tr><td><code>Dream</code></td><td>早期 SD 工具</td><td>提示词字符串</td></tr>
           </tbody>
         </table>
       </div>
+      <p>一段典型的 A1111 <code>parameters</code> 内容长这样：</p>
+      <pre><code>masterpiece, best quality, 1girl, ...
+Negative prompt: lowres, bad anatomy, ...
+Steps: 28, Sampler: DPM++ 2M Karras, CFG scale: 7,
+Seed: 3187702905, Size: 832x1216, Model hash: e3c47aedb0</code></pre>
+      <p>命中这种块基本就是实锤——正常拍摄的照片里不可能出现采样器和 CFG 参数。但它的脆弱性也很明显：只要图片被另存为 JPEG，或者被任何不保留文本块的工具处理一遍，这些信息就全没了。所以我们在置信度上把 PNG 文本信号定得保守（低），更多是配合其他信号使用。</p>
 
-      <h2>5. IPTC 元数据</h2>
-      <p>IPTC（国际新闻电信委员会）元数据标准主要用于新闻图片，但也被 AI 平台用于来源标注。</p>
+      <h2>5. MP4 / MOV：视频容器里的三类线索</h2>
+      <p>视频元数据比图片复杂一些，但思路一样。MP4 的元数据走 box 树：<code>moov → udta → meta → ilst</code>，其中 <code>ilst</code> 是条目列表，有两种寻址方式——经典的 iTunes 风格四字符键（<code>&#169;too</code> 表示编码工具、<code>&#169;swr</code> 表示软件），以及配合 <code>keys</code> box 的字符串键（QuickTime keyed metadata）。AI 视频检测主要看三类东西：</p>
       <ul class="content-list">
-        <li><code>Iptc4xmpExt:DigitalSourceType</code>：常见值包括 <code>trainedAlgorithmicMedia</code>（AI 生成）</li>
-        <li><code>photoshop:Credit</code>：版权/来源信息，部分 AI 平台写入平台名称</li>
+        <li><strong>工具字段</strong>：<code>&#169;too</code>、<code>&#169;swr</code>、<code>encoder</code>、<code>tool</code>、<code>software</code> 这几个键的值如果命中已知 AI 工具名（Runway、Sora、Kling……），是中等强度的信号。有个有意思的实例：部分 Veo 导出的视频，<code>&#169;too</code> 的值就是干巴巴的一个 "Google"。</li>
+        <li><strong>AIGC 标签</strong>：和图片的 EXIF 版本对应，国产视频平台会在 ilst 里写一个键名为 <code>AIGC</code> 的条目，值是 JSON：<code>&#123;"Label":"1","ProduceID":"...","ContentProducer":"..."&#125;</code>。<code>ContentProducer</code> 同样可以反查平台，比如 <code>001191330106MA2CFLDG4R10001</code> 对应通义万相（Wan）。</li>
+        <li><strong>SEI marker</strong>：H.264/H.265 码流允许插入 SEI（补充增强信息）NAL 单元，部分平台在里面留了 ASCII 标记。在 <code>mdat</code> box 的前 1MB 里做字节扫描，能找到 <code>kling-ai</code>、<code>sora</code>、<code>runway</code>、<code>pika-labs</code>、<code>luma-ai</code>、<code>hailuo</code>、<code>pixverse</code>、<code>vidu-ai</code> 这类字符串。SEI 藏在码流里而不是容器里，所以"重新封装但不重新编码"的操作（比如 MP4 转 MOV）反而删不掉它。</li>
       </ul>
+      <p>C2PA 也可以进 MP4（uuid box 里放 JUMBF），Sora 的部分导出就带。视频专题的完整流程见<a href="/blog/how-to-detect-ai-videos/">AI 视频检测指南</a>。</p>
 
-      <h2>6. MP4 / MOV 视频容器元数据</h2>
-      <p>AI 视频平台导出的原始文件可能在 MP4、MOV 或 M4V 容器中保留工具名、AIGC 标签、ContentProducer、SEI marker 或 C2PA/JUMBF 相关文本。Sora、可灵、Runway、Pika、Veo、Vidu、Luma、海螺、Pixverse、Wan 等视频工具，都可能通过容器字段、文件名或抽样帧水印留下线索。</p>
-      <ul class="content-list">
-        <li><strong>C2PA-lite / JUMBF</strong>：查找 digitalSourceType、claim_generator、Content Credentials 等来源文本</li>
-        <li><strong>iTunes 风格原子</strong>：如 tool/software 标签，可记录生成或导出工具</li>
-        <li><strong>AIGC 标签</strong>：部分国产平台可能写入 ProduceID、ContentProducer 等字段</li>
-        <li><strong>SEI marker</strong>：部分编码流可能保留工具相关标记</li>
-        <li><strong>视频帧水印</strong>：当容器元数据没有命中时，可抽样检查隐形或可见水印</li>
-      </ul>
-
-      <h2>各平台元数据写入策略对比</h2>
+      <h2>各平台元数据写入习惯速查</h2>
+      <p>下表是我们根据实际样本整理的大致情况，注意平台行为会随版本变化，仅供参考：</p>
       <div class="comparison-table">
         <table>
           <thead>
-            <tr><th>平台</th><th>EXIF</th><th>XMP</th><th>C2PA</th><th>PNG tEXt</th><th>MP4/帧</th></tr>
+            <tr><th>平台</th><th>EXIF</th><th>XMP</th><th>C2PA</th><th>PNG 文本</th><th>视频侧</th></tr>
           </thead>
           <tbody>
-            <tr><td>Midjourney</td><td>部分</td><td>✅</td><td>❌</td><td>部分</td><td>少见</td></tr>
-            <tr><td>DALL-E 3</td><td>部分</td><td>✅</td><td>✅</td><td>❌</td><td>相关视频看 Sora</td></tr>
-            <tr><td>Stable Diffusion</td><td>部分</td><td>部分</td><td>❌</td><td>✅</td><td>导出视频可抽帧</td></tr>
-            <tr><td>Adobe Firefly</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>可能有 C2PA/容器线索</td></tr>
-            <tr><td>Flux (ComfyUI)</td><td>部分</td><td>部分</td><td>❌</td><td>✅</td><td>导出视频可抽帧</td></tr>
-            <tr><td>Sora / Kling / Runway</td><td>少见</td><td>少见</td><td>部分</td><td>❌</td><td>✅</td></tr>
+            <tr><td>Midjourney</td><td>部分版本写 Description</td><td>写 CreatorTool / DigitalSourceType</td><td>无</td><td>部分</td><td>——</td></tr>
+            <tr><td>DALL-E 3 / GPT 图像</td><td>少量</td><td>有</td><td>有（OpenAI 签名）</td><td>无</td><td>视频看 Sora</td></tr>
+            <tr><td>Gemini / Imagen</td><td>少量</td><td>Credit="Made with Google AI"</td><td>有（Google 签名）</td><td>无</td><td>Veo 写 &#169;too</td></tr>
+            <tr><td>Stable Diffusion 系</td><td>少量</td><td>部分</td><td>无</td><td>主要载体</td><td>导出视频可抽帧</td></tr>
+            <tr><td>Adobe Firefly</td><td>有</td><td>有</td><td>有（创始成员）</td><td>无</td><td>——</td></tr>
+            <tr><td>通义 / 即梦等国产平台</td><td>UserComment AIGC JSON</td><td>部分</td><td>少见</td><td>少见</td><td>ilst AIGC 标签 + 角标水印</td></tr>
+            <tr><td>Sora / Kling / Runway / Pika</td><td>——</td><td>——</td><td>部分</td><td>——</td><td>SEI marker / 容器字段 / 帧水印</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2>如何读取图片/视频元数据？</h2>
-      <ul class="content-list">
-        <li><strong>AICheck365</strong>（本站）：浏览器内免费检测图片/视频 AI 来源信号</li>
-        <li><strong>ExifTool</strong>：命令行工具，读取几乎所有元数据格式</li>
-        <li><strong>Adobe Bridge / Lightroom</strong>：图形界面，查看 XMP 和 EXIF</li>
-        <li><strong>contentcredentials.org</strong>：Adobe 官方，专门查看 C2PA Manifest</li>
-      </ul>
+      <h2>怎么自己读这些元数据？</h2>
+      <p>动手能力强的话，ExifTool 一个就够了，几条常用命令：</p>
+      <pre><code># 列出全部元数据，按来源分组
+exiftool -a -G1 -s image.png
+
+# 单独导出 UserComment 原始内容（看 AIGC JSON 用）
+exiftool -b -UserComment image.jpg
+
+# 提取 XMP 原文
+exiftool -xmp -b image.jpg</code></pre>
+      <p>C2PA 用官方的 <code>c2patool</code> 或 Adobe 的 <a href="https://contentcredentials.org/verify" rel="noopener" target="_blank">contentcredentials.org/verify</a> 可以做完整的签名链验证。如果只是想快速看一个文件里有没有 AI 来源信号、不想装工具，<a href="/">AICheck365</a> 在浏览器里就能把上面提到的所有位置扫一遍——文件在本地解析，不会上传。</p>
 
       <div class="cta-box">
-        <p>立即检测你的图片或视频包含哪些来源信号</p>
-        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+        <p>把你手里的图片或视频拖进来，看看里面留了哪些来源信号</p>
+        <a href="/" class="primary cta-btn">开始检测 →</a>
       </div>
     </article>
 

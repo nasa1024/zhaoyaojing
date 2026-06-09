@@ -2,10 +2,11 @@
 import Base from '../../layouts/Base.astro';
 
 const faq = [
-  { q: "C2PA 签名可以被伪造吗？", a: "理论上极难伪造。C2PA 使用 PKI（公钥基础设施）数字签名，验证者可以通过签名方的公钥证书确认真实性。伪造需要攻破签名方的私钥，与伪造 SSL 证书难度相当。" },
-  { q: "所有 AI 平台都会使用 C2PA 吗？", a: "不是所有平台都已实现 C2PA。目前主要支持者包括 OpenAI（DALL-E 3、Sora）、Adobe（Firefly）、微软、Google、Sony 等。开源工具（如 Stable Diffusion）通常不默认写入 C2PA。" },
-  { q: "如何查看图片或视频的 C2PA 信息？", a: "可以使用 AICheck365 检测 C2PA 来源信号，也可以使用 Adobe 的 Content Credentials 官方验证工具（contentcredentials.org）查看详细的 C2PA Manifest 内容。浏览器版适合快速扫描来源文本，不等同于完整签名链审计。" },
-  { q: "C2PA 只用于 AI 图片吗？", a: "不是。C2PA 是通用内容溯源标准，也用于标注真实照片（相机拍摄）、视频、音频的来源。例如某些 Sony 相机型号已支持在拍照时写入 C2PA 签名。" },
+  { q: "C2PA 签名可以被伪造吗？", a: "在签名密码学层面极难。manifest 用 COSE 格式签名，验证时检查 X.509 证书链，伪造等价于攻破签名方的私钥。但要注意两点：一是任何人都可以用自己的证书给图片签一个'看起来像样'的 manifest，所以验证时必须看签名方身份是否可信，而不是只看'有没有签名'；二是把 manifest 整个删掉很容易，C2PA 防篡改，不防剥离。" },
+  { q: "所有 AI 平台都会写 C2PA 吗？", a: "不是。OpenAI（DALL-E 3、Sora）、Adobe（Firefly）、微软（Bing Image Creator）、Google（Imagen/Gemini 部分入口）已经在写。Midjourney 用的是 XMP 而非 C2PA；Stable Diffusion 等本地部署的开源工具默认不写——本地生成根本没有可用于签名的平台私钥。" },
+  { q: "如何查看一个文件的 C2PA 信息？", a: "完整验证用 Adobe 的 contentcredentials.org/verify 或官方命令行工具 c2patool，它们会解析整个 manifest store 并校验签名链。AICheck365 的浏览器版做的是轻量扫描：在本地提取 manifest 字节、匹配 digitalSourceType 和已知工具名，速度快、不上传文件，但不做签名链验证，定位是快速筛查而非法证审计。" },
+  { q: "C2PA 只用于 AI 图片吗？", a: "不是。它是通用的内容溯源标准，相机拍摄、人工编辑同样可以记录。Leica M11-P、部分 Sony 机型已经支持拍摄时在机内写入 C2PA 签名；新闻机构用它证明照片'确实出自这台相机、中间没被改过'。AI 标注只是它的用途之一。" },
+  { q: "图片经过编辑后 C2PA 还在吗？", a: "取决于编辑工具。支持 C2PA 的工具（如 Photoshop 开启 Content Credentials 后）会在原 manifest 之上追加新的 manifest，形成可追溯的编辑链；不支持的工具保存时会直接丢弃 APP11 段或 caBX chunk，记录就断了。" },
 ];
 
 const jsonLd = [
@@ -22,9 +23,10 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "C2PA 是什么？AI 图片/视频溯源标准完整解读",
-    "description": "深入了解 C2PA（内容真实性倡议）标准：谁制定的、如何工作、哪些平台支持、为什么重要。",
+    "description": "从 JUMBF 容器、manifest 结构、COSE 签名到 digitalSourceType 词表，拆解 C2PA 的技术实现，以及它在 JPEG APP11、PNG caBX、MP4 uuid box 中的存放方式。",
     "url": "https://www.aicheck365.com/blog/what-is-c2pa/",
     "datePublished": "2025-04-01",
+    "dateModified": "2026-06-09",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -41,7 +43,7 @@ const jsonLd = [
 
 <Base
   title="C2PA 是什么？AI 图片/视频溯源标准完整解读 | AICheck365"
-  description="深入了解 C2PA（内容真实性倡议）标准：OpenAI、Adobe、微软如何通过数字签名实现 AI 内容溯源，以及其对 AI 图片和视频检测的意义。"
+  description="从 JUMBF 容器、manifest 结构、COSE 签名到 digitalSourceType 词表，拆解 C2PA 的技术实现，以及它在 JPEG APP11、PNG caBX chunk、MP4 中的存放方式。"
   canonical="https://www.aicheck365.com/blog/what-is-c2pa/"
   jsonLd={jsonLd}
 >
@@ -52,71 +54,84 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>C2PA 是什么？AI 图片/视频溯源标准完整解读</h1>
-      <p class="article-meta">2025年4月 · 内容溯源 · 行业标准</p>
+      <p class="article-meta">2025年4月发布 · 2026年6月更新 · 内容溯源 · 行业标准</p>
 
-      <p class="lead-text">C2PA（Coalition for Content Provenance and Authenticity，内容来源和真实性联盟）是由科技行业主要参与者联合制定的开放标准，旨在为数字内容提供可验证的来源信息，是目前 AI 生成内容溯源最可靠的技术方案。</p>
+      <p class="lead-text">普通元数据（EXIF、XMP）的问题是谁都能改：一行 exiftool 命令就能把"Midjourney"改成"Canon EOS R5"。C2PA（Coalition for Content Provenance and Authenticity）解决的就是这个问题——它把内容的来源记录做成带数字签名的 manifest 嵌进文件，改动任何一个字节，签名校验就会失败。这让它成为目前 AI 内容溯源里唯一具备防篡改能力的方案。</p>
 
-      <h2>谁制定了 C2PA？</h2>
-      <p>C2PA 于 2021 年由以下组织联合发起：</p>
+      <h2>它是怎么来的</h2>
+      <p>C2PA 不是凭空出现的。2019 年 Adobe 牵头发起了 CAI（Content Authenticity Initiative），同期 BBC 和微软在做面向新闻业的 Project Origin，两边解决的是同一个问题。2021 年初，两个项目的技术路线合并，在 Linux 基金会旗下成立了 C2PA 联盟，制定统一的开放规范。创始成员包括 Adobe、Arm、BBC、Intel、Microsoft、Truepic；OpenAI、Google、Sony 等是后来加入的，目前成员早已过百。规范本身完全公开，参考实现 <code>c2pa-rs</code>（Rust）在 GitHub 上开源——AICheck365 命令行版的完整 C2PA 解析用的就是这个库。</p>
+
+      <h2>技术结构：manifest、claim、assertion、签名</h2>
+      <p>一个 C2PA 记录的层级是这样的：文件里嵌一个 <strong>manifest store</strong>，里面可以装多个 <strong>manifest</strong>（每次编辑追加一个，形成链）；每个 manifest 包含若干 <strong>assertion</strong>（断言，描述内容的具体事实）、一个把这些断言绑定起来的 <strong>claim</strong>，以及对 claim 的 <strong>COSE 数字签名</strong>和签名方的 X.509 证书链。</p>
+      <p>对 AI 检测来说，最有价值的是这几处：</p>
       <ul class="content-list">
-        <li><strong>Adobe</strong>：Content Credentials 功能的主要开发者</li>
-        <li><strong>Microsoft</strong>：Windows 平台和 Azure AI 服务的集成方</li>
-        <li><strong>Intel</strong>：硬件层面的信任根支持</li>
-        <li><strong>BBC、Reuters</strong>：新闻媒体行业代表</li>
-        <li><strong>OpenAI</strong>：DALL-E 3 和 Sora 的 C2PA 实施方</li>
-        <li><strong>Google、Sony、Qualcomm</strong>（后续加入）</li>
-      </ul>
-      <p>该标准已发展为行业主流规范，目前已有 100+ 家公司加入 C2PA 联盟。</p>
-
-      <h2>C2PA 的工作原理</h2>
-      <p>C2PA 采用 <strong>PKI（公钥基础设施）数字签名</strong>技术，在内容创建或编辑时嵌入加密签名的 Manifest：</p>
-      <ol class="content-list">
-        <li>内容创建者（AI 工具或相机）使用私钥对内容信息进行数字签名</li>
-        <li>签名后的 Manifest 嵌入图片文件（JPEG、PNG、MP4 等）</li>
-        <li>任何人都可以用签名方的公钥验证 Manifest 的真实性</li>
-        <li>Manifest 包含内容的创建时间、创建工具、编辑历史等信息</li>
-      </ol>
-
-      <h2>C2PA Manifest 包含什么信息？</h2>
-      <ul class="content-list">
-        <li><strong>claim_generator</strong>：生成内容的工具名称（如 "OpenAI DALL-E"）</li>
-        <li><strong>digitalSourceType</strong>：内容类型（如 <code>trainedAlgorithmicMedia</code> 表示 AI 生成）</li>
-        <li><strong>created</strong>：内容创建时间戳</li>
-        <li><strong>actions</strong>：内容处理历史（创建、编辑等操作记录）</li>
-        <li><strong>数字签名</strong>：签名方的证书链和签名数据</li>
+        <li><code>claim_generator</code> / <code>claim_generator_info</code>：生成这条记录的软件。Google 系生成图写的是 <code>Google C2PA Core Generator Library</code>，OpenAI 的图会出现 OpenAI 相关标识。</li>
+        <li><code>c2pa.actions</code> 断言（新版本是 <code>c2pa.actions.v2</code>）：记录内容经历了什么操作。AI 生成对应 <code>c2pa.created</code> 动作，其中的 <code>digitalSourceType</code> 字段直接声明来源类型，<code>softwareAgent</code> 记录执行操作的软件。</li>
+        <li>签名时间戳和证书链：判断记录是谁签的、什么时候签的。</li>
       </ul>
 
-      <h2>C2PA 在视频里怎么看？</h2>
-      <p>视频文件通常比图片更容易经历转码和重新封装，因此 C2PA 信息可能存在于 MP4/MOV 容器、JUMBF 数据或可读来源文本中，也可能在平台处理后消失。AICheck365 浏览器版会扫描 C2PA、Content Credentials、digitalSourceType、claim_generator 等来源文本，但不会执行完整签名链和证书链验证。</p>
-
-      <h2>哪些平台已支持 C2PA？</h2>
+      <h3>digitalSourceType：判断 AI 来源的核心字段</h3>
+      <p>这个字段的取值来自 IPTC 的受控词表，C2PA 和 XMP/IPTC 用的是同一套。和 AI 相关的有六个值，证据强度并不一样：</p>
       <div class="comparison-table">
         <table>
           <thead>
-            <tr><th>平台/工具</th><th>支持状态</th><th>备注</th></tr>
+            <tr><th>取值</th><th>含义</th><th>证据强度</th></tr>
           </thead>
           <tbody>
-            <tr><td>OpenAI DALL-E 3</td><td>✅ 全面支持</td><td>2023年10月起</td></tr>
-            <tr><td>Adobe Firefly</td><td>✅ 全面支持</td><td>C2PA 创始成员</td></tr>
-            <tr><td>Microsoft Copilot Image</td><td>✅ 支持</td><td>Bing Image Creator</td></tr>
-            <tr><td>Google Imagen</td><td>🔄 部分支持</td><td>SynthID + C2PA</td></tr>
-            <tr><td>Midjourney</td><td>❌ 暂不支持</td><td>使用 XMP 替代</td></tr>
-            <tr><td>Stable Diffusion</td><td>❌ 默认不支持</td><td>可通过插件实现</td></tr>
+            <tr><td><code>trainedAlgorithmicMedia</code></td><td>完全由训练算法（即 AI 模型）生成</td><td><span class="badge high">高</span></td></tr>
+            <tr><td><code>compositeWithTrainedAlgorithmicMedia</code></td><td>包含 AI 生成成分的合成内容（如 AI 修图）</td><td><span class="badge high">高</span></td></tr>
+            <tr><td><code>compositeSynthetic</code></td><td>包含合成元素</td><td><span class="badge high">高</span></td></tr>
+            <tr><td><code>algorithmicMedia</code></td><td>算法生成，但不一定经过模型训练（如分形图）</td><td><span class="badge medium">中</span></td></tr>
+            <tr><td><code>dataDrivenMedia</code></td><td>数据驱动生成（如数据可视化）</td><td><span class="badge medium">中</span></td></tr>
+            <tr><td><code>trainedAlgorithmicData</code></td><td>AI 生成的数据</td><td><span class="badge medium">中</span></td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2>C2PA 的局限性</h2>
+      <h2>manifest 实际存在文件的哪里</h2>
+      <p>C2PA 数据用 JUMBF（JPEG Universal Metadata Box Format，ISO/IEC 19566-5）容器封装，不同文件格式有不同的嵌入位置，这部分细节在多数介绍文章里都被略过了，但对理解检测原理很关键：</p>
       <ul class="content-list">
-        <li>签名在图片经过压缩、重新保存或格式转换后可能失效</li>
-        <li>截图不保留 C2PA 信息</li>
-        <li>只能证明"是 AI 生成"，无法证明"不是 AI 生成"</li>
-        <li>恶意行为者可以选择不使用 C2PA 的工具生成内容</li>
+        <li><strong>JPEG</strong>：放在 APP11 段（标记字节 <code>0xFFEB</code>）。JPEG 单段最大 64KB，而带证书链的 manifest 经常超过这个大小，所以规范定义了分段机制：每段 payload 以 <code>JP</code> 两个字符开头，跟着 2 字节的 box 实例号和 4 字节的序列号，序列号为 1 的段在偏移 24 处能看到 <code>c2pa</code> 标识。读取时要按实例号和序列号把多个 APP11 段重新拼接成完整的 JUMBF 块——AICheck365 的浏览器版就实现了这个重组逻辑。</li>
+        <li><strong>PNG</strong>：放在专用的 <code>caBX</code> chunk 里（也有用 <code>caBI</code> 的）。PNG chunk 自带 4 字节长度字段，没有 64KB 限制，所以通常一个 chunk 就装下了。遍历 chunk 链表、按类型名匹配即可定位。</li>
+        <li><strong>MP4/MOV</strong>：放在 uuid box 中。视频的 manifest 一般出现在文件头部区域，扫描前几 MB 就能覆盖。</li>
+      </ul>
+
+      <h2>哪些平台在写 C2PA？</h2>
+      <p>截至 2026 年中的大致情况（平台行为会变，以实测为准）：</p>
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr><th>平台/工具</th><th>状态</th><th>备注</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>OpenAI DALL-E 3 / Sora</td><td>支持</td><td>图片自 2024 年初起带 C2PA，Sora 部分导出带</td></tr>
+            <tr><td>Adobe Firefly</td><td>支持</td><td>创始成员，Content Credentials 全线打通</td></tr>
+            <tr><td>Microsoft Bing Image Creator</td><td>支持</td><td>含 Copilot 图像生成</td></tr>
+            <tr><td>Google Imagen / Gemini</td><td>部分入口支持</td><td>同时使用 SynthID 像素水印；不同产品入口行为不一致</td></tr>
+            <tr><td>Midjourney</td><td>不支持</td><td>写 XMP（CreatorTool、DigitalSourceType），无签名</td></tr>
+            <tr><td>Stable Diffusion / ComfyUI</td><td>默认不支持</td><td>本地生成无平台私钥可签；参数走 PNG 文本块</td></tr>
+            <tr><td>Leica M11-P、部分 Sony 相机</td><td>支持</td><td>反方向应用：拍摄时机内签名，证明"是真照片"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>完整验证 vs 快速扫描：一个该说清楚的区别</h2>
+      <p>"检测 C2PA"其实有两个深度档位，混为一谈容易产生误解：</p>
+      <p><strong>完整验证</strong>解析整个 manifest store，校验 COSE 签名、证书链和信任列表，能给出"这条记录由某机构签发、未被篡改"的结论。<code>c2patool</code> 和 contentcredentials.org/verify 做的是这个。</p>
+      <p><strong>快速扫描</strong>（AICheck365 浏览器版的做法）是在本地定位 JUMBF 块后，在 manifest 字节里做文本级匹配：找 <code>digitalSourceType</code> 的六个 AI 取值、匹配已知工具名清单、识别 Google 凭证链路的特征字符串。命中 <code>trainedAlgorithmicMedia</code> 记高置信度，命中已知工具名记高置信度，只命中 Google + C2PA 关联特征记中等。这个档位足够回答"这文件有没有 AI 来源声明"，但它不验证签名——如果你需要法律或新闻场景的可信结论，请走完整验证。</p>
+
+      <h2>局限性：C2PA 不能做什么</h2>
+      <p>把 C2PA 当万能解药会失望，它的边界很清楚：</p>
+      <ul class="content-list">
+        <li><strong>防篡改，不防剥离。</strong>把 APP11 段或 caBX chunk 整个删掉，文件照常打开，记录无声消失。截图、社交平台转码、多数修图软件的"另存为"都会造成这种剥离。</li>
+        <li><strong>只能证有，不能证无。</strong>没有 C2PA 的图片可能是真照片，也可能出自不写 C2PA 的工具，或者被洗过元数据。</li>
+        <li><strong>覆盖不了不合作的生成方。</strong>本地跑 Stable Diffusion 的人不会给自己的图签 AI 标记。</li>
+        <li><strong>"有签名"不等于"可信"。</strong>验证时要看签名方是谁，任何人都能用自己的证书签 manifest。</li>
       </ul>
 
       <div class="cta-box">
-      <p>使用 AICheck365 检测图片或视频是否包含 C2PA 来源信号</p>
-        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+        <p>想知道你手里的文件带不带 C2PA 来源声明？拖进来扫一下，本地完成，不上传</p>
+        <a href="/" class="primary cta-btn">开始检测 →</a>
       </div>
 
       <h2>常见问题</h2>
@@ -133,6 +148,7 @@ const jsonLd = [
     <div class="related-platforms card">
       <h2>相关内容</h2>
       <div class="related-links">
+        <a href="/blog/ai-image-metadata-guide/">媒体元数据完整指南 →</a>
         <a href="/blog/how-to-detect-ai-videos/">如何检测 AI 视频 →</a>
         <a href="/blog/how-to-detect-ai-images/">如何检测 AI 图片 →</a>
         <a href="/platforms/dall-e/">DALL-E C2PA 指南 →</a>

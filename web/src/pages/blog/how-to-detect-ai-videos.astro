@@ -2,10 +2,11 @@
 import Base from '../../layouts/Base.astro';
 
 const faq = [
-  { q: "AI 生成视频一定能检测出来吗？", a: "不能保证。检测依赖原始文件里保留的 C2PA、MP4/MOV 元数据、SEI marker、文件名或视频帧水印。转码、录屏、剪辑软件重新导出后，这些线索可能消失。" },
-  { q: "为什么优先上传原始视频？", a: "原始视频最可能保留容器元数据和内容凭证。社交平台会重新编码视频，常常删除或覆盖来源字段。" },
-  { q: "浏览器版会上传视频吗？", a: "不会。视频文件在本地浏览器内读取；只有 ffmpeg.wasm 和检测 WASM 在本机处理文件字节和抽样帧。" },
-  { q: "C2PA-lite 和完整 C2PA 验证有什么区别？", a: "浏览器版会扫描 C2PA/JUMBF 中的来源文本和 AI 工具线索，但不做完整签名链和证书链验证。它适合快速判断，不等同于法证审计。" },
+  { q: "AI 生成视频一定能检测出来吗？", a: "不能保证。检测依赖原始文件里保留的 C2PA、容器元数据、SEI marker、文件名或帧水印。经过社交平台转码、录屏、剪辑软件重新导出后，容器层信号基本会被洗掉；SEI 和帧水印能多扛一些处理，但也不是不可摧毁。" },
+  { q: "为什么一定要拿原始视频文件？", a: "因为转码是毁灭性的。社交平台收到视频后会用自己的编码器重新压制：新的码流、新的容器、新的 encoder 字段，原文件的 ©too、AIGC 标签、C2PA 全部被替换或丢弃。从生成平台直接下载的文件和从微信里转出来的文件，可检测性是两个世界。" },
+  { q: "检测时视频会上传到服务器吗？", a: "不会。文件在浏览器本地读取：容器和码流扫描直接在内存里做，需要抽帧时才懒加载 ffmpeg.wasm，在本机解码几帧做水印分析。整个过程没有任何字节离开你的电脑。" },
+  { q: "什么是 SEI marker？为什么它比容器元数据更难洗掉？", a: "SEI（Supplemental Enhancement Information）是 H.264/H.265 码流内部的附加信息单元，部分平台在里面写入了工具标识（如 kling-ai、pika-labs）。它嵌在视频码流里而不是容器里，所以只换容器不重新编码的操作（如 MP4 转 MOV）动不了它；但重新编码会把它彻底抹掉。" },
+  { q: "浏览器版的 C2PA 检测和完整验证一样吗？", a: "不一样。浏览器版扫描容器中的 C2PA/JUMBF 来源文本（digitalSourceType、claim_generator 等）并匹配已知工具，不校验签名链和证书链。它回答'有没有 AI 来源声明'，不出具'记录可信且未被篡改'的结论，后者请用 c2patool 做完整验证。" },
 ];
 
 const jsonLd = [
@@ -21,9 +22,11 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "如何检测 AI 生成视频？MP4 元数据、C2PA 与视频帧水印指南",
-    "description": "解释 Sora、可灵、Runway、Pika 等 AI 视频可能留下的 C2PA-lite、MP4/MOV 元数据、SEI marker、文件名和视频帧水印线索。",
+    "headline": "如何检测 AI 生成视频？容器元数据、SEI marker 与帧水印逐层排查",
+    "description": "Sora、可灵、Runway、Pika、Veo 等平台的视频会留下哪些痕迹：MP4 ilst 工具字段、AIGC 隐式标识、码流 SEI marker、C2PA 与帧水印，逐层拆解检测原理。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-ai-videos/",
+    "datePublished": "2026-05-26",
+    "dateModified": "2026-06-09",
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -39,8 +42,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="如何检测 AI 生成视频？MP4 元数据、C2PA 与帧水印 | AICheck365"
-  description="上传原始 AI 视频，在浏览器本地检查 C2PA-lite、MP4/MOV 元数据、SEI marker、文件名和抽样视频帧水印线索。"
+  title="如何检测 AI 生成视频？容器元数据、SEI marker 与帧水印 | AICheck365"
+  description="Sora、可灵、Runway、Pika、Veo 等平台的视频会留下哪些痕迹：MP4 ilst 工具字段、AIGC 隐式标识、码流 SEI marker、C2PA 与帧水印，逐层拆解检测原理。"
   canonical="https://www.aicheck365.com/blog/how-to-detect-ai-videos/"
   jsonLd={jsonLd}
 >
@@ -50,47 +53,49 @@ const jsonLd = [
     </nav>
 
     <article class="card content-article">
-      <h1>如何检测 AI 生成视频？MP4 元数据、C2PA 与视频帧水印指南</h1>
-      <p class="article-meta">2026年5月 · AI 视频检测 · MP4 元数据 · C2PA</p>
+      <h1>如何检测 AI 生成视频？容器元数据、SEI marker 与帧水印逐层排查</h1>
+      <p class="article-meta">2026年5月发布 · 2026年6月更新 · AI 视频检测 · MP4 元数据 · C2PA</p>
 
-      <p class="lead-text">AI 视频检测不能只看画面。Sora、可灵、Runway、Pika、Veo、Vidu、Luma、海螺、Pixverse、Wan 等工具导出的原始视频，可能在容器元数据、C2PA/JUMBF、SEI marker、文件名或视频帧水印里留下来源线索。</p>
+      <p class="lead-text">判断一段视频是不是 AI 生成的，光盯着画面看不出名堂——Sora、可灵、Veo 这代模型的画面质量已经过了"一眼假"的阶段。真正有效的入手点在文件内部：视频文件从容器到码流有好几层可以藏来源信息的地方，生成平台或主动或被监管要求地在里面留了痕迹。这篇按从外到内的顺序，把每一层怎么查讲清楚。</p>
 
-      <h2>第一步：优先使用原始视频文件</h2>
-      <p>最适合检测的是从生成平台直接下载的 MP4、MOV、M4V、WebM 或 AVI 文件。转发到社交平台、录屏、剪辑后重新导出的视频，通常会被重新编码，原始元数据和水印线索都可能减少。</p>
+      <h2>第零步：搞到原始文件，这一步决定一切</h2>
+      <p>先理解转码对证据的破坏有多彻底。你把视频发到社交平台，平台会用自己的编码器重新压制一遍：码流换成平台的 H.264/H.265 参数，容器重新封装，<code>encoder</code> 字段变成平台转码集群的标识，原文件的工具字段、AIGC 标签、C2PA 全部消失。录屏更不用说——那是对着屏幕重新生成了一个无关的新文件。</p>
+      <p>所以最理想的检测样本是<strong>从生成平台直接下载、没经过任何转手的 MP4/MOV</strong>。微信里转出来的、抖音上保存的，能查到东西的概率会低得多（不是零——帧水印有时还在，后面会说）。</p>
 
-      <h2>浏览器版会检查哪些视频信号？</h2>
-      <div class="signal-detail-grid">
-        <div class="signal-detail-card">
-          <h3>C2PA-lite / JUMBF</h3>
-          <p>扫描视频容器中的 C2PA、Content Credentials、digitalSourceType、claim_generator 等来源文本。</p>
-        </div>
-        <div class="signal-detail-card">
-          <h3>MP4 / MOV 元数据</h3>
-          <p>检查工具名、AIGC 标签、ContentProducer、iTunes 风格原子和其他可读容器字段。</p>
-        </div>
-        <div class="signal-detail-card">
-          <h3>SEI marker</h3>
-          <p>部分 H.264/MP4 视频可能在编码流里保留 Sora、Kling、Runway、Pika 等工具标记。</p>
-        </div>
-        <div class="signal-detail-card">
-          <h3>抽样视频帧水印</h3>
-          <p>如果元数据没有命中，页面会懒加载 ffmpeg.wasm，抽取少量帧做隐形水印和可见水印分析。</p>
-        </div>
-      </div>
+      <h2>第一层：容器元数据（moov → udta → meta → ilst）</h2>
+      <p>MP4/MOV 的元数据放在 box 树的 <code>ilst</code> 列表里，有两种键：iTunes 风格的四字符键（<code>&#169;too</code> 编码工具、<code>&#169;swr</code> 软件）和 keys box 配套的字符串键（<code>encoder</code>、<code>tool</code>、<code>software</code>）。检查这几个键的值是否命中已知 AI 工具名。一个实际例子：部分 Veo 导出的视频，<code>&#169;too</code> 的值就是一个单词 "Google"——平平无奇，但正常相机和剪辑软件不会这么写。</p>
 
-      <h2>检测结果怎么理解？</h2>
+      <h3>国产平台的 AIGC 隐式标识</h3>
+      <p>这层有个中国特色的可靠线索。《人工智能生成合成内容标识办法》（2025 年 9 月 1 日起施行）要求生成平台在文件中加入显式和隐式标识，隐式标识落到 MP4 上，就是 <code>ilst</code> 里一个键名为 <code>AIGC</code> 的条目，值是 JSON：</p>
+      <pre><code>&#123;"Label":"1","ProduceID":"...","ContentProducer":"001191330106MA2CFLDG4R10001"&#125;</code></pre>
+      <p><code>Label</code> 为 <code>"1"</code> 即声明 AI 生成；<code>ContentProducer</code> 是生产者注册编码，可以反查平台——上面这串编码对应通义万相（Wan）。这套机制让合规的国产平台视频反而比海外平台更好溯源。</p>
+
+      <h2>第二层：码流里的 SEI marker</h2>
+      <p>再往里一层是视频码流本身。H.264/H.265 允许在码流中插入 SEI（补充增强信息）单元，部分平台在里面留了 ASCII 工具标记。对 <code>mdat</code> box 的前 1MB 做字节扫描，可能找到这些字符串：<code>kling-ai</code>、<code>sora</code>、<code>runway</code>、<code>pika-labs</code>、<code>luma-ai</code>、<code>hailuo</code>、<code>pixverse</code>、<code>vidu-ai</code>、<code>genmo</code>、<code>haiper</code>。</p>
+      <p>SEI 的价值在于它的位置：嵌在码流里而不是容器里。"重新封装但不重新编码"的操作（比如用 ffmpeg <code>-c copy</code> 把 MP4 转成 MOV）会换掉全部容器元数据，但 SEI 原封不动。当然，真转码（重新编码）还是会把它抹掉。</p>
+
+      <h2>第三层：C2PA / Content Credentials</h2>
+      <p>Sora 等平台的部分导出带 C2PA manifest（JUMBF 容器，存放在 MP4 的 uuid box 中，一般在文件头部区域）。浏览器版的做法是扫描文件前 2MB，找 <code>c2pa</code>、<code>digitalSourceType</code>、<code>claim_generator</code>、<code>contentauth</code> 这些特征文本，再对命中区域做工具名匹配和来源类型判断：<code>trainedAlgorithmicMedia</code> 记高置信度。注意这是快速扫描而非签名验证，区别在 <a href="/blog/what-is-c2pa/">C2PA 文章</a>里有完整说明。</p>
+
+      <h2>第四层：文件名和帧水印</h2>
+      <p><strong>文件名</strong>是最弱的信号——谁都能改——但默认下载名确实带信息，作为辅助线索记低置信度。</p>
+      <p>容器和码流都没命中时，最后一招是看画面本身的水印，分两种：</p>
       <ul class="content-list">
-        <li><strong>有 C2PA 或明确工具名</strong>：通常是强来源线索，但浏览器版不做完整签名链验证。</li>
-        <li><strong>只有文件名或低置信度水印</strong>：只能作为辅助判断，需要结合来源上下文。</li>
-        <li><strong>没有检测到信号</strong>：不等于视频一定不是 AI 生成，只表示当前文件没有可读线索。</li>
+        <li><strong>可见角标</strong>：《标识办法》的显式标识要求，落地形式是画面角落的"AI 生成"半透明文字。国内平台基本统一放在左上或右下角。检测方法是对角部区域做亮度分析：找比周围明显亮的短笔画游程、检查它们是否聚成紧凑的文字状区块、亮度分布是否双峰。多个指标同时命中才报，避免把普通台标误判成 AI 标识。</li>
+        <li><strong>隐形水印</strong>：嵌在像素里的不可见信号。检测思路是对抽样帧做 Haar 小波变换，在低频子带里找量化嵌入的痕迹——RGB 三通道噪声水平的异常不对称、跨通道提取比特的异常一致性等指标，至少两项同时命中才报告。这类分析给出的是"存在水印状统计异常"的概率判断，置信度天然低于元数据命中，结果要谨慎解读。</li>
+      </ul>
+      <p>抽帧依赖 ffmpeg.wasm，页面采取懒加载：只有元数据层全部落空、确实需要看帧时才下载和初始化它，所以多数检测在元数据层就结束了，很快。</p>
+
+      <h2>结果怎么读</h2>
+      <ul class="content-list">
+        <li><strong>C2PA 命中或容器里有明确工具名/AIGC 标签</strong>：强线索。结合是不是原始文件判断，基本可以下结论。</li>
+        <li><strong>只有文件名或低置信度水印指标</strong>：辅助线索，单独不构成结论，要结合视频来源和上下文。</li>
+        <li><strong>什么都没有</strong>：最常见也最容易误读的结果。它只说明这份文件里没有可读信号——可能是真拍的，也可能是被转码洗干净的 AI 视频。这时候去找更接近源头的版本，比换十个检测工具都有用。</li>
       </ul>
 
-      <h2>隐私和性能</h2>
-      <p>视频文件不会上传服务器。浏览器会在本地读取文件字节，并在需要时用 ffmpeg.wasm 抽取帧。大文件或长视频可能会比较慢，建议优先用原始短片或平台导出的原始文件测试。</p>
-
       <div class="cta-box">
-        <p>上传原始 AI 视频，检查 MP4 元数据、C2PA 和视频帧水印</p>
-        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+        <p>有原始视频文件的话，拖进来逐层扫一遍，全程本地处理</p>
+        <a href="/" class="primary cta-btn">开始检测 →</a>
       </div>
 
       <h2>常见问题</h2>
