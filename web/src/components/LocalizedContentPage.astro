@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { localizedArticles } from '../content/localized-articles.mjs';
 
 interface Props {
   lang: string;
@@ -603,8 +604,12 @@ const canonicalPath = `/${path}/`;
 const canonical = `${SITE_URL}${canonicalPath}`;
 const localHref = (target) => `${prefix}${target}`;
 const titleFor = (key) => pageTitles[key]?.[lang] ?? pageTitles[key]?.en;
-const articleTitle = titleFor(path);
-const articleDesc = articleDescriptions[path]?.[lang] ?? articleDescriptions[path]?.en ?? c.blogDesc;
+const articleSlug = path.startsWith('blog/') ? path.slice('blog/'.length) : null;
+const richArticle = articleSlug
+  ? (localizedArticles[articleSlug]?.[lang] ?? localizedArticles[articleSlug]?.en ?? null)
+  : null;
+const articleTitle = richArticle?.title ?? titleFor(path);
+const articleDesc = richArticle?.desc ?? articleDescriptions[path]?.[lang] ?? articleDescriptions[path]?.en ?? c.blogDesc;
 const platformSlug = path.startsWith('platforms/') ? path.split('/')[1] : null;
 const platform = platforms.find((item) => item.slug === platformSlug);
 const platformSeoName = platform?.name.endsWith('AI') ? platform.name : `${platform?.name} AI`;
@@ -704,12 +709,16 @@ if (path === 'blog') {
   jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
 }
 
-const articles = Object.keys(pageTitles).map((slug) => ({
-  slug: slug.replace('blog/', ''),
-  title: titleFor(slug),
-  desc: articleDescriptions[slug]?.[lang] ?? articleDescriptions[slug]?.en ?? defaultArticleLead[lang],
-  tags: slug.includes('videos') ? ['AI video', 'MP4', 'C2PA'] : slug.includes('c2pa') ? ['C2PA', 'metadata'] : ['AI media', 'metadata'],
-}));
+const articles = Object.keys(pageTitles).map((slug) => {
+  const key = slug.replace('blog/', '');
+  const rich = localizedArticles[key]?.[lang] ?? localizedArticles[key]?.en ?? null;
+  return {
+    slug: key,
+    title: rich?.title ?? titleFor(slug),
+    desc: rich?.desc ?? articleDescriptions[slug]?.[lang] ?? articleDescriptions[slug]?.en ?? defaultArticleLead[lang],
+    tags: slug.includes('videos') ? ['AI video', 'MP4', 'C2PA'] : slug.includes('c2pa') ? ['C2PA', 'metadata'] : ['AI media', 'metadata'],
+  };
+});
 ---
 
 <Base title={titleWithSuffix(pageTitle)} description={pageDescription} canonical={canonical} jsonLd={jsonLd}>
@@ -772,7 +781,34 @@ const articles = Object.keys(pageTitles).map((slug) => ({
       </>
     )}
 
-    {path.startsWith('blog/') && (
+    {path.startsWith('blog/') && richArticle && (
+      <article class="card content-article">
+        <h1>{richArticle.title}</h1>
+        <p class="article-meta">{c.updated} · AI media detection · AICheck365</p>
+        <p class="lead-text">{richArticle.lead}</p>
+        {richArticle.sections.map((section) => (
+          <>
+            <h2>{section.h}</h2>
+            {(section.ps ?? []).map((p) => <p>{p}</p>)}
+            {section.list && (
+              <ul class="content-list">
+                {section.list.map((item) => <li>{item}</li>)}
+              </ul>
+            )}
+          </>
+        ))}
+        <h2>{c.sections.limits}</h2>
+        <p>{c.limitText}</p>
+        <h2>{c.sections.privacy}</h2>
+        <p>{c.privacyText}</p>
+        <div class="cta-box">
+          <p>{c.inspect}</p>
+          <a href={localHref('/')} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{c.inspect} -></a>
+        </div>
+      </article>
+    )}
+
+    {path.startsWith('blog/') && !richArticle && (
       <article class="card content-article">
         <h1>{pageTitle}</h1>
         <p class="article-meta">{c.updated} · AI media detection · AICheck365</p>
@@ -786,9 +822,6 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <p>{c.limitText}</p>
         <h2>{c.sections.privacy}</h2>
         <p>{c.privacyText}</p>
-        <h2>{c.sections.next}</h2>
-        <p>{defaultArticleLead[lang]} {c.signalIntro}</p>
-        <p>{c.limitText}</p>
         <div class="cta-box">
           <p>{c.inspect}</p>
           <a href={localHref('/')} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{c.inspect} -></a>
