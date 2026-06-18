@@ -65,6 +65,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: '平台指南',
     blog: '知识库',
     about: '关于',
+    methodology: '方法论',
     privacy: '隐私政策',
     terms: '服务条款',
     contact: '联系',
@@ -75,6 +76,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: '平台指南',
     blog: '知識庫',
     about: '關於',
+    methodology: '方法論',
     privacy: '隱私權政策',
     terms: '服務條款',
     contact: '聯絡',
@@ -85,6 +87,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: 'Platform Guides',
     blog: 'Knowledge Base',
     about: 'About',
+    methodology: 'Methodology',
     privacy: 'Privacy',
     terms: 'Terms',
     contact: 'Contact',
@@ -95,6 +98,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: 'プラットフォームガイド',
     blog: 'ナレッジベース',
     about: '概要',
+    methodology: 'Methodology',
     privacy: 'プライバシー',
     terms: '利用規約',
     contact: 'お問い合わせ',
@@ -105,6 +109,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: '플랫폼 가이드',
     blog: '지식 베이스',
     about: '소개',
+    methodology: 'Methodology',
     privacy: '개인정보',
     terms: '약관',
     contact: '문의',
@@ -115,6 +120,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: 'Plattform-Guides',
     blog: 'Wissensbasis',
     about: 'Über uns',
+    methodology: 'Methodology',
     privacy: 'Datenschutz',
     terms: 'Bedingungen',
     contact: 'Kontakt',
@@ -125,6 +131,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: 'Guides plateformes',
     blog: 'Base de connaissances',
     about: 'À propos',
+    methodology: 'Methodology',
     privacy: 'Confidentialité',
     terms: 'Conditions',
     contact: 'Contact',
@@ -135,6 +142,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: 'Guías de plataformas',
     blog: 'Base de conocimiento',
     about: 'Acerca de',
+    methodology: 'Methodology',
     privacy: 'Privacidad',
     terms: 'Términos',
     contact: 'Contacto',
@@ -145,6 +153,7 @@ const NAV_LABELS: Record<string, Record<string, string>> = {
     platforms: 'Guias de plataformas',
     blog: 'Base de conhecimento',
     about: 'Sobre',
+    methodology: 'Methodology',
     privacy: 'Privacidade',
     terms: 'Termos',
     contact: 'Contato',
@@ -355,6 +364,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
       <nav class="site-nav" id="site-nav">
         <a href={platformsHref} class="nav-link" data-i18n="nav.platforms">{navLabels.platforms}</a>
         <a href={`${navPrefix}/blog/`} class="nav-link" data-i18n="nav.blog">{navLabels.blog}</a>
+        <a href={`${navPrefix}/methodology/`} class="nav-link" data-i18n="nav.methodology">{navLabels.methodology}</a>
         <a href={aboutHref} class="nav-link" data-i18n="nav.about">{navLabels.about}</a>
       </nav>
       <select id="lang-switch" class="lang-select" aria-label="Select language">
@@ -377,6 +387,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
       <a href={homeHref} class="mobile-link" data-i18n="nav.tool">{navLabels.tool}</a>
       <a href={platformsHref} class="mobile-link" data-i18n="nav.platforms">{navLabels.platforms}</a>
       <a href={`${navPrefix}/blog/`} class="mobile-link" data-i18n="nav.blog">{navLabels.blog}</a>
+      <a href={`${navPrefix}/methodology/`} class="mobile-link" data-i18n="nav.methodology">{navLabels.methodology}</a>
       <a href={aboutHref} class="mobile-link" data-i18n="nav.about">{navLabels.about}</a>
       <a href={`${navPrefix}/privacy/`} class="mobile-link" data-i18n="nav.privacy">{navLabels.privacy}</a>
       <a href={`${navPrefix}/contact/`} class="mobile-link" data-i18n="nav.contact">{navLabels.contact}</a>
@@ -389,6 +400,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
         <div class="footer-links">
           <a href={homeHref} data-i18n="nav.tool">{navLabels.tool}</a>
           <a href={platformsHref} data-i18n="nav.platforms">{navLabels.platforms}</a>
+          <a href={`${navPrefix}/methodology/`} data-i18n="nav.methodology">{navLabels.methodology}</a>
           <a href={aboutHref} data-i18n="nav.about">{navLabels.about}</a>
           <a href={`${navPrefix}/privacy/`} data-i18n="nav.privacy">{navLabels.privacy}</a>
           <a href={`${navPrefix}/terms/`} data-i18n="nav.terms">{navLabels.terms}</a>

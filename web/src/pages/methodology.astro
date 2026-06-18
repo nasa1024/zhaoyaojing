@@ -1,0 +1,309 @@
+---
+import Base from '../layouts/Base.astro';
+
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const DEFAULT_LANG = 'zh-CN';
+
+function getUrlLang(pathname: string) {
+  const segment = pathname.split('/').filter(Boolean)[0];
+  return SUPPORTED_LANGS.includes(segment) ? segment : null;
+}
+
+const urlLang = getUrlLang(Astro.url.pathname);
+const pageLang = urlLang ?? DEFAULT_LANG;
+const navPrefix = urlLang && urlLang !== DEFAULT_LANG ? `/${pageLang}` : '';
+
+const isZh = pageLang === 'zh-CN' || pageLang === 'zh-TW';
+const isEn = pageLang === 'en';
+
+const COPY: Record<string, {
+  title: string;
+  description: string;
+  h1: string;
+  lead: string;
+  canCheckHeading: string;
+  cannotHeading: string;
+  canCheck: string[];
+  cannot: string[];
+  slogan: string;
+  linksHeading: string;
+}> = {
+  'zh-CN': {
+    title: '检测方法论 | AICheck365',
+    description: 'AICheck365 通过分析文件元数据、数字签名、平台标记和生成参数来检查 AI 来源线索，所有分析在浏览器本地完成，不上传文件。',
+    h1: 'AICheck365 方法论',
+    lead: 'AICheck365 通过解析原始文件中可观测的来源信号来判断 AI 来源线索，而非依赖黑盒神经网络。以下说明我们能检查什么、不能保证什么。',
+    canCheckHeading: 'AICheck365 可以检查',
+    cannotHeading: 'AICheck365 不能保证',
+    canCheck: [
+      '文件元数据（EXIF、XMP、IPTC）——拍摄设备、软件名称、生成工具等字段',
+      'C2PA 数字签名与内容凭证（Content Credentials）——由 OpenAI、Adobe、微软等厂商写入',
+      'PNG 文本块（tEXt / iTXt）——Stable Diffusion、ComfyUI 等工具写入的完整生成参数',
+      'MP4 / MOV 容器字段——工具名、AIGC 标签、SEI marker、自定义文本盒',
+      '平台特征标记——已知 AI 平台（Midjourney、DALL-E、Firefly、Kling 等）写入的特定字段或模式',
+      '视频帧抽样水印——在元数据无命中时，对少量关键帧检查可见或隐形水印线索',
+      '文件名启发式——部分平台生成的文件名具有规律性特征',
+      '容器结构分析——文件格式本身的异常或特征性结构',
+      '导出 / 编辑线索——部分软件在重新导出时写入的应用信息',
+    ],
+    cannot: [
+      '并非所有 AI 平台都在文件中写入可读的来源信息；无信号不等于人类拍摄',
+      '经过社交平台压缩或转码后，元数据通常会被剥离（微信、微博、X / Twitter 等）',
+      '截图、录屏或屏幕翻拍不携带原始文件元数据',
+      '各平台写入的标记尚无统一标准，未来标准可能变化',
+      '未知平台或新兴工具的来源信号可能尚未纳入检测库',
+      '检测结果不能替代法律鉴定或专家意见',
+      '文件哈希、指纹或内容特征分析不在本工具范围内',
+    ],
+    slogan: '证据比感觉重要。透明比百分比重要。',
+    linksHeading: '相关链接',
+  },
+  'zh-TW': {
+    title: '檢測方法論 | AICheck365',
+    description: 'AICheck365 透過分析檔案 metadata、數位簽章、平台標記和生成參數來檢查 AI 來源線索，所有分析在瀏覽器本機完成，不上傳檔案。',
+    h1: 'AICheck365 方法論',
+    lead: 'AICheck365 透過解析原始檔案中可觀測的來源訊號來判斷 AI 來源線索，而非依賴黑盒神經網路。以下說明我們能檢查什麼、不能保證什麼。',
+    canCheckHeading: 'AICheck365 可以檢查',
+    cannotHeading: 'AICheck365 不能保證',
+    canCheck: [
+      '檔案 metadata（EXIF、XMP、IPTC）——拍攝設備、軟體名稱、生成工具等欄位',
+      'C2PA 數位簽章與內容憑證（Content Credentials）——由 OpenAI、Adobe、Microsoft 等廠商寫入',
+      'PNG 文字區塊（tEXt / iTXt）——Stable Diffusion、ComfyUI 等工具寫入的完整生成參數',
+      'MP4 / MOV 容器欄位——工具名、AIGC 標籤、SEI marker、自訂文字盒',
+      '平台特徵標記——已知 AI 平台（Midjourney、DALL-E、Firefly、Kling 等）寫入的特定欄位或模式',
+      '影片幀抽樣浮水印——在 metadata 無命中時，對少量關鍵幀檢查可見或隱形浮水印線索',
+      '檔名啟發式——部分平台生成的檔名具有規律性特徵',
+      '容器結構分析——檔案格式本身的異常或特徵性結構',
+      '匯出 / 編輯線索——部分軟體在重新匯出時寫入的應用程式資訊',
+    ],
+    cannot: [
+      '並非所有 AI 平台都在檔案中寫入可讀的來源資訊；無訊號不等於人類拍攝',
+      '經過社群平台壓縮或轉碼後，metadata 通常會被移除（微信、微博、X / Twitter 等）',
+      '截圖、錄影或螢幕翻拍不攜帶原始檔案 metadata',
+      '各平台寫入的標記尚無統一標準，未來標準可能變化',
+      '未知平台或新興工具的來源訊號可能尚未納入檢測庫',
+      '檢測結果不能取代法律鑑定或專家意見',
+      '檔案雜湊、指紋或內容特徵分析不在本工具範圍內',
+    ],
+    slogan: '證據比感覺重要。透明比百分比重要。',
+    linksHeading: '相關連結',
+  },
+  en: {
+    title: 'Detection Methodology | AICheck365',
+    description: 'How AICheck365 checks for AI-origin signals: file metadata, digital signatures, platform marks, generation parameters, and container structure — all analyzed locally in your browser.',
+    h1: 'AICheck365 Methodology',
+    lead: 'AICheck365 detects AI-origin clues by parsing observable provenance signals in the original file — not by running a black-box neural network. Here is what we can inspect and what we cannot guarantee.',
+    canCheckHeading: 'AICheck365 can check',
+    cannotHeading: 'AICheck365 cannot guarantee',
+    canCheck: [
+      'File metadata (EXIF, XMP, IPTC) — device, software, and generation tool fields',
+      'C2PA digital signatures and Content Credentials — embedded by OpenAI, Adobe, Microsoft, and others',
+      'PNG text chunks (tEXt / iTXt) — full generation parameters written by Stable Diffusion, ComfyUI, and similar tools',
+      'MP4 / MOV container fields — tool name, AIGC tags, SEI markers, and custom text boxes',
+      'Platform-specific marks — fields or patterns written by known AI platforms (Midjourney, DALL-E, Firefly, Kling, etc.)',
+      'Video frame watermark sampling — checking a small number of key frames for visible or invisible watermark clues when metadata yields no match',
+      'File-name heuristics — some platforms produce filenames with recognizable patterns',
+      'Container structure analysis — unusual or characteristic structures in the file format itself',
+      'Export / edit clues — application information written by software on re-export',
+    ],
+    cannot: [
+      'Not all AI platforms embed readable provenance data in their output files; no signal does not mean human-made',
+      'After compression or transcoding by social platforms (WeChat, Weibo, X / Twitter, etc.), metadata is usually stripped',
+      'Screenshots, screen recordings, or photos of a screen carry no original file metadata',
+      'Platform marks have no universal standard and may change in the future',
+      'Signals from unknown or emerging tools may not yet be in the detection library',
+      'Results cannot substitute for legal appraisal or expert forensics',
+      'File hashes, fingerprints, and content-feature analysis are outside the scope of this tool',
+    ],
+    slogan: 'Evidence beats intuition. Transparency beats percentages.',
+    linksHeading: 'Related links',
+  },
+};
+
+// For the other 7 languages, fall back to English content with the language's own h1 label
+const LANG_H1: Record<string, string> = {
+  ja: 'AICheck365 メソドロジー',
+  ko: 'AICheck365 방법론',
+  de: 'AICheck365-Methodik',
+  fr: 'Méthodologie AICheck365',
+  es: 'Metodología AICheck365',
+  'pt-BR': 'Metodologia AICheck365',
+};
+const LANG_TITLE: Record<string, string> = {
+  ja: '検出方法論 | AICheck365',
+  ko: '탐지 방법론 | AICheck365',
+  de: 'Erkennungsmethodik | AICheck365',
+  fr: 'Méthodologie de détection | AICheck365',
+  es: 'Metodología de detección | AICheck365',
+  'pt-BR': 'Metodologia de detecção | AICheck365',
+};
+
+const baseCopy = COPY[pageLang] ?? { ...COPY['en'], h1: LANG_H1[pageLang] ?? COPY['en'].h1, title: LANG_TITLE[pageLang] ?? COPY['en'].title };
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: baseCopy.h1,
+    description: baseCopy.description,
+    url: `https://www.aicheck365.com/methodology/`,
+    dateModified: '2026-06-18',
+    author: {
+      '@type': 'Organization',
+      name: 'AICheck365',
+      url: 'https://www.aicheck365.com',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AICheck365',
+      url: 'https://www.aicheck365.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.aicheck365.com/og.png',
+      },
+    },
+    inLanguage: pageLang,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: isZh ? '首页' : isEn ? 'Home' : 'Home',
+        item: `https://www.aicheck365.com${navPrefix ? navPrefix + '/' : '/'}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: baseCopy.h1,
+        item: `https://www.aicheck365.com${navPrefix}/methodology/`,
+      },
+    ],
+  },
+];
+---
+
+<Base
+  title={baseCopy.title}
+  description={baseCopy.description}
+  canonical="https://www.aicheck365.com/methodology/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <article class="card content-article">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href={navPrefix ? `${navPrefix}/` : '/'}>{isZh ? '首页' : isEn ? 'Home' : 'Home'}</a>
+        <span aria-hidden="true"> › </span>
+        <span>{baseCopy.h1}</span>
+      </nav>
+
+      <h1>{baseCopy.h1}</h1>
+
+      <p class="lead-text">{baseCopy.lead}</p>
+
+      <div class="methodology-grid">
+        <section class="methodology-col methodology-col--can">
+          <h2>{baseCopy.canCheckHeading}</h2>
+          <ul class="content-list methodology-list">
+            {baseCopy.canCheck.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+
+        <section class="methodology-col methodology-col--cannot">
+          <h2>{baseCopy.cannotHeading}</h2>
+          <ul class="content-list methodology-list">
+            {baseCopy.cannot.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+      </div>
+
+      <blockquote class="methodology-slogan-block">
+        <p class="methodology-slogan">{baseCopy.slogan}</p>
+      </blockquote>
+
+      <h2>{baseCopy.linksHeading}</h2>
+      <ul class="content-list">
+        <li>
+          <a href={navPrefix ? `${navPrefix}/` : '/'}>{isZh ? '检测工具（首页）' : isEn ? 'Detector (home)' : 'Detector (home)'}</a>
+          {isZh ? ' — 上传文件，立即检测' : isEn ? ' — upload a file and run the detector' : ' — upload a file and run the detector'}
+        </li>
+        <li>
+          <a href={`${navPrefix}/platforms/`}>{isZh ? '平台指南' : isEn ? 'Platform Guides' : 'Platform Guides'}</a>
+          {isZh ? ' — 各 AI 平台的具体信号说明' : isEn ? ' — signal details for each AI platform' : ' — signal details for each AI platform'}
+        </li>
+        <li>
+          <a href={`${navPrefix}/privacy/`}>{isZh ? '隐私政策' : isEn ? 'Privacy Policy' : 'Privacy Policy'}</a>
+          {isZh ? ' — 文件如何在本地处理，哪些数据绝不发送' : isEn ? ' — how files are processed locally and what data is never sent' : ' — how files are processed locally and what data is never sent'}
+        </li>
+      </ul>
+    </article>
+  </main>
+</Base>
+
+<style>
+.breadcrumb {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.breadcrumb a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.methodology-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 28px 0;
+}
+
+@media (max-width: 680px) {
+  .methodology-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.methodology-col {
+  padding: 20px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.methodology-col--can {
+  background: rgba(74, 222, 128, 0.06);
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+.methodology-col--cannot {
+  background: rgba(248, 113, 113, 0.06);
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+.methodology-col h2 {
+  margin-top: 0;
+  font-size: 17px;
+}
+
+.methodology-slogan-block {
+  margin: 32px 0 24px;
+  padding: 18px 24px;
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: rgba(110, 168, 255, 0.07);
+}
+
+.methodology-slogan {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--text);
+  margin: 0;
+}
+</style>

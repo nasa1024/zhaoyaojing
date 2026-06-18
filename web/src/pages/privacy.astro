@@ -11,7 +11,7 @@ import Base from '../layouts/Base.astro';
   <main class="page content-page">
     <article class="card content-article">
       <h1>Privacy Policy</h1>
-      <p class="article-meta">Last updated: May 2025</p>
+      <p class="article-meta">Last updated: June 2026</p>
 
       <p class="lead-text">AICheck365 is committed to protecting your privacy. This policy explains what information we collect, how we use it, and your choices.</p>
 
@@ -67,6 +67,37 @@ import Base from '../layouts/Base.astro';
 
       <h2>10. Contact</h2>
       <p>If you have questions about this Privacy Policy, please <a href="/contact/">contact us</a>.</p>
+
+      <h2>11. Local-First File Processing</h2>
+      <p>AICheck365 performs all image and video analysis <strong>entirely inside your browser</strong> using WebAssembly (WASM) technology compiled from Rust. <strong>No file or any part of its content is ever uploaded to our servers or any third-party server.</strong></p>
+      <p>Specifically:</p>
+      <ul class="content-list">
+        <li><strong>Files are not uploaded.</strong> When you drop or select an image or video, the file bytes are passed directly to WASM code running in your browser's memory. They never leave your device.</li>
+        <li><strong>Detection results are not saved remotely.</strong> The analysis output exists only in the current browser session and is never transmitted off-device.</li>
+        <li><strong>History is stored locally only.</strong> If you enable detection history, it is written to your browser's <code>localStorage</code> on your device. It is never synced to a server.</li>
+        <li><strong>No private metadata is collected.</strong> We never read, extract, log, or transmit the private or personal fields found in your files (such as GPS coordinates, camera serial number, full EXIF tables, or embedded thumbnails).</li>
+      </ul>
+
+      <h2>12. What We Never Send to Analytics</h2>
+      <p>AICheck365 uses Google Analytics 4 for anonymous page-view statistics. The following data is <strong>categorically excluded</strong> from all analytics, logging, and telemetry:</p>
+      <ul class="content-list">
+        <li>The original file (image or video bytes)</li>
+        <li>The original filename or file path</li>
+        <li>Full EXIF metadata tables</li>
+        <li>GPS or location data embedded in files</li>
+        <li>AI generation prompt text (full or partial)</li>
+        <li>Any other private metadata fields from your file</li>
+        <li>File hashes or fingerprints</li>
+      </ul>
+      <p>Analytics events may include coarse, non-identifying information such as file type category (e.g., "image/jpeg") or detection outcome category (e.g., "signal found" vs. "no signal"), but never any content derived from your file.</p>
+
+      <h2>13. How to Delete Your Local Data</h2>
+      <p>Because AICheck365 stores nothing on its servers, there is no remote account or server-side data to delete. To remove any locally stored data:</p>
+      <ul class="content-list">
+        <li><strong>Detection history:</strong> Use the "Clear History" button in the app, or clear <code>localStorage</code> for aicheck365.com in your browser's settings (Settings → Privacy → Site Data / Cookies and Storage).</li>
+        <li><strong>Language preference:</strong> Also stored in <code>localStorage</code>; cleared by the same steps above.</li>
+        <li><strong>Cookies from third-party services</strong> (Google Analytics, AdSense): Clear cookies for aicheck365.com in your browser settings, or use the opt-out links in §3 above.</li>
+      </ul>
     </article>
   </main>
 </Base>
