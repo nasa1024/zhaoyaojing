@@ -1,0 +1,47 @@
+/* Forensic Pop design tokens — 语义色见 Global Constraints */
+:root {
+  /* 基底（深色为默认实验台） */
+  --fp-bone: #F4F0E8;
+  --fp-white: #FFFFFF;
+  --fp-ink: #151515;
+  --fp-graphite: #2A2A2A;
+
+  /* 语义强调色 */
+  --fp-verified: #C8FF3D;   /* 绿：可验证签名信号 */
+  --fp-neutral:  #275DFF;   /* 蓝：中性文件信息 */
+  --fp-weak:     #FFD84D;   /* 黄：弱信号/注意 */
+  --fp-fail:     #FF5C55;   /* 红：签名失效/冲突 */
+  --fp-unknown:  #8B86A8;   /* 灰紫：未发现/不确定 */
+
+  /* 角色变量（深色主题默认） */
+  --bg: var(--fp-ink);
+  --surface: #1c1c1c;
+  --surface-2: #232323;
+  --border: rgba(244,240,232,0.14);
+  --text: #ECE7DC;
+  --muted: #A39E92;
+
+  /* 字体 */
+  --font-display: "Space Grotesk", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-body: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+
+  --radius: 10px;
+  --radius-lg: 16px;
+  --motion-fast: 160ms;
+  --motion: 280ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --bg: var(--fp-bone);
+  --surface: var(--fp-white);
+  --surface-2: #ECE7DC;
+  --border: rgba(21,21,21,0.14);
+  --text: var(--fp-ink);
+  --muted: #5A564E;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0ms; --motion: 0ms; }
+}
