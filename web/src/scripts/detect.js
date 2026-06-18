@@ -6,6 +6,8 @@ const { t, applyI18n, setLang } = await import(/* @vite-ignore */ i18nModuleUrl)
 const renderModuleUrl = '/scripts/render.js';
 const { renderResult, setTranslator } = await import(/* @vite-ignore */ renderModuleUrl);
 setTranslator(t);
+const stateModuleUrl = '/scripts/state.js';
+const { deriveEvidenceState } = await import(/* @vite-ignore */ stateModuleUrl);
 const wasmModuleUrl = '/pkg/aicheck.js';
 const ffmpegCoreBaseUrl = 'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd';
 const ffmpegCoreFiles = {
@@ -81,28 +83,6 @@ export function initDetector() {
     if (typeof window.gtag === 'function') window.gtag('event', name, params);
   }
 
-  // ─── Evidence state derivation (mirrors state.js — no import needed) ───────
-  function deriveStateFromReport(report) {
-    const prov = report?.provenance || { state: 'unsigned', manifest: null };
-    const signals = report?.signals || [];
-    const ai = signals.filter((s) => (s.confidence || 'none') !== 'none');
-    // field conflict: camera-like signal + AI-tool signal present together
-    const cameraHints = ['make','model','相机','camera','lens','镜头'];
-    const cameraLike = signals.some((s) => cameraHints.some((h) => (s.description || '').toLowerCase().includes(h)) && !s.tool);
-    const hasTool = signals.some((s) => Boolean(s.tool));
-    const conflict = cameraLike && hasTool;
-    if (prov.state === 'invalid' || conflict) return 'D';
-    const aiSourceHints = ['trainedalgorithmicmedia','compositewithtrainedalgorithmicmedia','compositesynthetic','algorithmicmedia','datadrivenmedia'];
-    const aiToolHints = ['openai','dall-e','dalle','gpt image','imagen','gemini','midjourney','stable diffusion','stability','firefly','flux','ideogram','leonardo','sora','kling','runway','pika','veo','comfyui','grok','seedream','recraft','qwen','jimeng'];
-    const m = prov.manifest || {};
-    const dst = (m.digital_source_type || '').toLowerCase();
-    const cg = (m.claim_generator || '').toLowerCase();
-    const manifestAi = aiSourceHints.some((h) => dst.includes(h)) || aiToolHints.some((h) => cg.includes(h));
-    if ((prov.state === 'trusted' || prov.state === 'valid') && manifestAi) return 'A';
-    if (ai.length > 0) return 'B';
-    return 'C';
-  }
-
   // ─── File selection ──────────────────────────────────────────────
   fileInput.addEventListener('change', (event) => {
     const files = Array.from(event.target.files || []);
@@ -160,7 +140,7 @@ export function initDetector() {
 
       // Derive evidence state from the first result for the completion event
       const firstReport = results[0]?.report;
-      const evidenceState = firstReport ? deriveStateFromReport(firstReport) : 'C';
+      const evidenceState = firstReport ? deriveEvidenceState(firstReport).state : 'C';
       const signalCount = (firstReport?.signals || []).length;
       const mediaType = firstReport?.media_type || (firstReport?.mime_type?.startsWith('video/') ? 'video' : 'image');
       ga('analysis_completed', {

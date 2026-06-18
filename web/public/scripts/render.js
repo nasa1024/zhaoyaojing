@@ -150,10 +150,14 @@ export function renderResult(container, report, { expert = false } = {}) {
   import('./receipt.js').then(m => m.mountReceipt(container.querySelector('#receipt-mount'), report)).catch(() => {});
 }
 
-// Fix 3: per-card badge always sig-neutral; confidence chip uses confidence class only
+// Confidence-level → CSS class. Never maps to sig-verified (green is reserved for signature).
+// high→sig-neutral (teal/blue), medium→sig-weak (yellow), low/other→sig-unknown (grey).
+const CONF_CLASS = { high: 'sig-neutral', medium: 'sig-weak', low: 'sig-unknown' };
+
+// Fix 3: per-card badge always sig-neutral; confidence chip uses CONF_CLASS
 function renderEvidenceCard(s) {
   const confKey = (s.confidence || 'low').toLowerCase();
-  const confClass = SIG_CLASS[confKey] || SIG_CLASS.neutral;
+  const confClass = CONF_CLASS[confKey] || SIG_CLASS.unknown;
   const details = (s.details || [])
     .map((x) => `<li><span class="mono">${esc(x.key)}</span>: <span class="mono">${esc(x.value)}</span></li>`)
     .join('');
