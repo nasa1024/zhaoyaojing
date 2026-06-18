@@ -208,16 +208,15 @@ const copy = detectorCopy[lang] ?? detectorCopy.en;
   </div>
 </section>
 
-<section class="card result-card">
+<section class="card result-card" id="result-card">
   <div class="section-heading">
     <div>
       <h2 data-i18n="results.title">{copy.results}</h2>
       <p class="muted compact" data-i18n="results.subtitle">{copy.resultsSubtitle}</p>
     </div>
+    <label class="expert-toggle"><input type="checkbox" id="expert-mode" /> <span data-i18n="results.expert">专家模式</span></label>
   </div>
-  <div id="empty-state" class="empty-state" data-i18n="results.empty">
-    {copy.empty}
-  </div>
+  <div id="empty-state" class="empty-state" data-i18n="results.empty">{copy.empty}</div>
   <div id="report" class="report hidden"></div>
 </section>
 

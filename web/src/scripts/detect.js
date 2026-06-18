@@ -3,6 +3,9 @@ import { saveHistory, loadHistoryRaw, renderHistory } from './history.js';
 
 const i18nModuleUrl = '/scripts/i18n.js';
 const { t, applyI18n, setLang } = await import(/* @vite-ignore */ i18nModuleUrl);
+const renderModuleUrl = '/scripts/render.js';
+const { renderResult, setTranslator } = await import(/* @vite-ignore */ renderModuleUrl);
+setTranslator(t);
 const wasmModuleUrl = '/pkg/aicheck.js';
 const ffmpegCoreBaseUrl = 'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd';
 const ffmpegCoreFiles = {
@@ -27,12 +30,14 @@ export function initDetector() {
   const themeBtn       = document.getElementById('theme-toggle');
   const hamburger      = document.getElementById('hamburger');
   const mobileMenu     = document.getElementById('mobile-menu');
+  const expertModeEl   = document.getElementById('expert-mode');
 
   let wasmApi       = null;
   let selectedFiles = [];
   let isAnalyzing   = false;
   let ffmpegLoader  = null;
   let ffmpegCoreAssetUrls = null;
+  let lastSingleReport = null;
 
   // ─── Init ────────────────────────────────────────────────────────
   applyI18n();
@@ -41,11 +46,19 @@ export function initDetector() {
 
   langBtn?.addEventListener('change', (e) => setLang(e.target.value));
 
+  expertModeEl?.addEventListener('change', () => {
+    if (lastSingleReport && !reportEl.classList.contains('hidden')) {
+      renderResult(reportEl, lastSingleReport, { expert: expertModeEl.checked });
+    }
+  });
+
   document.addEventListener('langchange', () => {
     syncAnalyzeButton();
     if (selectedFiles.length) renderSelectedFiles(selectedFiles);
     if (!reportEl.classList.contains('hidden') && reportEl._lastReports) {
       renderReports(reportEl._lastReports);
+    } else if (lastSingleReport && !reportEl.classList.contains('hidden')) {
+      renderResult(reportEl, lastSingleReport, { expert: expertModeEl?.checked ?? false });
     }
   });
 
@@ -365,6 +378,7 @@ export function initDetector() {
 
     // Summary bar for batch
     const aiCount = results.filter(r => r.report.ai_generated).length;
+    const expertOn = expertModeEl?.checked ?? false;
     const summaryHtml = `
       <div class="batch-summary">
         <strong>${results.length} ${t('batch.files') || 'files'}</strong> —
@@ -378,25 +392,24 @@ export function initDetector() {
               <span class="badge ${r.report.overall_confidence || 'none'}">${escapeHtml(labelForConfidence(r.report.overall_confidence))}</span>
               <span class="batch-item-name">${escapeHtml(r.file.name)}</span>
             </summary>
-            <div class="batch-item-body">${buildReportHtml(r.report)}</div>
+            <div class="batch-item-body" data-batch-idx="${i}"></div>
           </details>
         `).join('')}
       </div>
     `;
     reportEl.innerHTML = summaryHtml;
+    // Render each batch item via renderResult
+    results.forEach((r, i) => {
+      const bodyEl = reportEl.querySelector(`.batch-item-body[data-batch-idx="${i}"]`);
+      if (bodyEl) renderResult(bodyEl, r.report, { expert: expertOn });
+    });
     document.getElementById('share-btn')?.addEventListener('click', () => copyReport(results));
   }
 
   function renderSingleReport(report) {
-    reportEl.innerHTML = `
-      <div class="report-header">
-        <span class="badge ${escapeHtml(report.overall_confidence || 'none')}">${escapeHtml(labelForConfidence(report.overall_confidence))}</span>
-        <strong>${escapeHtml(report.ai_generated ? t('report.ai_yes') : t('report.ai_no'))}</strong>
-        <button class="share-btn" id="share-btn">${t('share.button') || '📋 Copy Report'}</button>
-      </div>
-      ${buildReportHtml(report)}
-    `;
-    document.getElementById('share-btn')?.addEventListener('click', () => copyReport([{ report }]));
+    lastSingleReport = report;
+    const expertOn = expertModeEl?.checked ?? false;
+    renderResult(reportEl, report, { expert: expertOn });
   }
 
   function buildReportHtml(report) {
