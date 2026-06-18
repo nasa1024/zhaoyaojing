@@ -1,5 +1,9 @@
 import { deriveEvidenceState } from './state.js';
 
+function ga(name, params) {
+  if (typeof window.gtag === 'function') window.gtag('event', name, params);
+}
+
 const SIG_CLASS = { verified: 'sig-verified', neutral: 'sig-neutral', weak: 'sig-weak', fail: 'sig-fail', unknown: 'sig-unknown' };
 const LEVEL_CLASS = { verified: 'sig-verified', weak: 'sig-weak', unknown: 'sig-unknown', fail: 'sig-fail' };
 
@@ -51,6 +55,7 @@ const STATE_DISCLAIMER = {
 
 export function renderResult(container, report, { expert = false } = {}) {
   const d = deriveEvidenceState(report);
+  if (expert) ga('expert_mode_enabled', {});
   const sc = STATE_COPY[d.state];
   const sections = [];
 
@@ -140,6 +145,7 @@ export function renderResult(container, report, { expert = false } = {}) {
   // 11. Receipt export mount point (Task E will wire this)
   sections.push(`<div id="receipt-mount"></div>`);
 
+  ga('result_status_viewed', { state: d.state });
   container.innerHTML = sections.join('\n');
   import('./receipt.js').then(m => m.mountReceipt(container.querySelector('#receipt-mount'), report)).catch(() => {});
 }

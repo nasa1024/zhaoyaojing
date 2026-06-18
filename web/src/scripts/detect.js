@@ -81,6 +81,28 @@ export function initDetector() {
     if (typeof window.gtag === 'function') window.gtag('event', name, params);
   }
 
+  // ─── Evidence state derivation (mirrors state.js — no import needed) ───────
+  function deriveStateFromReport(report) {
+    const prov = report?.provenance || { state: 'unsigned', manifest: null };
+    const signals = report?.signals || [];
+    const ai = signals.filter((s) => (s.confidence || 'none') !== 'none');
+    // field conflict: camera-like signal + AI-tool signal present together
+    const cameraHints = ['make','model','相机','camera','lens','镜头'];
+    const cameraLike = signals.some((s) => cameraHints.some((h) => (s.description || '').toLowerCase().includes(h)) && !s.tool);
+    const hasTool = signals.some((s) => Boolean(s.tool));
+    const conflict = cameraLike && hasTool;
+    if (prov.state === 'invalid' || conflict) return 'D';
+    const aiSourceHints = ['trainedalgorithmicmedia','compositewithtrainedalgorithmicmedia','compositesynthetic','algorithmicmedia','datadrivenmedia'];
+    const aiToolHints = ['openai','dall-e','dalle','gpt image','imagen','gemini','midjourney','stable diffusion','stability','firefly','flux','ideogram','leonardo','sora','kling','runway','pika','veo','comfyui','grok','seedream','recraft','qwen','jimeng'];
+    const m = prov.manifest || {};
+    const dst = (m.digital_source_type || '').toLowerCase();
+    const cg = (m.claim_generator || '').toLowerCase();
+    const manifestAi = aiSourceHints.some((h) => dst.includes(h)) || aiToolHints.some((h) => cg.includes(h));
+    if ((prov.state === 'trusted' || prov.state === 'valid') && manifestAi) return 'A';
+    if (ai.length > 0) return 'B';
+    return 'C';
+  }
+
   // ─── File selection ──────────────────────────────────────────────
   fileInput.addEventListener('change', (event) => {
     const files = Array.from(event.target.files || []);
@@ -125,7 +147,7 @@ export function initDetector() {
       setStatus(t('status.loading_engine') || '正在加载检测引擎…');
       await ensureWasm();
       setStatus(t('status.analyzing'));
-      ga('analyze_start', { file_count: selectedFiles.length });
+      ga('analysis_started', { file_count: selectedFiles.length });
 
       const results = [];
       for (let i = 0; i < selectedFiles.length; i++) {
@@ -136,11 +158,16 @@ export function initDetector() {
         results.push({ file, report });
       }
 
-      const aiCount = results.filter(r => r.report.ai_generated).length;
-      ga('analyze_complete', {
+      // Derive evidence state from the first result for the completion event
+      const firstReport = results[0]?.report;
+      const evidenceState = firstReport ? deriveStateFromReport(firstReport) : 'C';
+      const signalCount = (firstReport?.signals || []).length;
+      const mediaType = firstReport?.media_type || (firstReport?.mime_type?.startsWith('video/') ? 'video' : 'image');
+      ga('analysis_completed', {
+        evidence_state: evidenceState,
+        signal_count: signalCount,
+        media_type: mediaType,
         file_count: results.length,
-        ai_detected: aiCount,
-        has_signals: aiCount > 0,
       });
 
       renderReports(results);
@@ -150,6 +177,7 @@ export function initDetector() {
     } catch (error) {
       console.error(error);
       setStatus(error?.message || String(error), true);
+      ga('analysis_failed', { error_type: error?.constructor?.name || 'UnknownError' });
     } finally {
       isAnalyzing = false;
       syncAnalyzeButton();
@@ -572,6 +600,7 @@ export function initDetector() {
   // ─── Open-sample button ──────────────────────────────────────────
   const openSampleBtn = document.querySelector('#open-sample');
   openSampleBtn?.addEventListener('click', async () => {
+    ga('sample_opened', {});
     let samplesData = [];
     try {
       // Fetch the samples data (built as static JSON by Astro)

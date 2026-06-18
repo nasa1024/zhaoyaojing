@@ -1,5 +1,9 @@
 import { deriveEvidenceState } from './state.js';
 
+function ga(name, params) {
+  if (typeof window.gtag === 'function') window.gtag('event', name, params);
+}
+
 const CONCLUSION = {
   A: 'The file contains verifiable AI-origin provenance signals.',
   B: 'The file contains AI-related metadata that is not cryptographically signed.',
@@ -92,11 +96,22 @@ export function mountReceipt(container, report) {
   wrap.addEventListener('click', async (e) => {
     const act = e.target?.dataset?.act;
     if (!act) return;
-    if (act === 'text') navigator.clipboard.writeText(receiptToText(model));
-    else if (act === 'cite') navigator.clipboard.writeText(receiptToCitation(model));
-    else if (act === 'json') download('aicheck365-receipt.json', new Blob([receiptToJSON(model)], { type: 'application/json' }));
-    else if (act === 'png') download('aicheck365-receipt.png', await receiptToPngBlob(model));
-    else if (act === 'print') window.print();
+    if (act === 'text') {
+      navigator.clipboard.writeText(receiptToText(model));
+      ga('report_exported', { format: 'text' });
+    } else if (act === 'cite') {
+      navigator.clipboard.writeText(receiptToCitation(model));
+      ga('report_exported', { format: 'citation' });
+    } else if (act === 'json') {
+      download('aicheck365-receipt.json', new Blob([receiptToJSON(model)], { type: 'application/json' }));
+      ga('report_exported', { format: 'json' });
+    } else if (act === 'png') {
+      download('aicheck365-receipt.png', await receiptToPngBlob(model));
+      ga('report_exported', { format: 'png' });
+    } else if (act === 'print') {
+      window.print();
+      ga('report_exported', { format: 'print' });
+    }
   });
   container.innerHTML = '';
   container.appendChild(wrap);
