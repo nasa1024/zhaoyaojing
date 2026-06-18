@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // 在浏览器上下文里 import ES module 并执行纯函数
 async function derive(page, report) {
   return await page.evaluate(async (r) => {
-    const mod = await import('/scripts/state.js'); // 构建产物路径
+    const mod = await import('/scripts/state.js'); // public/scripts -> dist /scripts，astro preview 服务构建产物
     return mod.deriveEvidenceState(r);
   }, report);
 }

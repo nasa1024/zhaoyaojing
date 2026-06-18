@@ -10,3 +10,8 @@
 web/dist/
 web/node_modules/
 web/.astro/
+
+# Playwright
+test-results/
+web/test-results/
+web/playwright-report/

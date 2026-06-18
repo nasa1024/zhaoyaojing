@@ -6,8 +6,9 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:4173',
   },
   webServer: {
-    command: 'npm run build && python3 -m http.server 4173 -d dist',
+    command: 'npm run build && npm run preview -- --port 4173 --host 127.0.0.1',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
+    timeout: 120000,
   },
 });
