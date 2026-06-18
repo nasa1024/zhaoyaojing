@@ -59,6 +59,7 @@ pub(crate) fn verify_provenance(bytes: &[u8], mime: &str) -> Provenance {
     use c2pa::{Reader, ValidationState};
     use std::io::Cursor;
 
+    #[allow(deprecated)]
     let reader = match Reader::from_stream(mime, Cursor::new(bytes)) {
         Ok(reader) => reader,
         Err(_) => return Provenance::default(), // no manifest / unsupported => unsigned
@@ -117,13 +118,14 @@ pub(crate) fn verify_provenance(bytes: &[u8], mime: &str) -> Provenance {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::*;
 
-    #[wasm_bindgen_test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
     fn maps_validation_states_to_stable_strings() {
         assert_eq!(provenance_state_str(ProvenanceState::Trusted), "trusted");
         assert_eq!(provenance_state_str(ProvenanceState::Valid), "valid");
@@ -131,7 +133,8 @@ mod tests {
         assert_eq!(provenance_state_str(ProvenanceState::Unsigned), "unsigned");
     }
 
-    #[wasm_bindgen_test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
+    #[cfg_attr(not(target_arch = "wasm32"), test)]
     fn provenance_default_is_unsigned_empty() {
         let p = Provenance::default();
         assert_eq!(p.state, "unsigned");
