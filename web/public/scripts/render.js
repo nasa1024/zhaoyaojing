@@ -3,6 +3,18 @@ import { deriveEvidenceState } from './state.js';
 const SIG_CLASS = { verified: 'sig-verified', neutral: 'sig-neutral', weak: 'sig-weak', fail: 'sig-fail', unknown: 'sig-unknown' };
 const LEVEL_CLASS = { verified: 'sig-verified', weak: 'sig-weak', unknown: 'sig-unknown', fail: 'sig-fail' };
 
+// Evidence-level human labels keyed by derived state level
+const LEVEL_LABEL = {
+  verified: { key: 'result.level.a', fallback: '已验证来源（数字签名）' },
+  weak:     { key: 'result.level.b', fallback: '弱信号（未签名元数据）' },
+  unknown:  { key: 'result.level.c', fallback: '未发现可识别信号' },
+  fail:     { key: 'result.level.d', fallback: '验证失败 / 字段冲突' },
+};
+
+// Keywords that qualify a signal as an editing/creation-software clue (not AI tool)
+const EDIT_KEYWORDS = ['software', '软件', '编辑', '导出', 'premiere', 'photoshop', 'ffmpeg', 'lightroom', 'capcut', '剪映'];
+const COMPRESS_KEYWORDS = ['压缩', '截图', '转码', '导出', '转发', 'compress', 'screenshot', 'transcod'];
+
 function esc(v) {
   return String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -60,6 +72,14 @@ export function renderResult(container, report, { expert = false } = {}) {
     sections.push(`<p class="evidence-note">${esc(tt(STATE_DISCLAIMER[d.state].key, STATE_DISCLAIMER[d.state].fallback))}</p>`);
   }
 
+  // 2b. Standalone "证据等级" (Evidence Level) block — Fix 1
+  const ll = LEVEL_LABEL[sc.level];
+  const levelLabel = tt(ll.key, ll.fallback);
+  sections.push(`<div class="evidence-level-section">
+    <h4>${esc(tt('result.level', '证据等级'))}</h4>
+    <div class="evidence-level"><span class="sig ${LEVEL_CLASS[sc.level]}">${esc(levelLabel)}</span> <span>${esc(levelLabel)}</span></div>
+  </div>`);
+
   // Summary grid: mime_type, mode etc. (for regression: video/mp4 must appear)
   sections.push(`<div class="summary-grid">
     <div class="summary-item">
@@ -96,6 +116,9 @@ export function renderResult(container, report, { expert = false } = {}) {
   // 4. Not-found signals
   sections.push(`<h3>${esc(tt('result.notfound', '未发现的信号'))}</h3>${renderNotFound(report)}`);
 
+  // 5. Propagation / edit clues — Fix 2
+  sections.push(renderClues(report));
+
   // 6. Raw fields / expert mode
   if (expert) sections.push(renderExpert(report));
 
@@ -120,16 +143,17 @@ export function renderResult(container, report, { expert = false } = {}) {
   container.innerHTML = sections.join('\n');
 }
 
+// Fix 3: per-card badge always sig-neutral; confidence chip uses confidence class only
 function renderEvidenceCard(s) {
-  // Use 'sig-verified' for cards that have a tool attribution, 'sig-neutral' otherwise.
-  const cls = SIG_CLASS[s.tool ? 'verified' : 'neutral'];
+  const confKey = (s.confidence || 'low').toLowerCase();
+  const confClass = SIG_CLASS[confKey] || SIG_CLASS.neutral;
   const details = (s.details || [])
     .map((x) => `<li><span class="mono">${esc(x.key)}</span>: <span class="mono">${esc(x.value)}</span></li>`)
     .join('');
   return `<article class="evidence-card">
     <div class="evidence-card-head">
-      <span class="signal-source mono">${esc(s.source || '')}</span>
-      <span class="sig ${cls}">${esc((s.confidence || 'low').toUpperCase())}</span>
+      <span class="signal-source mono sig sig-neutral">${esc(s.source || '')}</span>
+      <span class="sig ${confClass}">${esc((s.confidence || 'low').toUpperCase())}</span>
       ${s.tool ? `<span class="tag-inline">${esc(s.tool)}</span>` : ''}
     </div>
     <div>${esc(s.description || '')}</div>
@@ -153,6 +177,28 @@ function renderNotFound(report) {
   return `<ul class="notfound-list">${items || `<li class="muted">${esc(tt('result.allfound', '所有层都发现了信号'))}</li>`}</ul>`;
 }
 
+// Fix 2: Propagation / edit clues section
+function renderClues(report) {
+  const heading = esc(tt('result.clues', '传播与编辑线索'));
+
+  // Collect editing-software signals: no tool AND description contains edit keyword
+  const editClues = (report.signals || [])
+    .filter((s) => !s.tool && EDIT_KEYWORDS.some((kw) => (s.description || '').toLowerCase().includes(kw)))
+    .map((s) => s.description);
+
+  // Collect limitations that mention compression/screenshot/transcode
+  const limClues = (report.limitations || [])
+    .filter((l) => COMPRESS_KEYWORDS.some((kw) => l.toLowerCase().includes(kw)));
+
+  const allClues = [...editClues, ...limClues];
+
+  if (allClues.length > 0) {
+    return `<h3>${heading}</h3><ul class="clues-list">${allClues.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>`;
+  }
+  return `<h3>${heading}</h3><p class="clues-none">${esc(tt('result.clues.none', '未发现明显的编辑或传播线索（这既不能证明也不能否定文件被处理过）。'))}</p>`;
+}
+
+// Fix 4: stable ASCII i18n keys using index, Chinese text as fallback
 function renderNextSteps(state) {
   const stepsCD = [
     '确认是否为原始文件',
@@ -170,8 +216,10 @@ function renderNextSteps(state) {
     '查看相同平台真实样本',
     '导出检测报告',
   ];
-  const list = state === 'C' || state === 'D' ? stepsCD : stepsAB;
-  return `<ol class="next-steps">${list.map((x) => `<li>${esc(tt('next.' + x, x))}</li>`).join('')}</ol>`;
+  const isCD = state === 'C' || state === 'D';
+  const list = isCD ? stepsCD : stepsAB;
+  const prefix = isCD ? 'next.c.' : 'next.ab.';
+  return `<ol class="next-steps">${list.map((x, i) => `<li>${esc(tt(prefix + i, x))}</li>`).join('')}</ol>`;
 }
 
 function renderExpert(report) {

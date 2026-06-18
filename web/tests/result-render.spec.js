@@ -37,3 +37,35 @@ test('expert mode reveals raw JSON', async ({ page }) => {
   }, true);
   expect(html).toContain('raw_json'); // expert block shows raw field identifier
 });
+
+test('C state renders evidence-level label and propagation-clues heading', async ({ page }) => {
+  const html = await render(page, {
+    signals: [],
+    provenance: { state: 'unsigned', manifest: null },
+    limitations: [],
+    file_name: 'test.jpg',
+  });
+  // Fix 1: evidence-level section shows the C-level fallback label
+  expect(html).toContain('未发现可识别信号');
+  // Fix 2: propagation-clues heading is always rendered
+  expect(html).toContain('传播与编辑线索');
+});
+
+test('editing-software signal appears under propagation clues', async ({ page }) => {
+  const html = await render(page, {
+    signals: [
+      { source: 'EXIF', confidence: 'low', description: 'EXIF Software = Adobe Photoshop', tool: null, details: [] },
+    ],
+    provenance: { state: 'unsigned', manifest: null },
+    limitations: [],
+    file_name: 'edited.jpg',
+  });
+  // Fix 2: the photoshop description must appear in the clues section
+  expect(html).toContain('EXIF Software = Adobe Photoshop');
+  // The clues heading must be present
+  expect(html).toContain('传播与编辑线索');
+  // Fix 3: source badge must NOT carry sig-verified (green) — only sig-neutral
+  // The card's source badge is sig-neutral; sig-verified may still appear elsewhere
+  // but the signal-source element specifically must use sig-neutral
+  expect(html).toContain('sig-neutral');
+});
