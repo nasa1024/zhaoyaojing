@@ -176,6 +176,7 @@ struct BrowserReport {
     supported_formats: Vec<String>,
     supported_signal_types: Vec<String>,
     limitations: Vec<String>,
+    provenance: crate::web_c2pa_verify::Provenance,
 }
 
 #[derive(Serialize)]
@@ -248,6 +249,12 @@ pub fn analyze_media(bytes: &[u8], file_name: Option<String>) -> Result<JsValue,
     serde_wasm_bindgen::to_value(&report).map_err(js_err)
 }
 
+#[wasm_bindgen(js_name = verifyC2pa)]
+pub fn verify_c2pa(bytes: &[u8], mime: &str) -> Result<JsValue, JsValue> {
+    let provenance = crate::web_c2pa_verify::verify_provenance(bytes, mime);
+    serde_wasm_bindgen::to_value(&provenance).map_err(js_err)
+}
+
 #[wasm_bindgen(js_name = analyzeVideoFrameRgba)]
 pub fn analyze_video_frame_rgba(
     rgba: &[u8],
@@ -290,6 +297,7 @@ pub fn analyze_video_frame_rgba(
             "视频帧分析只检查抽样帧，不代表逐帧完整检测。".to_string(),
             "浏览器端帧分析可能受转码、缩放和抽帧质量影响。".to_string(),
         ],
+        provenance: Default::default(),
     };
 
     serde_wasm_bindgen::to_value(&report).map_err(js_err)
@@ -336,6 +344,7 @@ fn analyze_image_report(bytes: &[u8], file_name: Option<String>) -> Result<Brows
             .collect(),
         supported_signal_types: supported_signal_types(),
         limitations: media_limitations("image"),
+        provenance: crate::web_c2pa_verify::verify_provenance(bytes, mime_type),
     })
 }
 
@@ -372,6 +381,7 @@ fn analyze_video_report(
             .collect(),
         supported_signal_types: supported_signal_types(),
         limitations: media_limitations("video"),
+        provenance: crate::web_c2pa_verify::verify_provenance(bytes, mime_type),
     }
 }
 

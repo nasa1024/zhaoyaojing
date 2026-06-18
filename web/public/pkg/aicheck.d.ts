@@ -15,6 +15,8 @@ export function supportedImageCapabilities(): any;
 
 export function supportedMediaCapabilities(): any;
 
+export function verifyC2pa(bytes: Uint8Array, mime: string): any;
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
@@ -23,9 +25,10 @@ export interface InitOutput {
     readonly analyzeMedia: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly analyzeVideoFrameRgba: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
     readonly supportedImageCapabilities: () => [number, number, number];
-    readonly supportedMediaCapabilities: () => [number, number, number];
+    readonly verifyC2pa: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly initPanicHook: () => void;
     readonly start: () => void;
+    readonly supportedMediaCapabilities: () => [number, number, number];
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;

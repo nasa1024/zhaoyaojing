@@ -1,3 +1,4 @@
+#![cfg(not(target_arch = "wasm32"))]
 use assert_cmd::cargo_bin_cmd;
 use predicates::prelude::*;
 

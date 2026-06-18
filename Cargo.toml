@@ -50,7 +50,10 @@ serde-wasm-bindgen = "0.6"
 wasm-bindgen = "0.2"
 c2pa = { version = "0.82", default-features = false, features = ["rust_native_crypto"] }
 
-[dev-dependencies]
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 assert_cmd = "2"
 predicates = "3"
 tempfile = "3"
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = "0.3"

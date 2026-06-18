@@ -1,13 +1,26 @@
+// This binary is not built for wasm32 targets.
+// wasm-pack requires a valid main function even for lib-only builds that include this binary.
+#[cfg(target_arch = "wasm32")]
+fn main() {}
+
+#[cfg(not(target_arch = "wasm32"))]
 mod cli;
+#[cfg(not(target_arch = "wasm32"))]
 mod output;
 
+#[cfg(not(target_arch = "wasm32"))]
 use clap::Parser;
+#[cfg(not(target_arch = "wasm32"))]
 use cli::{Cli, Command};
+#[cfg(not(target_arch = "wasm32"))]
 use colored::control::set_override;
+#[cfg(not(target_arch = "wasm32"))]
 use std::process::ExitCode;
 
+#[cfg(not(target_arch = "wasm32"))]
 use aicheck::{detector, i18n, scanner};
 
+#[cfg(not(target_arch = "wasm32"))]
 fn main() -> ExitCode {
     let args = Cli::parse();
 
@@ -23,6 +36,7 @@ fn main() -> ExitCode {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn cmd_check(args: &Cli, check_args: &cli::CheckArgs) -> ExitCode {
     let files = match scanner::discover_files(&check_args.paths, check_args.recursive) {
         Ok(f) => f,
@@ -77,6 +91,7 @@ fn cmd_check(args: &Cli, check_args: &cli::CheckArgs) -> ExitCode {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn cmd_info(info_args: &cli::InfoArgs) -> ExitCode {
     let path = &info_args.file;
 
