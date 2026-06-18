@@ -1,0 +1,94 @@
+---
+const layers = [
+  {
+    num: 1,
+    titleZh: '文件类型 / 基础信息',
+    titleEn: 'File type / Basics',
+    fields: [
+      'Format:          PNG / JPEG / WebP / MP4 / MOV',
+      'FileSize:        2.4 MB',
+      'ColorSpace:      sRGB',
+      'BitDepth:        8',
+      'ImageWidth:      1024',
+      'ImageHeight:     1024',
+    ],
+  },
+  {
+    num: 2,
+    titleZh: 'EXIF + XMP 元数据',
+    titleEn: 'EXIF + XMP metadata',
+    fields: [
+      'Software:                DALL-E 3',
+      'Make:                    OpenAI',
+      'XMP:CreatorTool:         Adobe Firefly',
+      'XMP:DigitalSourceType:   trainedAlgorithmicMedia',
+      'XMP:CreateDate:          2024:03:15 14:22:07',
+      'XMP:MetadataDate:        2024:03:15 14:22:07',
+    ],
+  },
+  {
+    num: 3,
+    titleZh: 'PNG 文本块 + 生成参数',
+    titleEn: 'PNG text chunks + generation params',
+    fields: [
+      'tEXt:parameters:   masterpiece, best quality, 1girl',
+      'tEXt:prompt:       a futuristic city at night',
+      'tEXt:negative:     lowres, bad anatomy, blurry',
+      'tEXt:steps:        20',
+      'tEXt:sampler:      DPM++ 2M Karras',
+      'tEXt:model_hash:   d8691b4d18',
+    ],
+  },
+  {
+    num: 4,
+    titleZh: 'C2PA + 数字签名',
+    titleEn: 'C2PA + digital signature',
+    fields: [
+      'c2pa:claim_generator:   Adobe Firefly 1.0',
+      'c2pa:claim_generator_hints: adobeFirefly',
+      'digitalSourceType:      trainedAlgorithmicMedia',
+      'c2pa:title:             Firefly_20240315.jpg',
+      'Signature:              VALID (SHA-256, RS256)',
+      'Certificate:            Adobe Inc. / DigiCert',
+    ],
+  },
+  {
+    num: 5,
+    titleZh: '视频容器 + SEI + 帧',
+    titleEn: 'Video container + SEI + frames',
+    fields: [
+      'Handler:         kling-ai-1.6-standard',
+      'Encoder:         Kling Video v1.6',
+      'UserData:        {"generator":"kling","model":"v1.6"}',
+      'SEI:UUID:        kling_provenance_v1',
+      'FrameWatermark:  detected (confidence: 0.91)',
+      'MetadataTrack:   sora_video_metadata_v1.0',
+    ],
+  },
+];
+---
+
+<section class="card content-section five-layer-section" aria-labelledby="five-layer-heading">
+  <h2 id="five-layer-heading">
+    <span lang="zh-CN">AICheck365 检查哪五层？</span>
+    <span class="muted" lang="en" aria-hidden="true"> · Five evidence layers</span>
+  </h2>
+  <p class="muted" lang="zh-CN">点击每一层，查看实际检测的字段示例。</p>
+  <p class="muted" lang="en">Click each layer to see example fields that are inspected.</p>
+
+  <div class="five-layer-list">
+    {layers.map((layer) => (
+      <details class="evidence-layer card">
+        <summary class="evidence-layer-summary">
+          <span class="evidence-layer-num" aria-hidden="true">{layer.num}</span>
+          <span class="evidence-layer-title">
+            <span lang="zh-CN">{layer.titleZh}</span>
+            <span class="evidence-layer-en muted" lang="en">{layer.titleEn}</span>
+          </span>
+          <span class="evidence-layer-chevron" aria-hidden="true">›</span>
+        </summary>
+        <pre class="mono evidence-layer-fields">{layer.fields.join('\n')}</pre>
+      </details>
+    ))}
+  </div>
+</section>

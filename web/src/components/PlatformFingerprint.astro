@@ -1,0 +1,39 @@
+---
+interface Props {
+  prefix: string;
+}
+const { prefix } = Astro.props;
+
+const platforms = [
+  { name: 'OpenAI / DALL-E', slug: 'dall-e' },
+  { name: 'Gemini', slug: 'gemini' },
+  { name: 'Midjourney', slug: 'midjourney' },
+  { name: 'Adobe Firefly', slug: 'firefly' },
+  { name: 'Stable Diffusion', slug: 'stable-diffusion' },
+  { name: 'ComfyUI', slug: 'comfyui' },
+  { name: 'Sora', slug: 'sora' },
+  { name: 'Kling', slug: 'kling' },
+  { name: 'Flux', slug: 'flux' },
+];
+---
+
+<section class="card content-section platform-fingerprint" aria-labelledby="platform-fingerprint-heading">
+  <h2 id="platform-fingerprint-heading">
+    <span lang="zh-CN">支持研究的平台</span>
+    <span class="muted" lang="en" aria-hidden="true"> · Researched Platforms</span>
+  </h2>
+  <p class="muted" lang="zh-CN">以下平台已有专项检测指南，点击查看各平台的常见来源线索。</p>
+  <p class="muted" lang="en">Dedicated detection guides exist for the platforms below. Click to see common origin signals.</p>
+
+  <nav class="platform-capsule-row" aria-label="平台检测指南导航">
+    {platforms.map((p) => (
+      <a
+        class="platform-capsule"
+        href={`${prefix}/platforms/${p.slug}/`}
+        lang="en"
+      >
+        {p.name}
+      </a>
+    ))}
+  </nav>
+</section>

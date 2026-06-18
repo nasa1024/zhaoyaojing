@@ -1,6 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Detector from '../components/Detector.astro';
+import FileAnatomy from '../components/FileAnatomy.astro';
+import EvidenceVanish from '../components/EvidenceVanish.astro';
+import FiveLayer from '../components/FiveLayer.astro';
+import PlatformFingerprint from '../components/PlatformFingerprint.astro';
 
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
 const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
@@ -277,7 +281,17 @@ const jsonLd = {
       <div class="notice warning" data-i18n-html="notice" set:html={copy.notice} />
     </section>
 
+    <section class="card content-section file-anatomy-section">
+      <FileAnatomy />
+    </section>
+
     <Detector />
+
+    <EvidenceVanish />
+
+    <FiveLayer />
+
+    <PlatformFingerprint prefix={prefix} />
 
     <section class="card content-section">
       <h2>{copy.seoTitle}</h2>
@@ -289,5 +303,6 @@ const jsonLd = {
         {copy.usage.map((item) => <li>{item}</li>)}
       </ul>
     </section>
+    <script type="module" src="/scripts/scroll-narrative.js"></script>
   </main>
 </Base>

@@ -1,0 +1,15 @@
+---
+const layers = [
+  'sample.png',
+  '├── PNG Header',
+  '├── C2PA Manifest',
+  '├── XMP CreatorTool',
+  '├── digitalSourceType',
+  '├── claim_generator',
+  '└── Embedded Parameters',
+];
+---
+<figure class="file-anatomy" aria-label="文件结构解剖示例">
+  <pre class="mono anatomy-tree">{layers.map((l, i) => <span class="anatomy-line" style={`--i:${i}`}>{l}</span>)}</pre>
+  <figcaption class="muted" data-i18n="anatomy.caption">AICheck365 查看文件内部，而不是凭画面猜测。</figcaption>
+</figure>
