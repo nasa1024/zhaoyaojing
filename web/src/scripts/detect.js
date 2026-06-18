@@ -20,9 +20,6 @@ export function initDetector() {
   const statusEl       = document.querySelector('#status');
   const reportEl       = document.querySelector('#report');
   const emptyStateEl   = document.querySelector('#empty-state');
-  const platformListEl = document.querySelector('#platform-list');
-  const formatListEl   = document.querySelector('#format-list');
-  const signalTypesEl  = document.querySelector('#signal-types');
   const fileMetaEl     = document.querySelector('#file-meta');
   const uploadZoneEl   = document.querySelector('#upload-zone');
   const langBtn        = document.querySelector('#lang-switch');
@@ -33,16 +30,33 @@ export function initDetector() {
   const expertModeEl   = document.getElementById('expert-mode');
 
   let wasmApi       = null;
+  let wasmReadyPromise = null;
   let selectedFiles = [];
   let isAnalyzing   = false;
   let ffmpegLoader  = null;
   let ffmpegCoreAssetUrls = null;
   let lastSingleReport = null;
 
+  // ─── Lazy wasm loader ────────────────────────────────────────────
+  async function ensureWasm() {
+    if (!wasmReadyPromise) {
+      wasmReadyPromise = (async () => {
+        const pkg = await import(/* @vite-ignore */ wasmModuleUrl);
+        if (typeof pkg.default === 'function') await pkg.default();
+        pkg.initPanicHook?.();
+        wasmApi = pkg;
+        return pkg;
+      })();
+    }
+    return wasmReadyPromise;
+  }
+
   // ─── Init ────────────────────────────────────────────────────────
   applyI18n();
   applyTheme(localStorage.getItem('theme') ?? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
   renderHistory({ historyListEl, emptyStateEl, reportEl, t, renderSingleReport });
+  setStatus(t('status.ready'));
+  syncAnalyzeButton();
 
   langBtn?.addEventListener('change', (e) => setLang(e.target.value));
 
@@ -61,27 +75,6 @@ export function initDetector() {
       renderResult(reportEl, lastSingleReport, { expert: expertModeEl?.checked ?? false });
     }
   });
-
-  boot();
-
-  async function boot() {
-    try {
-      const pkg = await import(/* @vite-ignore */ wasmModuleUrl);
-      if (typeof pkg.default === 'function') await pkg.default();
-      pkg.initPanicHook?.();
-      wasmApi = pkg;
-
-      const capabilities = wasmApi.supportedMediaCapabilities
-        ? await wasmApi.supportedMediaCapabilities()
-        : await wasmApi.supportedImageCapabilities();
-      renderCapabilities(capabilities);
-      setStatus(t('status.ready'));
-      syncAnalyzeButton();
-    } catch (error) {
-      console.error(error);
-      setStatus(t('status.error'), true);
-    }
-  }
 
   // ─── GA4 helper ──────────────────────────────────────────────────
   function ga(name, params = {}) {
@@ -124,12 +117,13 @@ export function initDetector() {
 
   // ─── Analyze ─────────────────────────────────────────────────────
   analyzeBtn.addEventListener('click', async () => {
-    if (!wasmApi)            { setStatus(t('status.error'), true); return; }
     if (!selectedFiles.length) { setStatus(t('status.no_file'), true); return; }
 
     try {
       isAnalyzing = true;
       syncAnalyzeButton();
+      setStatus(t('status.loading_engine') || '正在加载检测引擎…');
+      await ensureWasm();
       setStatus(t('status.analyzing'));
       ga('analyze_start', { file_count: selectedFiles.length });
 
@@ -324,16 +318,6 @@ export function initDetector() {
     };
   }
 
-  // ─── Render: capabilities ────────────────────────────────────────
-  function renderCapabilities(capabilities) {
-    platformListEl.classList.remove('skeleton-list');
-    formatListEl.classList.remove('skeleton-list');
-    signalTypesEl.classList.remove('skeleton-list');
-    renderTags(platformListEl, capabilities.supported_platforms || []);
-    renderTags(formatListEl, capabilities.supported_formats || []);
-    renderBullets(signalTypesEl, capabilities.supported_signal_types || []);
-  }
-
   // ─── Render: selected files ──────────────────────────────────────
   function renderSelectedFiles(files) {
     if (!files.length) {
@@ -497,20 +481,8 @@ export function initDetector() {
   }
 
   // ─── Utils ───────────────────────────────────────────────────────
-  function renderTags(container, items) {
-    container.innerHTML = items.length
-      ? items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
-      : `<li>${escapeHtml(t('skeleton'))}</li>`;
-  }
-
-  function renderBullets(container, items) {
-    container.innerHTML = items.length
-      ? items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
-      : `<li>${escapeHtml(t('skeleton'))}</li>`;
-  }
-
   function syncAnalyzeButton() {
-    analyzeBtn.disabled = !wasmApi || !selectedFiles.length || isAnalyzing;
+    analyzeBtn.disabled = !selectedFiles.length || isAnalyzing;
     analyzeBtn.textContent = isAnalyzing ? t('btn.running') : t('btn.idle');
   }
 

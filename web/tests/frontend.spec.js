@@ -109,8 +109,11 @@ test('shows trust indicators, selected file metadata, and accessible controls', 
   await expect(page.getByText('隐私优先')).toBeVisible();
   await expect(page.getByText('适合原图检测')).toBeVisible();
 
-  await expect(page.locator('#platform-list li')).toHaveCount(mockCapabilities.supported_platforms.length);
-  await expect(page.locator('#format-list li')).toHaveCount(mockCapabilities.supported_formats.length);
+  // capability lists are static server-rendered HTML (no wasm needed to show them)
+  await expect(page.locator('#platform-list')).toContainText('Midjourney');
+  await expect(page.locator('#platform-list')).toContainText('Adobe Firefly');
+  await expect(page.locator('#format-list')).toContainText('image/png');
+  await expect(page.locator('#signal-types')).toContainText('EXIF metadata');
 
   await page.setInputFiles('#file-input', {
     name: 'sample.png',
@@ -125,6 +128,27 @@ test('shows trust indicators, selected file metadata, and accessible controls', 
   await page.getByRole('button', { name: '开始检测' }).click();
   await expect(page.locator('#report').getByText('检测到 AI 来源信号')).toBeVisible();
   await expect(page.locator('#report .signal-source').getByText('OpenAI', { exact: true })).toBeVisible();
+});
+
+test('does not load the engine wasm until analysis is triggered', async ({ page }) => {
+  let pkgRequested = false;
+  page.on('request', (req) => { if (req.url().includes('/pkg/aicheck.js')) pkgRequested = true; });
+
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: '开始检测' })).toBeVisible();
+  // engine wasm must NOT be fetched on initial page load
+  expect(pkgRequested).toBe(false);
+
+  await page.setInputFiles('#file-input', {
+    name: 'sample.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from([137, 80, 78, 71]),
+  });
+  await expect(page.getByRole('button', { name: '开始检测' })).toBeEnabled();
+  await page.getByRole('button', { name: '开始检测' }).click();
+  await expect(page.locator('#report')).toBeVisible();
+  // engine wasm is fetched lazily on first analysis
+  expect(pkgRequested).toBe(true);
 });
 
 test('accepts and renders video metadata reports', async ({ page }) => {
