@@ -141,6 +141,7 @@ export function renderResult(container, report, { expert = false } = {}) {
   sections.push(`<div id="receipt-mount"></div>`);
 
   container.innerHTML = sections.join('\n');
+  import('./receipt.js').then(m => m.mountReceipt(container.querySelector('#receipt-mount'), report)).catch(() => {});
 }
 
 // Fix 3: per-card badge always sig-neutral; confidence chip uses confidence class only

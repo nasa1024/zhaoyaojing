@@ -1538,3 +1538,9 @@ select:focus-visible {
 .sig-fail::before { background:#fff; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);} /* 菱 */
 .sig-unknown  { color:#fff; background:var(--fp-unknown); }
 .sig-unknown::before { background:#fff; border-radius:2px; opacity:.6; }
+
+@media print {
+  .site-header, .site-nav, .site-footer, .ad-slot, .upload-card, .receipt-actions, .expert-block { display:none !important; }
+  body { background:#fff; color:#000; }
+  .evidence-summary, .signal-list, .limitation-list { break-inside: avoid; }
+}
