@@ -1,18 +1,18 @@
 :root {
-  color-scheme: dark;
-  --bg: #08111f;
-  --card: rgba(10, 22, 40, 0.9);
-  --card-strong: rgba(13, 31, 57, 0.94);
-  --border: rgba(115, 149, 207, 0.24);
-  --border-strong: rgba(110, 168, 255, 0.45);
-  --text: #e9f1ff;
-  --muted: #9db1d3;
-  --accent: #6ea8ff;
-  --accent-strong: #4a8eff;
-  --danger: #ffb366;
-  --danger-text: #ffb3b3;
-  --success: #8ae6b0;
-  --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  --bg: var(--fp-ink);
+  --card: var(--surface);
+  --card-strong: var(--surface-2);
+  --border: rgba(244,240,232,0.14);
+  --border-strong: rgba(244,240,232,0.28);
+  --text: #ECE7DC;
+  --muted: #A39E92;
+  --accent: var(--fp-verified);
+  --accent-strong: var(--fp-neutral);
+  --danger: var(--fp-fail);
+  --danger-text: var(--fp-fail);
+  --success: var(--fp-verified);
+  --shadow: 0 18px 60px rgba(0,0,0,0.35);
+  font-family: var(--font-body);
 }
 
 * {
@@ -25,12 +25,9 @@ html {
 
 body {
   margin: 0;
-  font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-body);
   color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(110, 168, 255, 0.26), transparent 30rem),
-    radial-gradient(circle at 85% 10%, rgba(138, 230, 176, 0.12), transparent 26rem),
-    linear-gradient(180deg, #08111f, #040913 70%);
+  background: var(--bg);
 }
 
 button,
@@ -1526,3 +1523,18 @@ select:focus-visible {
     font-size: 56px;
   }
 }
+
+/* 语义信号色 — 颜色 + 形状双编码（无障碍：状态不只靠颜色） */
+.sig { display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px;
+  font: 600 12px/1 var(--font-mono); border:1px solid transparent; }
+.sig::before { content:""; width:8px; height:8px; }
+.sig-verified { color:#0b1a00; background:var(--fp-verified); }
+.sig-verified::before { background:#0b1a00; border-radius:50%; }            /* 圆 */
+.sig-neutral  { color:#fff; background:var(--fp-neutral); }
+.sig-neutral::before { background:#fff; }                                    /* 方 */
+.sig-weak     { color:#3a2e00; background:var(--fp-weak); }
+.sig-weak::before { background:#3a2e00; clip-path:polygon(50% 0,100% 100%,0 100%); } /* 三角 */
+.sig-fail     { color:#fff; background:var(--fp-fail); }
+.sig-fail::before { background:#fff; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);} /* 菱 */
+.sig-unknown  { color:#fff; background:var(--fp-unknown); }
+.sig-unknown::before { background:#fff; border-radius:2px; opacity:.6; }
