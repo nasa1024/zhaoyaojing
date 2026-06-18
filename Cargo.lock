@@ -53,7 +53,8 @@ version = "0.2.0"
 dependencies = [
  "anyhow",
  "assert_cmd",
- "c2pa",
+ "c2pa 0.77.0",
+ "c2pa 0.82.1",
  "clap",
  "colored",
  "console_error_panic_hook",
@@ -72,6 +73,21 @@ dependencies = [
  "tempfile",
  "walkdir",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "alloc-no-stdlib"
+version = "2.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cc7bb162ec39d46ab1ca8c77bf72e890535becd1751bb45f64c597edb4c8c6b3"
+
+[[package]]
+name = "alloc-stdlib"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e76a019e91224d279006ff972f1e984179a6e9feb050adba6ce8274aef23195"
+dependencies = [
+ "alloc-no-stdlib",
 ]
 
 [[package]]
@@ -238,9 +254,9 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
 name = "atree"
-version = "0.5.2"
+version = "0.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "132573478eb9ff973c6f75d0ed425ac12da77d266506483345f46743ecc83a98"
+checksum = "239d25181cb40f1955529367ee495e35d03aab4e578028f41e7abc8b21c367a8"
 
 [[package]]
 name = "autocfg"
@@ -332,6 +348,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8894febbff9f758034a5b8e12d87918f56dfc64a8e1fe757d65e29041538d93"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "brotli"
+version = "7.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cc97b8f16f944bba54f0433f07e30be199b6dc2bd25937444bbad560bcea29bd"
+dependencies = [
+ "alloc-no-stdlib",
+ "alloc-stdlib",
+ "brotli-decompressor",
+]
+
+[[package]]
+name = "brotli-decompressor"
+version = "4.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a334ef7c9e23abf0ce748e8cd309037da93e606ad52eb372e4ce327a0dcfbdfd"
+dependencies = [
+ "alloc-no-stdlib",
+ "alloc-stdlib",
 ]
 
 [[package]]
@@ -497,6 +534,96 @@ dependencies = [
  "web-sys",
  "web-time",
  "wstd",
+ "x509-parser",
+ "zeroize",
+ "zip",
+]
+
+[[package]]
+name = "c2pa"
+version = "0.82.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8e96917bbbabdb4dd15030b67e4694b6751d618768fe88ad57f98aad7fd8e751"
+dependencies = [
+ "asn1-rs",
+ "async-generic",
+ "async-trait",
+ "atree",
+ "base64",
+ "bcder",
+ "brotli",
+ "byteorder",
+ "byteordered",
+ "bytes",
+ "c2pa_cbor",
+ "chrono",
+ "config",
+ "console_log",
+ "const-hex",
+ "const-oid",
+ "coset",
+ "der",
+ "ecdsa",
+ "ed25519-dalek",
+ "env_logger",
+ "extfmt",
+ "getrandom 0.2.17",
+ "getrandom 0.3.4",
+ "glob",
+ "hex",
+ "hex-literal",
+ "http",
+ "id3",
+ "img-parts",
+ "iref",
+ "jfifdump",
+ "js-sys",
+ "lazy_static",
+ "log",
+ "memchr",
+ "mp4",
+ "nom 7.1.3",
+ "non-empty-string",
+ "nonempty-collections",
+ "num-bigint-dig",
+ "p256",
+ "p384",
+ "p521",
+ "pem",
+ "pkcs1",
+ "pkcs8",
+ "png_pong",
+ "quick-xml 0.39.2",
+ "rand 0.8.5",
+ "rand_chacha 0.9.0",
+ "range-set",
+ "rasn",
+ "rasn-cms",
+ "rasn-ocsp",
+ "rasn-pkix",
+ "regex",
+ "riff",
+ "rsa",
+ "serde",
+ "serde-transcode",
+ "serde-wasm-bindgen",
+ "serde_bytes",
+ "serde_derive",
+ "serde_json",
+ "serde_with",
+ "sha1",
+ "sha2",
+ "spki",
+ "static-iref",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 1.0.6+spec-1.1.0",
+ "url",
+ "uuid",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "web-time",
  "x509-parser",
  "zeroize",
  "zip",
