@@ -5,6 +5,9 @@ import FileAnatomy from '../components/FileAnatomy.astro';
 import EvidenceVanish from '../components/EvidenceVanish.astro';
 import FiveLayer from '../components/FiveLayer.astro';
 import PlatformFingerprint from '../components/PlatformFingerprint.astro';
+import MethodologyBlock from '../components/MethodologyBlock.astro';
+import SampleExperience from '../components/SampleExperience.astro';
+import LatestExperiments from '../components/LatestExperiments.astro';
 
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
 const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
@@ -303,6 +306,25 @@ const jsonLd = {
         {copy.usage.map((item) => <li>{item}</li>)}
       </ul>
     </section>
+
+    <MethodologyBlock />
+
+    <div class="ad-slot ad-slot--after-methodology">
+      <!-- Replace after AdSense approval:
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+
+    <SampleExperience />
+
+    <LatestExperiments />
+
     <script type="module" src="/scripts/scroll-narrative.js"></script>
   </main>
 </Base>

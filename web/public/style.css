@@ -1918,3 +1918,212 @@ select:focus-visible {
   body { background:#fff; color:#000; }
   .evidence-summary, .signal-list, .limitation-list { break-inside: avoid; }
 }
+
+/* ─── Ad slot height reservation (prevent layout shift) ─── */
+
+.ad-slot {
+  min-height: 280px;
+}
+
+/* ─── F6: Methodology Block ─── */
+
+.methodology-block {
+  margin-top: 20px;
+}
+
+.methodology-heading {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.methodology-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 640px) {
+  .methodology-cols {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.methodology-col {
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.methodology-col--can {
+  background: rgba(138, 230, 176, 0.06);
+  border-color: rgba(138, 230, 176, 0.2);
+}
+
+.methodology-col--cannot {
+  background: rgba(255, 198, 92, 0.05);
+  border-color: rgba(255, 198, 92, 0.18);
+}
+
+.methodology-col-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.methodology-col-sub {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.methodology-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.methodology-list li {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.methodology-list--can li::marker {
+  color: var(--fp-verified, #8ae6b0);
+}
+
+.methodology-list--cannot li::marker {
+  color: var(--fp-weak, #ffc65c);
+}
+
+.methodology-slogan {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--accent);
+  margin: 8px 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.methodology-link {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.methodology-link:hover {
+  color: var(--accent);
+}
+
+/* ─── F7: Sample Experience ─── */
+
+.sample-experience {
+  margin-top: 20px;
+}
+
+.sample-placeholder,
+.experiment-placeholder {
+  padding: 16px 0 8px;
+  font-size: 15px;
+}
+
+.sample-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.sample-card {
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.sample-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.sample-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.sample-title {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.sample-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.sample-signals {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ─── F7: Latest Experiments ─── */
+
+.latest-experiments {
+  margin-top: 20px;
+}
+
+.experiment-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.experiment-card {
+  padding: 16px 18px;
+}
+
+.experiment-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.experiment-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.experiment-findings {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.experiment-link {
+  font-size: 14px;
+  color: var(--accent);
+}

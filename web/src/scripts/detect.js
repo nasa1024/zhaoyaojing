@@ -569,6 +569,46 @@ export function initDetector() {
     applyTheme(document.body.dataset.theme === 'light' ? 'dark' : 'light');
   });
 
+  // ─── Open-sample button ──────────────────────────────────────────
+  const openSampleBtn = document.querySelector('#open-sample');
+  openSampleBtn?.addEventListener('click', async () => {
+    let samplesData = [];
+    try {
+      // Fetch the samples data (built as static JSON by Astro)
+      const res = await fetch('/src/data/samples.json').catch(() => null)
+        ?? await fetch('/data/samples.json').catch(() => null);
+      if (res?.ok) samplesData = await res.json();
+    } catch {
+      samplesData = [];
+    }
+
+    if (!Array.isArray(samplesData) || samplesData.length === 0) {
+      setStatus(t('sample.soon') || '样本即将上线');
+      return;
+    }
+
+    // Non-empty branch: load first sample's fileRef and run analysis
+    const sample = samplesData[0];
+    if (!sample?.fileRef) {
+      setStatus(t('sample.soon') || '样本即将上线');
+      return;
+    }
+    try {
+      setStatus(t('status.loading_engine') || '正在加载样本…');
+      const res = await fetch(sample.fileRef);
+      if (!res.ok) throw new Error(`Failed to fetch sample: ${res.status}`);
+      const blob = await res.blob();
+      const ext = sample.fileRef.split('.').pop() || 'bin';
+      const file = new File([blob], `${sample.id}.${ext}`, { type: blob.type });
+      selectedFiles = [file];
+      renderSelectedFiles(selectedFiles);
+      syncAnalyzeButton();
+      analyzeBtn.click();
+    } catch (err) {
+      setStatus((t('status.error') || 'Error: ') + (err?.message || String(err)), true);
+    }
+  });
+
   // ─── Hamburger ───────────────────────────────────────────────────
   hamburger?.addEventListener('click', () => {
     const expanded = hamburger.getAttribute('aria-expanded') === 'true';

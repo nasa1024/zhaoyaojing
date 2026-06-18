@@ -74,6 +74,8 @@ const translations = {
     'report.heading.limits': '限制与风险提示',
     'video.frame_failed':    '视频帧分析未完成',
     'video.no_frames':       '未能抽取可分析的视频帧',
+    'sample.soon':           '样本即将上线',
+    'status.loading_engine': '正在加载检测引擎…',
   },
 
   // ── Traditional Chinese ─────────────────────────────────────────
@@ -146,6 +148,8 @@ const translations = {
     'report.heading.limits': '限制與風險提示',
     'video.frame_failed':    '影片幀分析未完成',
     'video.no_frames':       '未能抽取可分析的影片幀',
+    'sample.soon':           '樣本即將上線',
+    'status.loading_engine': '正在載入偵測引擎…',
   },
 
   // ── English ─────────────────────────────────────────────────────
@@ -221,6 +225,8 @@ const translations = {
     'report.heading.limits': 'Limitations & Risk Notes',
     'video.frame_failed':    'Video frame analysis was not completed',
     'video.no_frames':       'No decodable video frames were extracted',
+    'sample.soon':           'Samples coming soon',
+    'status.loading_engine': 'Loading detection engine…',
   },
 
   // ── Japanese ─────────────────────────────────────────────────────

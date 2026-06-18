@@ -1,0 +1,100 @@
+---
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
+const lang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
+const isZh = lang === 'zh-CN' || lang === 'zh-TW';
+
+const canCheck = {
+  'zh-CN': [
+    '文件元数据（EXIF / XMP / IPTC）',
+    '来源凭证（C2PA / Content Credentials）',
+    '数字签名与哈希',
+    '平台标记与生成参数',
+    '容器结构与文件头',
+    '部分编辑/导出线索',
+    'PNG 文本块',
+    'MP4/MOV 容器元数据与 SEI 标记',
+  ],
+  en: [
+    'File metadata (EXIF / XMP / IPTC)',
+    'Provenance credentials (C2PA / Content Credentials)',
+    'Digital signatures and hashes',
+    'Platform marks and generation parameters',
+    'Container structure and file headers',
+    'Some edit and export clues',
+    'PNG text chunks',
+    'MP4/MOV container metadata and SEI markers',
+  ],
+};
+
+const cannotGuarantee = {
+  'zh-CN': [
+    '所有 AI 文件都保留了来源信息',
+    '截图保留了原始出处',
+    '所有平台使用统一的标记格式',
+    '无信号 = 人工制作',
+    '结果可替代法律鉴定或专家评估',
+  ],
+  en: [
+    'All AI files retain provenance data',
+    'Screenshots retain origin information',
+    'All platforms use uniform marks',
+    'No signal means human-made',
+    'Results replace legal or expert appraisal',
+  ],
+};
+
+const headings = {
+  'zh-CN': {
+    section: '方法论与检测限制',
+    can: '可检查',
+    cannot: '不能保证',
+    canSub: 'We can check',
+    cannotSub: 'We cannot guarantee',
+    slogan: '证据比感觉重要。透明比百分比重要。',
+    link: '了解完整方法论',
+  },
+  en: {
+    section: 'Methodology & Limitations',
+    can: 'We can check',
+    cannot: 'We cannot guarantee',
+    canSub: '',
+    cannotSub: '',
+    slogan: 'Evidence beats intuition. Transparency beats percentages.',
+    link: 'Read the full methodology',
+  },
+};
+
+const fallback = headings.en;
+const h = headings[lang] ?? fallback;
+const canList = canCheck[lang] ?? canCheck.en;
+const cannotList = cannotGuarantee[lang] ?? cannotGuarantee.en;
+---
+
+<section class="methodology-block card content-section" id="methodology">
+  <h2 class="methodology-heading">
+    {isZh ? h.section : h.section}
+  </h2>
+  <div class="methodology-cols">
+    <div class="methodology-col methodology-col--can">
+      <h3 class="methodology-col-title">
+        {h.can}
+        {h.canSub && <span class="methodology-col-sub">{h.canSub}</span>}
+      </h3>
+      <ul class="methodology-list methodology-list--can">
+        {canList.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+    <div class="methodology-col methodology-col--cannot">
+      <h3 class="methodology-col-title">
+        {h.cannot}
+        {h.cannotSub && <span class="methodology-col-sub">{h.cannotSub}</span>}
+      </h3>
+      <ul class="methodology-list methodology-list--cannot">
+        {cannotList.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </div>
+  <p class="methodology-slogan">{h.slogan}</p>
+  <a href="/methodology/" class="methodology-link">{h.link} →</a>
+</section>
