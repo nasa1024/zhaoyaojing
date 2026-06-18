@@ -3,12 +3,19 @@ export const EVIDENCE_STATE = { A: 'A', B: 'B', C: 'C', D: 'D' };
 const AI_SOURCE_HINTS = ['trainedalgorithmicmedia','compositewithtrainedalgorithmicmedia',
   'compositesynthetic','algorithmicmedia','datadrivenmedia','trainedalgorithmicdata'];
 const CAMERA_HINTS = ['make','model','相机','camera','lens','镜头'];
+const AI_TOOL_HINTS = ['openai','dall-e','dall·e','dalle','gpt image','imagen','gemini','google ai',
+  'midjourney','stable diffusion','stability','firefly','flux','ideogram','leonardo','novelai',
+  'sora','kling','runway','pika','veo','comfyui','grok','seedream','recraft','qwen','jimeng'];
 
 function manifestPointsToAi(m) {
   if (!m) return false;
   const dst = (m.digital_source_type || '').toLowerCase();
   if (AI_SOURCE_HINTS.some((h) => dst.includes(h))) return true;
-  return Boolean(m.claim_generator); // 有签名 + 有生成器，结合 AI 信号视为来源声明
+  if (m.claim_generator && typeof m.claim_generator === 'string') {
+    const cg = m.claim_generator.toLowerCase();
+    if (AI_TOOL_HINTS.some((h) => cg.includes(h))) return true;
+  }
+  return false;
 }
 
 function aiSignals(report) {
@@ -16,7 +23,6 @@ function aiSignals(report) {
 }
 
 export function hasFieldConflict(report) {
-  if (report.provenance && report.provenance.state === 'invalid') return true;
   const signals = report.signals || [];
   const cameraLike = signals.some((s) =>
     CAMERA_HINTS.some((h) => (s.description || '').toLowerCase().includes(h)) && !s.tool);

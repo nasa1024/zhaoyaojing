@@ -54,4 +54,25 @@ test.describe('deriveEvidenceState', () => {
     });
     expect(r.state).toBe('D');
   });
+
+  test('A: valid (not trusted) signature + AI digital_source_type', async ({ page }) => {
+    await page.goto('/');
+    const r = await derive(page, {
+      signals: [{ source:'C2PA', confidence:'high', tool:'imagen', description:'x' }],
+      provenance: { state:'valid', manifest:{ digital_source_type:'trainedAlgorithmicMedia', claim_generator:'SomeUnknownTool' } },
+      limitations: [],
+    });
+    expect(r.state).toBe('A');
+    expect(r.signature).toBe('valid');
+  });
+
+  test('C: trusted signature + Adobe Photoshop claim_generator is NOT state A', async ({ page }) => {
+    await page.goto('/');
+    const r = await derive(page, {
+      signals: [],
+      provenance: { state:'trusted', manifest:{ claim_generator:'Adobe Photoshop 2024' } },
+      limitations: [],
+    });
+    expect(r.state).toBe('C');
+  });
 });
