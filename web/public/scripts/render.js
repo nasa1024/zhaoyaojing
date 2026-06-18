@@ -147,7 +147,7 @@ export function renderResult(container, report, { expert = false } = {}) {
 
   ga('result_status_viewed', { state: d.state });
   container.innerHTML = sections.join('\n');
-  import('./receipt.js').then(m => m.mountReceipt(container.querySelector('#receipt-mount'), report)).catch(() => {});
+  import('./receipt.js').then(m => m.mountReceipt(container.querySelector('#receipt-mount'), report, tt)).catch(() => {});
 }
 
 // Confidence-level → CSS class. Never maps to sig-verified (green is reserved for signature).

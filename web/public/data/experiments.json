@@ -1,0 +1,57 @@
+[
+  {
+    "id": "firefly-jpeg-2026-06",
+    "platform": "Adobe Firefly",
+    "testDate": "2026-06-19",
+    "fileFormat": "JPEG",
+    "sampleCount": 1,
+    "mainFindings": "Valid C2PA Content Credentials with digitalSourceType=trainedAlgorithmicMedia; the signature is cryptographically valid while the signing certificate is untrusted in the browser trust list.",
+    "resultChanged": false,
+    "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
+    "detailUrl": "https://github.com/contentauth/example-assets"
+  },
+  {
+    "id": "openai-png-2026-06",
+    "platform": "OpenAI (ChatGPT / DALL·E)",
+    "testDate": "2026-06-19",
+    "fileFormat": "PNG",
+    "sampleCount": 1,
+    "mainFindings": "A C2PA claim (trainedAlgorithmicMedia) is present, but the signing certificate is expired, so validation returns Invalid: the provenance claim cannot be verified.",
+    "resultChanged": false,
+    "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
+    "detailUrl": "https://github.com/contentauth/example-assets"
+  },
+  {
+    "id": "comfyui-sdxl-png-2026-06",
+    "platform": "ComfyUI / Stable Diffusion XL",
+    "testDate": "2026-06-19",
+    "fileFormat": "PNG",
+    "sampleCount": 1,
+    "mainFindings": "No C2PA signature. PNG tEXt 'prompt' and 'workflow' chunks carry the full generation graph; the detector flags AI-related metadata at low confidence (unsigned).",
+    "resultChanged": false,
+    "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
+    "detailUrl": "https://github.com/comfyanonymous/ComfyUI_examples"
+  },
+  {
+    "id": "c2pa-conformance-images-2026-06",
+    "platform": "C2PA conformance images",
+    "testDate": "2026-06-19",
+    "fileFormat": "JPEG",
+    "sampleCount": 2,
+    "mainFindings": "An image with no manifest reads as unsigned (no provenance); a deliberately tampered manifest fails with assertion.dataHash.mismatch and reads as invalid.",
+    "resultChanged": false,
+    "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
+    "detailUrl": "https://github.com/contentauth/c2pa-rs/tree/main/sdk/tests/fixtures"
+  },
+  {
+    "id": "c2pa-signed-mp4-2026-06",
+    "platform": "C2PA-signed MP4 (generic)",
+    "testDate": "2026-06-19",
+    "fileFormat": "MP4",
+    "sampleCount": 1,
+    "mainFindings": "A BMFF C2PA manifest validates (generic CreativeWork, not AI). The detector surfaces the C2PA signal; the AI-tool-name heuristic produced a spurious match against manifest bytes, which is a logged limitation.",
+    "resultChanged": false,
+    "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
+    "detailUrl": "https://github.com/contentauth/c2pa-rs/tree/main/sdk/tests/fixtures"
+  }
+]

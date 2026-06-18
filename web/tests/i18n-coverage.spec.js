@@ -59,6 +59,12 @@ const CRITICAL_KEYS = [
   'next.ab.2',
   'next.ab.3',
   'next.ab.4',
+  // Receipt export buttons (merged via RECEIPT_LABELS)
+  'receipt.btn.text',
+  'receipt.btn.cite',
+  'receipt.btn.json',
+  'receipt.btn.png',
+  'receipt.btn.print',
 ];
 
 test('all 9 language objects contain every critical Phase-1 i18n key with a non-empty value', async ({ page }) => {

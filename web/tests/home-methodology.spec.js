@@ -17,19 +17,27 @@ test('MethodologyBlock slogan renders', async ({ page }) => {
   expect(slogan).toMatch(/证据比感觉重要|Evidence beats/);
 });
 
-test('SampleExperience placeholder renders when data is empty', async ({ page }) => {
+test('SampleExperience renders real sample cards with source + known limits', async ({ page }) => {
   await page.goto('/');
-  // samples.json is empty array so placeholder should be visible
-  await expect(page.locator('.sample-placeholder')).toBeVisible();
-  const text = await page.locator('.sample-placeholder').textContent();
-  expect(text).toMatch(/即将上线|coming soon/i);
+  await expect(page.locator('.sample-placeholder')).toHaveCount(0);
+  const cards = page.locator('.sample-card');
+  expect(await cards.count()).toBeGreaterThan(0);
+  // A known real sample and the §7.3-required source line must be present.
+  await expect(page.locator('.sample-card', { hasText: 'Adobe Firefly' })).toBeVisible();
+  expect(await page.locator('.sample-source').count()).toBeGreaterThan(0);
+  expect(await page.locator('.sample-limits').count()).toBeGreaterThan(0);
+  // Cards must be keyboard-focusable (role=button, tabindex) for click-to-analyze.
+  await expect(cards.first()).toHaveAttribute('data-file-ref', /\/samples\//);
 });
 
-test('LatestExperiments placeholder renders when data is empty', async ({ page }) => {
+test('LatestExperiments renders real experiment cards', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.experiment-placeholder')).toBeVisible();
-  const text = await page.locator('.experiment-placeholder').textContent();
-  expect(text).toMatch(/即将发布|coming soon/i);
+  await expect(page.locator('.experiment-placeholder')).toHaveCount(0);
+  const cards = page.locator('.experiment-card');
+  expect(await cards.count()).toBeGreaterThan(0);
+  await expect(page.locator('.experiment-card', { hasText: 'ComfyUI' })).toBeVisible();
+  // parser version (spec §11) is surfaced
+  expect(await page.locator('.experiment-parser').count()).toBeGreaterThan(0);
 });
 
 test('no .ad-slot is above the Detector / first screen', async ({ page }) => {

@@ -1,41 +1,25 @@
 ---
-import samples from '../data/samples.json';
-
-const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
-const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
-const lang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
-const isZh = lang === 'zh-CN' || lang === 'zh-TW';
-
-const headings: Record<string, { title: string; subtitle: string; soon: string; processed: string; signals: string }> = {
-  'zh-CN': {
-    title: '真实样本体验',
-    subtitle: '以下样本来自真实测试，点击可在检测器中分析。',
-    soon: '真实样本即将上线',
-    processed: '经过处理',
-    signals: '信号',
-  },
-  en: {
-    title: 'Real Sample Experience',
-    subtitle: 'These samples come from real tests. Click to analyze in the detector.',
-    soon: 'Real samples coming soon',
-    processed: 'Processed',
-    signals: 'signals',
-  },
-};
-const h = headings[lang] ?? headings.en;
+import samples from '../../public/data/samples.json';
+import { homeStrings, resolveLang } from '../i18n/home.js';
+const h = homeStrings(resolveLang(Astro.url.pathname)).sample;
 ---
 
 <section class="sample-experience card content-section" id="sample-experience">
   <h2>{h.title}</h2>
-  {samples.length > 0 ? (
-    <p class="muted compact">{h.subtitle}</p>
-  ) : null}
+  {samples.length > 0 && <p class="muted compact">{h.subtitle}</p>}
   {samples.length === 0 ? (
     <p class="muted sample-placeholder">{h.soon}</p>
   ) : (
     <div class="sample-cards">
       {samples.map((s: any) => (
-        <article class="sample-card card" data-file-ref={s.fileRef} data-sample-id={s.id}>
+        <article
+          class="sample-card card"
+          data-file-ref={s.fileRef}
+          data-sample-id={s.id}
+          tabindex="0"
+          role="button"
+          aria-label={`${s.title} — ${h.title}`}
+        >
           <div class="sample-card-header">
             <strong class="sample-title">{s.title}</strong>
             <span class="tag-inline">{s.platform}</span>
@@ -43,10 +27,19 @@ const h = headings[lang] ?? headings.en;
           <div class="sample-meta">
             <span>{s.fileFormat}</span>
             {s.processed && <span class="badge low">{h.processed}</span>}
-            <span class="muted">{s.testDate}</span>
+            {s.testDate && <span class="muted">{s.testDate}</span>}
           </div>
+          {s.source && (
+            <p class="muted sample-source">{h.source}: {s.source}</p>
+          )}
           {s.signals?.length > 0 && (
             <p class="muted sample-signals">{s.signals.length} {h.signals}: {s.signals.join(', ')}</p>
+          )}
+          {s.knownLimits?.length > 0 && (
+            <ul class="sample-limits muted">
+              <li class="sample-limits-title">{h.limits}:</li>
+              {s.knownLimits.map((k: string) => <li>{k}</li>)}
+            </ul>
           )}
         </article>
       ))}

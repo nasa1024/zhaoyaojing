@@ -431,7 +431,7 @@ const translations = {
     'result.state.c.note':   'これはファイルが人間によって作成されたことを証明しません。出所情報が書き込まれていない場合や、スクリーンショット・圧縮・トランスコード・再エクスポート時に削除された可能性があります。',
     'result.state.d.note':   'ファイルには出所情報が含まれますが、署名が無効またはフィールド間に矛盾があり、確定的な出所結論を出すことができません。',
     'result.level':          '証拠レベル',
-    'result.level.a':        '検証済み出所（電子署名）',
+    'result.level.a':        '検証済み出所（デジタル署名）',
     'result.level.b':        '弱いシグナル（未署名メタデータ）',
     'result.level.c':        '識別可能なシグナルなし',
     'result.level.d':        '検証失敗 / フィールド競合',
@@ -674,7 +674,7 @@ const translations = {
     'result.limits':         'Einschränkungen',
     'result.next':           'Nächste Schritte',
     'result.clues':          'Verbreitungs- & Bearbeitungshinweise',
-    'result.clues.none':     'Keine offensichtlichen Bearbeitungs- oder Verbreitungshinweise gefunden (dies beweist noch widerlegt nicht, dass die Datei verarbeitet wurde).',
+    'result.clues.none':     'Keine offensichtlichen Bearbeitungs- oder Verbreitungshinweise gefunden (dies beweist weder noch widerlegt, dass die Datei verarbeitet wurde).',
     'result.expert':         'Expertenmodus',
     'layer.c2pa':            'C2PA digitale Signatur',
     'layer.png':             'PNG-Generierungsparameter',
@@ -936,10 +936,10 @@ const translations = {
     'nav.contact':      'Contato',
     'footer.note':      `© ${new Date().getFullYear()} AICheck365 · Imagens e vídeos são analisados localmente no seu navegador`,
     'page.title':       'AICheck365 · Detector de IA para imagens/vídeos | Identificar mídia gerada por IA de graça',
-    'page.description': 'Verifique indícios de origem por IA em imagens e vídeos diretamente no navegador. Lê EXIF, XMP, C2PA, texto PNG, metadados MP4/MOV e marcas dágua de quadros. Sem uploads.',
+    'page.description': 'Verifique indícios de origem por IA em imagens e vídeos diretamente no navegador. Lê EXIF, XMP, C2PA, texto PNG, metadados MP4/MOV e marcas d\'água de quadros. Sem uploads.',
     'eyebrow':               'Detecção de origem IA para imagens/vídeos',
     'hero.h1':               'Detector de origem de imagens/vídeos IA',
-    'hero.lead':             'Imagens e vídeos são analisados <strong>localmente no seu navegador — sem uploads para o servidor</strong>. Detecta metadados, rastros de plataformas, nomes de arquivo e marcas dágua de quadros.',
+    'hero.lead':             'Imagens e vídeos são analisados <strong>localmente no seu navegador — sem uploads para o servidor</strong>. Detecta metadados, rastros de plataformas, nomes de arquivo e marcas d\'água de quadros.',
     'metric.uploads.value':  '0',
     'metric.uploads.label':  'Uploads para servidor',
     'metric.local.value':    '100%',
@@ -1041,6 +1041,22 @@ const translations = {
     'next.ab.4':             'Exportar o relatório de detecção',
   },
 };
+
+// ─── Receipt export button labels (merged into the translations above) ──
+const RECEIPT_LABELS = {
+  'zh-CN': { 'receipt.btn.text': '复制文字摘要', 'receipt.btn.cite': '复制引用格式', 'receipt.btn.json': '下载 JSON', 'receipt.btn.png': '下载 PNG', 'receipt.btn.print': '打印 / PDF' },
+  'zh-TW': { 'receipt.btn.text': '複製文字摘要', 'receipt.btn.cite': '複製引用格式', 'receipt.btn.json': '下載 JSON', 'receipt.btn.png': '下載 PNG', 'receipt.btn.print': '列印 / PDF' },
+  'en': { 'receipt.btn.text': 'Copy text summary', 'receipt.btn.cite': 'Copy citation', 'receipt.btn.json': 'Download JSON', 'receipt.btn.png': 'Download PNG', 'receipt.btn.print': 'Print / PDF' },
+  'ja': { 'receipt.btn.text': 'テキスト要約をコピー', 'receipt.btn.cite': '引用形式をコピー', 'receipt.btn.json': 'JSON をダウンロード', 'receipt.btn.png': 'PNG をダウンロード', 'receipt.btn.print': '印刷 / PDF' },
+  'ko': { 'receipt.btn.text': '텍스트 요약 복사', 'receipt.btn.cite': '인용 형식 복사', 'receipt.btn.json': 'JSON 다운로드', 'receipt.btn.png': 'PNG 다운로드', 'receipt.btn.print': '인쇄 / PDF' },
+  'de': { 'receipt.btn.text': 'Textzusammenfassung kopieren', 'receipt.btn.cite': 'Zitation kopieren', 'receipt.btn.json': 'JSON herunterladen', 'receipt.btn.png': 'PNG herunterladen', 'receipt.btn.print': 'Drucken / PDF' },
+  'fr': { 'receipt.btn.text': 'Copier le résumé texte', 'receipt.btn.cite': 'Copier la citation', 'receipt.btn.json': 'Télécharger le JSON', 'receipt.btn.png': 'Télécharger le PNG', 'receipt.btn.print': 'Imprimer / PDF' },
+  'es': { 'receipt.btn.text': 'Copiar resumen de texto', 'receipt.btn.cite': 'Copiar cita', 'receipt.btn.json': 'Descargar JSON', 'receipt.btn.png': 'Descargar PNG', 'receipt.btn.print': 'Imprimir / PDF' },
+  'pt-BR': { 'receipt.btn.text': 'Copiar resumo em texto', 'receipt.btn.cite': 'Copiar citação', 'receipt.btn.json': 'Baixar JSON', 'receipt.btn.png': 'Baixar PNG', 'receipt.btn.print': 'Imprimir / PDF' },
+};
+for (const [lang, labels] of Object.entries(RECEIPT_LABELS)) {
+  if (translations[lang]) Object.assign(translations[lang], labels);
+}
 
 // ─── OG locale map ───────────────────────────────────────────────
 const OG_LOCALE = {

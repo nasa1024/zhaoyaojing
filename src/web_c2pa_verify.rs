@@ -54,6 +54,22 @@ impl Default for Provenance {
     }
 }
 
+/// Classify a `Reader::from_stream` error into a provenance state.
+///
+/// `JumbfNotFound` / `UnsupportedType` mean there simply is no readable C2PA data
+/// in the asset — that is "unsigned" (evidence state C), not a failure. Any other
+/// error means C2PA data *was* present but could not be parsed/decoded (corrupt,
+/// truncated, or malformed manifest) — we surface that as an invalid provenance
+/// claim (evidence state D) rather than silently downgrading it to "unsigned".
+#[cfg(target_arch = "wasm32")]
+fn state_for_reader_error(err: &c2pa::Error) -> ProvenanceState {
+    use c2pa::Error;
+    match err {
+        Error::JumbfNotFound | Error::UnsupportedType => ProvenanceState::Unsigned,
+        _ => ProvenanceState::Invalid,
+    }
+}
+
 #[cfg(target_arch = "wasm32")]
 pub(crate) fn verify_provenance(bytes: &[u8], mime: &str) -> Provenance {
     use c2pa::{Reader, ValidationState};
@@ -62,7 +78,25 @@ pub(crate) fn verify_provenance(bytes: &[u8], mime: &str) -> Provenance {
     #[allow(deprecated)]
     let reader = match Reader::from_stream(mime, Cursor::new(bytes)) {
         Ok(reader) => reader,
-        Err(_) => return Provenance::default(), // no manifest / unsupported => unsigned
+        Err(e) => match state_for_reader_error(&e) {
+            // No C2PA data present / unsupported for C2PA reading => unsigned.
+            ProvenanceState::Unsigned => return Provenance::default(),
+            // C2PA data present but unparseable => invalid provenance claim (state D).
+            _ => {
+                return Provenance {
+                    state: provenance_state_str(ProvenanceState::Invalid).to_string(),
+                    manifest: None,
+                    validation_status: vec![ValidationIssue {
+                        code: "manifest.parseError".to_string(),
+                        url: None,
+                        explanation: Some(format!(
+                            "C2PA data present but could not be parsed: {e}"
+                        )),
+                    }],
+                    raw_json: None,
+                };
+            }
+        },
     };
 
     // c2pa 0.82 ValidationState: Trusted, Valid, Invalid only (no Unsigned variant)
@@ -178,5 +212,33 @@ mod tests {
     fn extract_digital_source_type_returns_none_when_absent() {
         let json = r#"{"assertions":[{"label":"c2pa.actions","data":{"actions":[{"action":"c2pa.created"}]}}]}"#;
         assert_eq!(extract_digital_source_type(json), None);
+    }
+
+    // The error-classification helper only exists on the wasm target (it depends on
+    // c2pa::Error from the wasm-target c2pa dependency).
+    #[cfg(target_arch = "wasm32")]
+    #[wasm_bindgen_test]
+    fn read_error_absent_manifest_is_unsigned() {
+        use c2pa::Error;
+        assert_eq!(
+            state_for_reader_error(&Error::JumbfNotFound),
+            ProvenanceState::Unsigned
+        );
+        assert_eq!(
+            state_for_reader_error(&Error::UnsupportedType),
+            ProvenanceState::Unsigned
+        );
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    #[wasm_bindgen_test]
+    fn read_error_corrupt_manifest_is_invalid() {
+        use c2pa::Error;
+        // C2PA data present but a JUMBF box is missing/broken => invalid (state D),
+        // distinct from "no manifest at all".
+        assert_eq!(
+            state_for_reader_error(&Error::JumbfBoxNotFound),
+            ProvenanceState::Invalid
+        );
     }
 }

@@ -1,36 +1,12 @@
 ---
-import experiments from '../data/experiments.json';
-
-const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
-const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
-const lang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
-
-const headings: Record<string, { title: string; subtitle: string; soon: string; samples: string; changed: string; detail: string }> = {
-  'zh-CN': {
-    title: '最新实验记录',
-    subtitle: '以下为真实批量测试结果。',
-    soon: '最新实验记录即将发布',
-    samples: '个样本',
-    changed: '结果有变化',
-    detail: '查看详情',
-  },
-  en: {
-    title: 'Latest Experiments',
-    subtitle: 'Real batch test results.',
-    soon: 'Latest experiment records coming soon',
-    samples: 'samples',
-    changed: 'Result changed',
-    detail: 'View details',
-  },
-};
-const h = headings[lang] ?? headings.en;
+import experiments from '../../public/data/experiments.json';
+import { homeStrings, resolveLang } from '../i18n/home.js';
+const h = homeStrings(resolveLang(Astro.url.pathname)).experiments;
 ---
 
 <section class="latest-experiments card content-section" id="latest-experiments">
   <h2>{h.title}</h2>
-  {experiments.length > 0 ? (
-    <p class="muted compact">{h.subtitle}</p>
-  ) : null}
+  {experiments.length > 0 && <p class="muted compact">{h.subtitle}</p>}
   {experiments.length === 0 ? (
     <p class="muted experiment-placeholder">{h.soon}</p>
   ) : (
@@ -39,7 +15,7 @@ const h = headings[lang] ?? headings.en;
         <article class="experiment-card card">
           <div class="experiment-card-header">
             <strong>{e.platform}</strong>
-            <span class="muted">{e.testDate}</span>
+            {e.testDate && <span class="muted">{e.testDate}</span>}
           </div>
           <div class="experiment-meta">
             <span>{e.fileFormat}</span>
@@ -47,8 +23,11 @@ const h = headings[lang] ?? headings.en;
             {e.resultChanged && <span class="badge medium">{h.changed}</span>}
           </div>
           <p class="experiment-findings">{e.mainFindings}</p>
+          {e.parserVersion && (
+            <p class="muted experiment-parser">{h.parser}: {e.parserVersion}</p>
+          )}
           {e.detailUrl && (
-            <a href={e.detailUrl} class="experiment-link">{h.detail} →</a>
+            <a href={e.detailUrl} class="experiment-link" rel="noopener" target="_blank">{h.detail} →</a>
           )}
         </article>
       ))}

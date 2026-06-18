@@ -1,35 +1,5 @@
 // ─── History module ───────────────────────────────────────────────
-// Shared helpers needed by history (duplicated here to avoid a
-// separate util file; detect.js keeps its own copies for the render
-// functions that also need them).
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
-
-function labelForConfidence(confidence) {
-  switch ((confidence || '').toLowerCase()) {
-    case 'high':   return 'HIGH';
-    case 'medium': return 'MEDIUM';
-    case 'low':    return 'LOW';
-    default:       return 'NONE';
-  }
-}
-
-function timeAgo(ts) {
-  const diff = Date.now() - ts;
-  const m = Math.floor(diff / 60000);
-  if (m < 1) return 'Just now';
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
+import { escapeHtml, labelForConfidence, timeAgo } from './format.js';
 
 // ─── History storage ──────────────────────────────────────────────
 const HISTORY_KEY = 'aicheck_history';

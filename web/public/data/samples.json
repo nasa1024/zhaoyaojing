@@ -1,0 +1,92 @@
+[
+  {
+    "id": "firefly-valid-c2pa",
+    "title": "Adobe Firefly image with valid Content Credentials",
+    "platform": "Adobe Firefly",
+    "fileFormat": "JPEG",
+    "processed": false,
+    "source": "Content Authenticity Initiative example assets (contentauth/example-assets, MIT)",
+    "testDate": "2026-06-19",
+    "signals": ["C2PA"],
+    "knownLimits": [
+      "digitalSourceType = trainedAlgorithmicMedia and the signature is cryptographically valid.",
+      "The signing certificate is not in this engine's trust list (untrusted), so the result is reported as 'valid' rather than 'trusted'."
+    ],
+    "fileRef": "/samples/verified-ai-credentials.jpg"
+  },
+  {
+    "id": "openai-expired-c2pa",
+    "title": "OpenAI image whose C2PA certificate has expired",
+    "platform": "OpenAI (ChatGPT / DALL·E)",
+    "fileFormat": "PNG",
+    "processed": false,
+    "source": "Content Authenticity Initiative example assets (contentauth/example-assets, MIT)",
+    "testDate": "2026-06-19",
+    "signals": ["C2PA"],
+    "knownLimits": [
+      "A C2PA claim marked trainedAlgorithmicMedia is present, but the signing certificate is expired and untrusted.",
+      "Validation therefore fails: the provenance claim exists but cannot be verified (evidence state D)."
+    ],
+    "fileRef": "/samples/expired-credentials.png"
+  },
+  {
+    "id": "comfyui-sdxl-params",
+    "title": "Stable Diffusion XL output with embedded generation parameters",
+    "platform": "ComfyUI / Stable Diffusion XL",
+    "fileFormat": "PNG",
+    "processed": false,
+    "source": "ComfyUI official examples (comfyanonymous/ComfyUI_examples)",
+    "testDate": "2026-06-19",
+    "signals": ["PNG text chunks (prompt / workflow)"],
+    "knownLimits": [
+      "No cryptographic signature: only unsigned generation parameters embedded in PNG tEXt chunks.",
+      "Such chunks are routinely stripped by chat apps, social platforms, and screenshots."
+    ],
+    "fileRef": "/samples/generation-parameters.png"
+  },
+  {
+    "id": "screenshot-no-metadata",
+    "title": "Image with no provenance metadata",
+    "platform": "—",
+    "fileFormat": "JPEG",
+    "processed": false,
+    "source": "C2PA Rust SDK conformance fixtures (contentauth/c2pa-rs, Apache-2.0 / MIT)",
+    "testDate": "2026-06-19",
+    "signals": [],
+    "knownLimits": [
+      "No origin signals were found. This is not proof of human creation.",
+      "Evidence may have been removed earlier in the file's distribution chain."
+    ],
+    "fileRef": "/samples/screenshot-no-metadata.jpg"
+  },
+  {
+    "id": "plain-photograph",
+    "title": "Plain photograph, no embedded provenance",
+    "platform": "—",
+    "fileFormat": "JPEG",
+    "processed": false,
+    "source": "NASA (public domain), via contentauth/c2pa-rs fixtures",
+    "testDate": "2026-06-19",
+    "signals": [],
+    "knownLimits": [
+      "No AI or provenance signals detected.",
+      "Absence of signals cannot distinguish a real photo from an AI image whose evidence was stripped."
+    ],
+    "fileRef": "/samples/plain-photo.jpg"
+  },
+  {
+    "id": "tampered-c2pa",
+    "title": "Tampered C2PA signature (content hash mismatch)",
+    "platform": "C2PA test sample (tampered)",
+    "fileFormat": "JPEG",
+    "processed": true,
+    "source": "C2PA Rust SDK conformance fixtures (contentauth/c2pa-rs, Apache-2.0 / MIT)",
+    "testDate": "2026-06-19",
+    "signals": [],
+    "knownLimits": [
+      "A C2PA manifest is present but the asset hash does not match (assertion.dataHash.mismatch) and the certificate is untrusted.",
+      "The provenance claim is therefore invalid (evidence state D)."
+    ],
+    "fileRef": "/samples/tampered-signature.jpg"
+  }
+]

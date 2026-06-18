@@ -1,5 +1,6 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { saveHistory, loadHistoryRaw, renderHistory } from './history.js';
+import { escapeHtml, labelForConfidence } from './format.js';
 
 const i18nModuleUrl = '/scripts/i18n.js';
 const { t, applyI18n, setLang } = await import(/* @vite-ignore */ i18nModuleUrl);
@@ -542,28 +543,10 @@ export function initDetector() {
     return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[i]}`;
   }
 
-  function labelForConfidence(confidence) {
-    switch ((confidence || '').toLowerCase()) {
-      case 'high':   return 'HIGH';
-      case 'medium': return 'MEDIUM';
-      case 'low':    return 'LOW';
-      default:       return 'NONE';
-    }
-  }
-
   function setStatus(message, isError = false) {
     statusEl.textContent = message;
     statusEl.classList.toggle('muted', !isError);
     statusEl.classList.toggle('error', isError);
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#39;');
   }
 
   // ─── Theme ───────────────────────────────────────────────────────
@@ -579,36 +562,16 @@ export function initDetector() {
 
   // ─── Open-sample button ──────────────────────────────────────────
   const openSampleBtn = document.querySelector('#open-sample');
-  openSampleBtn?.addEventListener('click', async () => {
-    ga('sample_opened', {});
-    let samplesData = [];
-    try {
-      // Fetch the samples data (built as static JSON by Astro)
-      const res = await fetch('/src/data/samples.json').catch(() => null)
-        ?? await fetch('/data/samples.json').catch(() => null);
-      if (res?.ok) samplesData = await res.json();
-    } catch {
-      samplesData = [];
-    }
-
-    if (!Array.isArray(samplesData) || samplesData.length === 0) {
-      setStatus(t('sample.soon') || '样本即将上线');
-      return;
-    }
-
-    // Non-empty branch: load first sample's fileRef and run analysis
-    const sample = samplesData[0];
-    if (!sample?.fileRef) {
-      setStatus(t('sample.soon') || '样本即将上线');
-      return;
-    }
+  // Load a specific sample file (by its public fileRef) into the detector and analyze it.
+  async function loadSampleIntoDetector(fileRef, id) {
+    if (!fileRef) { setStatus(t('sample.soon') || '样本即将上线'); return; }
     try {
       setStatus(t('status.loading_engine') || '正在加载样本…');
-      const res = await fetch(sample.fileRef);
+      const res = await fetch(fileRef);
       if (!res.ok) throw new Error(`Failed to fetch sample: ${res.status}`);
       const blob = await res.blob();
-      const ext = sample.fileRef.split('.').pop() || 'bin';
-      const file = new File([blob], `${sample.id}.${ext}`, { type: blob.type });
+      const ext = (fileRef.split('.').pop() || 'bin').split(/[?#]/)[0];
+      const file = new File([blob], `${id || 'sample'}.${ext}`, { type: blob.type });
       selectedFiles = [file];
       renderSelectedFiles(selectedFiles);
       syncAnalyzeButton();
@@ -616,6 +579,41 @@ export function initDetector() {
     } catch (err) {
       setStatus((t('status.error') || 'Error: ') + (err?.message || String(err)), true);
     }
+  }
+
+  openSampleBtn?.addEventListener('click', async () => {
+    ga('sample_opened', { source: 'cta' });
+    let samplesData = [];
+    try {
+      // Fetch the samples data (served from web/public/data, available in dev + prod)
+      const res = await fetch('/data/samples.json').catch(() => null);
+      if (res?.ok) samplesData = await res.json();
+    } catch {
+      samplesData = [];
+    }
+    if (!Array.isArray(samplesData) || samplesData.length === 0) {
+      setStatus(t('sample.soon') || '样本即将上线');
+      return;
+    }
+    await loadSampleIntoDetector(samplesData[0]?.fileRef, samplesData[0]?.id);
+  });
+
+  // Click (or keyboard-activate) any sample card to analyze that specific sample.
+  function handleSampleCard(card) {
+    const fileRef = card?.dataset?.fileRef;
+    if (!fileRef) return;
+    ga('sample_opened', { source: 'card', sample: card.dataset.sampleId || '' });
+    document.querySelector('#upload-zone')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    loadSampleIntoDetector(fileRef, card.dataset.sampleId);
+  }
+  document.addEventListener('click', (e) => {
+    const card = e.target?.closest?.('.sample-card[data-file-ref]');
+    if (card) handleSampleCard(card);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target?.closest?.('.sample-card[data-file-ref]');
+    if (card) { e.preventDefault(); handleSampleCard(card); }
   });
 
   // ─── Hamburger ───────────────────────────────────────────────────

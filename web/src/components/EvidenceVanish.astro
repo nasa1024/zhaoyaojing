@@ -1,82 +1,27 @@
 ---
-const steps = [
-  {
-    label: '1',
-    zh: '原始平台文件',
-    en: 'Original platform file',
-    lostZh: '保留全部元数据：C2PA、XMP、EXIF、PNG 文本块、生成参数',
-    lostEn: 'All metadata intact: C2PA, XMP, EXIF, PNG text chunks, generation params',
-    intact: true,
-  },
-  {
-    label: '2',
-    zh: '聊天 App 转发（微信 / Telegram）',
-    en: 'Chat app transfer (WeChat / Telegram)',
-    lostZh: '丢失：PNG 文本块、XMP 大部分字段、EXIF GPS 信息',
-    lostEn: 'Lost: PNG text chunks, most XMP fields, EXIF GPS data',
-    intact: false,
-  },
-  {
-    label: '3',
-    zh: '社交平台转码（微博 / Twitter / Instagram）',
-    en: 'Social platform transcode (Weibo / Twitter / Instagram)',
-    lostZh: '丢失：EXIF 全部字段、C2PA Manifest、XMP CreatorTool、所有生成参数',
-    lostEn: 'Lost: All EXIF fields, C2PA Manifest, XMP CreatorTool, all generation params',
-    intact: false,
-  },
-  {
-    label: '4',
-    zh: '截图或录屏',
-    en: 'Screenshot or screen recording',
-    lostZh: '丢失：所有原始元数据，仅保留截图软件写入的新 EXIF',
-    lostEn: 'Lost: All original metadata; only screenshot tool EXIF remains',
-    intact: false,
-  },
-  {
-    label: '5',
-    zh: '重新导出 / 另存为',
-    en: 'Re-export / save-as',
-    lostZh: '丢失：所有溯源字段，可能被新软件写入无关 EXIF',
-    lostEn: 'Lost: All provenance fields; new software may write unrelated EXIF',
-    intact: false,
-  },
-];
+import { homeStrings, resolveLang } from '../i18n/home.js';
+const h = homeStrings(resolveLang(Astro.url.pathname));
+const v = h.vanish;
 ---
 
 <section class="card content-section evidence-vanish-section" aria-labelledby="evidence-vanish-heading">
-  <h2 id="evidence-vanish-heading">
-    <span lang="zh-CN">证据为什么会消失？</span>
-    <span class="muted" lang="en" aria-hidden="true"> · Why evidence disappears</span>
-  </h2>
-  <p class="muted" lang="zh-CN">每次转发、压缩、截图，都可能抹去 AI 来源线索。</p>
-  <p class="muted" lang="en">Each share, compression, or screenshot may erase AI-origin signals.</p>
+  <h2 id="evidence-vanish-heading">{v.title}</h2>
+  <p class="muted">{v.subtitle}</p>
 
-  <ol class="vanish-steps" aria-label="传播过程中证据消失的步骤">
-    {steps.map((step) => (
-      <li class={`vanish-step${step.intact ? ' vanish-step--intact' : ' vanish-step--lost'}`} data-step>
+  <ol class="vanish-steps">
+    {v.steps.map((step, i) => (
+      <li class={`vanish-step${i === 0 ? ' vanish-step--intact' : ' vanish-step--lost'}`} data-step>
         <div class="vanish-step-header">
-          <span class="vanish-step-num" aria-hidden="true">{step.label}</span>
-          <span class="vanish-step-title">
-            <span lang="zh-CN">{step.zh}</span>
-            <span class="vanish-step-en muted" lang="en">{step.en}</span>
-          </span>
-          <span class={`vanish-badge ${step.intact ? 'vanish-badge--intact' : 'vanish-badge--lost'}`} aria-label={step.intact ? '元数据完整' : '元数据丢失'}>
-            {step.intact ? '完整' : '已丢失'}
-          </span>
+          <span class="vanish-step-num" aria-hidden="true">{i + 1}</span>
+          <span class="vanish-step-title">{step.title}</span>
+          <span
+            class={`vanish-badge ${i === 0 ? 'vanish-badge--intact' : 'vanish-badge--lost'}`}
+          >{i === 0 ? v.badgeIntact : v.badgeLost}</span>
         </div>
-        <p class="vanish-step-detail muted">
-          <span lang="zh-CN">{step.lostZh}</span>
-          <span class="vanish-sep" aria-hidden="true"> · </span>
-          <span lang="en">{step.lostEn}</span>
-        </p>
+        <p class="vanish-step-detail muted">{step.detail}</p>
       </li>
     ))}
   </ol>
 
-  <p class="vanish-emphasis" lang="zh-CN">
-    <strong>没有找到证据，不代表它不是 AI。证据可能已经在传播过程中消失。</strong>
-  </p>
-  <p class="muted vanish-emphasis-en" lang="en">
-    No signals found does not mean it is not AI-generated. Evidence may have been erased during sharing.
-  </p>
+  <p class="vanish-emphasis"><strong>{v.emphasis}</strong></p>
 </section>

@@ -1,7 +1,20 @@
 import { deriveEvidenceState } from './state.js';
 
+// Revoke object URLs a while after the download click so slow disks/browsers
+// have time to start the download before the blob is freed.
+const OBJECT_URL_TTL_MS = 30_000;
+
 function ga(name, params) {
   if (typeof window.gtag === 'function') window.gtag('event', name, params);
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const CONCLUSION = {
@@ -79,28 +92,35 @@ function download(filename, blob) {
   a.href = url;
   a.download = filename;
   a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setTimeout(() => URL.revokeObjectURL(url), OBJECT_URL_TTL_MS);
 }
 
-export function mountReceipt(container, report) {
+export function mountReceipt(container, report, translate) {
   if (!container) return;
+  // translate(key, fallback) is injected by render.js (the client i18n translator).
+  // Falls back to the Chinese default copy when not provided.
+  const tr = typeof translate === 'function' ? translate : (_k, fb) => fb;
   const model = buildReceiptModel(report);
   const wrap = document.createElement('div');
   wrap.className = 'receipt-actions';
-  wrap.innerHTML = `
-    <button data-act="text">复制文字摘要</button>
-    <button data-act="cite">复制引用格式</button>
-    <button data-act="json">下载 JSON</button>
-    <button data-act="png">下载 PNG</button>
-    <button data-act="print">打印 / PDF</button>`;
+  const buttons = [
+    ['text', 'receipt.btn.text', '复制文字摘要'],
+    ['cite', 'receipt.btn.cite', '复制引用格式'],
+    ['json', 'receipt.btn.json', '下载 JSON'],
+    ['png', 'receipt.btn.png', '下载 PNG'],
+    ['print', 'receipt.btn.print', '打印 / PDF'],
+  ];
+  wrap.innerHTML = buttons
+    .map(([act, key, fb]) => `<button data-act="${act}">${tr(key, fb)}</button>`)
+    .join('');
   wrap.addEventListener('click', async (e) => {
     const act = e.target?.dataset?.act;
     if (!act) return;
     if (act === 'text') {
-      navigator.clipboard.writeText(receiptToText(model));
+      copyToClipboard(receiptToText(model)); // fire-and-forget; errors handled internally
       ga('report_exported', { format: 'text' });
     } else if (act === 'cite') {
-      navigator.clipboard.writeText(receiptToCitation(model));
+      copyToClipboard(receiptToCitation(model));
       ga('report_exported', { format: 'citation' });
     } else if (act === 'json') {
       download('aicheck365-receipt.json', new Blob([receiptToJSON(model)], { type: 'application/json' }));
