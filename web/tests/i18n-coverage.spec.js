@@ -65,6 +65,15 @@ const CRITICAL_KEYS = [
   'receipt.btn.json',
   'receipt.btn.png',
   'receipt.btn.print',
+  // Result related-reading + state-D conflict labels (merged via RESULT_LABELS)
+  'result.related',
+  'result.related.platform',
+  'result.related.platforms',
+  'result.related.guide',
+  'result.related.methodology',
+  'result.conflict',
+  'result.conflict.signature',
+  'result.conflict.fields',
 ];
 
 test('all 9 language objects contain every critical Phase-1 i18n key with a non-empty value', async ({ page }) => {

@@ -15,6 +15,21 @@
     "fileRef": "/samples/verified-ai-credentials.jpg"
   },
   {
+    "id": "google-veo-c2pa-video",
+    "title": "AI-generated video with valid Google C2PA Content Credentials",
+    "platform": "Google Veo",
+    "fileFormat": "MP4",
+    "processed": false,
+    "source": "User-provided original video carrying intact C2PA (Google generative-AI provenance)",
+    "testDate": "2026-06-19",
+    "signals": ["C2PA (Google Generative AI)", "MP4 encoding tool: Google"],
+    "knownLimits": [
+      "digitalSourceType = trainedAlgorithmicMedia (fully AI-generated); the BMFF C2PA manifest records 'Created by Google Generative AI' plus an imperceptible SynthID watermark, and the signature is cryptographically valid.",
+      "The manifest identifies 'Google Generative AI' (Veo is Google's video model); the signing certificate (Google LLC) is not in this engine's trust list, so the result is reported as 'valid' rather than 'trusted'."
+    ],
+    "fileRef": "/samples/unboxing-video.mp4"
+  },
+  {
     "id": "openai-expired-c2pa",
     "title": "OpenAI image whose C2PA certificate has expired",
     "platform": "OpenAI (ChatGPT / DALL·E)",

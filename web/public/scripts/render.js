@@ -77,6 +77,16 @@ export function renderResult(container, report, { expert = false } = {}) {
     sections.push(`<p class="evidence-note">${esc(tt(STATE_DISCLAIMER[d.state].key, STATE_DISCLAIMER[d.state].fallback))}</p>`);
   }
 
+  // 2a. State D: surface the specific failure / conflict reasons (state.js fills d.conflicts)
+  if (d.state === 'D' && (d.conflicts || []).length) {
+    const CONFLICT_LABEL = {
+      'signature-invalid': tt('result.conflict.signature', '数字签名验证失败：来源声明存在，但无法被验证。'),
+      'field-conflict': tt('result.conflict.fields', '字段之间存在冲突：例如相机 EXIF 与 AI 工具标记同时出现。'),
+    };
+    const items = d.conflicts.map((c) => `<li>${esc(CONFLICT_LABEL[c] || c)}</li>`).join('');
+    sections.push(`<div class="conflict-block"><h4>${esc(tt('result.conflict', '失败 / 冲突详情'))}</h4><ul class="conflict-list">${items}</ul></div>`);
+  }
+
   // 2b. Standalone "证据等级" (Evidence Level) block — Fix 1
   const ll = LEVEL_LABEL[sc.level];
   const levelLabel = tt(ll.key, ll.fallback);
@@ -139,8 +149,8 @@ export function renderResult(container, report, { expert = false } = {}) {
   // 8. Next-steps decision tree
   sections.push(`<h3>${esc(tt('result.next', '下一步建议'))}</h3>${renderNextSteps(d.state)}`);
 
-  // 9/10. Related platforms / articles row
-  sections.push(`<div class="related-row" id="related-links"></div>`);
+  // 9/10. Related platform profiles + knowledge articles
+  sections.push(renderRelatedLinks(report));
 
   // 11. Receipt export mount point (Task E will wire this)
   sections.push(`<div id="receipt-mount"></div>`);
@@ -240,4 +250,63 @@ function renderExpert(report) {
     ${(prov.validation_status || []).map((v) => `<div class="kv mono">${esc(v.code || '')}</div>`).join('')}
     ${prov.raw_json ? `<pre class="mono raw-json">raw_json:\n${esc(prov.raw_json)}</pre>` : ''}
   </details>`;
+}
+
+// ── §9.2 (9/10): related platform profiles + knowledge articles ───────────────
+// Map a detected tool / claim-generator substring to an existing platform-guide slug.
+const PLATFORM_SLUGS = [
+  ['firefly', 'firefly'], ['photoshop', 'firefly'], ['adobe', 'firefly'],
+  ['dall', 'dall-e'], ['openai', 'dall-e'], ['gpt image', 'dall-e'], ['gpt-image', 'dall-e'],
+  ['gemini', 'gemini'], ['imagen', 'imagen'],
+  ['midjourney', 'midjourney'],
+  ['stable diffusion', 'stable-diffusion'], ['stability', 'stable-diffusion'], ['automatic1111', 'stable-diffusion'], ['a1111', 'stable-diffusion'],
+  ['comfyui', 'comfyui'],
+  ['flux', 'flux'],
+  ['ideogram', 'ideogram'],
+  ['leonardo', 'leonardo'],
+  ['sora', 'sora'],
+  ['kling', 'kling'],
+  ['runway', 'runway'],
+];
+
+function langPrefix() {
+  try {
+    const seg = (location.pathname || '').split('/').filter(Boolean)[0];
+    const PREFIXED = ['zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR']; // zh-CN is the un-prefixed default
+    return PREFIXED.includes(seg) ? `/${seg}` : '';
+  } catch {
+    return '';
+  }
+}
+
+function detectedPlatformSlug(report) {
+  const m = (report.provenance && report.provenance.manifest) || {};
+  const hay = [
+    ...(report.signals || []).map((s) => `${s.tool || ''} ${s.description || ''}`),
+    m.claim_generator || '',
+    m.digital_source_type || '',
+  ].join(' ').toLowerCase();
+  for (const [kw, slug] of PLATFORM_SLUGS) {
+    if (hay.includes(kw)) return slug;
+  }
+  return null;
+}
+
+function renderRelatedLinks(report) {
+  const p = langPrefix();
+  const isVideo = (report.media_type === 'video') || (report.mime_type || '').startsWith('video/');
+  const guide = isVideo ? 'how-to-detect-ai-videos' : 'how-to-detect-ai-images';
+  const links = [];
+  const slug = detectedPlatformSlug(report);
+  if (slug) {
+    links.push(`<a href="${p}/platforms/${slug}/">${esc(tt('result.related.platform', '查看该平台检测指南'))} →</a>`);
+  }
+  links.push(`<a href="${p}/platforms/">${esc(tt('result.related.platforms', '全部平台指南'))} →</a>`);
+  links.push(`<a href="${p}/blog/${guide}/">${esc(tt('result.related.guide', '相关检测指南'))} →</a>`);
+  // methodology is a root-only page (no per-language route) — always link unprefixed
+  links.push(`<a href="/methodology/">${esc(tt('result.related.methodology', '方法论与限制'))} →</a>`);
+  return `<div class="related-row" id="related-links">
+    <h3>${esc(tt('result.related', '相关阅读'))}</h3>
+    <nav class="related-links-inline" aria-label="${esc(tt('result.related', '相关阅读'))}">${links.join('')}</nav>
+  </div>`;
 }

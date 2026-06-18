@@ -41,7 +41,7 @@ const HOME_I18N = {
       "canList": ["File metadata (EXIF / XMP / IPTC)", "Provenance credentials (C2PA / Content Credentials)", "Digital signatures and hashes", "Platform marks and generation parameters", "Container structure and file headers", "Some edit and export clues", "PNG text chunks", "MP4/MOV container metadata and SEI markers"],
       "cannotList": ["All AI files retain provenance data", "Screenshots retain origin information", "All platforms use uniform marks", "No signal means human-made", "Results replace legal or expert appraisal"]
     },
-    "sample": { "title": "Real Sample Experience", "subtitle": "These samples come from real tests. Click to analyze in the detector.", "soon": "Real samples coming soon", "processed": "Processed", "signals": "signals", "source": "Source", "limits": "Known limits" },
+    "sample": { "title": "Real Sample Experience", "subtitle": "These samples come from real tests. Click to analyze in the detector.", "soon": "Real samples coming soon", "processed": "Processed", "signals": "signals", "source": "Source", "limits": "Known limits", "unprocessed": "Unprocessed" },
     "experiments": { "title": "Latest Experiments", "subtitle": "Real batch test results.", "soon": "Latest experiment records coming soon", "samples": "samples", "changed": "Result changed", "detail": "View details", "parser": "Parser" }
   },
   "zh-CN": {
@@ -69,7 +69,7 @@ const HOME_I18N = {
       "canList": ["文件元数据（EXIF / XMP / IPTC）", "来源凭证（C2PA / Content Credentials）", "数字签名与哈希", "平台标记与生成参数", "容器结构与文件头", "部分编辑/导出线索", "PNG 文本块", "MP4/MOV 容器元数据与 SEI 标记"],
       "cannotList": ["所有 AI 文件都保留了来源信息", "截图保留了原始出处", "所有平台使用统一的标记格式", "无信号 = 人工制作", "结果可替代法律鉴定或专家评估"]
     },
-    "sample": { "title": "真实样本体验", "subtitle": "以下样本来自真实测试，点击可在检测器中分析。", "soon": "真实样本即将上线", "processed": "经过处理", "signals": "信号", "source": "来源", "limits": "已知限制" },
+    "sample": { "title": "真实样本体验", "subtitle": "以下样本来自真实测试，点击可在检测器中分析。", "soon": "真实样本即将上线", "processed": "经过处理", "signals": "信号", "source": "来源", "limits": "已知限制", "unprocessed": "未处理" },
     "experiments": { "title": "最新实验记录", "subtitle": "以下为真实批量测试结果。", "soon": "最新实验记录即将发布", "samples": "个样本", "changed": "结果有变化", "detail": "查看详情", "parser": "解析器" }
   },
   "zh-TW": {
@@ -97,7 +97,7 @@ const HOME_I18N = {
       "canList": ["檔案元數據（EXIF / XMP / IPTC）", "來源憑證（C2PA / Content Credentials）", "數位簽名與雜湊值", "平台標記與生成參數", "容器結構與檔案標頭", "部分編輯與匯出線索", "PNG 文字區塊", "MP4/MOV 容器元數據與 SEI 標記"],
       "cannotList": ["所有 AI 檔案都保留了來源資料", "截圖保留了原始出處資訊", "所有平台使用統一的標記", "無訊號就代表是人類製作", "結果可取代法律鑑定或專家評估"]
     },
-    "sample": { "title": "真實樣本體驗", "subtitle": "以下樣本來自真實測試，點擊可在偵測器中分析。", "soon": "真實樣本即將上線", "processed": "已處理", "signals": "個訊號", "source": "來源", "limits": "已知限制" },
+    "sample": { "title": "真實樣本體驗", "subtitle": "以下樣本來自真實測試，點擊可在偵測器中分析。", "soon": "真實樣本即將上線", "processed": "已處理", "signals": "個訊號", "source": "來源", "limits": "已知限制", "unprocessed": "未處理" },
     "experiments": { "title": "最新實驗記錄", "subtitle": "以下為真實批次測試結果。", "soon": "最新實驗記錄即將發布", "samples": "個樣本", "changed": "結果有變化", "detail": "查看詳情", "parser": "解析器" }
   },
   "ja": {
@@ -125,7 +125,7 @@ const HOME_I18N = {
       "canList": ["ファイルメタデータ（EXIF / XMP / IPTC）", "出所資格情報（C2PA / Content Credentials）", "デジタル署名とハッシュ", "プラットフォームのマークと生成パラメータ", "コンテナ構造とファイルヘッダー", "一部の編集・エクスポートの手がかり", "PNGテキストチャンク", "MP4/MOV コンテナメタデータと SEI マーカー"],
       "cannotList": ["すべてのAIファイルが出所データを保持している", "スクリーンショットが出所情報を保持している", "すべてのプラットフォームが統一されたマークを使用している", "シグナルがない＝人間が作成した", "結果が法的鑑定や専門家の評価に代わる"]
     },
-    "sample": { "title": "実サンプル体験", "subtitle": "これらのサンプルは実際のテストから得られたものです。クリックすると検出ツールで分析できます。", "soon": "実サンプル近日公開", "processed": "処理済み", "signals": "シグナル", "source": "出所", "limits": "既知の制限" },
+    "sample": { "title": "実サンプル体験", "subtitle": "これらのサンプルは実際のテストから得られたものです。クリックすると検出ツールで分析できます。", "soon": "実サンプル近日公開", "processed": "処理済み", "signals": "シグナル", "source": "出所", "limits": "既知の制限", "unprocessed": "未処理" },
     "experiments": { "title": "最新の実験記録", "subtitle": "実際のバッチテスト結果です。", "soon": "最新の実験記録近日公開", "samples": "サンプル", "changed": "結果に変化あり", "detail": "詳細を見る", "parser": "パーサー" }
   },
   "ko": {
@@ -153,7 +153,7 @@ const HOME_I18N = {
       "canList": ["파일 메타데이터 (EXIF / XMP / IPTC)", "출처 자격증명 (C2PA / Content Credentials)", "디지털 서명과 해시", "플랫폼 마커와 생성 파라미터", "컨테이너 구조와 파일 헤더", "일부 편집 및 내보내기 단서", "PNG 텍스트 청크", "MP4/MOV 컨테이너 메타데이터와 SEI 마커"],
       "cannotList": ["모든 AI 파일이 출처 데이터를 보존한다", "스크린샷이 원본 출처 정보를 보존한다", "모든 플랫폼이 통일된 마커를 사용한다", "신호가 없으면 사람이 만든 것이다", "결과가 법적 감정이나 전문가 평가를 대체한다"]
     },
-    "sample": { "title": "실제 샘플 체험", "subtitle": "이 샘플들은 실제 테스트에서 가져온 것입니다. 클릭하면 감지기에서 분석할 수 있습니다.", "soon": "실제 샘플 곧 출시 예정", "processed": "처리됨", "signals": "신호", "source": "출처", "limits": "알려진 한계" },
+    "sample": { "title": "실제 샘플 체험", "subtitle": "이 샘플들은 실제 테스트에서 가져온 것입니다. 클릭하면 감지기에서 분석할 수 있습니다.", "soon": "실제 샘플 곧 출시 예정", "processed": "처리됨", "signals": "신호", "source": "출처", "limits": "알려진 한계", "unprocessed": "미처리" },
     "experiments": { "title": "최신 실험 기록", "subtitle": "실제 배치 테스트 결과입니다.", "soon": "최신 실험 기록 곧 공개 예정", "samples": "개 샘플", "changed": "결과 변경됨", "detail": "상세 보기", "parser": "파서" }
   },
   "de": {
@@ -181,7 +181,7 @@ const HOME_I18N = {
       "canList": ["Datei-Metadaten (EXIF / XMP / IPTC)", "Herkunftsnachweise (C2PA / Content Credentials)", "Digitale Signaturen und Hashes", "Plattform-Markierungen und Generierungsparameter", "Container-Struktur und Datei-Header", "Einige Bearbeitungs- und Export-Hinweise", "PNG-Text-Chunks", "MP4/MOV-Container-Metadaten und SEI-Markierungen"],
       "cannotList": ["Dass alle KI-Dateien Herkunftsdaten behalten", "Dass Screenshots Herkunftsinformationen behalten", "Dass alle Plattformen einheitliche Markierungen verwenden", "Dass fehlende Signale bedeuten, dass etwas von Menschenhand stammt", "Dass die Ergebnisse eine rechtliche oder fachliche Begutachtung ersetzen"]
     },
-    "sample": { "title": "Erfahrung mit echten Beispielen", "subtitle": "Diese Beispiele stammen aus echten Tests. Klicken Sie, um sie im Detektor zu analysieren.", "soon": "Echte Beispiele bald verfügbar", "processed": "Verarbeitet", "signals": "Signale", "source": "Quelle", "limits": "Bekannte Einschränkungen" },
+    "sample": { "title": "Erfahrung mit echten Beispielen", "subtitle": "Diese Beispiele stammen aus echten Tests. Klicken Sie, um sie im Detektor zu analysieren.", "soon": "Echte Beispiele bald verfügbar", "processed": "Verarbeitet", "signals": "Signale", "source": "Quelle", "limits": "Bekannte Einschränkungen", "unprocessed": "Unverarbeitet" },
     "experiments": { "title": "Neueste Experimente", "subtitle": "Echte Batch-Testergebnisse.", "soon": "Neueste Experiment-Aufzeichnungen bald verfügbar", "samples": "Beispiele", "changed": "Ergebnis geändert", "detail": "Details ansehen", "parser": "Parser" }
   },
   "fr": {
@@ -209,7 +209,7 @@ const HOME_I18N = {
       "canList": ["Métadonnées de fichier (EXIF / XMP / IPTC)", "Références de provenance (C2PA / Content Credentials)", "Signatures numériques et hachages", "Marques de plateforme et paramètres de génération", "Structure du conteneur et en-têtes de fichier", "Certains indices de modification et d'exportation", "Texte PNG", "Métadonnées de conteneur MP4/MOV et marqueurs SEI"],
       "cannotList": ["Tous les fichiers IA conservent des données de provenance", "Les captures d'écran conservent les informations d'origine", "Toutes les plateformes utilisent des marques uniformes", "L'absence de signal signifie une création humaine", "Les résultats remplacent une expertise juridique ou professionnelle"]
     },
-    "sample": { "title": "Expérience sur échantillons réels", "subtitle": "Ces échantillons proviennent de tests réels. Cliquez pour les analyser dans le détecteur.", "soon": "Échantillons réels bientôt disponibles", "processed": "Traité", "signals": "signaux", "source": "Source", "limits": "Limites connues" },
+    "sample": { "title": "Expérience sur échantillons réels", "subtitle": "Ces échantillons proviennent de tests réels. Cliquez pour les analyser dans le détecteur.", "soon": "Échantillons réels bientôt disponibles", "processed": "Traité", "signals": "signaux", "source": "Source", "limits": "Limites connues", "unprocessed": "Non traité" },
     "experiments": { "title": "Dernières expériences", "subtitle": "Résultats de tests par lots réels.", "soon": "Derniers comptes rendus d'expériences bientôt disponibles", "samples": "échantillons", "changed": "Résultat modifié", "detail": "Voir les détails", "parser": "Analyseur" }
   },
   "es": {
@@ -237,7 +237,7 @@ const HOME_I18N = {
       "canList": ["Metadatos del archivo (EXIF / XMP / IPTC)", "Credenciales de procedencia (C2PA / Content Credentials)", "Firmas digitales y hashes", "Marcas de plataforma y parámetros de generación", "Estructura del contenedor y encabezados de archivo", "Algunas pistas de edición y exportación", "Bloques de texto PNG", "Metadatos del contenedor MP4/MOV y marcadores SEI"],
       "cannotList": ["Que todos los archivos de IA conserven datos de procedencia", "Que las capturas de pantalla conserven información de origen", "Que todas las plataformas usen marcas uniformes", "Que la ausencia de señal signifique creación humana", "Que los resultados sustituyan un peritaje legal o experto"]
     },
-    "sample": { "title": "Experiencia con muestras reales", "subtitle": "Estas muestras provienen de pruebas reales. Haz clic para analizarlas en el detector.", "soon": "Muestras reales próximamente", "processed": "Procesado", "signals": "señales", "source": "Fuente", "limits": "Limitaciones conocidas" },
+    "sample": { "title": "Experiencia con muestras reales", "subtitle": "Estas muestras provienen de pruebas reales. Haz clic para analizarlas en el detector.", "soon": "Muestras reales próximamente", "processed": "Procesado", "signals": "señales", "source": "Fuente", "limits": "Limitaciones conocidas", "unprocessed": "Sin procesar" },
     "experiments": { "title": "Últimos experimentos", "subtitle": "Resultados reales de pruebas por lotes.", "soon": "Registros de los últimos experimentos próximamente", "samples": "muestras", "changed": "El resultado cambió", "detail": "Ver detalles", "parser": "Analizador" }
   },
   "pt-BR": {
@@ -265,7 +265,7 @@ const HOME_I18N = {
       "canList": ["Metadados de arquivo (EXIF / XMP / IPTC)", "Credenciais de proveniência (C2PA / Content Credentials)", "Assinaturas digitais e hashes", "Marcas de plataforma e parâmetros de geração", "Estrutura do contêiner e cabeçalhos de arquivo", "Algumas pistas de edição e exportação", "Blocos de texto PNG", "Metadados de contêiner MP4/MOV e marcadores SEI"],
       "cannotList": ["Que todos os arquivos de IA retenham dados de proveniência", "Que capturas de tela retenham informações de origem", "Que todas as plataformas usem marcas uniformes", "Que a ausência de sinal signifique feito por humano", "Que os resultados substituam perícia jurídica ou avaliação de especialista"]
     },
-    "sample": { "title": "Experiência com amostras reais", "subtitle": "Estas amostras vêm de testes reais. Clique para analisar no detector.", "soon": "Amostras reais em breve", "processed": "Processado", "signals": "sinais", "source": "Fonte", "limits": "Limitações conhecidas" },
+    "sample": { "title": "Experiência com amostras reais", "subtitle": "Estas amostras vêm de testes reais. Clique para analisar no detector.", "soon": "Amostras reais em breve", "processed": "Processado", "signals": "sinais", "source": "Fonte", "limits": "Limitações conhecidas", "unprocessed": "Não processado" },
     "experiments": { "title": "Experimentos mais recentes", "subtitle": "Resultados reais de testes em lote.", "soon": "Registros dos experimentos mais recentes em breve", "samples": "amostras", "changed": "Resultado alterado", "detail": "Ver detalhes", "parser": "Analisador" }
   }
 };

@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const faq = [
+  { q: "Runway 生成的视频可以直接检测吗？", a: "可以。AICheck365 浏览器版支持上传 MP4/MOV/M4V 等视频文件，会先检查 C2PA-lite 文本、MP4/MOV 容器元数据、文件名线索；没有命中时再在本地抽样视频帧做水印分析。" },
+  { q: "Runway Gen-2 / Gen-3 视频有什么来源线索？", a: "原始导出文件可能在 MP4/MOV 容器里保留编码器、创建工具或自定义字段；部分版本会写入工具名或 AIGC 相关文本。经过社交平台转码或剪辑后，这些线索通常会消失。" },
+  { q: "Runway 支持 C2PA 吗？", a: "Runway 并非以 C2PA 为主要来源标记的平台，检测更多依赖 MP4/MOV 容器元数据、文件名和抽样帧水印。命中 C2PA 文本时浏览器版会扫描相关字段，但不做完整签名链验证。" },
+  { q: "为什么 Runway 视频检测可能没有结果？", a: "录屏、截图、社交平台转码或视频编辑软件重新导出都会清除原始容器元数据。无信号不等于一定不是 AI 生成。" },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.aicheck365.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Platform Guides", "item": "https://www.aicheck365.com/platforms/" },
+      { "@type": "ListItem", "position": 3, "name": "Runway", "item": "https://www.aicheck365.com/platforms/runway/" },
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何检测 Runway AI 视频？MP4/MOV 元数据与视频帧水印指南",
+    "description": "了解 Runway Gen-2 / Gen-3 原始视频和导出帧可能保留的 MP4/MOV 容器元数据、文件名和视频帧水印线索。",
+    "url": "https://www.aicheck365.com/platforms/runway/",
+    "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": { "@type": "Answer", "text": item.a }
+    }))
+  }
+];
+---
+
+<Base
+  title="如何检测 Runway AI 视频？MP4/MOV 元数据与帧水印 | AICheck365"
+  description="上传 Runway 原始视频或帧图，在浏览器本地检查 MP4/MOV 容器元数据、文件名和视频帧水印线索，不上传文件。"
+  canonical="https://www.aicheck365.com/platforms/runway/"
+  jsonLd={jsonLd}
+>
+  <main class="page content-page">
+    <nav class="breadcrumb">
+      <a href="/">首页</a> › <a href="/platforms/">平台指南</a> › Runway
+    </nav>
+
+    <article class="card content-article">
+      <h1>Runway AI 视频检测：MP4/MOV 元数据与帧水印</h1>
+      <p class="article-meta">信号类型：MP4/MOV 元数据 · 文件名 · 视频帧水印 · C2PA-lite 文本</p>
+
+      <p class="lead-text">Runway 是较早商用的文生视频 / 视频编辑 AI 平台（Gen-2、Gen-3 等）。检测 Runway 内容时，从平台导出的原始视频文件比截图和转码版本更有价值，因为 MP4/MOV 容器元数据、文件名和视频帧水印线索更可能保留下来。</p>
+
+      <h2>Runway 视频的可检测信号</h2>
+      <div class="signal-detail-grid">
+        <div class="signal-detail-card">
+          <h3>MP4 / MOV 元数据</h3>
+          <p>浏览器版会检查视频容器里的编码器、创建工具、AIGC 标签、SEI marker 和其他可读来源字段。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>文件名线索</h3>
+          <p>平台默认导出的文件名有时带有工具或批次特征，可作为辅助线索，但很容易被重命名。</p>
+        </div>
+        <div class="signal-detail-card">
+          <h3>抽样视频帧水印</h3>
+          <p>如果元数据没有命中，会在本地抽取少量帧，检查隐形水印和角落可见标识。</p>
+        </div>
+      </div>
+
+      <h2>检测局限性</h2>
+      <p>检测 Runway 生成内容时需要注意以下限制：</p>
+      <ul class="content-list">
+        <li>视频帧分析只抽样少量帧，不代表逐帧完整法证检测</li>
+        <li>截图或屏幕录制会完全丢失原始容器元数据</li>
+        <li>经过视频编辑软件处理或社交平台转码的内容，元数据可能被覆盖</li>
+        <li>Runway 的来源标记策略可能随平台版本更新变化</li>
+      </ul>
+
+      <h2>和其他视频平台的关系</h2>
+      <p>Runway、Sora、Kling 都是视频生成平台，但它们写入来源信息的方式并不统一。如果你需要检测其他平台的视频内容，参考 <a href="/platforms/sora/">Sora 检测指南</a> 和 <a href="/platforms/kling/">可灵 Kling 检测指南</a> 也会有所帮助。</p>
+
+      <div class="cta-box">
+        <p>上传从 Runway 导出的原始视频或帧图进行检测</p>
+        <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
+      </div>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </article>
+
+    <div class="platform-disclaimer card" role="note">
+      <p><strong>重要：</strong>未发现该平台的来源信号，并不能排除文件由该平台生成。来源信息可能从未被写入，或已在导出、压缩、转码、截图等过程中被移除。</p>
+    </div>
+
+    <div class="related-platforms card">
+      <h2>其他平台检测指南</h2>
+      <div class="related-links">
+        <a href="/platforms/sora/">Sora →</a>
+        <a href="/platforms/kling/">可灵 Kling →</a>
+        <a href="/platforms/gemini/">Gemini →</a>
+        <a href="/platforms/dall-e/">DALL-E / GPT Image →</a>
+      </div>
+    </div>
+  </main>
+</Base>

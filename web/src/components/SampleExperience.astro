@@ -26,7 +26,7 @@ const h = homeStrings(resolveLang(Astro.url.pathname)).sample;
           </div>
           <div class="sample-meta">
             <span>{s.fileFormat}</span>
-            {s.processed && <span class="badge low">{h.processed}</span>}
+            <span class={`badge ${s.processed ? 'low' : 'none'}`}>{s.processed ? h.processed : h.unprocessed}</span>
             {s.testDate && <span class="muted">{s.testDate}</span>}
           </div>
           {s.source && (

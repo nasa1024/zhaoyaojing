@@ -173,6 +173,24 @@ detectorCopy['zh-TW'] = {
   history: '最近檢測',
 };
 const copy = detectorCopy[lang] ?? detectorCopy.en;
+
+// §19: no-JS fallback notice for the interactive detector
+const NOSCRIPT = {
+  'zh-CN': '检测器需要 JavaScript 才能在本地分析文件。即使未启用 JavaScript，下方的方法论、支持格式和平台指南依然可以阅读。',
+  'zh-TW': '偵測器需要 JavaScript 才能在本機分析檔案。即使未啟用 JavaScript，下方的方法論、支援格式和平台指南依然可以閱讀。',
+  en: 'The detector needs JavaScript to analyze files locally. Even without JavaScript, the methodology, supported formats, and platform guides below remain readable.',
+  ja: '検出器はファイルをローカルで分析するために JavaScript が必要です。JavaScript が無効でも、下記の方法論・対応フォーマット・プラットフォームガイドは読めます。',
+  ko: '검사기는 파일을 로컬에서 분석하려면 JavaScript가 필요합니다. JavaScript가 없어도 아래의 방법론, 지원 형식, 플랫폼 가이드는 읽을 수 있습니다.',
+  de: 'Der Detektor benötigt JavaScript, um Dateien lokal zu analysieren. Auch ohne JavaScript bleiben Methodik, unterstützte Formate und Plattform-Guides unten lesbar.',
+  fr: 'Le détecteur a besoin de JavaScript pour analyser les fichiers localement. Sans JavaScript, la méthodologie, les formats pris en charge et les guides de plateformes ci-dessous restent lisibles.',
+  es: 'El detector necesita JavaScript para analizar archivos localmente. Incluso sin JavaScript, la metodología, los formatos compatibles y las guías de plataformas siguen siendo legibles.',
+  'pt-BR': 'O detector precisa de JavaScript para analisar arquivos localmente. Mesmo sem JavaScript, a metodologia, os formatos suportados e os guias de plataformas continuam legíveis.',
+};
+const noscriptCopy = NOSCRIPT[lang] ?? NOSCRIPT.en;
+
+// §16: ad slots must be clearly labeled
+const AD_LABEL = { 'zh-CN': '广告', 'zh-TW': '廣告', en: 'Advertisement', ja: '広告', ko: '광고', de: 'Anzeige', fr: 'Publicité', es: 'Publicidad', 'pt-BR': 'Publicidade' };
+const adLabel = AD_LABEL[lang] ?? AD_LABEL.en;
 ---
 
 <section class="grid two-col primary-grid">
@@ -188,6 +206,9 @@ const copy = detectorCopy[lang] ?? detectorCopy.en;
     <div id="file-meta" class="file-meta hidden" aria-live="polite"></div>
     <button id="analyze-btn" class="primary" disabled data-i18n="upload.button">{copy.button}</button>
     <p id="status" class="status muted" role="status" aria-live="polite" data-i18n="upload.status.init">{copy.init}</p>
+    <noscript>
+      <p class="notice warning">{noscriptCopy}</p>
+    </noscript>
   </div>
 
   <div class="card">
@@ -282,6 +303,7 @@ const copy = detectorCopy[lang] ?? detectorCopy.en;
 </section>
 
 <div class="ad-slot ad-slot--horizontal">
+  <span class="ad-label" style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.55;margin-bottom:6px">{adLabel}</span>
   <!-- Replace after AdSense approval:
   <ins class="adsbygoogle"
        style="display:block"

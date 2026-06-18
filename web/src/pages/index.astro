@@ -13,6 +13,8 @@ const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', '
 const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
 const pageLang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
 const prefix = pageLang === 'zh-CN' ? '' : `/${pageLang}`;
+const AD_LABEL = { 'zh-CN': '广告', 'zh-TW': '廣告', en: 'Advertisement', ja: '広告', ko: '광고', de: 'Anzeige', fr: 'Publicité', es: 'Publicidad', 'pt-BR': 'Publicidade' };
+const adLabel = AD_LABEL[pageLang] ?? AD_LABEL.en;
 
 const homeCopy = {
   'zh-CN': {
@@ -331,6 +333,7 @@ const jsonLd = {
     <MethodologyBlock />
 
     <div class="ad-slot ad-slot--after-methodology">
+      <span class="ad-label" style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.55;margin-bottom:6px">{adLabel}</span>
       <!-- Replace after AdSense approval:
       <ins class="adsbygoogle"
            style="display:block"
