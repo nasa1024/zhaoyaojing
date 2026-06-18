@@ -12,12 +12,14 @@ const homeCopy = {
     title: 'AICheck365 · AI 图片/视频检测 | 免费识别 AI 生成内容',
     description: '在浏览器本地检测图片/视频里的 AI 来源线索。支持 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据和视频帧水印线索，不上传文件。',
     eyebrow: 'AI 图片/视频来源检测',
-    h1: 'AI 图片/视频来源信号检测',
-    lead: '图片和视频只在你的浏览器里<strong>本地分析，不上传服务器</strong>。重点读取元数据、平台痕迹、文件名线索和视频帧水印。',
+    h1: '别问它"像不像 AI"，看看它留下了什么',
+    lead: '拖入原始图片或视频。AICheck365 会检查 C2PA、EXIF、XMP、PNG 文本、生成参数和视频容器中的来源线索。',
     uploads: '服务器上传',
     local: '本地运行',
-    privacy: '隐私优先',
+    privacy: '文件在你的浏览器中处理，不会离开你的设备。',
     privacyDesc: '文件只在当前浏览器内读取',
+    ctaPrimary: '拖入原始文件',
+    ctaSecondary: '先拆一个真实样本',
     original: '适合原图检测',
     originalDesc: '保留元数据的原始文件命中率更高',
     explain: '结果可解释',
@@ -35,12 +37,14 @@ const homeCopy = {
     title: 'AICheck365 · AI Image/Video Detector | Free AI-Generated Media Detection',
     description: 'Check AI-origin clues in image and video files locally in your browser. Reads EXIF, XMP, C2PA, PNG text chunks, MP4/MOV metadata, and video-frame watermark clues. No uploads.',
     eyebrow: 'AI Image/Video Origin Detection',
-    h1: 'AI Image/Video Origin Detector',
-    lead: 'Images and videos are analyzed <strong>locally in your browser, with no server upload</strong>. The tool reads metadata, platform traces, file-name hints, and video-frame watermarks.',
+    h1: 'Don\'t ask if it looks like AI — see what it left behind',
+    lead: 'Drop in an original image or video. AICheck365 inspects the C2PA, EXIF, XMP, PNG text, generation parameters, and video-container origin clues.',
     uploads: 'Server uploads',
     local: 'Local processing',
-    privacy: 'Privacy first',
+    privacy: 'Files are processed in your browser and never leave your device.',
     privacyDesc: 'Files are only read inside your browser',
+    ctaPrimary: 'Drop an original file',
+    ctaSecondary: 'Inspect a real sample first',
     original: 'Best with originals',
     originalDesc: 'Original files retain more detectable signals',
     explain: 'Explainable results',
@@ -244,14 +248,11 @@ const jsonLd = {
           <h1 data-i18n="hero.h1">{copy.h1}</h1>
           <p class="lead" data-i18n-html="hero.lead" set:html={copy.lead} />
         </div>
-        <div class="hero-panel" aria-label="核心特性">
-          <div class="metric-card">
-            <span class="metric-value" data-i18n="metric.uploads.value">0</span>
-            <span class="metric-label" data-i18n="metric.uploads.label">{copy.uploads}</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value" data-i18n="metric.local.value">100%</span>
-            <span class="metric-label" data-i18n="metric.local.label">{copy.local}</span>
+        <div class="hero-actions">
+          <p class="hero-privacy" data-i18n="hero.privacy">{copy.privacy ?? homeCopy.en.privacy}</p>
+          <div class="hero-cta">
+            <a href="#upload-zone" class="btn-primary" data-i18n="hero.cta.primary">{copy.ctaPrimary ?? homeCopy.en.ctaPrimary}</a>
+            <button id="open-sample" class="btn-secondary" data-i18n="hero.cta.secondary">{copy.ctaSecondary ?? homeCopy.en.ctaSecondary}</button>
           </div>
         </div>
       </div>
