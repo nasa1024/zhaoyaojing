@@ -89,7 +89,7 @@ export function initDetector() {
     const files = Array.from(event.target.files || []);
     selectedFiles = files.filter(isSupportedMedia);
     if (selectedFiles.length) {
-      ga('file_select', { file_count: selectedFiles.length, file_type: selectedFiles[0].type || mediaTypeFromName(selectedFiles[0].name) });
+      ga('upload_started', { source: 'picker', file_count: selectedFiles.length, file_type: selectedFiles[0].type || mediaTypeFromName(selectedFiles[0].name) });
     }
     renderSelectedFiles(selectedFiles);
     syncAnalyzeButton();
@@ -113,6 +113,7 @@ export function initDetector() {
     const valid = files.filter(isSupportedMedia);
     if (!valid.length) { setStatus(t('status.unsupported'), true); return; }
     selectedFiles = valid;
+    ga('upload_started', { source: 'drop', file_count: valid.length, file_type: valid[0].type || mediaTypeFromName(valid[0].name) });
     fileInput.value = '';
     renderSelectedFiles(valid);
     syncAnalyzeButton();

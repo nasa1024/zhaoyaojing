@@ -29,8 +29,13 @@ export function buildReceiptModel(report) {
   const d = deriveEvidenceState(report);
   const prov = report.provenance || {};
   const m = prov.manifest || {};
+  const checked = new Date().toISOString().slice(0, 10);
   const lines = [
     { label: 'File', value: report.file_name || '—' },
+    // Spec §7 field order: File / Checked / Processing / signal statuses.
+    // Kept in `lines` so it also appears in the text, PNG, and print receipts,
+    // not only JSON/citation.
+    { label: 'Checked', value: checked },
     { label: 'Processing', value: 'Local browser only' },
     { label: 'Evidence State', value: d.state },
     { label: 'Signature', value: prov.state || 'unsigned' },
@@ -40,7 +45,7 @@ export function buildReceiptModel(report) {
   ];
   return {
     file: report.file_name || '—',
-    checked: new Date().toISOString().slice(0, 10),
+    checked,
     processing: 'Local browser only',
     state: d.state,
     lines,

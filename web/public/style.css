@@ -2158,3 +2158,16 @@ select:focus-visible {
 .tool-hub-card { padding: 18px 20px; border: 1px solid var(--border); border-radius: 14px; }
 .tool-hub-card.soon { opacity: 0.6; }
 .tool-hub-card h3 { margin: 0 0 6px; font-size: 16px; }
+
+/* ── Evidence Card as expandable <details> (summary = head) ── */
+details.evidence-card > summary.evidence-card-head {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+details.evidence-card > summary.evidence-card-head::-webkit-details-marker { display: none; }
+details.evidence-card > summary.evidence-card-head::marker { content: ''; }
+.evidence-card-body { margin-top: 8px; }

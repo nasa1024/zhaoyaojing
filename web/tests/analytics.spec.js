@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SAMPLE = path.join(__dirname, '../public/samples/verified-ai-credentials.jpg');
 
 // Minimal fake report for driving render.js
 const fakeReport = {
@@ -138,6 +143,73 @@ test('analytics params contain NO forbidden private keys', async ({ page }) => {
       expect(hasForbidden, `Event "${call.name}" has forbidden param key "${key}"`).toBe(false);
     }
   }
+});
+
+test('upload_started fires when a file is selected on the home detector', async ({ page }) => {
+  await installGtagStub(page);
+  await page.goto('/');
+  await page.locator('#file-input').setInputFiles(SAMPLE);
+  const calls = await getAllRecordedEvents(page);
+  const started = calls.filter((c) => c.name === 'upload_started');
+  expect(started.length).toBeGreaterThan(0);
+  expect(started[0].params.source).toBe('picker');
+});
+
+test('evidence_card_expanded fires when a card is toggled back open', async ({ page }) => {
+  await installGtagStub(page);
+  await page.goto('/');
+  // A non-editing signal renders as an Evidence Card (editing-software signals
+  // go to propagation clues instead).
+  const report = {
+    file_name: 'x.png', mime_type: 'image/png', media_type: 'image',
+    signals: [{ source: 'XMP', confidence: 'medium', tool: 'Imagen', description: 'AISystemUsed = Imagen', details: [{ key: 'xmp:AISystemUsed', value: 'Imagen' }] }],
+    provenance: { state: 'unsigned', manifest: null }, limitations: [],
+  };
+  await page.evaluate(async (r) => {
+    const mod = await import('/scripts/render.js');
+    const el = document.getElementById('report');
+    el.classList.remove('hidden');
+    mod.renderResult(el, r, { expert: false });
+  }, report);
+  const card = page.locator('details.evidence-card').first();
+  await expect(card).toHaveCount(1);
+  // Collapse then expand → the expand fires the event (no event on initial open render).
+  await card.locator('summary').click();
+  await card.locator('summary').click();
+  const calls = await getAllRecordedEvents(page);
+  expect(calls.filter((c) => c.name === 'evidence_card_expanded').length).toBeGreaterThan(0);
+});
+
+test('platform_page_clicked and related_guide_clicked fire from the related-links nav', async ({ page }) => {
+  await installGtagStub(page);
+  await page.goto('/');
+  await page.evaluate(async (r) => {
+    const mod = await import('/scripts/render.js');
+    const el = document.getElementById('report');
+    el.classList.remove('hidden');
+    mod.renderResult(el, r, { expert: false });
+    // Click platform + guide links without navigating away.
+    const click = (sel) => {
+      const a = document.querySelector(sel);
+      if (!a) return;
+      a.addEventListener('click', (e) => e.preventDefault(), { once: true });
+      a.click();
+    };
+    click('#related-links a[href*="/platforms/"]');
+    click('#related-links a[href*="/blog/"]');
+  }, { file_name: 'x.jpg', mime_type: 'image/jpeg', media_type: 'image', signals: [], provenance: { state: 'unsigned', manifest: null }, limitations: [] });
+  const calls = await getAllRecordedEvents(page);
+  expect(calls.filter((c) => c.name === 'platform_page_clicked').length).toBeGreaterThan(0);
+  expect(calls.filter((c) => c.name === 'related_guide_clicked').length).toBeGreaterThan(0);
+});
+
+test('ad_viewable fires when a reserved ad slot scrolls into view', async ({ page }) => {
+  await installGtagStub(page);
+  await page.goto('/');
+  await page.locator('.ad-slot').first().scrollIntoViewIfNeeded();
+  await page.waitForTimeout(600);
+  const calls = await getAllRecordedEvents(page);
+  expect(calls.filter((c) => c.name === 'ad_viewable').length).toBeGreaterThan(0);
 });
 
 test('sitemap-0.xml contains methodology and no user/result data', async ({ request }) => {

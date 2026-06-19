@@ -51,3 +51,24 @@ applyTheme(savedTheme);
 themeBtn?.addEventListener('click', () => {
   applyTheme(document.body.dataset.theme === 'light' ? 'dark' : 'light');
 });
+
+// ─── ad_viewable: fire once when a reserved ad slot scrolls into view ─────
+// Measures ad-slot viewability (spec §18). Works on the reserved containers
+// today; stays correct once live AdSense markup is uncommented. Sends only a
+// slot identifier — never file or result data.
+(function trackAdViewable() {
+  const slots = document.querySelectorAll('.ad-slot');
+  if (!slots.length || typeof IntersectionObserver !== 'function') return;
+  const ga = (name, params) => { if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); };
+  const slotName = (el) =>
+    (Array.from(el.classList).find((c) => c.startsWith('ad-slot--')) || 'ad-slot').replace('ad-slot--', '') || 'ad';
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        ga('ad_viewable', { slot: slotName(entry.target) });
+        io.unobserve(entry.target);
+      }
+    }
+  }, { threshold: 0.5 });
+  slots.forEach((s) => io.observe(s));
+})();

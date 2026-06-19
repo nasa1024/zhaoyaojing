@@ -157,6 +157,25 @@ export function renderResult(container, report, { expert = false } = {}) {
 
   ga('result_status_viewed', { state: d.state });
   container.innerHTML = sections.join('\n');
+
+  // evidence_card_expanded: cards render open, so no event fires on initial
+  // render — only when the user toggles one back open after collapsing it.
+  container.querySelectorAll('details.evidence-card').forEach((card) => {
+    card.addEventListener('toggle', () => {
+      if (card.open) ga('evidence_card_expanded', { source: card.querySelector('.signal-source')?.textContent || '' });
+    });
+  });
+
+  // platform_page_clicked / related_guide_clicked: delegated click tracking on
+  // the related-links nav. Params carry only the destination path (no private data).
+  container.querySelector('#related-links')?.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    if (href.includes('/platforms/')) ga('platform_page_clicked', { href });
+    else if (href.includes('/blog/')) ga('related_guide_clicked', { href });
+  });
+
   import('./receipt.js').then(m => m.mountReceipt(container.querySelector('#receipt-mount'), report, tt)).catch(() => {});
 }
 
@@ -171,15 +190,21 @@ function renderEvidenceCard(s) {
   const details = (s.details || [])
     .map((x) => `<li><span class="mono">${esc(x.key)}</span>: <span class="mono">${esc(x.value)}</span></li>`)
     .join('');
-  return `<article class="evidence-card">
-    <div class="evidence-card-head">
+  // Expandable Evidence Card: the head (source/confidence/tool) is the summary
+  // and is always visible; the body (description + raw fields) collapses. Open
+  // by default so nothing is hidden on first render; a toggle-to-open fires the
+  // evidence_card_expanded analytics event (wired in renderResult).
+  return `<details class="evidence-card" open>
+    <summary class="evidence-card-head">
       <span class="signal-source mono sig sig-neutral">${esc(s.source || '')}</span>
       <span class="sig ${confClass}">${esc((s.confidence || 'low').toUpperCase())}</span>
       ${s.tool ? `<span class="tag-inline">${esc(s.tool)}</span>` : ''}
+    </summary>
+    <div class="evidence-card-body">
+      <div>${esc(s.description || '')}</div>
+      ${details ? `<ul class="detail-list">${details}</ul>` : ''}
     </div>
-    <div>${esc(s.description || '')}</div>
-    ${details ? `<ul class="detail-list">${details}</ul>` : ''}
-  </article>`;
+  </details>`;
 }
 
 function renderNotFound(report) {
