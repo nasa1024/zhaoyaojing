@@ -2127,3 +2127,34 @@ select:focus-visible {
   font-size: 14px;
   color: var(--accent);
 }
+
+/* ── Tool pages (raw-metadata inspectors; injected HTML → must be global) ── */
+.tool-upload { display: grid; gap: 14px; }
+.tool-drop-zone {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 28px; border: 1.5px dashed var(--border); border-radius: 14px;
+  cursor: pointer; text-align: center; transition: border-color .15s, background .15s;
+}
+.tool-drop-zone.drag-over { border-color: var(--accent); background: rgba(110, 168, 255, 0.07); }
+.tool-drop-zone input[type="file"] { display: none; }
+.tool-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 16px 0 8px; }
+.tool-toolbar input[type="text"] { flex: 1 1 220px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); }
+.tool-raw-section { margin: 18px 0; }
+.tool-raw-h { font-size: 15px; margin: 0 0 8px; }
+.tool-raw-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tool-raw-table th { text-align: left; padding: 6px 12px 6px 0; vertical-align: top; white-space: nowrap; color: var(--muted); font-weight: 600; }
+.tool-raw-table td { padding: 6px 0; vertical-align: top; word-break: break-word; }
+.tool-raw-val--text, .tool-raw-json { font-family: var(--mono, ui-monospace, monospace); }
+.tool-raw-list { margin: 0; padding-left: 20px; font-size: 13px; }
+.tool-raw-json { white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow: auto; padding: 12px; border-radius: 10px; border: 1px solid var(--border); font-size: 12px; }
+.tool-raw-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 600; font-size: 13px; margin-bottom: 8px; border: 1px solid var(--border); }
+.tool-raw-badge--trusted, .tool-raw-badge--valid { background: rgba(74, 222, 128, 0.10); border-color: rgba(74, 222, 128, 0.35); }
+.tool-raw-badge--invalid { background: rgba(248, 113, 113, 0.10); border-color: rgba(248, 113, 113, 0.35); }
+.tool-raw-badge--unsigned { background: rgba(148, 163, 184, 0.10); }
+.tool-raw-empty { color: var(--muted); font-size: 14px; }
+.tool-glossary { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 24px; }
+.tool-glossary th, .tool-glossary td { text-align: left; padding: 8px 12px 8px 0; vertical-align: top; border-bottom: 1px solid var(--border); }
+.tool-hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+.tool-hub-card { padding: 18px 20px; border: 1px solid var(--border); border-radius: 14px; }
+.tool-hub-card.soon { opacity: 0.6; }
+.tool-hub-card h3 { margin: 0 0 6px; font-size: 16px; }
