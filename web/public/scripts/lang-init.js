@@ -3,7 +3,16 @@ import { applyI18n, setLang } from '/scripts/i18n.js';
 applyI18n();
 
 document.getElementById('lang-switch')?.addEventListener('change', (e) => {
-  setLang(e.target.value);
+  const lang = e.target.value;
+  // Single-language pages (e.g. /tools/*) have no localized variant of THIS
+  // path, so navigating to it would 404. Switch the stored language and send
+  // the user to that language's homepage instead.
+  if (document.body?.dataset.singleLang === 'true') {
+    setLang(lang, { navigate: false });
+    window.location.assign(lang === 'zh-CN' ? '/' : `/${lang}/`);
+    return;
+  }
+  setLang(lang);
 });
 
 // ─── Hamburger menu ───────────────────────────────────────────────

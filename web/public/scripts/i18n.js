@@ -5,6 +5,7 @@ const translations = {
   'zh-CN': {
     'nav.tool':         '检测工具',
     'nav.platforms':    '平台指南',
+    'nav.tools':        '工具',
     'nav.blog':         '知识库',
     'nav.about':        '关于',
     'nav.privacy':      '隐私政策',
@@ -119,6 +120,7 @@ const translations = {
   'zh-TW': {
     'nav.tool':         '檢測工具',
     'nav.platforms':    '平台指南',
+    'nav.tools':        '工具',
     'nav.blog':         '知識庫',
     'nav.about':        '關於',
     'nav.privacy':      '隱私政策',
@@ -235,6 +237,7 @@ const translations = {
   'en': {
     'nav.tool':         'Detector',
     'nav.platforms':    'Platform Guides',
+    'nav.tools':        'Tools',
     'nav.blog':         'Blog',
     'nav.about':        'About',
     'nav.privacy':      'Privacy Policy',
@@ -349,6 +352,7 @@ const translations = {
   'ja': {
     'nav.tool':         '検出ツール',
     'nav.platforms':    'プラットフォーム',
+    'nav.tools':        'ツール',
     'nav.blog':         'ブログ',
     'nav.about':        'について',
     'nav.privacy':      'プライバシー',
@@ -465,6 +469,7 @@ const translations = {
   'ko': {
     'nav.tool':         '감지 도구',
     'nav.platforms':    '플랫폼 가이드',
+    'nav.tools':        '도구',
     'nav.blog':         '블로그',
     'nav.about':        '소개',
     'nav.privacy':      '개인정보처리방침',
@@ -581,6 +586,7 @@ const translations = {
   'de': {
     'nav.tool':         'Detektor',
     'nav.platforms':    'Plattform-Guides',
+    'nav.tools':        'Werkzeuge',
     'nav.blog':         'Blog',
     'nav.about':        'Über uns',
     'nav.privacy':      'Datenschutz',
@@ -697,6 +703,7 @@ const translations = {
   'fr': {
     'nav.tool':         'Détecteur',
     'nav.platforms':    'Guides Plateformes',
+    'nav.tools':        'Outils',
     'nav.blog':         'Blog',
     'nav.about':        'À propos',
     'nav.privacy':      'Confidentialité',
@@ -813,6 +820,7 @@ const translations = {
   'es': {
     'nav.tool':         'Detector',
     'nav.platforms':    'Guías de Plataformas',
+    'nav.tools':        'Herramientas',
     'nav.blog':         'Blog',
     'nav.about':        'Acerca de',
     'nav.privacy':      'Privacidad',
@@ -929,6 +937,7 @@ const translations = {
   'pt-BR': {
     'nav.tool':         'Detector',
     'nav.platforms':    'Guias de Plataformas',
+    'nav.tools':        'Ferramentas',
     'nav.blog':         'Blog',
     'nav.about':        'Sobre',
     'nav.privacy':      'Privacidade',
@@ -1189,6 +1198,9 @@ function localizeInternalLinks() {
   document.querySelectorAll('a[href^="/"]').forEach((anchor) => {
     const href = anchor.getAttribute('href');
     if (!href || href.startsWith('//')) return;
+    // Root-only pages (e.g. /tools/*) have no localized variant; prefixing them
+    // would 404. Such links opt out with data-no-localize.
+    if (anchor.hasAttribute('data-no-localize')) return;
     const url = new URL(href, window.location.origin);
     anchor.setAttribute('href', `${withLangInPathname(url.pathname, urlLang)}${url.search}${url.hash}`);
   });
