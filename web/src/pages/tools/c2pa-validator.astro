@@ -1,0 +1,190 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const DEFAULT_LANG = 'zh-CN';
+function getUrlLang(pathname) {
+  const seg = pathname.split('/').filter(Boolean)[0];
+  return SUPPORTED_LANGS.includes(seg) ? seg : null;
+}
+const urlLang = getUrlLang(Astro.url.pathname);
+const pageLang = urlLang ?? DEFAULT_LANG;
+const navPrefix = urlLang && urlLang !== DEFAULT_LANG ? `/${pageLang}` : '';
+const isZh = pageLang === 'zh-CN' || pageLang === 'zh-TW';
+
+const COPY = {
+  'zh-CN': {
+    title: 'C2PA 验证器 | AICheck365',
+    description: 'C2PA 验证器：检查文件是否包含 C2PA Manifest，显示签名状态、Claim Generator、Digital Source Type、Assertions、Ingredient 链、证书信息与原始 JSON。本地分析，不上传文件。',
+    h1: 'C2PA 验证器',
+    lead: '上传图片或视频，逐项查看其 C2PA 内容凭证（Content Credentials）的原始结构：是否存在 Manifest、签名是否通过、由哪个工具签发、包含哪些断言（assertions）、原料链与证书信息，以及完整的原始 JSON。所有解析都在你的浏览器本地完成。',
+    usageH: '如何使用',
+    usage: ['点击或拖拽一个图片/视频文件到上传区。', '工具会在本地运行 C2PA 校验引擎（首次会加载约 9MB 的 wasm）。', '结果按签名状态、验证问题、Manifest 字段、断言、原料链、证书、原始 JSON 分层展示。', '可搜索字段、复制或导出完整 JSON 以供留存或复核。'],
+    glossaryH: '字段含义',
+    glossary: [
+      ['Manifest', '一份 C2PA 来源声明，记录文件由谁、用什么工具、经过哪些操作生成或编辑。'],
+      ['签名状态', 'trusted=证书在信任列表内且有效；valid=密码学有效但证书不在本引擎信任列表；invalid=签名或内容哈希校验失败；unsigned=未发现 C2PA 数据。'],
+      ['Claim Generator', '写入该 Manifest 的软件/工具标识。'],
+      ['Digital Source Type', 'IPTC 来源类型，如 trainedAlgorithmicMedia 表示完全由 AI 生成。'],
+      ['Assertions', 'Manifest 内的断言条目，如创建动作、缩略图、训练来源等。'],
+      ['Ingredient 链', '该文件引用的上游素材（原料）及其各自的验证状态。'],
+      ['证书 / 签名', '签发者、证书序列号、签名时间与算法。'],
+    ],
+    limitsH: '适用范围与限制',
+    limits: ['未发现 C2PA 数据不代表文件是人类拍摄——多数平台根本不写入 C2PA，且导出、压缩、截图会移除它。', 'valid 表示密码学有效但证书未被本引擎信任，并非伪造证明。', '本工具只读取并展示文件中实际存在的 C2PA 数据，不做任何推断或评分。'],
+    faqH: '常见问题',
+    faq: [
+      { q: '为什么显示 valid 而不是 trusted？', a: '签名密码学上有效，但签发证书不在本引擎的信任根列表内。这很常见（例如厂商使用自有证书），并不代表文件被篡改。' },
+      { q: '没有发现 Manifest 是否说明是真人拍摄？', a: '不能。大多数相机和 AI 平台不写入 C2PA，且任何一次导出、压缩、转码或截图都会移除它。无信号只代表“此文件中没有可读的 C2PA 数据”。' },
+      { q: '我的文件会被上传吗？', a: '不会。校验完全在你的浏览器本地通过 WebAssembly 运行，文件不会离开你的设备。' },
+    ],
+    relatedH: '相关',
+    methodology: '方法论与限制',
+    ui: { loading: '正在加载校验引擎…', analyzing: '正在校验…', done: '完成', error: '错误：', noFile: '请选择文件', empty: '选择一个图片或视频文件开始校验', state: '签名状态', validation: '验证问题', manifest: 'Manifest 字段', assertions: '断言 (Assertions)', ingredients: 'Ingredient 链', signature: '证书 / 签名', rawJson: '原始 Manifest JSON', none: '此文件中未发现 C2PA Manifest。', filterPlaceholder: '搜索字段…', copy: '复制 JSON', copied: '已复制 ✓', exportJson: '导出 JSON' },
+    upload: { title: '上传文件校验 C2PA', zone: '点击或拖拽图片/视频到此处', formats: '支持图片与视频（JPEG / PNG / WebP / MP4 / MOV 等）' },
+  },
+  'zh-TW': {
+    title: 'C2PA 驗證器 | AICheck365',
+    description: 'C2PA 驗證器：檢查檔案是否包含 C2PA Manifest，顯示簽章狀態、Claim Generator、Digital Source Type、Assertions、Ingredient 鏈、憑證資訊與原始 JSON。本機分析，不上傳檔案。',
+    h1: 'C2PA 驗證器',
+    lead: '上傳圖片或影片，逐項查看其 C2PA 內容憑證（Content Credentials）的原始結構：是否存在 Manifest、簽章是否通過、由哪個工具簽發、包含哪些斷言、原料鏈與憑證資訊，以及完整的原始 JSON。所有解析都在你的瀏覽器本機完成。',
+    usageH: '如何使用',
+    usage: ['點擊或拖曳一個圖片/影片檔案到上傳區。', '工具會在本機執行 C2PA 校驗引擎（首次會載入約 9MB 的 wasm）。', '結果按簽章狀態、驗證問題、Manifest 欄位、斷言、原料鏈、憑證、原始 JSON 分層展示。', '可搜尋欄位、複製或匯出完整 JSON。'],
+    glossaryH: '欄位含義',
+    glossary: [
+      ['Manifest', '一份 C2PA 來源聲明，記錄檔案由誰、用什麼工具、經過哪些操作生成或編輯。'],
+      ['簽章狀態', 'trusted=憑證在信任清單內且有效；valid=密碼學有效但憑證不在本引擎信任清單；invalid=簽章或內容雜湊校驗失敗；unsigned=未發現 C2PA 資料。'],
+      ['Claim Generator', '寫入該 Manifest 的軟體/工具標識。'],
+      ['Digital Source Type', 'IPTC 來源類型，如 trainedAlgorithmicMedia 表示完全由 AI 生成。'],
+      ['Assertions', 'Manifest 內的斷言條目。'],
+      ['Ingredient 鏈', '該檔案引用的上游素材及其各自的驗證狀態。'],
+      ['憑證 / 簽章', '簽發者、憑證序號、簽章時間與演算法。'],
+    ],
+    limitsH: '適用範圍與限制',
+    limits: ['未發現 C2PA 資料不代表檔案是真人拍攝。', 'valid 表示密碼學有效但憑證未被本引擎信任，並非偽造證明。', '本工具只讀取並展示檔案中實際存在的 C2PA 資料，不做任何推斷或評分。'],
+    faqH: '常見問題',
+    faq: [
+      { q: '為什麼顯示 valid 而不是 trusted？', a: '簽章密碼學上有效，但簽發憑證不在本引擎的信任根清單內。' },
+      { q: '沒有發現 Manifest 是否說明是真人拍攝？', a: '不能。大多數相機和 AI 平台不寫入 C2PA，且匯出、壓縮、轉碼或截圖都會移除它。' },
+      { q: '我的檔案會被上傳嗎？', a: '不會。校驗完全在你的瀏覽器本機透過 WebAssembly 執行。' },
+    ],
+    relatedH: '相關',
+    methodology: '方法論與限制',
+    ui: { loading: '正在載入校驗引擎…', analyzing: '正在校驗…', done: '完成', error: '錯誤：', noFile: '請選擇檔案', empty: '選擇一個圖片或影片檔案開始校驗', state: '簽章狀態', validation: '驗證問題', manifest: 'Manifest 欄位', assertions: '斷言 (Assertions)', ingredients: 'Ingredient 鏈', signature: '憑證 / 簽章', rawJson: '原始 Manifest JSON', none: '此檔案中未發現 C2PA Manifest。', filterPlaceholder: '搜尋欄位…', copy: '複製 JSON', copied: '已複製 ✓', exportJson: '匯出 JSON' },
+    upload: { title: '上傳檔案校驗 C2PA', zone: '點擊或拖曳圖片/影片到此處', formats: '支援圖片與影片（JPEG / PNG / WebP / MP4 / MOV 等）' },
+  },
+  en: {
+    title: 'C2PA Validator | AICheck365',
+    description: 'C2PA Validator: check whether a file carries a C2PA manifest and inspect signature state, claim generator, digital source type, assertions, ingredient chain, certificate info, and raw JSON. Analyzed locally, never uploaded.',
+    h1: 'C2PA Validator',
+    lead: 'Upload an image or video and inspect the raw structure of its C2PA Content Credentials: whether a manifest exists, whether the signature validates, which tool signed it, which assertions it carries, the ingredient chain and certificate info, and the full raw JSON. All parsing happens locally in your browser.',
+    usageH: 'How to use',
+    usage: ['Click or drag an image/video file onto the upload area.', 'The C2PA verification engine runs locally (a ~9MB wasm loads on first use).', 'Results are grouped by signature state, validation issues, manifest fields, assertions, ingredient chain, certificate, and raw JSON.', 'Search fields, copy, or export the full JSON for your records.'],
+    glossaryH: 'Field meanings',
+    glossary: [
+      ['Manifest', 'A C2PA provenance claim recording who created or edited a file, with which tool, through which actions.'],
+      ['Signature state', 'trusted = cert in the trust list and valid; valid = cryptographically valid but cert not in this engine’s trust list; invalid = signature or content-hash check failed; unsigned = no C2PA data found.'],
+      ['Claim Generator', 'The software/tool identifier that wrote the manifest.'],
+      ['Digital Source Type', 'IPTC source type, e.g. trainedAlgorithmicMedia for fully AI-generated media.'],
+      ['Assertions', 'Statements inside the manifest, e.g. creation actions, thumbnails, training source.'],
+      ['Ingredient chain', 'Upstream assets this file references, each with its own validation state.'],
+      ['Certificate / signature', 'Issuer, certificate serial number, signing time, and algorithm.'],
+    ],
+    limitsH: 'Scope & limits',
+    limits: ['No C2PA data does NOT mean the file is human-made — most platforms never embed it, and export/compression/screenshots strip it.', '"valid" means cryptographically valid with an untrusted cert; it is not proof of forgery.', 'This tool only reads and displays C2PA data actually present in the file; it makes no inference or score.'],
+    faqH: 'FAQ',
+    faq: [
+      { q: 'Why does it say valid instead of trusted?', a: 'The signature is cryptographically valid, but the signing certificate is not in this engine’s trust roots. This is common (e.g. a vendor using its own cert) and does not mean the file was tampered with.' },
+      { q: 'Does "no manifest" mean the photo is real?', a: 'No. Most cameras and AI platforms do not embed C2PA, and any export, compression, transcode, or screenshot removes it. No signal only means "no readable C2PA data in this file."' },
+      { q: 'Is my file uploaded?', a: 'No. Verification runs entirely in your browser via WebAssembly; the file never leaves your device.' },
+    ],
+    relatedH: 'Related',
+    methodology: 'Methodology & limits',
+    ui: { loading: 'Loading verification engine…', analyzing: 'Verifying…', done: 'Done', error: 'Error: ', noFile: 'Please choose a file', empty: 'Choose an image or video file to verify', state: 'Signature state', validation: 'Validation issues', manifest: 'Manifest fields', assertions: 'Assertions', ingredients: 'Ingredient chain', signature: 'Certificate / signature', rawJson: 'Raw manifest JSON', none: 'No C2PA manifest found in this file.', filterPlaceholder: 'Search fields…', copy: 'Copy JSON', copied: 'Copied ✓', exportJson: 'Export JSON' },
+    upload: { title: 'Upload a file to validate C2PA', zone: 'Click or drag an image/video here', formats: 'Images and video supported (JPEG / PNG / WebP / MP4 / MOV, etc.)' },
+  },
+};
+const LANG_H1 = { ja: 'C2PA バリデーター', ko: 'C2PA 검증기', de: 'C2PA-Validator', fr: 'Validateur C2PA', es: 'Validador C2PA', 'pt-BR': 'Validador C2PA' };
+const LANG_TITLE = { ja: 'C2PA バリデーター | AICheck365', ko: 'C2PA 검증기 | AICheck365', de: 'C2PA-Validator | AICheck365', fr: 'Validateur C2PA | AICheck365', es: 'Validador C2PA | AICheck365', 'pt-BR': 'Validador C2PA | AICheck365' };
+
+const c = COPY[pageLang] ?? { ...COPY.en, h1: LANG_H1[pageLang] ?? COPY.en.h1, title: LANG_TITLE[pageLang] ?? COPY.en.title };
+
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'SoftwareApplication',
+    name: 'C2PA Validator', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web browser',
+    description: c.description, url: 'https://www.aicheck365.com/tools/c2pa-validator/',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, inLanguage: pageLang },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: isZh ? '首页' : 'Home', item: `https://www.aicheck365.com${navPrefix ? navPrefix + '/' : '/'}` },
+      { '@type': 'ListItem', position: 2, name: isZh ? '工具' : 'Tools', item: 'https://www.aicheck365.com/tools/' },
+      { '@type': 'ListItem', position: 3, name: c.h1, item: 'https://www.aicheck365.com/tools/c2pa-validator/' },
+    ] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: c.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+const islandLabels = c.ui;
+---
+
+<Base title={c.title} description={c.description} canonical="https://www.aicheck365.com/tools/c2pa-validator/" jsonLd={jsonLd} singleLang={true}>
+  <main class="page content-page">
+    <article class="card content-article">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href={navPrefix ? `${navPrefix}/` : '/'}>{isZh ? '首页' : 'Home'}</a>
+        <span aria-hidden="true"> › </span>
+        <a href="/tools/">{isZh ? '工具' : 'Tools'}</a>
+        <span aria-hidden="true"> › </span>
+        <span>{c.h1}</span>
+      </nav>
+      <h1>{c.h1}</h1>
+      <p class="lead-text">{c.lead}</p>
+
+      <!-- ── Interactive island (the ONLY client-JS part) ── -->
+      <section id="tool-inspector" data-tool="c2pa-validator" data-accept="image,video" class="card tool-card">
+        <h2>{c.upload.title}</h2>
+        <div class="tool-upload">
+          <label class="tool-drop-zone" id="tool-drop-zone" for="tool-file-input">
+            <input id="tool-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,video/mp4,video/quicktime,video/webm,video/x-m4v,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff,.mp4,.mov,.m4v,.webm" />
+            <span class="upload-icon" aria-hidden="true">↥</span>
+            <span>{c.upload.zone}</span>
+            <small class="muted">{c.upload.formats}</small>
+          </label>
+          <p id="tool-status" class="status muted" role="status" aria-live="polite"></p>
+          <div class="tool-toolbar">
+            <input id="tool-filter" type="text" placeholder={c.ui.filterPlaceholder} aria-label={c.ui.filterPlaceholder} />
+            <button id="tool-copy" class="ghost">{c.ui.copy}</button>
+            <button id="tool-export" class="ghost">{c.ui.exportJson}</button>
+          </div>
+          <div id="tool-output" class="tool-output hidden"></div>
+        </div>
+        <noscript><p class="notice warning">{isZh ? '该工具需要 JavaScript 才能在本地校验文件；下方的说明、字段含义和常见问题无需 JavaScript 即可阅读。' : 'This tool needs JavaScript to verify files locally; the explanation, field meanings, and FAQ below are readable without it.'}</p></noscript>
+      </section>
+      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(islandLabels)} />
+
+      <h2>{c.usageH}</h2>
+      <ol class="content-list">{c.usage.map((s) => <li>{s}</li>)}</ol>
+
+      <h2>{c.glossaryH}</h2>
+      <table class="tool-glossary"><tbody>{c.glossary.map((g) => <tr><th>{g[0]}</th><td>{g[1]}</td></tr>)}</tbody></table>
+
+      <h2>{c.limitsH}</h2>
+      <ul class="content-list">{c.limits.map((s) => <li>{s}</li>)}</ul>
+
+      <h2>{c.faqH}</h2>
+      <dl class="faq-list">{c.faq.map((f) => (
+        <Fragment>
+          <dt>{f.q}</dt>
+          <dd>{f.a}</dd>
+        </Fragment>
+      ))}</dl>
+
+      <h2>{c.relatedH}</h2>
+      <ul class="content-list">
+        <li><a href="/methodology/">{c.methodology} →</a></li>
+        <li><a href="/tools/">{isZh ? '全部专用工具' : 'All detection tools'} →</a></li>
+      </ul>
+    </article>
+  </main>
+</Base>
+
+<script>import '../../scripts/tool-inspector.js';</script>
