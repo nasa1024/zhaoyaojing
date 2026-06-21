@@ -23,6 +23,27 @@ pub(crate) struct Mp4MetadataHit {
     pub details: Vec<(String, String)>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[allow(dead_code)]
+pub(crate) struct Mp4BoxSummary {
+    pub path: String,
+    pub box_type: String,
+    pub offset: usize,
+    pub size: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[allow(dead_code)]
+pub(crate) struct Mp4Inspection {
+    pub major_brand: Option<String>,
+    pub minor_version: Option<u32>,
+    pub compatible_brands: Vec<String>,
+    pub boxes: Vec<Mp4BoxSummary>,
+    pub ilst_entries: Vec<(String, String)>,
+    pub hits: Vec<Mp4MetadataHit>,
+    pub has_c2pa_or_jumbf_text: bool,
+}
+
 const MP4_TOOL_MAPPINGS: &[(&str, &str, CoreConfidence)] =
     &[("google", "google veo", CoreConfidence::Medium)];
 
@@ -41,7 +62,9 @@ const SEI_MARKERS: &[(&[u8], &str)] = &[
     (b"haiper", "haiper"),
 ];
 
+#[allow(dead_code)]
 struct BoxInfo {
+    box_start: usize,
     box_type: [u8; 4],
     content_start: usize,
     box_end: usize,
@@ -62,6 +85,38 @@ pub(crate) fn detect(data: &[u8]) -> Vec<Mp4MetadataHit> {
     hits.extend(detect_aigc_label(&entries));
     hits.extend(detect_sei_markers(data));
     hits
+}
+
+#[allow(dead_code)]
+pub(crate) fn inspect(data: &[u8]) -> Mp4Inspection {
+    if !is_mp4_like(data) {
+        return Mp4Inspection {
+            major_brand: None,
+            minor_version: None,
+            compatible_brands: Vec::new(),
+            boxes: Vec::new(),
+            ilst_entries: Vec::new(),
+            hits: Vec::new(),
+            has_c2pa_or_jumbf_text: false,
+        };
+    }
+
+    let (major_brand, minor_version, compatible_brands) = parse_ftyp(data);
+    let ilst_entries = extract_ilst_entries(data);
+    let hits = detect(data);
+    let mut boxes = Vec::new();
+    summarize_boxes(data, 0, data.len(), "", 0, &mut boxes);
+    Mp4Inspection {
+        major_brand,
+        minor_version,
+        compatible_brands,
+        boxes,
+        ilst_entries,
+        hits,
+        has_c2pa_or_jumbf_text: contains_ascii_case(data, b"c2pa")
+            || contains_ascii_case(data, b"jumbf")
+            || contains_ascii_case(data, b"manifest"),
+    }
 }
 
 fn read_u32_be(data: &[u8], offset: usize) -> Option<u32> {
@@ -111,6 +166,7 @@ fn find_boxes(data: &[u8], start: usize, end: usize) -> Vec<BoxInfo> {
         }
         let box_end = (pos as u64 + actual_size).min(end as u64) as usize;
         boxes.push(BoxInfo {
+            box_start: pos,
             box_type,
             content_start,
             box_end,
@@ -129,6 +185,96 @@ fn get_box(data: &[u8], start: usize, end: usize, box_type: &[u8; 4]) -> Option<
 
 fn box_type_to_string(box_type: &[u8; 4]) -> String {
     box_type.iter().map(|&b| b as char).collect()
+}
+
+#[allow(dead_code)]
+fn parse_ftyp(data: &[u8]) -> (Option<String>, Option<u32>, Vec<String>) {
+    let Some((start, end)) = get_box(data, 0, data.len().min(512), b"ftyp") else {
+        return (None, None, Vec::new());
+    };
+    if start + 8 > end {
+        return (None, None, Vec::new());
+    }
+    let major_brand = std::str::from_utf8(&data[start..start + 4])
+        .ok()
+        .map(|s| s.to_string());
+    let minor_version = read_u32_be(data, start + 4);
+    let mut compatible_brands = Vec::new();
+    let mut pos = start + 8;
+    while pos + 4 <= end {
+        if let Ok(brand) = std::str::from_utf8(&data[pos..pos + 4]) {
+            compatible_brands.push(brand.to_string());
+        }
+        pos += 4;
+    }
+    (major_brand, minor_version, compatible_brands)
+}
+
+#[allow(dead_code)]
+fn summarize_boxes(
+    data: &[u8],
+    start: usize,
+    end: usize,
+    parent: &str,
+    depth: usize,
+    out: &mut Vec<Mp4BoxSummary>,
+) {
+    if depth > 5 || out.len() >= 240 {
+        return;
+    }
+
+    for item in find_boxes(data, start, end) {
+        if out.len() >= 240 {
+            return;
+        }
+        let box_type = box_type_to_string(&item.box_type);
+        let path = if parent.is_empty() {
+            box_type.clone()
+        } else {
+            format!("{parent}/{box_type}")
+        };
+        out.push(Mp4BoxSummary {
+            path: path.clone(),
+            box_type: box_type.clone(),
+            offset: item.box_start,
+            size: item.box_end.saturating_sub(item.box_start),
+        });
+
+        let child_start = if &item.box_type == b"meta" {
+            (item.content_start + 4).min(item.box_end)
+        } else {
+            item.content_start
+        };
+        if is_container_box(&item.box_type) && child_start < item.box_end {
+            summarize_boxes(data, child_start, item.box_end, &path, depth + 1, out);
+        }
+    }
+}
+
+#[allow(dead_code)]
+fn is_container_box(box_type: &[u8; 4]) -> bool {
+    matches!(
+        box_type,
+        b"moov"
+            | b"trak"
+            | b"mdia"
+            | b"minf"
+            | b"stbl"
+            | b"udta"
+            | b"meta"
+            | b"ilst"
+            | b"edts"
+            | b"dinf"
+    )
+}
+
+#[allow(dead_code)]
+fn contains_ascii_case(data: &[u8], needle: &[u8]) -> bool {
+    if needle.is_empty() || data.len() < needle.len() {
+        return false;
+    }
+    data.windows(needle.len())
+        .any(|window| window.eq_ignore_ascii_case(needle))
 }
 
 fn parse_ilst_standard(data: &[u8], start: usize, end: usize) -> Vec<(String, String)> {

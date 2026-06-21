@@ -1,0 +1,13 @@
+---
+import MetadataToolPage from '../../../components/tools/MetadataToolPage.astro';
+
+export function getStaticPaths() {
+  return [
+    'exif-xmp-reader',
+    'png-parameter-extractor',
+    'mp4-metadata-inspector',
+  ].map((tool) => ({ params: { lang: 'en', tool } }));
+}
+---
+
+<MetadataToolPage />

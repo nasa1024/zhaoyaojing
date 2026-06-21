@@ -1,0 +1,9 @@
+---
+import ToolHubPage from '../../../components/tools/ToolHubPage.astro';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }];
+}
+---
+
+<ToolHubPage />

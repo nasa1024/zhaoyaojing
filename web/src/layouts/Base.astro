@@ -8,6 +8,7 @@ interface Props {
   robots?: string;
   lang?: string;
   singleLang?: boolean;
+  alternateLangs?: string[];
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   lang: langProp,
   singleLang = false,
+  alternateLangs,
 } = Astro.props;
 
 const SITE_URL = 'https://www.aicheck365.com';
@@ -26,6 +28,7 @@ const SITE_NAME = 'AICheck365';
 const SITE_DESCRIPTION = 'A browser-local AI image and video origin detector for C2PA, EXIF, XMP, PNG text chunks, MP4/MOV metadata, file-name clues, and video frame watermark signals.';
 const DEFAULT_LANG = 'zh-CN';
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const LOCALIZED_TOOL_LANGS = ['en'];
 const SEO_KEYWORDS = [
   'AI image detector',
   'AI video detector',
@@ -208,12 +211,13 @@ const canonicalHref = urlLang
 const navPrefix = urlLang && urlLang !== DEFAULT_LANG ? `/${pageLang}` : '';
 const homeHref = navPrefix ? `${navPrefix}/` : '/';
 const platformsHref = `${navPrefix}/platforms/`;
-// Tool pages are root-only (no /{lang}/tools/* variants exist), so the nav link
-// must stay unprefixed on every language or it 404s on the 8 prefixed locales.
-const toolsHref = '/tools/';
+const hasLocalizedTools = urlLang && LOCALIZED_TOOL_LANGS.includes(pageLang);
+const toolsHref = hasLocalizedTools ? `${navPrefix}/tools/` : '/tools/';
+const toolsNoLocalize = !hasLocalizedTools;
 const aboutHref = `${navPrefix}/about/`;
 const i18nPage = canonicalPath === '/' ? 'home' : 'content';
 const navLabels = NAV_LABELS[pageLang] ?? NAV_LABELS[DEFAULT_LANG];
+const pageAlternateLangs = (alternateLangs ?? SUPPORTED_LANGS).filter((lang) => SUPPORTED_LANGS.includes(lang));
 function normalizeMetaTitle(value: string) {
   let normalized = value;
   if (value.length > 70) {
@@ -323,7 +327,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     {!singleLang && (
       <>
         <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${canonicalPath}`} />
-        {SUPPORTED_LANGS.map((lang) => (
+        {pageAlternateLangs.map((lang) => (
           <link rel="alternate" hreflang={lang} href={`${SITE_URL}${localizedPath(canonicalPath, lang)}`} />
         ))}
       </>
@@ -343,7 +347,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <meta property="og:image:alt" content="AICheck365 AI image and video origin detector" />
     <meta property="og:site_name"   content="AICheck365" />
     <meta property="og:locale"      content={OG_LOCALE[pageLang] ?? 'zh_CN'} />
-    {SUPPORTED_LANGS.filter((lang) => lang !== pageLang).map((lang) => (
+    {pageAlternateLangs.filter((lang) => lang !== pageLang).map((lang) => (
       <meta property="og:locale:alternate" content={OG_LOCALE[lang] ?? 'en_US'} />
     ))}
 
@@ -360,14 +364,34 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <!-- Google AdSense placeholder -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RF8YQ5YB1"></script>
-    <script>
+    <!-- Google Analytics 4 + Consent Mode v2. Defaults must be set before gtag.js loads. -->
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8RF8YQ5YB1');
+      window.gtag = window.gtag || function gtag(){dataLayer.push(arguments);};
+      (function initConsentDefault() {
+        var key = 'aicheck_consent_v1';
+        var stored = null;
+        try { stored = JSON.parse(localStorage.getItem(key) || 'null'); } catch {}
+        var lang = document.documentElement.lang || '';
+        var tz = '';
+        try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch {}
+        var europeTz = /^Europe\//.test(tz) || ['Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Azores'].includes(tz);
+        var consentRequired = ['de', 'fr', 'es'].includes(lang) || europeTz;
+        var state = stored && stored.state ? stored.state : (consentRequired ? 'unset_required' : 'granted_all');
+        var granted = state === 'granted_all';
+        window.__AICHECK_CONSENT_REQUIRED__ = consentRequired;
+        window.__AICHECK_CONSENT_STATE__ = state;
+        window.gtag('consent', 'default', {
+          ad_storage: granted ? 'granted' : 'denied',
+          analytics_storage: granted ? 'granted' : 'denied',
+          ad_user_data: granted ? 'granted' : 'denied',
+          ad_personalization: granted ? 'granted' : 'denied',
+        });
+      })();
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-8RF8YQ5YB1', { anonymize_ip: true });
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RF8YQ5YB1"></script>
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
@@ -381,7 +405,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
       <a href={homeHref} class="site-logo">AICheck365</a>
       <nav class="site-nav" id="site-nav">
         <a href={platformsHref} class="nav-link" data-i18n="nav.platforms">{navLabels.platforms}</a>
-        <a href={toolsHref} class="nav-link" data-i18n="nav.tools" data-no-localize>{navLabels.tools}</a>
+        <a href={toolsHref} class="nav-link" data-i18n="nav.tools" data-no-localize={toolsNoLocalize ? true : undefined}>{navLabels.tools}</a>
         <a href={`${navPrefix}/blog/`} class="nav-link" data-i18n="nav.blog">{navLabels.blog}</a>
         <a href={`${navPrefix}/methodology/`} class="nav-link" data-i18n="nav.methodology">{navLabels.methodology}</a>
         <a href={aboutHref} class="nav-link" data-i18n="nav.about">{navLabels.about}</a>
@@ -405,7 +429,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <a href={homeHref} class="mobile-link" data-i18n="nav.tool">{navLabels.tool}</a>
       <a href={platformsHref} class="mobile-link" data-i18n="nav.platforms">{navLabels.platforms}</a>
-      <a href={toolsHref} class="mobile-link" data-i18n="nav.tools" data-no-localize>{navLabels.tools}</a>
+      <a href={toolsHref} class="mobile-link" data-i18n="nav.tools" data-no-localize={toolsNoLocalize ? true : undefined}>{navLabels.tools}</a>
       <a href={`${navPrefix}/blog/`} class="mobile-link" data-i18n="nav.blog">{navLabels.blog}</a>
       <a href={`${navPrefix}/methodology/`} class="mobile-link" data-i18n="nav.methodology">{navLabels.methodology}</a>
       <a href={aboutHref} class="mobile-link" data-i18n="nav.about">{navLabels.about}</a>
@@ -420,7 +444,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
         <div class="footer-links">
           <a href={homeHref} data-i18n="nav.tool">{navLabels.tool}</a>
           <a href={platformsHref} data-i18n="nav.platforms">{navLabels.platforms}</a>
-          <a href={toolsHref} data-i18n="nav.tools" data-no-localize>{navLabels.tools}</a>
+          <a href={toolsHref} data-i18n="nav.tools" data-no-localize={toolsNoLocalize ? true : undefined}>{navLabels.tools}</a>
           <a href={`${navPrefix}/methodology/`} data-i18n="nav.methodology">{navLabels.methodology}</a>
           <a href={aboutHref} data-i18n="nav.about">{navLabels.about}</a>
           <a href={`${navPrefix}/privacy/`} data-i18n="nav.privacy">{navLabels.privacy}</a>
@@ -433,6 +457,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
       </div>
     </footer>
 
+    <script type="module" src="/scripts/consent.js"></script>
     <script type="module" src="/scripts/lang-init.js"></script>
   </body>
 </html>

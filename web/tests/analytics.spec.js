@@ -4,6 +4,21 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SAMPLE = path.join(__dirname, '../public/samples/verified-ai-credentials.jpg');
+const PNG_SAMPLE = path.join(__dirname, '../public/samples/generation-parameters.png');
+const FORBIDDEN_PARAM_KEYS = [
+  'file_name', 'filename', 'file_path', 'filepath', 'gps', 'lat', 'lng',
+  'latitude', 'longitude', 'prompt', 'exif', 'hash', 'sha', 'md5', 'serial',
+  'certificate', 'raw_json', 'metadata_value',
+];
+const TOOL_EVENT_ALLOWED_PARAMS = {
+  detector_view: ['locale', 'page_type', 'tool_type'],
+  file_select: ['file_category', 'mime_group', 'file_count_bucket'],
+  analysis_start: ['tool_type'],
+  analysis_complete: ['result_category', 'duration_bucket', 'file_category'],
+  analysis_error: ['sanitized_error_code', 'file_category'],
+  copy_result: ['copy_type'],
+  export_result: ['export_type'],
+};
 
 // Minimal fake report for driving render.js
 const fakeReport = {
@@ -30,6 +45,16 @@ async function installGtagStub(page) {
 
 function getAllRecordedEvents(page) {
   return page.evaluate(() => window.__ga_calls__ || []);
+}
+
+function assertNoForbiddenAnalyticsParams(calls) {
+  for (const call of calls) {
+    const paramKeys = Object.keys(call.params || {}).map(k => k.toLowerCase());
+    for (const key of paramKeys) {
+      const hasForbidden = FORBIDDEN_PARAM_KEYS.some(f => key === f || key.includes(f));
+      expect(hasForbidden, `Event "${call.name}" has forbidden param key "${key}"`).toBe(false);
+    }
+  }
 }
 
 test('result_status_viewed fires with state letter when renderResult is called', async ({ page }) => {
@@ -133,16 +158,53 @@ test('analytics params contain NO forbidden private keys', async ({ page }) => {
   await page.locator('#receipt-mount button[data-act="text"]').click();
 
   const calls = await getAllRecordedEvents(page);
-  const forbidden = ['file_name', 'filename', 'file_path', 'filepath', 'gps', 'lat', 'lng',
-    'latitude', 'longitude', 'prompt', 'exif', 'hash', 'sha', 'md5'];
+  assertNoForbiddenAnalyticsParams(calls);
+});
 
-  for (const call of calls) {
-    const paramKeys = Object.keys(call.params || {}).map(k => k.toLowerCase());
-    for (const key of paramKeys) {
-      const hasForbidden = forbidden.some(f => key === f || key.includes(f));
-      expect(hasForbidden, `Event "${call.name}" has forbidden param key "${key}"`).toBe(false);
-    }
+test('tool page analytics follows the PRD allowlist and keeps file data private', async ({ page }) => {
+  test.setTimeout(90000);
+  await installGtagStub(page);
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: () => Promise.resolve() },
+    });
+    window.confirm = () => true;
+  });
+  await page.goto('/en/tools/png-parameter-extractor/');
+  await page.waitForFunction(() => window.__ga_calls__?.some((c) => c.name === 'detector_view'));
+
+  await page.locator('#tool-file-input').setInputFiles(PNG_SAMPLE);
+  await expect(page.locator('#tool-output')).toBeVisible({ timeout: 80000 });
+  await page.locator('#tool-copy').click();
+  await page.waitForFunction(() => window.__ga_calls__?.some((c) => c.name === 'copy_result'), null, { timeout: 5000 });
+  await page.locator('#tool-export').click();
+  await page.waitForFunction(() => window.__ga_calls__?.some((c) => c.name === 'export_result'), null, { timeout: 5000 });
+
+  const calls = await getAllRecordedEvents(page);
+  const toolCalls = calls.filter((c) => Object.prototype.hasOwnProperty.call(TOOL_EVENT_ALLOWED_PARAMS, c.name));
+  const names = toolCalls.map((c) => c.name);
+  for (const eventName of ['detector_view', 'file_select', 'analysis_start', 'analysis_complete', 'copy_result', 'export_result']) {
+    expect(names).toContain(eventName);
   }
+
+  for (const call of toolCalls) {
+    const allowed = TOOL_EVENT_ALLOWED_PARAMS[call.name];
+    const actual = Object.keys(call.params || {}).sort();
+    expect(actual, `Unexpected params for ${call.name}`).toEqual([...allowed].sort());
+  }
+
+  const selected = toolCalls.find((c) => c.name === 'file_select');
+  expect(selected.params).toEqual({ file_category: 'image', mime_group: 'image', file_count_bucket: '1' });
+  const completed = toolCalls.find((c) => c.name === 'analysis_complete');
+  expect(completed.params.result_category).toBe('signals_found');
+
+  assertNoForbiddenAnalyticsParams(toolCalls);
+  const payloadText = JSON.stringify(toolCalls.map((c) => c.params)).toLowerCase();
+  expect(payloadText).not.toContain('generation-parameters');
+  expect(payloadText).not.toContain('workflow');
+  expect(payloadText).not.toContain('prompt');
+  expect(payloadText).not.toContain('raw');
 });
 
 test('upload_started fires when a file is selected on the home detector', async ({ page }) => {

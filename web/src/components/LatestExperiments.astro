@@ -26,8 +26,15 @@ const h = homeStrings(resolveLang(Astro.url.pathname)).experiments;
           {e.parserVersion && (
             <p class="muted experiment-parser">{h.parser}: {e.parserVersion}</p>
           )}
-          {e.detailUrl && (
-            <a href={e.detailUrl} class="experiment-link" rel="noopener" target="_blank">{h.detail} →</a>
+          {(e.researchUrl || e.detailUrl) && (
+            <a
+              href={e.researchUrl || e.detailUrl}
+              class="experiment-link"
+              rel={e.researchUrl ? undefined : 'noopener'}
+              target={e.researchUrl ? undefined : '_blank'}
+            >
+              {h.detail} →
+            </a>
           )}
         </article>
       ))}

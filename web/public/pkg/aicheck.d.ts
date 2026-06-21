@@ -9,6 +9,12 @@ export function analyzeVideoFrameRgba(rgba: Uint8Array, width: number, height: n
 
 export function initPanicHook(): void;
 
+export function inspectExifXmp(bytes: Uint8Array): any;
+
+export function inspectMp4Metadata(bytes: Uint8Array): any;
+
+export function inspectPngMetadata(bytes: Uint8Array): any;
+
 export function start(): void;
 
 export function supportedImageCapabilities(): any;
@@ -24,11 +30,14 @@ export interface InitOutput {
     readonly analyzeImage: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly analyzeMedia: (a: number, b: number, c: number, d: number) => [number, number, number];
     readonly analyzeVideoFrameRgba: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
+    readonly inspectExifXmp: (a: number, b: number) => [number, number, number];
+    readonly inspectMp4Metadata: (a: number, b: number) => [number, number, number];
+    readonly inspectPngMetadata: (a: number, b: number) => [number, number, number];
     readonly supportedImageCapabilities: () => [number, number, number];
     readonly verifyC2pa: (a: number, b: number, c: number, d: number) => [number, number, number];
+    readonly supportedMediaCapabilities: () => [number, number, number];
     readonly initPanicHook: () => void;
     readonly start: () => void;
-    readonly supportedMediaCapabilities: () => [number, number, number];
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;

@@ -626,7 +626,7 @@ const PLATFORM_DISCLAIMER = {
 };
 const platformDisclaimer = PLATFORM_DISCLAIMER[lang] ?? PLATFORM_DISCLAIMER.en;
 const publishedAt = '2026-05-26';
-const modifiedAt = '2026-05-29';
+const modifiedAt = '2026-06-21';
 
 function titleWithSuffix(title) {
   return `${title} | ${c.metaSuffix}`;
@@ -646,6 +646,196 @@ function platformMetaDescription(name) {
   };
   return descriptions[lang] ?? descriptions.en;
 }
+
+const priorityPlatformProfiles = {
+  en: {
+    sora: {
+      title: 'Sora AI Detector: Check MP4 Metadata, C2PA and Frame Watermarks',
+      description: 'Check original Sora MP4/MOV exports locally for C2PA text, MP4/MOV metadata, SEI markers, file-name clues, and sampled frame watermark signals.',
+      h1: 'Sora AI Detector: what to check in the original video file',
+      meta: 'Target query: sora ai detector · Updated June 2026 · Parser: aicheck 0.2.0',
+      lead: 'To check a Sora video, start with the original MP4 or MOV export. AICheck365 looks for preserved file evidence first: C2PA/JUMBF text, MP4/MOV container fields, SEI markers, file-name clues, and only then sampled frame watermark signals. A screenshot or social-media reupload usually removes the strongest evidence.',
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Sora original sample', 'Not yet available in this repository. This page intentionally does not claim a Sora-specific test result until a licensed original export is added.'],
+        ['Closest video regression sample', 'A user-provided Google Veo MP4 with valid Google generative-AI C2PA is bundled for video-C2PA regression. It proves the MP4/C2PA path, not Sora-specific provenance.'],
+        ['Tested parser', 'aicheck 0.2.0 (Rust/WASM, c2pa-rs 0.82 path for C2PA, MP4 container scanner for boxes and ilst fields).'],
+      ],
+      signalRows: [
+        ['C2PA / JUMBF text', 'Strong when present: digitalSourceType, claim_generator, contentauth, or OpenAI-related provenance strings in the original container.'],
+        ['MP4/MOV metadata', 'Medium: ftyp brand, box tree, udta/meta/ilst, encoder/tool/software fields, AIGC-style labels, and C2PA text snippets.'],
+        ['SEI marker', 'Weak to medium: generator strings embedded in the video bitstream can survive remuxing, but not full re-encoding.'],
+        ['Frame watermark', 'Weak: sampled frame checks are a fallback when metadata layers are empty.'],
+      ],
+      limits: [
+        'No readable signal does not prove the video is human-made.',
+        'Social platforms, screen recording, editors, and transcoders can remove or overwrite container metadata.',
+        'The browser detector surfaces evidence clues; it is not a legal authenticity verdict.',
+      ],
+      ctaLead: 'Use the container-first tool for original Sora exports, or return to the full detector when you need fallback frame analysis.',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'Inspect MP4/MOV metadata' },
+        { href: '/', label: 'Run the full local detector' },
+        { href: '/blog/how-to-detect-ai-videos/', label: 'Read the AI video workflow' },
+      ],
+      faq: [
+        ['Can AICheck365 detect every Sora video?', 'No. It can only show evidence that remains in the file you upload. If the file was transcoded, recorded from screen, or stripped, the strongest evidence may be gone.'],
+        ['Should I upload a screenshot of a Sora frame?', 'Prefer the original video. A screenshot is a new image file and usually has none of the MP4/C2PA container evidence.'],
+        ['Is a Sora-specific sample bundled?', 'Not yet. The page records that gap explicitly so the SEO page does not overclaim.'],
+      ],
+    },
+    gemini: {
+      title: 'Gemini C2PA Checker: Inspect Google AI Content Credentials',
+      description: 'Inspect original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.',
+      h1: 'Gemini C2PA checker: read the evidence in the original file',
+      meta: 'Target query: gemini c2pa · Updated June 2026 · Parser: aicheck 0.2.0',
+      lead: 'For Gemini or Google AI files, the most useful evidence is usually inside the original download, not in the pixels. AICheck365 checks C2PA/JUMBF data, PNG caBX-style provenance containers, digitalSourceType, Google claim-generator strings, XMP/EXIF fields, and MP4/MOV metadata locally in the browser.',
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Gemini image sample', 'Not bundled yet. The page does not claim a direct Gemini PNG test until a licensed original sample is added.'],
+        ['Bundled Google generative-AI video sample', 'A Google Veo MP4 is included and carries valid Google generative-AI C2PA; it validates the Google C2PA video path, not Gemini image coverage.'],
+        ['Key fields to inspect', 'digitalSourceType = trainedAlgorithmicMedia, claim_generator_info, Google / Gemini / Imagen strings, PNG/JPEG C2PA locations, and MP4 tool fields.'],
+      ],
+      signalRows: [
+        ['C2PA Content Credentials', 'Strong when a valid manifest declares trainedAlgorithmicMedia or a Google generative-AI claim generator.'],
+        ['PNG caBX / JUMBF', 'Important for original Google/Gemini-style image files because ordinary image viewers often hide these bytes.'],
+        ['XMP / EXIF', 'Medium: Credit, CreatorTool, Software, and Google AI strings can support the C2PA evidence.'],
+        ['File name', 'Weak: names such as Gemini_Generated_Image are useful context but can be edited.'],
+      ],
+      limits: [
+        'A screenshot or chat-app copy usually removes C2PA and XMP data.',
+        'SynthID-style pixel watermarks are not equivalent to third-party readable C2PA metadata.',
+        'No signal only means this file copy has no readable evidence.',
+      ],
+      ctaLead: 'Use the C2PA validator when you specifically need manifest details; use the EXIF/XMP reader for supporting metadata.',
+      ctas: [
+        { href: '/tools/c2pa-validator/', label: 'Open the C2PA validator' },
+        { href: '/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields' },
+        { href: '/blog/how-to-detect-gemini-generated-images/', label: 'Read the Gemini metadata guide' },
+      ],
+      faq: [
+        ['Does every Gemini image include C2PA?', 'No. Product entry point, file format, export path, and later processing can change whether C2PA remains readable.'],
+        ['What is the strongest Gemini C2PA field?', 'A manifest with digitalSourceType = trainedAlgorithmicMedia or a Google generative-AI claim generator is much stronger than a file name.'],
+        ['Will my Gemini file be uploaded?', 'No. The checks run locally in the browser.'],
+      ],
+    },
+    comfyui: {
+      title: 'ComfyUI EXIF and Metadata Viewer: Extract PNG Workflow JSON',
+      description: 'Inspect original ComfyUI PNG files for prompt, workflow JSON, node graph data, Stable Diffusion parameters, model names, seed, sampler, CFG, and dimensions.',
+      h1: 'ComfyUI EXIF? The useful data is usually PNG workflow metadata',
+      meta: 'Target query: comfyui exif · Tested 2026-06-19 · Parser: aicheck 0.2.0',
+      lead: 'People search for “ComfyUI EXIF”, but ComfyUI usually stores generation data in PNG text chunks, not camera EXIF. Upload the original PNG to extract prompt/workflow JSON, node count, model names, seed, sampler, CFG, dimensions, and raw text chunks locally in your browser.',
+      sampleHeading: 'Real sample and parser output',
+      sampleRows: [
+        ['Bundled sample', 'ComfyUI / Stable Diffusion XL PNG from ComfyUI official examples.'],
+        ['Detected fields', 'PNG text chunks named prompt / workflow; full unsigned workflow JSON; AI-related metadata at low confidence because it is not signed.'],
+        ['Known limits', 'Prompt and workflow chunks are not cryptographically signed and are often stripped by social platforms, chat apps, and screenshots.'],
+      ],
+      signalRows: [
+        ['prompt', 'ComfyUI node graph data and generation parameters serialized as JSON.'],
+        ['workflow', 'The graph structure that can often be loaded back into ComfyUI.'],
+        ['Model and sampler fields', 'Checkpoint/model file names, sampler, scheduler, steps, CFG, seed, width, and height when present.'],
+        ['Raw text chunks', 'Original tEXt/iTXt/zTXt values are retained for expert review and JSON export.'],
+      ],
+      limits: [
+        'Unsigned metadata can be edited and should not be treated as legal proof.',
+        'A missing workflow does not mean an image is not AI-generated.',
+        'Screenshots and platform-compressed copies usually remove the PNG workflow chunks.',
+      ],
+      ctaLead: 'The PNG Parameter / Workflow Extractor is the primary page for the “comfyui exif” intent.',
+      ctas: [
+        { href: '/tools/png-parameter-extractor/', label: 'Extract PNG workflow metadata' },
+        { href: '/tools/exif-xmp-reader/', label: 'Check EXIF/XMP too' },
+        { href: '/platforms/stable-diffusion/', label: 'Compare Stable Diffusion signals' },
+      ],
+      faq: [
+        ['Is ComfyUI metadata really EXIF?', 'Usually no. The important data is commonly in PNG text chunks such as prompt and workflow.'],
+        ['Can I recover the exact workflow?', 'Often yes for original PNG exports, but only if the workflow chunk was written and preserved.'],
+        ['Why is confidence lower than C2PA?', 'Because ComfyUI workflow metadata is unsigned and can be edited.'],
+      ],
+    },
+  },
+};
+
+const priorityArticleProfiles = {
+  de: {
+    'blog/how-to-detect-ai-videos': {
+      title: 'Videoerkennung: AI-Videos über MP4-Metadaten, C2PA und Wasserzeichen prüfen',
+      description: 'Videoerkennung für AI-Clips: Prüfe Originalvideos lokal auf C2PA, MP4/MOV-Metadaten, SEI marker, Dateinamen und Frame-Wasserzeichen.',
+      h1: 'Videoerkennung für AI-Videos: zuerst die Originaldatei prüfen',
+      meta: 'Ziel-Keyword: videoerkennung · Aktualisiert Juni 2026 · Parser: aicheck 0.2.0',
+      lead: 'Für die Videoerkennung ist die Originaldatei entscheidend. AICheck365 prüft MP4/MOV-Metadaten, C2PA/JUMBF-Text, SEI marker, Dateinamen und erst danach einzelne Frames auf Wasserzeichen. Ein Social-Media-Upload oder eine Bildschirmaufnahme kann die stärksten Signale entfernen.',
+      sampleHeading: 'Getestete Beispiele',
+      sampleRows: [
+        ['Google Veo MP4', 'Originalvideo mit gültigen Google-C2PA-Content-Credentials; digitalSourceType = trainedAlgorithmicMedia.'],
+        ['Generisches signiertes MP4', 'C2PA ist vorhanden und gültig, aber nicht AI-spezifisch; dient als Regression für BMFF/C2PA.'],
+        ['Parser-Version', 'aicheck 0.2.0, Rust/WASM, MP4-Container-Scanner und C2PA-Pfad.'],
+      ],
+      signalRows: [
+        ['C2PA / Content Credentials', 'Starkes Signal, wenn ein Manifest eine AI-Quelle deklariert.'],
+        ['MP4/MOV-Felder', 'Encoder, tool, software, AIGC-Labels und Box-Pfade zeigen, wo ein Hinweis gefunden wurde.'],
+        ['SEI marker', 'Kann Remuxing überleben, verschwindet aber häufig beim Neucodieren.'],
+        ['Frame-Wasserzeichen', 'Fallback mit niedrigerem Gewicht, wenn Metadaten fehlen.'],
+      ],
+      limits: [
+        'Kein Treffer beweist nicht, dass ein Video menschlich erstellt wurde.',
+        'Transcoding, Screenshots und Schnittprogramme überschreiben häufig Containerdaten.',
+        'Die Prüfung läuft lokal; große Videos können länger dauern.'],
+      ctaLead: 'Nutze zuerst den MP4/MOV-Metadaten-Inspector für Originaldateien.',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'MP4/MOV-Metadaten prüfen', localized: false },
+        { href: '/', label: 'Vollständigen Detektor öffnen' },
+        { href: '/platforms/sora/', label: 'Sora-Profil lesen' },
+      ],
+      faq: [
+        ['Was bedeutet Videoerkennung hier?', 'Es geht um lesbare Herkunftssignale in der Datei, nicht um ein intransparentes Prozenturteil.'],
+        ['Warum ist ein Originalvideo wichtig?', 'Weil Transcoding C2PA, MP4-Felder und Encoderdaten entfernen oder überschreiben kann.'],
+        ['Werden Videos hochgeladen?', 'Nein. Die Analyse läuft lokal im Browser.'],
+      ],
+    },
+  },
+  'pt-BR': {
+    'blog/how-to-detect-ai-images': {
+      title: 'Como identificar imagens geradas por IA em 2026: metadados, C2PA e PNG',
+      description: 'Guia prático em português do Brasil para identificar imagens geradas por IA em 2026 usando EXIF/XMP, C2PA, parâmetros PNG, amostras reais e limites claros.',
+      h1: 'Como identificar imagens geradas por IA em 2026',
+      meta: 'Keyword alvo: como identificar imagens geradas por ia 2026 · Atualizado em junho de 2026 · Parser: aicheck 0.2.0',
+      lead: 'Para identificar uma imagem gerada por IA em 2026, comece pelo arquivo original. AICheck365 procura evidências legíveis: C2PA, EXIF/XMP, textos PNG com parâmetros, workflow JSON do ComfyUI, nome do arquivo e sinais de plataforma. Se a imagem for print ou cópia de rede social, muitos sinais podem ter desaparecido.',
+      sampleHeading: 'Amostras reais usadas nos testes',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'C2PA válido com digitalSourceType = trainedAlgorithmicMedia; assinatura criptograficamente válida, mas certificado fora da lista de confiança do navegador.'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'Chunks PNG text prompt/workflow com parâmetros de geração não assinados.'],
+        ['Imagem sem metadados', 'Retorna “sem evidência legível”; isso não prova criação humana.'],
+      ],
+      signalRows: [
+        ['C2PA', 'Mais forte quando o manifesto assinado declara trainedAlgorithmicMedia ou fonte algorítmica.'],
+        ['EXIF/XMP', 'Software, CreatorTool, Credit, DigitalSourceType e campos de ferramenta ajudam quando preservados.'],
+        ['PNG parameters', 'Stable Diffusion, AUTOMATIC1111, ComfyUI e NovelAI podem gravar prompt, seed, sampler, CFG e workflow.'],
+        ['Contexto visual', 'Útil como pista, mas não substitui evidência de arquivo.'],
+      ],
+      limits: [
+        'Ausência de sinais não significa que a imagem é real.',
+        'Prints, WhatsApp, Instagram, editores e compressores removem metadados.',
+        'Metadados sem assinatura podem ser editados; trate como pista, não veredito legal.',
+      ],
+      ctaLead: 'Use primeiro as ferramentas de metadados; depois compare com o contexto visual e a origem do arquivo.',
+      ctas: [
+        { href: '/tools/exif-xmp-reader/', label: 'Abrir leitor EXIF/XMP', localized: false },
+        { href: '/tools/png-parameter-extractor/', label: 'Extrair parâmetros PNG', localized: false },
+        { href: '/', label: 'Usar detector completo' },
+      ],
+      faq: [
+        ['Dá para identificar qualquer imagem de IA?', 'Não. A ferramenta só mostra sinais preservados no arquivo atual.'],
+        ['O que é melhor: metadados ou análise visual?', 'Metadados preservados costumam ser mais explicáveis; análise visual é apenas apoio.'],
+        ['Meus arquivos são enviados?', 'Não. A análise roda localmente no navegador.'],
+      ],
+    },
+  },
+};
+
+const priorityPlatformProfile = platform ? priorityPlatformProfiles[lang]?.[platform.slug] : null;
+const priorityArticleProfile = priorityArticleProfiles[lang]?.[path] ?? null;
+const profileHref = (cta) => cta.localized === false ? cta.href : localHref(cta.href);
 
 function jsonLdBase(type, name, description) {
   const pageUrl = `${SITE_URL}${prefix}/${path}/`;
@@ -718,6 +908,40 @@ if (path === 'blog') {
   jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
 }
 
+if (priorityPlatformProfile) {
+  pageTitle = priorityPlatformProfile.title;
+  pageDescription = priorityPlatformProfile.description;
+  jsonLd = [
+    ...jsonLdBase('Article', pageTitle, pageDescription),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: priorityPlatformProfile.faq.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    },
+  ];
+}
+
+if (priorityArticleProfile) {
+  pageTitle = priorityArticleProfile.title;
+  pageDescription = priorityArticleProfile.description;
+  jsonLd = [
+    ...jsonLdBase('Article', pageTitle, pageDescription),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: priorityArticleProfile.faq.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    },
+  ];
+}
+
 const articles = Object.keys(pageTitles).map((slug) => ({
   slug: slug.replace('blog/', ''),
   title: titleFor(slug),
@@ -786,7 +1010,51 @@ const articles = Object.keys(pageTitles).map((slug) => ({
       </>
     )}
 
-    {path.startsWith('blog/') && (
+    {priorityArticleProfile && (
+      <article class="card content-article priority-seo-page" data-priority-page={path}>
+        <h1>{priorityArticleProfile.h1}</h1>
+        <p class="article-meta">{priorityArticleProfile.meta}</p>
+        <p class="lead-text">{priorityArticleProfile.lead}</p>
+
+        <h2>{priorityArticleProfile.sampleHeading}</h2>
+        <table class="tool-glossary">
+          <tbody>
+            {priorityArticleProfile.sampleRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+          </tbody>
+        </table>
+
+        <h2>{c.sections.signals}</h2>
+        <table class="tool-glossary">
+          <tbody>
+            {priorityArticleProfile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+          </tbody>
+        </table>
+
+        <h2>{c.sections.limits}</h2>
+        <ul class="content-list">
+          {priorityArticleProfile.limits.map((item) => <li>{item}</li>)}
+        </ul>
+
+        <div class="cta-box">
+          <p>{priorityArticleProfile.ctaLead}</p>
+          <div class="related-links">
+            {priorityArticleProfile.ctas.map((cta) => <a href={profileHref(cta)}>{cta.label} -></a>)}
+          </div>
+        </div>
+
+        <h2>{c.sections.faq}</h2>
+        <div class="faq-list">
+          {priorityArticleProfile.faq.map(([q, a]) => (
+            <details class="faq-item">
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+      </article>
+    )}
+
+    {path.startsWith('blog/') && !priorityArticleProfile && (
       <article class="card content-article">
         <h1>{pageTitle}</h1>
         <p class="article-meta">{c.updated} · AI media detection · AICheck365</p>
@@ -810,7 +1078,64 @@ const articles = Object.keys(pageTitles).map((slug) => ({
       </article>
     )}
 
-    {platform && (
+    {priorityPlatformProfile && (
+      <>
+        <article class="card content-article priority-seo-page" data-priority-page={path}>
+          <h1>{priorityPlatformProfile.h1}</h1>
+          <p class="article-meta">{priorityPlatformProfile.meta}</p>
+          <p class="lead-text">{priorityPlatformProfile.lead}</p>
+
+          <h2>{priorityPlatformProfile.sampleHeading}</h2>
+          <table class="tool-glossary">
+            <tbody>
+              {priorityPlatformProfile.sampleRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+            </tbody>
+          </table>
+
+          <h2>{c.sections.signals}</h2>
+          <table class="tool-glossary">
+            <tbody>
+              {priorityPlatformProfile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+            </tbody>
+          </table>
+
+          <h2>{c.sections.limits}</h2>
+          <ul class="content-list">
+            {priorityPlatformProfile.limits.map((item) => <li>{item}</li>)}
+          </ul>
+
+          <div class="cta-box">
+            <p>{priorityPlatformProfile.ctaLead}</p>
+            <div class="related-links">
+              {priorityPlatformProfile.ctas.map((cta) => <a href={profileHref(cta)}>{cta.label} -></a>)}
+            </div>
+          </div>
+
+          <h2>{c.sections.faq}</h2>
+          <div class="faq-list">
+            {priorityPlatformProfile.faq.map(([q, a]) => (
+              <details class="faq-item">
+                <summary>{q}</summary>
+                <p>{a}</p>
+              </details>
+            ))}
+          </div>
+        </article>
+        <div class="platform-disclaimer card" role="note">
+          <p>{platformDisclaimer}</p>
+        </div>
+        <div class="related-platforms card">
+          <h2>{c.platforms}</h2>
+          <div class="related-links">
+            {relatedPlatforms.map((item) => (
+              <a href={localHref(`/platforms/${item.slug}/`)}>{item.name} -></a>
+            ))}
+          </div>
+        </div>
+      </>
+    )}
+
+    {platform && !priorityPlatformProfile && (
       <>
         <article class="card content-article">
           <h1>{pageTitle}</h1>

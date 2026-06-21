@@ -58,6 +58,7 @@ dependencies = [
  "clap",
  "colored",
  "console_error_panic_hook",
+ "flate2",
  "id3",
  "image",
  "infer",

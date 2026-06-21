@@ -4,9 +4,8 @@ applyI18n();
 
 document.getElementById('lang-switch')?.addEventListener('change', (e) => {
   const lang = e.target.value;
-  // Single-language pages (e.g. /tools/*) have no localized variant of THIS
-  // path, so navigating to it would 404. Switch the stored language and send
-  // the user to that language's homepage instead.
+  // Single-language pages have no localized variant of THIS path, so navigating
+  // to it would 404. Store the language and send the user to that homepage.
   if (document.body?.dataset.singleLang === 'true') {
     setLang(lang, { navigate: false });
     window.location.assign(lang === 'zh-CN' ? '/' : `/${lang}/`);

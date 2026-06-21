@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import experiments from '../../../public/data/experiments.json';
+
+const title = 'Research Center: AI Media Provenance Experiments | AICheck365';
+const description = 'AICheck365 Research Center publishes reproducible browser-local AI media provenance experiments, including tested samples, parser versions, expected signals, actual signals, limitations, and source licenses.';
+const canonical = 'https://www.aicheck365.com/research/';
+const sortedExperiments = [...experiments].sort((a: any, b: any) => String(b.testDate).localeCompare(String(a.testDate)));
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description,
+    url: canonical,
+    inLanguage: 'en',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aicheck365.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Research', item: canonical },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} singleLang={true}>
+  <main class="page content-page research-page">
+    <section class="content-hero">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true"> › </span>
+        <span>Research</span>
+      </nav>
+      <h1>Research Center</h1>
+      <p class="lead-text">Reproducible, browser-local tests for AI media provenance signals. Each note records the sample source, license, parser version, expected signals, actual output, misses, limitations, and steps to reproduce.</p>
+    </section>
+
+    <section class="research-grid" aria-label="Research experiments">
+      {sortedExperiments.map((experiment: any) => (
+        <article class="research-card">
+          <div class="research-card-head">
+            <span class="tag-inline">{experiment.fileFormat}</span>
+            <span class="muted">{experiment.testDate}</span>
+          </div>
+          <h2><a href={experiment.researchUrl}>{experiment.platform}</a></h2>
+          <p>{experiment.mainFindings}</p>
+          <dl class="research-meta">
+            <div><dt>Samples</dt><dd>{experiment.sampleCount}</dd></div>
+            <div><dt>Parser</dt><dd>{experiment.parserVersion}</dd></div>
+            <div><dt>License</dt><dd>{experiment.sourceLicense}</dd></div>
+          </dl>
+          <a class="experiment-link" href={experiment.researchUrl}>Read experiment →</a>
+        </article>
+      ))}
+    </section>
+  </main>
+</Base>

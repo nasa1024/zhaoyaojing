@@ -1,0 +1,359 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const DEFAULT_LANG = 'zh-CN';
+const TOOL_ALTERNATE_LANGS = ['zh-CN', 'en'];
+
+function getUrlLang(pathname) {
+  const seg = pathname.split('/').filter(Boolean)[0];
+  return SUPPORTED_LANGS.includes(seg) ? seg : null;
+}
+
+const urlLang = getUrlLang(Astro.url.pathname);
+const pageLang = urlLang === 'en' ? 'en' : DEFAULT_LANG;
+const homePath = pageLang === 'en' ? '/en/' : '/';
+const toolsPath = pageLang === 'en' ? '/en/tools/' : '/tools/';
+const toolsUrl = `https://www.aicheck365.com${toolsPath}`;
+
+function localizeHref(href) {
+  if (pageLang !== 'en' || !href.startsWith('/')) return href;
+  return href === '/' ? '/en/' : `/en${href}`;
+}
+
+const TOOL_PAGES_ZH = {
+  'exif-xmp-reader': {
+    tool: 'exif-xmp-reader',
+    title: 'EXIF/XMP 阅读器：查看 AI 图片元数据 | AICheck365',
+    description: 'EXIF/XMP 阅读器：在浏览器本地查看图片 EXIF、XMP、IPTC 与基础属性，搜索字段、复制安全摘要、导出 JSON，并高亮 AI 生成工具相关字段。',
+    h1: 'EXIF/XMP 阅读器',
+    lead: '上传一张原始图片，查看它保留的 EXIF、XMP、软件、时间、版权、位置和 AI/生成工具字段。工具会标记 GPS、序列号、作者联系方式、提示词等敏感字段；复制摘要默认跳过这些字段，完整 JSON 导出前会再次确认。',
+    uploadTitle: '上传图片查看 EXIF / XMP',
+    uploadZone: '点击或拖拽图片到此处',
+    formats: '支持 JPEG / PNG / WebP / GIF / BMP / TIFF',
+    accept: 'image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff',
+    usage: ['选择原始图片；社交平台压缩图往往已经丢失元数据。', '用搜索框查找字段名、软件名、平台名或字段值。', '复制 JSON 会生成安全摘要；如需完整导出，先确认是否包含敏感字段。'],
+    fields: [
+      ['AI / 生成工具', 'Software、CreatorTool、DigitalSourceType、AISystemUsed、AIPromptInformation 等。'],
+      ['敏感字段', 'GPS、序列号、作者联系方式、UserComment、提示词和嵌入缩略图默认被标记。'],
+      ['原始 XMP', '如果文件含 XMP packet，会作为可折叠 raw blob 展示，便于专家复核。'],
+    ],
+    limits: ['元数据可以被编辑、伪造或清除；单个字段不能作为法律级证明。', '未发现 EXIF/XMP 不代表图片不是 AI 生成，只说明当前文件没有保留这些可读字段。', '复制摘要会省略敏感字段；完整导出请先确认用途和保存范围。'],
+    faq: [
+      { q: '为什么有些图片没有 EXIF？', a: '许多平台会在上传、压缩、截图或重新导出时清除 EXIF/XMP。无字段只代表当前副本没有保留可读元数据。' },
+      { q: 'EXIF Software 命中 AI 工具就能确定吗？', a: '它是来源线索，但不是签名证明。建议结合 C2PA、PNG 参数、平台页样本和文件来源一起判断。' },
+      { q: '文件会上传吗？', a: '不会。解析逻辑通过 WebAssembly 在你的浏览器本地运行。' },
+    ],
+    related: [
+      ['/tools/c2pa-validator/', 'C2PA 验证器'],
+      ['/tools/png-parameter-extractor/', 'PNG 参数/工作流提取器'],
+      ['/platforms/gemini/', 'Gemini / Google AI 指南'],
+      ['/blog/ai-image-metadata-guide/', 'AI 图片/视频元数据指南'],
+    ],
+  },
+  'png-parameter-extractor': {
+    tool: 'png-parameter-extractor',
+    title: 'ComfyUI Metadata Viewer：PNG 参数与工作流提取器 | AICheck365',
+    description: 'ComfyUI Metadata Viewer / PNG 参数提取器：读取 PNG tEXt、iTXt、zTXt、ComfyUI workflow、A1111 parameters、Stable Diffusion 与 NovelAI 元数据。本地分析，不上传文件。',
+    h1: 'PNG 参数与 ComfyUI Workflow 提取器',
+    lead: '上传原始 PNG，提取 tEXt、iTXt、zTXt 文本块中的 ComfyUI prompt/workflow、AUTOMATIC1111 parameters、Stable Diffusion 参数和 NovelAI 线索。结果可搜索、复制安全摘要或导出完整 JSON。',
+    uploadTitle: '上传 PNG 提取参数',
+    uploadZone: '点击或拖拽 PNG 到此处',
+    formats: '支持 PNG tEXt / iTXt / zTXt 文本块',
+    accept: 'image/png,.png',
+    usage: ['优先上传生成工具直接导出的 PNG，而不是截图或社交平台保存图。', '顶部摘要会说明是否发现 ComfyUI、A1111 或 NovelAI 结构。', 'Raw data 区域保留原始文本块；大型 workflow 默认折叠。'],
+    fields: [
+      ['ComfyUI', 'prompt、workflow、节点数量、首个 class_type 和原始 JSON。'],
+      ['A1111 / Stable Diffusion', '正向提示词、反向提示词、steps、sampler、CFG、seed、size、model/hash。'],
+      ['NovelAI', '识别 NovelAI 相关文本结构，并保留原始文本块供复核。'],
+    ],
+    limits: ['未签名 PNG 参数可以被人为修改，不能单独证明真实来源。', '无文本块不代表图片不是 AI 生成；很多导出、压缩和截图会移除参数。', '复制摘要默认跳过 prompt/workflow 等敏感内容，完整导出前会二次确认。'],
+    faq: [
+      { q: 'ComfyUI 为什么经常被搜索成 EXIF？', a: '很多用户把“图片里保存的生成信息”统称为 EXIF，但 ComfyUI 通常写在 PNG 文本块或 workflow JSON，不是真正的相机 EXIF。' },
+      { q: '支持压缩 zTXt 吗？', a: '支持。当前浏览器解析器会读取 PNG tEXt、iTXt 和 zTXt，并在可解压时展示文本内容。' },
+      { q: '没有 parameters 是否说明不是 Stable Diffusion？', a: '不能。参数可能在导出链路中被移除，也可能使用了不写入文本块的工具。' },
+    ],
+    related: [
+      ['/platforms/comfyui/', 'ComfyUI 平台指南'],
+      ['/platforms/stable-diffusion/', 'Stable Diffusion 指南'],
+      ['/tools/exif-xmp-reader/', 'EXIF/XMP 阅读器'],
+      ['/blog/ai-image-metadata-guide/', 'AI 元数据指南'],
+    ],
+  },
+  'mp4-metadata-inspector': {
+    tool: 'mp4-metadata-inspector',
+    title: 'MP4/MOV 元数据检查器：AI 视频容器字段 | AICheck365',
+    description: 'MP4/MOV Metadata Inspector：本地查看 MP4、MOV、M4V 容器 brand、box 树、udta/meta/ilst 字段、AIGC 标签、SEI marker 与 C2PA/JUMBF 文本线索。',
+    h1: 'MP4/MOV 元数据检查器',
+    lead: '上传 MP4、MOV 或 M4V 视频，先检查容器层来源字段：ftyp brand、box 树、udta/meta/ilst、AIGC 标签、常见平台字符串、SEI marker 以及 C2PA/JUMBF 文本线索。此页面不会一开始加载 ffmpeg.wasm；抽样帧水印请使用首页通用检测器。',
+    uploadTitle: '上传视频检查容器元数据',
+    uploadZone: '点击或拖拽 MP4 / MOV / M4V 到此处',
+    formats: '支持 MP4 / MOV / M4V 容器优先检查',
+    accept: 'video/mp4,video/quicktime,video/x-m4v,.mp4,.mov,.m4v',
+    usage: ['选择原始平台导出的视频；二次转码常会移除容器字段。', '先看摘要和 AI-related signals，再展开 box tree 与 ilst 字段。', '如容器无信号，可回到首页继续做抽样帧水印检测。'],
+    fields: [
+      ['ftyp', 'major_brand、minor_version、compatible_brands。'],
+      ['udta/meta/ilst', 'encoder、software、tool、comment、AIGC 等可读字段。'],
+      ['box tree', '展示 MP4/MOV box 路径、偏移和大小，便于专家定位字段来源。'],
+    ],
+    limits: ['当前专用页优先做容器检查，不在首屏加载 ffmpeg.wasm。', '无平台字段不代表视频不是 AI 生成；转码、剪辑、上传平台都会清除来源线索。', 'WebM/AVI 可先使用首页通用检测器做基础识别。'],
+    faq: [
+      { q: '这和首页 AI 视频检测有什么区别？', a: '本页是容器元数据检查器，只看 MP4/MOV 文件结构和可读字段。首页通用检测器还可以按需抽样视频帧做水印分析。' },
+      { q: '能检测 Sora、Kling、Runway 吗？', a: '如果原始视频仍保留 C2PA-lite、MP4 字段、AIGC 标签、SEI marker 或平台字符串，就会作为来源线索显示。' },
+      { q: '为什么不直接加载 ffmpeg？', a: 'PRD 要求容器优先，避免大文件一开始就加载重型抽帧引擎，减少内存和 Core Web Vitals 风险。' },
+    ],
+    related: [
+      ['/platforms/sora/', 'Sora 视频检测指南'],
+      ['/platforms/kling/', 'Kling 视频检测指南'],
+      ['/blog/how-to-detect-ai-videos/', '如何检测 AI 视频'],
+      ['/methodology/', '方法论与限制'],
+    ],
+  },
+};
+
+const TOOL_PAGES_EN = {
+  'exif-xmp-reader': {
+    tool: 'exif-xmp-reader',
+    title: 'EXIF/XMP Reader: Inspect AI Image Metadata | AICheck365',
+    description: 'EXIF/XMP Reader: inspect image EXIF, XMP, IPTC, base properties, and AI-tool fields locally in your browser, with searchable fields, safe copy, and JSON export.',
+    h1: 'EXIF/XMP Reader',
+    lead: 'Upload an original image and inspect its retained EXIF, XMP, software, timestamp, copyright, location, and AI/generative-tool fields. The tool labels GPS, serial numbers, author contacts, prompts, and other sensitive fields; safe copy omits them by default, and full JSON export asks for confirmation.',
+    uploadTitle: 'Upload an image to read EXIF / XMP',
+    uploadZone: 'Click or drag an image here',
+    formats: 'JPEG / PNG / WebP / GIF / BMP / TIFF supported',
+    accept: 'image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff',
+    usage: ['Use the most original image you can find; social-media copies often strip metadata.', 'Search by field name, software name, platform name, or field value.', 'Copy creates a safe summary; full export asks again if sensitive fields are present.'],
+    fields: [
+      ['AI / generation tools', 'Software, CreatorTool, DigitalSourceType, AISystemUsed, AIPromptInformation, and similar fields.'],
+      ['Sensitive fields', 'GPS, serial numbers, author contacts, UserComment, prompts, and embedded thumbnails are labeled by default.'],
+      ['Raw XMP', 'If the file carries an XMP packet, it is preserved as a collapsible raw blob for expert review.'],
+    ],
+    limits: ['Metadata can be edited, forged, or stripped; a single field is not legal-grade proof.', 'No EXIF/XMP does not mean an image is human-made; it only means this copy has no readable retained fields.', 'Safe copy omits sensitive fields; confirm your use case before full export.'],
+    faq: [
+      { q: 'Why do some images have no EXIF?', a: 'Many platforms remove EXIF/XMP during upload, compression, screenshots, or re-export. Empty fields only mean this copy kept no readable metadata.' },
+      { q: 'Does an AI tool in EXIF Software prove the source?', a: 'It is a provenance clue, not a signed proof. Combine it with C2PA, PNG parameters, platform samples, and file provenance.' },
+      { q: 'Is my file uploaded?', a: 'No. Parsing runs locally in your browser through WebAssembly.' },
+    ],
+    related: [
+      ['/tools/c2pa-validator/', 'C2PA Validator'],
+      ['/tools/png-parameter-extractor/', 'PNG Parameter / Workflow Extractor'],
+      ['/platforms/gemini/', 'Gemini / Google AI Guide'],
+      ['/blog/ai-image-metadata-guide/', 'AI Image/Video Metadata Guide'],
+    ],
+  },
+  'png-parameter-extractor': {
+    tool: 'png-parameter-extractor',
+    title: 'ComfyUI Metadata Viewer: PNG Parameter Extractor | AICheck365',
+    description: 'ComfyUI Metadata Viewer / PNG Parameter Extractor: read PNG tEXt, iTXt, zTXt, ComfyUI workflow, A1111 parameters, Stable Diffusion, and NovelAI metadata locally.',
+    h1: 'PNG Parameter and ComfyUI Workflow Extractor',
+    lead: 'Upload an original PNG and extract ComfyUI prompt/workflow data, AUTOMATIC1111 parameters, Stable Diffusion settings, and NovelAI clues from PNG tEXt, iTXt, and zTXt chunks. Results are searchable, safe to copy, and exportable as JSON.',
+    uploadTitle: 'Upload a PNG to extract parameters',
+    uploadZone: 'Click or drag a PNG here',
+    formats: 'PNG tEXt / iTXt / zTXt chunks supported',
+    accept: 'image/png,.png',
+    usage: ['Prefer PNG files exported directly by the generation tool, not screenshots or social-media saves.', 'The summary shows whether ComfyUI, A1111, or NovelAI structures were found.', 'Raw data preserves original text chunks; large workflows are collapsed by default.'],
+    fields: [
+      ['ComfyUI', 'prompt, workflow, node count, first class_type, and raw JSON.'],
+      ['A1111 / Stable Diffusion', 'Positive prompt, negative prompt, steps, sampler, CFG, seed, size, model/hash.'],
+      ['NovelAI', 'NovelAI-related text structures are detected and retained for review.'],
+    ],
+    limits: ['Unsigned PNG parameters can be manually edited and do not prove origin by themselves.', 'No text chunks does not mean the image is not AI-generated; many export and compression paths strip parameters.', 'Safe copy skips prompt/workflow-style sensitive content by default; full export asks for confirmation.'],
+    faq: [
+      { q: 'Why do people call ComfyUI metadata EXIF?', a: 'Many users call any saved generation info "EXIF", but ComfyUI usually writes PNG text chunks or workflow JSON, not camera EXIF.' },
+      { q: 'Does it support compressed zTXt?', a: 'Yes. The browser parser reads PNG tEXt, iTXt, and zTXt, and displays text when it can be decompressed.' },
+      { q: 'Does no parameters mean it is not Stable Diffusion?', a: 'No. Parameters may have been stripped, or the tool may not write PNG text chunks at all.' },
+    ],
+    related: [
+      ['/platforms/comfyui/', 'ComfyUI Platform Guide'],
+      ['/platforms/stable-diffusion/', 'Stable Diffusion Guide'],
+      ['/tools/exif-xmp-reader/', 'EXIF/XMP Reader'],
+      ['/blog/ai-image-metadata-guide/', 'AI Metadata Guide'],
+    ],
+  },
+  'mp4-metadata-inspector': {
+    tool: 'mp4-metadata-inspector',
+    title: 'MP4/MOV Metadata Inspector: AI Video Container Fields | AICheck365',
+    description: 'MP4/MOV Metadata Inspector: inspect MP4, MOV, and M4V brands, box tree, udta/meta/ilst fields, AIGC labels, SEI markers, and C2PA/JUMBF text clues locally.',
+    h1: 'MP4/MOV Metadata Inspector',
+    lead: 'Upload an MP4, MOV, or M4V video and inspect container-level provenance first: ftyp brand, box tree, udta/meta/ilst fields, AIGC labels, common platform strings, SEI markers, and C2PA/JUMBF text clues. This page does not load ffmpeg.wasm on first view; use the homepage detector for sampled frame watermark analysis.',
+    uploadTitle: 'Upload a video to inspect container metadata',
+    uploadZone: 'Click or drag an MP4 / MOV / M4V here',
+    formats: 'MP4 / MOV / M4V container-first inspection supported',
+    accept: 'video/mp4,video/quicktime,video/x-m4v,.mp4,.mov,.m4v',
+    usage: ['Choose an original platform export; secondary transcoding often strips container fields.', 'Start with the summary and AI-related signals, then expand the box tree and ilst fields.', 'If the container has no signal, return to the homepage detector for sampled frame watermark checks.'],
+    fields: [
+      ['ftyp', 'major_brand, minor_version, and compatible_brands.'],
+      ['udta/meta/ilst', 'Readable encoder, software, tool, comment, AIGC, and similar fields.'],
+      ['box tree', 'MP4/MOV box path, offset, and size for expert field provenance.'],
+    ],
+    limits: ['This dedicated page prioritizes container inspection and avoids loading ffmpeg.wasm on first view.', 'No platform field does not mean the video is not AI-generated; transcoding, editing, and uploads often strip provenance clues.', 'For WebM/AVI, start with the homepage detector for basic identification.'],
+    faq: [
+      { q: 'How is this different from the homepage AI video detector?', a: 'This page only inspects MP4/MOV file structure and readable container fields. The homepage detector can also sample video frames for watermark signals when needed.' },
+      { q: 'Can it detect Sora, Kling, or Runway?', a: 'If the original video still carries C2PA-lite, MP4 fields, AIGC labels, SEI markers, or platform strings, they will be shown as provenance clues.' },
+      { q: 'Why not load ffmpeg immediately?', a: 'The PRD requires a container-first path to avoid heavy frame extraction before the user asks for it, reducing memory and Core Web Vitals risk.' },
+    ],
+    related: [
+      ['/platforms/sora/', 'Sora Video Detection Guide'],
+      ['/platforms/kling/', 'Kling Video Detection Guide'],
+      ['/blog/how-to-detect-ai-videos/', 'How to Detect AI Videos'],
+      ['/methodology/', 'Methodology & Limits'],
+    ],
+  },
+};
+
+const UI_COPY = {
+  'zh-CN': {
+    loading: '正在加载解析引擎…',
+    analyzing: '正在分析…',
+    done: '完成',
+    error: '错误：',
+    noFile: '请选择文件',
+    empty: '选择一个文件开始',
+    filterPlaceholder: '搜索字段、值或来源…',
+    copy: '复制安全摘要',
+    copied: '已复制 ✓',
+    exportJson: '导出完整 JSON',
+    warnings: '注意事项',
+    signals: 'AI 相关信号',
+    rawData: '原始数据',
+    none: '未发现可读元数据。',
+    sensitiveExport: '完整导出可能包含 GPS、序列号、作者联系方式、提示词或 workflow JSON 等敏感元数据。确认继续导出？',
+  },
+  en: {
+    loading: 'Loading parser…',
+    analyzing: 'Analyzing…',
+    done: 'Done',
+    error: 'Error: ',
+    noFile: 'Please choose a file',
+    empty: 'Choose a file to begin',
+    filterPlaceholder: 'Search fields, values, or sources…',
+    copy: 'Copy safe summary',
+    copied: 'Copied ✓',
+    exportJson: 'Export full JSON',
+    warnings: 'Warnings',
+    signals: 'AI-related signals',
+    rawData: 'Raw data',
+    none: 'No readable metadata found.',
+    sensitiveExport: 'Full export may contain GPS, serial numbers, author contacts, prompts, workflow JSON, or other sensitive metadata. Continue?',
+  },
+};
+
+const SECTION_COPY = {
+  'zh-CN': {
+    home: '首页',
+    tools: '工具',
+    howTo: '如何使用',
+    fields: '会展示哪些字段',
+    limits: '适用范围与限制',
+    faq: '常见问题',
+    related: '相关工具与指南',
+    noScript: '该工具需要 JavaScript 才能在本地解析文件；下方说明和常见问题无需 JavaScript 即可阅读。',
+  },
+  en: {
+    home: 'Home',
+    tools: 'Tools',
+    howTo: 'How to use',
+    fields: 'Fields shown',
+    limits: 'Scope & limits',
+    faq: 'FAQ',
+    related: 'Related tools and guides',
+    noScript: 'This tool needs JavaScript to parse files locally; the explanation and FAQ below are readable without it.',
+  },
+};
+
+const pages = pageLang === 'en' ? TOOL_PAGES_EN : TOOL_PAGES_ZH;
+const page = pages[Astro.params.tool];
+const ui = UI_COPY[pageLang] ?? UI_COPY[DEFAULT_LANG];
+const section = SECTION_COPY[pageLang] ?? SECTION_COPY[DEFAULT_LANG];
+const currentPath = `${toolsPath}${page.tool}/`;
+const currentUrl = `https://www.aicheck365.com${currentPath}`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: page.h1,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    description: page.description,
+    url: currentUrl,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    inLanguage: pageLang,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: section.home, item: `https://www.aicheck365.com${homePath}` },
+      { '@type': 'ListItem', position: 2, name: section.tools, item: toolsUrl },
+      { '@type': 'ListItem', position: 3, name: page.h1, item: currentUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: page.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<Base title={page.title} description={page.description} canonical={`https://www.aicheck365.com/tools/${page.tool}/`} jsonLd={jsonLd} alternateLangs={TOOL_ALTERNATE_LANGS}>
+  <main class="page content-page">
+    <article class="card content-article">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href={homePath}>{section.home}</a>
+        <span aria-hidden="true"> › </span>
+        <a href={toolsPath}>{section.tools}</a>
+        <span aria-hidden="true"> › </span>
+        <span>{page.h1}</span>
+      </nav>
+      <h1>{page.h1}</h1>
+      <p class="lead-text">{page.lead}</p>
+
+      <section id="tool-inspector" data-tool={page.tool} class="card tool-card">
+        <h2>{page.uploadTitle}</h2>
+        <div class="tool-upload">
+          <label class="tool-drop-zone" id="tool-drop-zone" for="tool-file-input">
+            <input id="tool-file-input" type="file" accept={page.accept} />
+            <span class="upload-icon" aria-hidden="true">↥</span>
+            <span>{page.uploadZone}</span>
+            <small class="muted">{page.formats}</small>
+          </label>
+          <p id="tool-status" class="status muted" role="status" aria-live="polite"></p>
+          <div class="tool-toolbar">
+            <input id="tool-filter" type="text" placeholder={ui.filterPlaceholder} aria-label={ui.filterPlaceholder} />
+            <button id="tool-copy" class="ghost">{ui.copy}</button>
+            <button id="tool-export" class="ghost">{ui.exportJson}</button>
+          </div>
+          <div id="tool-output" class="tool-output hidden"></div>
+        </div>
+        <noscript><p class="notice warning">{section.noScript}</p></noscript>
+      </section>
+      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(ui)} />
+
+      <h2>{section.howTo}</h2>
+      <ol class="content-list">{page.usage.map((item) => <li>{item}</li>)}</ol>
+
+      <h2>{section.fields}</h2>
+      <table class="tool-glossary"><tbody>{page.fields.map((row) => <tr><th>{row[0]}</th><td>{row[1]}</td></tr>)}</tbody></table>
+
+      <h2>{section.limits}</h2>
+      <ul class="content-list">{page.limits.map((item) => <li>{item}</li>)}</ul>
+
+      <h2>{section.faq}</h2>
+      <dl class="faq-list">{page.faq.map((f) => (
+        <Fragment>
+          <dt>{f.q}</dt>
+          <dd>{f.a}</dd>
+        </Fragment>
+      ))}</dl>
+
+      <h2>{section.related}</h2>
+      <ul class="content-list">
+        {page.related.map(([href, text]) => <li><a href={localizeHref(href)}>{text} →</a></li>)}
+      </ul>
+    </article>
+  </main>
+</Base>
+
+<script>import '../../scripts/tool-inspector.js';</script>

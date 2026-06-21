@@ -8,7 +8,20 @@
     "mainFindings": "Valid C2PA Content Credentials with digitalSourceType=trainedAlgorithmicMedia; the signature is cryptographically valid while the signing certificate is untrusted in the browser trust list.",
     "resultChanged": false,
     "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
-    "detailUrl": "https://github.com/contentauth/example-assets"
+    "detailUrl": "https://github.com/contentauth/example-assets",
+    "researchUrl": "/research/firefly-jpeg-2026-06/",
+    "sourceLicense": "MIT via contentauth/example-assets",
+    "environment": "Browser-local WASM parser in Chromium/Playwright local preview; aicheck 0.2.0; c2pa-rs 0.82.",
+    "expectedSignals": ["C2PA manifest present", "digitalSourceType=trainedAlgorithmicMedia", "Cryptographic signature validates"],
+    "actualSignals": ["C2PA state: valid", "Manifest reports trainedAlgorithmicMedia", "Signing certificate is not trusted by this browser-local trust list"],
+    "misses": ["The browser trust list does not upgrade this sample to trusted."],
+    "limitations": ["Valid means the signature is cryptographically valid, not that the signer is a configured trust root.", "The sample is a public fixture, not a fresh production export from every Adobe Firefly workflow."],
+    "reproSteps": ["Open the C2PA Validator.", "Upload /samples/verified-ai-credentials.jpg.", "Confirm the status summary and raw manifest JSON.", "Compare validation_status with the expected signal list."],
+    "sampleRefs": ["firefly-valid-c2pa"],
+    "relatedLinks": [
+      { "href": "/platforms/firefly/", "label": "Adobe Firefly guide" },
+      { "href": "/tools/c2pa-validator/", "label": "C2PA Validator" }
+    ]
   },
   {
     "id": "openai-png-2026-06",
@@ -19,7 +32,20 @@
     "mainFindings": "A C2PA claim (trainedAlgorithmicMedia) is present, but the signing certificate is expired, so validation returns Invalid: the provenance claim cannot be verified.",
     "resultChanged": false,
     "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
-    "detailUrl": "https://github.com/contentauth/example-assets"
+    "detailUrl": "https://github.com/contentauth/example-assets",
+    "researchUrl": "/research/openai-png-2026-06/",
+    "sourceLicense": "MIT via contentauth/example-assets",
+    "environment": "Browser-local WASM parser in Chromium/Playwright local preview; aicheck 0.2.0; c2pa-rs 0.82.",
+    "expectedSignals": ["C2PA manifest present", "digitalSourceType=trainedAlgorithmicMedia", "Expired signing credential is reported as invalid"],
+    "actualSignals": ["C2PA state: invalid", "Manifest is present", "Validation status includes an expired or untrusted credential problem"],
+    "misses": ["No trusted provenance state is produced because the signing credential is expired."],
+    "limitations": ["The failure is about provenance verification, not a visual authenticity judgement.", "Certificate status can change across parser/trust-store versions."],
+    "reproSteps": ["Open the C2PA Validator.", "Upload /samples/expired-credentials.png.", "Confirm that manifest presence is found but signature validity is invalid.", "Review validation issues for the expired credential."],
+    "sampleRefs": ["openai-expired-c2pa"],
+    "relatedLinks": [
+      { "href": "/platforms/dall-e/", "label": "OpenAI image guide" },
+      { "href": "/tools/c2pa-validator/", "label": "C2PA Validator" }
+    ]
   },
   {
     "id": "comfyui-sdxl-png-2026-06",
@@ -30,7 +56,20 @@
     "mainFindings": "No C2PA signature. PNG tEXt 'prompt' and 'workflow' chunks carry the full generation graph; the detector flags AI-related metadata at low confidence (unsigned).",
     "resultChanged": false,
     "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
-    "detailUrl": "https://github.com/comfyanonymous/ComfyUI_examples"
+    "detailUrl": "https://github.com/comfyanonymous/ComfyUI_examples",
+    "researchUrl": "/research/comfyui-sdxl-png-2026-06/",
+    "sourceLicense": "Permissive repository license via comfyanonymous/ComfyUI_examples",
+    "environment": "Browser-local PNG chunk parser in Chromium/Playwright local preview; aicheck 0.2.0.",
+    "expectedSignals": ["No C2PA manifest", "PNG tEXt prompt chunk present", "PNG tEXt workflow chunk present"],
+    "actualSignals": ["C2PA state: unsigned", "PNG tool flags prompt/workflow chunks", "AI-related metadata is low confidence because it is unsigned"],
+    "misses": ["No cryptographic signer or trust-root evidence exists in the sample."],
+    "limitations": ["PNG text chunks are editable and can be stripped by screenshots, chat apps, and social-media uploads.", "The raw workflow can contain prompts or other sensitive content, so safe copy omits it."],
+    "reproSteps": ["Open the PNG Parameter Extractor.", "Upload /samples/generation-parameters.png.", "Search for prompt and workflow fields.", "Use safe copy to confirm sensitive raw chunks are omitted from copied analytics-safe output."],
+    "sampleRefs": ["comfyui-sdxl-params"],
+    "relatedLinks": [
+      { "href": "/platforms/comfyui/", "label": "ComfyUI guide" },
+      { "href": "/tools/png-parameter-extractor/", "label": "PNG Parameter Extractor" }
+    ]
   },
   {
     "id": "c2pa-conformance-images-2026-06",
@@ -41,7 +80,20 @@
     "mainFindings": "An image with no manifest reads as unsigned (no provenance); a deliberately tampered manifest fails with assertion.dataHash.mismatch and reads as invalid.",
     "resultChanged": false,
     "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
-    "detailUrl": "https://github.com/contentauth/c2pa-rs/tree/main/sdk/tests/fixtures"
+    "detailUrl": "https://github.com/contentauth/c2pa-rs/tree/main/sdk/tests/fixtures",
+    "researchUrl": "/research/c2pa-conformance-images-2026-06/",
+    "sourceLicense": "Apache-2.0 / MIT via contentauth/c2pa-rs fixtures",
+    "environment": "Browser-local WASM parser in Chromium/Playwright local preview; aicheck 0.2.0; c2pa-rs 0.82.",
+    "expectedSignals": ["No-manifest fixture returns unsigned", "Tampered fixture returns invalid", "Tampered fixture surfaces content hash mismatch"],
+    "actualSignals": ["No-manifest sample: unsigned", "Tampered sample: invalid", "Validation issue includes a mismatch/signature problem"],
+    "misses": ["No AI-platform attribution is expected for these conformance fixtures."],
+    "limitations": ["The pair validates state separation, not platform-specific AI attribution.", "Exact validation code wording can change across c2pa-rs versions."],
+    "reproSteps": ["Open the C2PA Validator.", "Upload /samples/screenshot-no-metadata.jpg and confirm unsigned/no manifest.", "Upload /samples/tampered-signature.jpg and confirm invalid/tamper summary.", "Compare both status summaries before opening raw JSON."],
+    "sampleRefs": ["screenshot-no-metadata", "tampered-c2pa"],
+    "relatedLinks": [
+      { "href": "/tools/c2pa-validator/", "label": "C2PA Validator" },
+      { "href": "/methodology/", "label": "Methodology and limits" }
+    ]
   },
   {
     "id": "c2pa-signed-mp4-2026-06",
@@ -52,6 +104,19 @@
     "mainFindings": "A BMFF C2PA manifest validates (generic CreativeWork, not AI). The detector surfaces the C2PA signal; the AI-tool-name heuristic produced a spurious match against manifest bytes, which is a logged limitation.",
     "resultChanged": false,
     "parserVersion": "aicheck 0.2.0 (c2pa-rs 0.82, wasm)",
-    "detailUrl": "https://github.com/contentauth/c2pa-rs/tree/main/sdk/tests/fixtures"
+    "detailUrl": "https://github.com/contentauth/c2pa-rs/tree/main/sdk/tests/fixtures",
+    "researchUrl": "/research/c2pa-signed-mp4-2026-06/",
+    "sourceLicense": "Apache-2.0 / MIT via contentauth/c2pa-rs fixtures",
+    "environment": "Browser-local BMFF/C2PA parser in Chromium/Playwright local preview; aicheck 0.2.0; c2pa-rs 0.82.",
+    "expectedSignals": ["BMFF C2PA manifest present", "Generic signed creative-work provenance", "No AI platform attribution expected"],
+    "actualSignals": ["C2PA manifest validates", "MP4 container metadata is readable", "A heuristic AI-tool-name match against manifest bytes is logged as a limitation"],
+    "misses": ["The detector should not claim this generic signed MP4 is AI-generated from C2PA alone."],
+    "limitations": ["The sample is useful for container/C2PA parsing, not for platform attribution.", "Heuristic matches inside binary manifest bytes require manual review."],
+    "reproSteps": ["Open the C2PA Validator or MP4 Metadata Inspector.", "Upload /samples/signed-video.mp4.", "Confirm BMFF/C2PA manifest readability.", "Check that the research note distinguishes signed provenance from AI attribution."],
+    "sampleRefs": [],
+    "relatedLinks": [
+      { "href": "/tools/c2pa-validator/", "label": "C2PA Validator" },
+      { "href": "/tools/mp4-metadata-inspector/", "label": "MP4 Metadata Inspector" }
+    ]
   }
 ]

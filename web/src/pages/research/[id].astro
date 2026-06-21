@@ -1,0 +1,138 @@
+---
+import Base from '../../layouts/Base.astro';
+import experiments from '../../../public/data/experiments.json';
+import samples from '../../../public/data/samples.json';
+
+export function getStaticPaths() {
+  return experiments.map((experiment: any) => ({
+    params: { id: experiment.id },
+    props: { experiment },
+  }));
+}
+
+const { experiment } = Astro.props;
+const sampleMap = new Map(samples.map((sample: any) => [sample.id, sample]));
+const relatedSamples = (experiment.sampleRefs || [])
+  .map((id: string) => sampleMap.get(id))
+  .filter(Boolean);
+const canonical = `https://www.aicheck365.com${experiment.researchUrl}`;
+const title = `${experiment.platform} provenance experiment (${experiment.testDate}) | AICheck365 Research`;
+const description = `${experiment.platform} research note: ${experiment.mainFindings} Includes sample count, source license, parser version, expected and actual signals, misses, limitations, and reproducible steps.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: title,
+    description,
+    url: canonical,
+    datePublished: experiment.testDate,
+    dateModified: experiment.testDate,
+    isAccessibleForFree: true,
+    about: experiment.platform,
+    author: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
+    publisher: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aicheck365.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Research', item: 'https://www.aicheck365.com/research/' },
+      { '@type': 'ListItem', position: 3, name: experiment.platform, item: canonical },
+    ],
+  },
+];
+
+const rows = [
+  ['Platform', experiment.platform],
+  ['Tested at', experiment.testDate],
+  ['Sample count', experiment.sampleCount],
+  ['File format', experiment.fileFormat],
+  ['Parser version', experiment.parserVersion],
+  ['Browser/system', experiment.environment],
+  ['Source/license', experiment.sourceLicense],
+];
+---
+
+<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} singleLang={true}>
+  <main class="page content-page research-page">
+    <article class="research-detail">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true"> › </span>
+        <a href="/research/">Research</a>
+        <span aria-hidden="true"> › </span>
+        <span>{experiment.platform}</span>
+      </nav>
+
+      <header class="content-hero">
+        <p class="muted compact">{experiment.testDate} · {experiment.fileFormat} · {experiment.sampleCount} sample{experiment.sampleCount === 1 ? '' : 's'}</p>
+        <h1>{experiment.platform}</h1>
+        <p class="lead-text">{experiment.mainFindings}</p>
+      </header>
+
+      <section>
+        <h2>Experiment Summary</h2>
+        <table class="tool-glossary research-table">
+          <tbody>
+            {rows.map(([key, value]) => (
+              <tr><th>{key}</th><td>{value}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section class="research-columns">
+        <div>
+          <h2>Expected Signals</h2>
+          <ul class="content-list">{experiment.expectedSignals.map((item: string) => <li>{item}</li>)}</ul>
+        </div>
+        <div>
+          <h2>Actual Signals</h2>
+          <ul class="content-list">{experiment.actualSignals.map((item: string) => <li>{item}</li>)}</ul>
+        </div>
+      </section>
+
+      <section class="research-columns">
+        <div>
+          <h2>Misses</h2>
+          <ul class="content-list">{experiment.misses.map((item: string) => <li>{item}</li>)}</ul>
+        </div>
+        <div>
+          <h2>Limitations</h2>
+          <ul class="content-list">{experiment.limitations.map((item: string) => <li>{item}</li>)}</ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Reproducible Steps</h2>
+        <ol class="content-list">{experiment.reproSteps.map((item: string) => <li>{item}</li>)}</ol>
+      </section>
+
+      {relatedSamples.length > 0 && (
+        <section>
+          <h2>Sample Provenance</h2>
+          <div class="research-sample-list">
+            {relatedSamples.map((sample: any) => (
+              <article class="research-sample">
+                <h3>{sample.title}</h3>
+                <p class="muted compact">{sample.source}</p>
+                <p><a href={sample.fileRef}>Open sample file →</a></p>
+                <ul class="content-list compact">{sample.knownLimits.map((item: string) => <li>{item}</li>)}</ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section>
+        <h2>Related Tools And Pages</h2>
+        <ul class="content-list">
+          {experiment.relatedLinks.map((link: any) => <li><a href={link.href}>{link.label} →</a></li>)}
+          <li><a href={experiment.detailUrl} rel="noopener" target="_blank">External source fixture →</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+</Base>

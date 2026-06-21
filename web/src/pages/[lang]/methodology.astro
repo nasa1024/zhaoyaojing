@@ -1,0 +1,11 @@
+---
+import MethodologyPage from '../methodology.astro';
+
+export function getStaticPaths() {
+  return ['zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'].map((lang) => ({
+    params: { lang },
+  }));
+}
+---
+
+<MethodologyPage />

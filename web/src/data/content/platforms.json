@@ -1,0 +1,62 @@
+[
+  {
+    "id": "platforms-index-zh",
+    "slug": "platforms",
+    "route": "/platforms/",
+    "locale": "zh-CN",
+    "pageType": "platform_index",
+    "platform": "All platforms",
+    "title": "AI 图片/视频平台检测指南 | Sora、Kling、Gemini、DALL-E | AICheck365",
+    "description": "查看 Gemini、Imagen、DALL-E、Midjourney、Stable Diffusion、Adobe Firefly、Sora、Kling、Runway、Pika 等平台常见的图片/视频来源线索。",
+    "canonical": "https://www.aicheck365.com/platforms/",
+    "primaryKeyword": "AI 图片视频平台检测指南",
+    "draft": false,
+    "updatedAt": "2026-06-21",
+    "internalLinks": ["/platforms/sora/", "/platforms/gemini/", "/platforms/comfyui/", "/platforms/stable-diffusion/", "/tools/"]
+  },
+  {
+    "id": "sora-en-priority",
+    "slug": "sora",
+    "route": "/en/platforms/sora/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Sora",
+    "title": "Sora AI Detector: Check MP4 Metadata, C2PA and Frame Watermarks | AICheck365",
+    "description": "Check original Sora MP4/MOV exports locally for C2PA text, MP4/MOV metadata, SEI markers, file-name clues, and sampled frame watermark signals.",
+    "canonical": "https://www.aicheck365.com/en/platforms/sora/",
+    "primaryKeyword": "Sora AI detector",
+    "draft": false,
+    "updatedAt": "2026-06-21",
+    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/en/blog/how-to-detect-ai-videos/", "/en/platforms/kling/"]
+  },
+  {
+    "id": "gemini-en-priority",
+    "slug": "gemini",
+    "route": "/en/platforms/gemini/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Gemini",
+    "title": "Gemini C2PA Checker: Inspect Google AI Content Credentials | AICheck365",
+    "description": "Inspect original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.",
+    "canonical": "https://www.aicheck365.com/en/platforms/gemini/",
+    "primaryKeyword": "Gemini C2PA checker",
+    "draft": false,
+    "updatedAt": "2026-06-21",
+    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/platforms/imagen/", "/en/blog/how-to-detect-gemini-generated-images/"]
+  },
+  {
+    "id": "comfyui-en-priority",
+    "slug": "comfyui",
+    "route": "/en/platforms/comfyui/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF and Metadata Viewer: Extract PNG Workflow JSON | AICheck365",
+    "description": "Inspect original ComfyUI PNG files for prompt, workflow JSON, node graph data, Stable Diffusion parameters, model names, seed, sampler, CFG, and dimensions.",
+    "canonical": "https://www.aicheck365.com/en/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-06-21",
+    "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/en/platforms/stable-diffusion/", "/en/blog/ai-image-metadata-guide/"]
+  }
+]

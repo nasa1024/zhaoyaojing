@@ -1091,6 +1091,7 @@ const OG_LOCALE = {
 };
 
 const SUPPORTED_LANGS = Object.keys(translations);
+const LOCALIZED_TOOL_LANGS = ['en'];
 
 function langFromPathname(pathname = window.location.pathname) {
   const segment = pathname.split('/').filter(Boolean)[0];
@@ -1105,6 +1106,9 @@ function stripLangFromPathname(pathname = window.location.pathname) {
 
 function withLangInPathname(pathname, lang) {
   const cleanPath = stripLangFromPathname(pathname);
+  if (cleanPath.startsWith('/tools/') && lang !== 'zh-CN' && !LOCALIZED_TOOL_LANGS.includes(lang)) {
+    return `/${lang}/`;
+  }
   if (lang === 'zh-CN') {
     return cleanPath;
   }
@@ -1198,10 +1202,10 @@ function localizeInternalLinks() {
   document.querySelectorAll('a[href^="/"]').forEach((anchor) => {
     const href = anchor.getAttribute('href');
     if (!href || href.startsWith('//')) return;
-    // Root-only pages (e.g. /tools/*) have no localized variant; prefixing them
-    // would 404. Such links opt out with data-no-localize.
     if (anchor.hasAttribute('data-no-localize')) return;
     const url = new URL(href, window.location.origin);
+    const cleanPath = stripLangFromPathname(url.pathname);
+    if (cleanPath.startsWith('/tools/') && !LOCALIZED_TOOL_LANGS.includes(urlLang)) return;
     anchor.setAttribute('href', `${withLangInPathname(url.pathname, urlLang)}${url.search}${url.hash}`);
   });
 }
