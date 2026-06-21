@@ -13,9 +13,6 @@ const urlLang = getUrlLang(Astro.url.pathname);
 const pageLang = urlLang ?? DEFAULT_LANG;
 const navPrefix = urlLang && urlLang !== DEFAULT_LANG ? `/${pageLang}` : '';
 
-const isZh = pageLang === 'zh-CN' || pageLang === 'zh-TW';
-const isEn = pageLang === 'en';
-
 const COPY: Record<string, {
   title: string;
   description: string;
@@ -27,6 +24,13 @@ const COPY: Record<string, {
   cannot: string[];
   slogan: string;
   linksHeading: string;
+  homeLabel: string;
+  detectorLabel: string;
+  detectorDesc: string;
+  platformsLabel: string;
+  platformsDesc: string;
+  privacyLabel: string;
+  privacyDesc: string;
 }> = {
   'zh-CN': {
     title: '检测方法论 | AICheck365',
@@ -57,6 +61,13 @@ const COPY: Record<string, {
     ],
     slogan: '证据比感觉重要。透明比百分比重要。',
     linksHeading: '相关链接',
+    homeLabel: '首页',
+    detectorLabel: '检测工具（首页）',
+    detectorDesc: '上传文件，立即检测',
+    platformsLabel: '平台指南',
+    platformsDesc: '各 AI 平台的具体信号说明',
+    privacyLabel: '隐私政策',
+    privacyDesc: '文件如何在本地处理，哪些数据绝不发送',
   },
   'zh-TW': {
     title: '檢測方法論 | AICheck365',
@@ -87,6 +98,13 @@ const COPY: Record<string, {
     ],
     slogan: '證據比感覺重要。透明比百分比重要。',
     linksHeading: '相關連結',
+    homeLabel: '首頁',
+    detectorLabel: '檢測工具（首頁）',
+    detectorDesc: '上傳檔案，立即檢測',
+    platformsLabel: '平台指南',
+    platformsDesc: '各 AI 平台的具體訊號說明',
+    privacyLabel: '隱私權政策',
+    privacyDesc: '檔案如何在本機處理，哪些資料絕不傳送',
   },
   en: {
     title: 'Detection Methodology | AICheck365',
@@ -117,28 +135,240 @@ const COPY: Record<string, {
     ],
     slogan: 'Evidence beats intuition. Transparency beats percentages.',
     linksHeading: 'Related links',
+    homeLabel: 'Home',
+    detectorLabel: 'Detector (home)',
+    detectorDesc: 'upload a file and run the detector',
+    platformsLabel: 'Platform Guides',
+    platformsDesc: 'signal details for each AI platform',
+    privacyLabel: 'Privacy Policy',
+    privacyDesc: 'how files are processed locally and what data is never sent',
+  },
+  ja: {
+    title: '検出方法論 | AICheck365',
+    description: 'AICheck365 はファイルメタデータ、デジタル署名、プラットフォーム固有の印、生成パラメータを解析して AI 由来の手がかりを確認します。すべてブラウザ内でローカルに実行され、ファイルはアップロードされません。',
+    h1: 'AICheck365 の方法論',
+    lead: 'AICheck365 は、ブラックボックスのニューラルネットワークで推測するのではなく、元ファイルに残っている観測可能な来歴シグナルを解析して AI 由来の手がかりを確認します。以下では、確認できることと保証できないことを明確にします。',
+    canCheckHeading: 'AICheck365 が確認できること',
+    cannotHeading: 'AICheck365 が保証できないこと',
+    canCheck: [
+      'ファイルメタデータ（EXIF、XMP、IPTC）- 撮影機器、ソフトウェア名、生成ツールなどのフィールド',
+      'C2PA デジタル署名と Content Credentials - OpenAI、Adobe、Microsoft などが埋め込む来歴情報',
+      'PNG テキストチャンク（tEXt / iTXt）- Stable Diffusion、ComfyUI などが書き込む生成パラメータ',
+      'MP4 / MOV コンテナフィールド - ツール名、AIGC タグ、SEI marker、カスタムテキストボックス',
+      'プラットフォーム固有の印 - Midjourney、DALL-E、Firefly、Kling など既知の AI プラットフォームが書き込むフィールドやパターン',
+      '動画フレームの透かしサンプリング - メタデータで一致しない場合に、少数のキーフレームで可視または不可視の透かしを確認',
+      'ファイル名ヒューリスティック - 一部のプラットフォームが生成する認識しやすいファイル名パターン',
+      'コンテナ構造の解析 - ファイル形式そのものに現れる異常または特徴的な構造',
+      '書き出し / 編集の手がかり - 再書き出し時にソフトウェアが残すアプリケーション情報',
+    ],
+    cannot: [
+      'すべての AI プラットフォームが読み取り可能な来歴情報を書き込むわけではありません。シグナルがないことは人間が作った証明ではありません。',
+      'SNS による圧縮や再エンコード（WeChat、Weibo、X / Twitter など）の後は、メタデータが削除されることがよくあります。',
+      'スクリーンショット、画面録画、画面の撮影には元ファイルのメタデータは含まれません。',
+      'プラットフォームの印には統一標準がなく、将来変更される可能性があります。',
+      '未知または新興ツールのシグナルは、まだ検出ライブラリに含まれていない場合があります。',
+      '検出結果は法的鑑定や専門家のフォレンジック判断の代替にはなりません。',
+      'ファイルハッシュ、フィンガープリント、内容特徴の分析はこのツールの範囲外です。',
+    ],
+    slogan: '証拠は直感に勝る。透明性はパーセンテージに勝る。',
+    linksHeading: '関連リンク',
+    homeLabel: 'ホーム',
+    detectorLabel: '検出ツール（ホーム）',
+    detectorDesc: 'ファイルをアップロードして検出を実行',
+    platformsLabel: 'プラットフォームガイド',
+    platformsDesc: '各 AI プラットフォームの具体的なシグナル',
+    privacyLabel: 'プライバシーポリシー',
+    privacyDesc: 'ファイルをローカルで処理する方法と送信されないデータ',
+  },
+  ko: {
+    title: '탐지 방법론 | AICheck365',
+    description: 'AICheck365는 파일 메타데이터, 디지털 서명, 플랫폼 표시, 생성 파라미터를 분석해 AI 출처 신호를 확인합니다. 모든 분석은 브라우저에서 로컬로 실행되며 파일은 업로드되지 않습니다.',
+    h1: 'AICheck365 방법론',
+    lead: 'AICheck365는 블랙박스 신경망으로 추측하지 않고, 원본 파일에 남아 있는 관찰 가능한 출처 신호를 파싱해 AI 출처 단서를 확인합니다. 아래는 확인할 수 있는 것과 보장할 수 없는 것의 경계입니다.',
+    canCheckHeading: 'AICheck365가 확인할 수 있는 것',
+    cannotHeading: 'AICheck365가 보장할 수 없는 것',
+    canCheck: [
+      '파일 메타데이터(EXIF, XMP, IPTC) - 촬영 장치, 소프트웨어 이름, 생성 도구 필드',
+      'C2PA 디지털 서명과 Content Credentials - OpenAI, Adobe, Microsoft 등이 삽입하는 출처 정보',
+      'PNG 텍스트 청크(tEXt / iTXt) - Stable Diffusion, ComfyUI 등 도구가 기록하는 생성 파라미터',
+      'MP4 / MOV 컨테이너 필드 - 도구 이름, AIGC 태그, SEI marker, 사용자 정의 텍스트 박스',
+      '플랫폼별 표시 - Midjourney, DALL-E, Firefly, Kling 등 알려진 AI 플랫폼이 기록하는 특정 필드나 패턴',
+      '비디오 프레임 워터마크 샘플링 - 메타데이터가 일치하지 않을 때 일부 키프레임에서 보이는 워터마크나 보이지 않는 워터마크 단서 확인',
+      '파일명 휴리스틱 - 일부 플랫폼이 만드는 인식 가능한 파일명 패턴',
+      '컨테이너 구조 분석 - 파일 형식 자체의 비정상적이거나 특징적인 구조',
+      '내보내기 / 편집 단서 - 재내보내기 과정에서 소프트웨어가 남기는 애플리케이션 정보',
+    ],
+    cannot: [
+      '모든 AI 플랫폼이 출력 파일에 읽을 수 있는 출처 데이터를 삽입하는 것은 아닙니다. 신호가 없다고 해서 사람이 만든 파일이라는 뜻은 아닙니다.',
+      '소셜 플랫폼의 압축이나 트랜스코딩(WeChat, Weibo, X / Twitter 등)을 거치면 메타데이터가 보통 제거됩니다.',
+      '스크린샷, 화면 녹화, 화면을 다시 촬영한 파일에는 원본 파일 메타데이터가 없습니다.',
+      '플랫폼 표시에는 보편적인 표준이 없으며 앞으로 바뀔 수 있습니다.',
+      '알려지지 않았거나 새로 등장한 도구의 신호는 아직 탐지 라이브러리에 없을 수 있습니다.',
+      '탐지 결과는 법적 감정이나 전문가 포렌식 판단을 대체할 수 없습니다.',
+      '파일 해시, 지문, 콘텐츠 특징 분석은 이 도구의 범위가 아닙니다.',
+    ],
+    slogan: '증거는 직감을 이깁니다. 투명성은 백분율을 이깁니다.',
+    linksHeading: '관련 링크',
+    homeLabel: '홈',
+    detectorLabel: '검사 도구(홈)',
+    detectorDesc: '파일을 업로드하고 바로 검사',
+    platformsLabel: '플랫폼 가이드',
+    platformsDesc: '각 AI 플랫폼의 구체적인 신호 설명',
+    privacyLabel: '개인정보 처리방침',
+    privacyDesc: '파일이 로컬에서 처리되는 방식과 전송되지 않는 데이터',
+  },
+  de: {
+    title: 'Erkennungsmethodik | AICheck365',
+    description: 'AICheck365 prüft AI-Herkunftssignale über Datei-Metadaten, digitale Signaturen, Plattformmarkierungen und Generierungsparameter. Alles läuft lokal im Browser, ohne Datei-Upload.',
+    h1: 'AICheck365-Methodik',
+    lead: 'AICheck365 bewertet AI-Herkunftshinweise, indem beobachtbare Provenienzsignale in der Originaldatei gelesen werden, nicht durch ein Black-Box-Neuronales-Netz. Hier steht, was wir prüfen können und was nicht garantiert werden kann.',
+    canCheckHeading: 'Was AICheck365 prüfen kann',
+    cannotHeading: 'Was AICheck365 nicht garantieren kann',
+    canCheck: [
+      'Datei-Metadaten (EXIF, XMP, IPTC) - Geräte-, Software- und Generierungswerkzeug-Felder',
+      'C2PA-Digitalsignaturen und Content Credentials - eingebettet von OpenAI, Adobe, Microsoft und anderen',
+      'PNG-Text-Chunks (tEXt / iTXt) - vollständige Generierungsparameter von Stable Diffusion, ComfyUI und ähnlichen Tools',
+      'MP4- / MOV-Containerfelder - Werkzeugname, AIGC-Tags, SEI marker und eigene Textboxen',
+      'Plattformspezifische Markierungen - Felder oder Muster bekannter AI-Plattformen wie Midjourney, DALL-E, Firefly und Kling',
+      'Video-Frame-Wasserzeichen-Sampling - Prüfung weniger Keyframes auf sichtbare oder unsichtbare Wasserzeichen, wenn Metadaten keinen Treffer liefern',
+      'Dateinamen-Heuristiken - erkennbare Muster in Dateinamen mancher Plattformen',
+      'Analyse der Containerstruktur - ungewöhnliche oder charakteristische Strukturen im Dateiformat selbst',
+      'Export- / Bearbeitungshinweise - Anwendungsinformationen, die Software beim erneuten Export schreibt',
+    ],
+    cannot: [
+      'Nicht alle AI-Plattformen schreiben lesbare Provenienzdaten in Ausgabedateien. Kein Signal bedeutet nicht, dass die Datei von einem Menschen erstellt wurde.',
+      'Nach Kompression oder Transcoding durch soziale Plattformen (WeChat, Weibo, X / Twitter usw.) werden Metadaten meist entfernt.',
+      'Screenshots, Bildschirmaufnahmen oder abfotografierte Bildschirme enthalten keine Originaldatei-Metadaten.',
+      'Plattformmarkierungen haben keinen universellen Standard und können sich künftig ändern.',
+      'Signale unbekannter oder neuer Tools sind möglicherweise noch nicht in der Erkennungsbibliothek enthalten.',
+      'Ergebnisse ersetzen keine rechtliche Begutachtung oder forensische Expertenmeinung.',
+      'Datei-Hashes, Fingerprints und Inhaltsmerkmalsanalysen liegen außerhalb des Umfangs dieses Tools.',
+    ],
+    slogan: 'Beweise schlagen Intuition. Transparenz schlägt Prozentzahlen.',
+    linksHeading: 'Verwandte Links',
+    homeLabel: 'Startseite',
+    detectorLabel: 'Detektor (Startseite)',
+    detectorDesc: 'Datei hochladen und Prüfung starten',
+    platformsLabel: 'Plattform-Guides',
+    platformsDesc: 'konkrete Signale der einzelnen AI-Plattformen',
+    privacyLabel: 'Datenschutzerklärung',
+    privacyDesc: 'wie Dateien lokal verarbeitet werden und welche Daten nie gesendet werden',
+  },
+  fr: {
+    title: 'Méthodologie de détection | AICheck365',
+    description: 'AICheck365 recherche les signaux d’origine IA dans les métadonnées de fichier, signatures numériques, marques de plateforme et paramètres de génération. Toute l’analyse s’effectue localement dans le navigateur, sans téléversement.',
+    h1: 'Méthodologie AICheck365',
+    lead: 'AICheck365 identifie des indices d’origine IA en lisant les signaux de provenance observables dans le fichier original, plutôt qu’en utilisant un réseau neuronal opaque. Voici ce que nous pouvons inspecter et ce que nous ne pouvons pas garantir.',
+    canCheckHeading: 'Ce qu’AICheck365 peut vérifier',
+    cannotHeading: 'Ce qu’AICheck365 ne peut pas garantir',
+    canCheck: [
+      'Métadonnées de fichier (EXIF, XMP, IPTC) - champs d’appareil, de logiciel et d’outil de génération',
+      'Signatures numériques C2PA et Content Credentials - intégrées par OpenAI, Adobe, Microsoft et d’autres',
+      'Blocs de texte PNG (tEXt / iTXt) - paramètres de génération complets écrits par Stable Diffusion, ComfyUI et des outils similaires',
+      'Champs de conteneur MP4 / MOV - nom d’outil, balises AIGC, SEI marker et boîtes de texte personnalisées',
+      'Marques propres aux plateformes - champs ou motifs écrits par des plateformes IA connues comme Midjourney, DALL-E, Firefly ou Kling',
+      'Échantillonnage de filigranes vidéo - vérification de quelques images clés pour des filigranes visibles ou invisibles lorsque les métadonnées ne donnent rien',
+      'Heuristiques de nom de fichier - certains noms de fichiers générés par les plateformes suivent des motifs reconnaissables',
+      'Analyse de structure du conteneur - structures inhabituelles ou caractéristiques du format de fichier lui-même',
+      'Indices d’exportation / édition - informations d’application écrites par un logiciel lors d’un réexport',
+    ],
+    cannot: [
+      'Toutes les plateformes IA n’intègrent pas de provenance lisible dans leurs fichiers. L’absence de signal ne prouve pas une création humaine.',
+      'Après compression ou transcodage par des plateformes sociales (WeChat, Weibo, X / Twitter, etc.), les métadonnées sont généralement supprimées.',
+      'Les captures d’écran, enregistrements d’écran ou photos d’un écran ne contiennent pas les métadonnées du fichier original.',
+      'Les marques de plateforme ne suivent aucun standard universel et peuvent changer.',
+      'Les signaux d’outils inconnus ou émergents peuvent ne pas encore figurer dans la bibliothèque de détection.',
+      'Les résultats ne remplacent pas une expertise juridique ou forensique.',
+      'Les hachages, empreintes et analyses de caractéristiques de contenu sont hors du périmètre de cet outil.',
+    ],
+    slogan: 'Les preuves valent mieux que l’intuition. La transparence vaut mieux que les pourcentages.',
+    linksHeading: 'Liens associés',
+    homeLabel: 'Accueil',
+    detectorLabel: 'Détecteur (accueil)',
+    detectorDesc: 'téléverser un fichier et lancer la détection',
+    platformsLabel: 'Guides plateformes',
+    platformsDesc: 'signaux précis de chaque plateforme IA',
+    privacyLabel: 'Politique de confidentialité',
+    privacyDesc: 'comment les fichiers sont traités localement et quelles données ne sont jamais envoyées',
+  },
+  es: {
+    title: 'Metodología de detección | AICheck365',
+    description: 'AICheck365 comprueba señales de origen IA mediante metadatos de archivo, firmas digitales, marcas de plataforma y parámetros de generación. Todo se analiza localmente en el navegador, sin subir archivos.',
+    h1: 'Metodología de AICheck365',
+    lead: 'AICheck365 detecta indicios de origen IA leyendo señales de procedencia observables en el archivo original, no mediante una red neuronal de caja negra. Aquí se explica qué podemos inspeccionar y qué no podemos garantizar.',
+    canCheckHeading: 'AICheck365 puede comprobar',
+    cannotHeading: 'AICheck365 no puede garantizar',
+    canCheck: [
+      'Metadatos del archivo (EXIF, XMP, IPTC): campos de dispositivo, software y herramienta de generación',
+      'Firmas digitales C2PA y Content Credentials: incrustadas por OpenAI, Adobe, Microsoft y otros proveedores',
+      'Bloques de texto PNG (tEXt / iTXt): parámetros completos de generación escritos por Stable Diffusion, ComfyUI y herramientas similares',
+      'Campos de contenedor MP4 / MOV: nombre de herramienta, etiquetas AIGC, SEI marker y cajas de texto personalizadas',
+      'Marcas específicas de plataforma: campos o patrones escritos por plataformas IA conocidas como Midjourney, DALL-E, Firefly o Kling',
+      'Muestreo de marcas de agua en video: revisión de algunos fotogramas clave en busca de marcas visibles o invisibles cuando los metadatos no aportan señales',
+      'Heurísticas de nombre de archivo: algunas plataformas generan nombres de archivo con patrones reconocibles',
+      'Análisis de estructura del contenedor: estructuras inusuales o características del propio formato de archivo',
+      'Pistas de exportación / edición: información de aplicación escrita por software al reexportar',
+    ],
+    cannot: [
+      'No todas las plataformas IA incrustan procedencia legible en sus archivos. La ausencia de señal no significa que el archivo sea humano.',
+      'Tras la compresión o transcodificación por plataformas sociales (WeChat, Weibo, X / Twitter, etc.), los metadatos suelen eliminarse.',
+      'Las capturas de pantalla, grabaciones de pantalla o fotos de una pantalla no conservan los metadatos del archivo original.',
+      'Las marcas de plataforma no tienen un estándar universal y pueden cambiar en el futuro.',
+      'Las señales de herramientas desconocidas o emergentes pueden no estar todavía en la biblioteca de detección.',
+      'Los resultados no sustituyen una pericia legal ni una evaluación forense experta.',
+      'Los hashes, huellas digitales y análisis de características del contenido están fuera del alcance de esta herramienta.',
+    ],
+    slogan: 'La evidencia supera a la intuición. La transparencia supera a los porcentajes.',
+    linksHeading: 'Enlaces relacionados',
+    homeLabel: 'Inicio',
+    detectorLabel: 'Detector (inicio)',
+    detectorDesc: 'subir un archivo y ejecutar la detección',
+    platformsLabel: 'Guías de plataformas',
+    platformsDesc: 'señales concretas de cada plataforma IA',
+    privacyLabel: 'Política de privacidad',
+    privacyDesc: 'cómo se procesan los archivos localmente y qué datos nunca se envían',
+  },
+  'pt-BR': {
+    title: 'Metodologia de detecção | AICheck365',
+    description: 'O AICheck365 verifica sinais de origem de IA por metadados de arquivo, assinaturas digitais, marcas de plataforma e parâmetros de geração. Toda a análise acontece localmente no navegador, sem upload de arquivos.',
+    h1: 'Metodologia do AICheck365',
+    lead: 'O AICheck365 detecta pistas de origem de IA analisando sinais de proveniência observáveis no arquivo original, e não usando uma rede neural de caixa-preta. Veja o que podemos inspecionar e o que não podemos garantir.',
+    canCheckHeading: 'O que o AICheck365 pode verificar',
+    cannotHeading: 'O que o AICheck365 não pode garantir',
+    canCheck: [
+      'Metadados de arquivo (EXIF, XMP, IPTC) - campos de dispositivo, software e ferramenta de geração',
+      'Assinaturas digitais C2PA e Content Credentials - incorporadas por OpenAI, Adobe, Microsoft e outros',
+      'Blocos de texto PNG (tEXt / iTXt) - parâmetros completos de geração gravados por Stable Diffusion, ComfyUI e ferramentas semelhantes',
+      'Campos de contêiner MP4 / MOV - nome da ferramenta, etiquetas AIGC, SEI marker e caixas de texto personalizadas',
+      'Marcas específicas de plataforma - campos ou padrões escritos por plataformas de IA conhecidas, como Midjourney, DALL-E, Firefly e Kling',
+      'Amostragem de marcas d’água em frames de vídeo - verificação de poucos frames-chave em busca de marcas visíveis ou invisíveis quando os metadados não trazem sinal',
+      'Heurísticas de nome de arquivo - algumas plataformas geram nomes com padrões reconhecíveis',
+      'Análise da estrutura do contêiner - estruturas incomuns ou características do próprio formato do arquivo',
+      'Pistas de exportação / edição - informações de aplicativo gravadas por software ao reexportar',
+    ],
+    cannot: [
+      'Nem todas as plataformas de IA gravam proveniência legível nos arquivos gerados. Ausência de sinal não significa criação humana.',
+      'Após compressão ou transcodificação por plataformas sociais (WeChat, Weibo, X / Twitter etc.), os metadados geralmente são removidos.',
+      'Capturas de tela, gravações de tela ou fotos de uma tela não mantêm os metadados do arquivo original.',
+      'Marcas de plataforma não seguem um padrão universal e podem mudar no futuro.',
+      'Sinais de ferramentas desconhecidas ou emergentes talvez ainda não estejam na biblioteca de detecção.',
+      'Os resultados não substituem perícia legal nem avaliação forense especializada.',
+      'Hashes de arquivo, impressões digitais e análise de características do conteúdo estão fora do escopo desta ferramenta.',
+    ],
+    slogan: 'Evidências valem mais que intuição. Transparência vale mais que porcentagens.',
+    linksHeading: 'Links relacionados',
+    homeLabel: 'Início',
+    detectorLabel: 'Detector (início)',
+    detectorDesc: 'enviar um arquivo e executar a detecção',
+    platformsLabel: 'Guias de plataformas',
+    platformsDesc: 'sinais concretos de cada plataforma de IA',
+    privacyLabel: 'Política de privacidade',
+    privacyDesc: 'como os arquivos são processados localmente e quais dados nunca são enviados',
   },
 };
 
-// For the other 7 languages, fall back to English content with the language's own h1 label
-const LANG_H1: Record<string, string> = {
-  ja: 'AICheck365 メソドロジー',
-  ko: 'AICheck365 방법론',
-  de: 'AICheck365-Methodik',
-  fr: 'Méthodologie AICheck365',
-  es: 'Metodología AICheck365',
-  'pt-BR': 'Metodologia AICheck365',
-};
-const LANG_TITLE: Record<string, string> = {
-  ja: '検出方法論 | AICheck365',
-  ko: '탐지 방법론 | AICheck365',
-  de: 'Erkennungsmethodik | AICheck365',
-  fr: 'Méthodologie de détection | AICheck365',
-  es: 'Metodología de detección | AICheck365',
-  'pt-BR': 'Metodologia de detecção | AICheck365',
-};
-
-const baseCopy = COPY[pageLang] ?? { ...COPY['en'], h1: LANG_H1[pageLang] ?? COPY['en'].h1, title: LANG_TITLE[pageLang] ?? COPY['en'].title };
+const baseCopy = COPY[pageLang] ?? COPY.en;
+const pageUrl = `https://www.aicheck365.com${navPrefix}/methodology/`;
 
 const jsonLd = [
   {
@@ -146,8 +376,8 @@ const jsonLd = [
     '@type': 'Article',
     headline: baseCopy.h1,
     description: baseCopy.description,
-    url: `https://www.aicheck365.com/methodology/`,
-    dateModified: '2026-06-18',
+    url: pageUrl,
+    dateModified: '2026-06-21',
     author: {
       '@type': 'Organization',
       name: 'AICheck365',
@@ -171,14 +401,14 @@ const jsonLd = [
       {
         '@type': 'ListItem',
         position: 1,
-        name: isZh ? '首页' : isEn ? 'Home' : 'Home',
+        name: baseCopy.homeLabel,
         item: `https://www.aicheck365.com${navPrefix ? navPrefix + '/' : '/'}`,
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: baseCopy.h1,
-        item: `https://www.aicheck365.com${navPrefix}/methodology/`,
+        item: pageUrl,
       },
     ],
   },
@@ -188,13 +418,13 @@ const jsonLd = [
 <Base
   title={baseCopy.title}
   description={baseCopy.description}
-  canonical="https://www.aicheck365.com/methodology/"
+  canonical={pageUrl}
   jsonLd={jsonLd}
 >
   <main class="page content-page">
     <article class="card content-article">
       <nav class="breadcrumb" aria-label="breadcrumb">
-        <a href={navPrefix ? `${navPrefix}/` : '/'}>{isZh ? '首页' : isEn ? 'Home' : 'Home'}</a>
+        <a href={navPrefix ? `${navPrefix}/` : '/'}>{baseCopy.homeLabel}</a>
         <span aria-hidden="true"> › </span>
         <span>{baseCopy.h1}</span>
       </nav>
@@ -226,16 +456,16 @@ const jsonLd = [
       <h2>{baseCopy.linksHeading}</h2>
       <ul class="content-list">
         <li>
-          <a href={navPrefix ? `${navPrefix}/` : '/'}>{isZh ? '检测工具（首页）' : isEn ? 'Detector (home)' : 'Detector (home)'}</a>
-          {isZh ? ' — 上传文件，立即检测' : isEn ? ' — upload a file and run the detector' : ' — upload a file and run the detector'}
+          <a href={navPrefix ? `${navPrefix}/` : '/'}>{baseCopy.detectorLabel}</a>
+          {' — '}{baseCopy.detectorDesc}
         </li>
         <li>
-          <a href={`${navPrefix}/platforms/`}>{isZh ? '平台指南' : isEn ? 'Platform Guides' : 'Platform Guides'}</a>
-          {isZh ? ' — 各 AI 平台的具体信号说明' : isEn ? ' — signal details for each AI platform' : ' — signal details for each AI platform'}
+          <a href={`${navPrefix}/platforms/`}>{baseCopy.platformsLabel}</a>
+          {' — '}{baseCopy.platformsDesc}
         </li>
         <li>
-          <a href={`${navPrefix}/privacy/`}>{isZh ? '隐私政策' : isEn ? 'Privacy Policy' : 'Privacy Policy'}</a>
-          {isZh ? ' — 文件如何在本地处理，哪些数据绝不发送' : isEn ? ' — how files are processed locally and what data is never sent' : ' — how files are processed locally and what data is never sent'}
+          <a href={`${navPrefix}/privacy/`}>{baseCopy.privacyLabel}</a>
+          {' — '}{baseCopy.privacyDesc}
         </li>
       </ul>
     </article>

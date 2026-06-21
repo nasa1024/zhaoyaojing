@@ -191,6 +191,61 @@ const noscriptCopy = NOSCRIPT[lang] ?? NOSCRIPT.en;
 // §16: ad slots must be clearly labeled
 const AD_LABEL = { 'zh-CN': '广告', 'zh-TW': '廣告', en: 'Advertisement', ja: '広告', ko: '광고', de: 'Anzeige', fr: 'Publicité', es: 'Publicidad', 'pt-BR': 'Publicidade' };
 const adLabel = AD_LABEL[lang] ?? AD_LABEL.en;
+const EXPERT_LABEL = {
+  'zh-CN': '专家模式',
+  'zh-TW': '專家模式',
+  en: 'Expert mode',
+  ja: 'エキスパートモード',
+  ko: '전문가 모드',
+  de: 'Expertenmodus',
+  fr: 'Mode expert',
+  es: 'Modo experto',
+  'pt-BR': 'Modo especialista',
+};
+const expertLabel = EXPERT_LABEL[lang] ?? EXPERT_LABEL.en;
+const isChineseLocale = lang === 'zh-CN' || lang === 'zh-TW';
+const platformNames = [
+  'Adobe Firefly',
+  'Automatic1111 / A1111',
+  'Bing Image Creator',
+  'Canva AI',
+  'ComfyUI',
+  'Copilot Designer',
+  'Craiyon',
+  'DALL-E / OpenAI',
+  'DeepAI',
+  'DreamStudio',
+  'Flux',
+  'Fooocus',
+  'Genmo',
+  'Google Veo',
+  'Grok',
+  isChineseLocale ? 'Hailuo / 海螺' : 'Hailuo',
+  'Haiper',
+  'Ideogram',
+  'Imagen / Google AI / Gemini',
+  'InvokeAI',
+  isChineseLocale ? 'Jimeng / 即梦 / Dreamina' : 'Jimeng / Dreamina',
+  'Kling',
+  'Leonardo.ai',
+  'Luma',
+  'Meta AI',
+  'Microsoft Designer',
+  'Midjourney',
+  'NightCafe',
+  'NovelAI',
+  'Pika',
+  'Pixverse',
+  isChineseLocale ? 'Qwen / 通义万相' : 'Qwen Image',
+  'Recraft',
+  'Runway',
+  'Seedream',
+  'Sora',
+  'Stability AI',
+  'Stable Diffusion',
+  'Vidu',
+  'Wan',
+];
 ---
 
 <section class="grid two-col primary-grid">
@@ -215,46 +270,7 @@ const adLabel = AD_LABEL[lang] ?? AD_LABEL.en;
     <h2 data-i18n="platforms.title">{copy.platformsTitle}</h2>
     <p class="muted" data-i18n-html="platforms.desc" set:html={copy.platformsDesc} />
     <ul id="platform-list" class="tag-list" aria-label={copy.platformAria}>
-      <li>Adobe Firefly</li>
-      <li>Automatic1111 / A1111</li>
-      <li>Bing Image Creator</li>
-      <li>Canva AI</li>
-      <li>ComfyUI</li>
-      <li>Copilot Designer</li>
-      <li>Craiyon</li>
-      <li>DALL-E / OpenAI</li>
-      <li>DeepAI</li>
-      <li>DreamStudio</li>
-      <li>Flux</li>
-      <li>Fooocus</li>
-      <li>Genmo</li>
-      <li>Google Veo</li>
-      <li>Grok</li>
-      <li>Hailuo / 海螺</li>
-      <li>Haiper</li>
-      <li>Ideogram</li>
-      <li>Imagen / Google AI / Gemini</li>
-      <li>InvokeAI</li>
-      <li>Jimeng / 即梦 / Dreamina</li>
-      <li>Kling</li>
-      <li>Leonardo.ai</li>
-      <li>Luma</li>
-      <li>Meta AI</li>
-      <li>Microsoft Designer</li>
-      <li>Midjourney</li>
-      <li>NightCafe</li>
-      <li>NovelAI</li>
-      <li>Pika</li>
-      <li>Pixverse</li>
-      <li>Qwen / 通义万相</li>
-      <li>Recraft</li>
-      <li>Runway</li>
-      <li>Seedream</li>
-      <li>Sora</li>
-      <li>Stability AI</li>
-      <li>Stable Diffusion</li>
-      <li>Vidu</li>
-      <li>Wan</li>
+      {platformNames.map((name) => <li>{name}</li>)}
     </ul>
   </div>
 </section>
@@ -296,7 +312,7 @@ const adLabel = AD_LABEL[lang] ?? AD_LABEL.en;
       <h2 data-i18n="results.title">{copy.results}</h2>
       <p class="muted compact" data-i18n="results.subtitle">{copy.resultsSubtitle}</p>
     </div>
-    <label class="expert-toggle"><input type="checkbox" id="expert-mode" /> <span data-i18n="results.expert">专家模式</span></label>
+    <label class="expert-toggle"><input type="checkbox" id="expert-mode" /> <span data-i18n="result.expert">{expertLabel}</span></label>
   </div>
   <div id="empty-state" class="empty-state" data-i18n="results.empty">{copy.empty}</div>
   <div id="report" class="report hidden"></div>
