@@ -1,0 +1,9 @@
+---
+import C2paViewerPage from '../../../components/tools/C2paViewerPage.astro';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }];
+}
+---
+
+<C2paViewerPage />

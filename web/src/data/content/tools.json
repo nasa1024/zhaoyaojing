@@ -7,12 +7,12 @@
     "pageType": "tool_hub",
     "toolType": "hub",
     "title": "专用检测工具 | AICheck365",
-    "description": "AICheck365 的专用取证工具：C2PA 验证器、EXIF/XMP 阅读器、PNG 参数提取器、MP4 元数据检查器。逐层查看文件原始来源数据，全部在浏览器本地完成。",
+    "description": "AICheck365 的专用取证工具：C2PA 验证器、C2PA 查看器、EXIF/XMP 阅读器、PNG 参数提取器、MP4 元数据检查器。逐层查看文件原始来源数据，全部在浏览器本地完成。",
     "canonical": "https://www.aicheck365.com/tools/",
     "primaryKeyword": "AI 文件元数据检测工具",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/tools/c2pa-validator/", "/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/mp4-metadata-inspector/", "/methodology/"]
+    "internalLinks": ["/tools/c2pa-validator/", "/tools/c2pa-viewer/", "/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/mp4-metadata-inspector/", "/methodology/"]
   },
   {
     "id": "tools-hub-en",
@@ -22,12 +22,12 @@
     "pageType": "tool_hub",
     "toolType": "hub",
     "title": "Detection Tools | AICheck365",
-    "description": "AICheck365 forensic tools: C2PA Validator, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector. Inspect raw per-layer provenance data locally in your browser.",
+    "description": "AICheck365 forensic tools: C2PA Validator, C2PA Viewer, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector. Inspect raw per-layer provenance data locally in your browser.",
     "canonical": "https://www.aicheck365.com/en/tools/",
     "primaryKeyword": "AI metadata detection tools",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/en/tools/mp4-metadata-inspector/", "/en/methodology/"]
+    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/c2pa-viewer/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/en/tools/mp4-metadata-inspector/", "/en/methodology/"]
   },
   {
     "id": "c2pa-validator-zh",
@@ -58,6 +58,36 @@
     "draft": false,
     "updatedAt": "2026-06-21",
     "internalLinks": ["/en/tools/", "/en/methodology/"]
+  },
+  {
+    "id": "c2pa-viewer-zh",
+    "slug": "c2pa-viewer",
+    "route": "/tools/c2pa-viewer/",
+    "locale": "zh-CN",
+    "pageType": "tool",
+    "toolType": "c2pa-viewer",
+    "title": "C2PA 查看器：提取 AIGC 图片视频原始凭证 | AICheck365",
+    "description": "C2PA 查看器：在浏览器本地解析并查看图片与视频的 C2PA Content Credentials 原始 JSON 结构。支持复制与导出，不上传文件。",
+    "canonical": "https://www.aicheck365.com/tools/c2pa-viewer/",
+    "primaryKeyword": "C2PA 查看器",
+    "draft": false,
+    "updatedAt": "2026-06-30",
+    "internalLinks": ["/tools/", "/tools/c2pa-validator/", "/methodology/"]
+  },
+  {
+    "id": "c2pa-viewer-en",
+    "slug": "c2pa-viewer",
+    "route": "/en/tools/c2pa-viewer/",
+    "locale": "en",
+    "pageType": "tool",
+    "toolType": "c2pa-viewer",
+    "title": "C2PA Viewer: Extract Raw Content Credentials JSON | AICheck365",
+    "description": "C2PA Viewer: inspect and extract raw C2PA manifests JSON locally in your browser. Copy or export raw Content Credentials without uploading files.",
+    "canonical": "https://www.aicheck365.com/en/tools/c2pa-viewer/",
+    "primaryKeyword": "C2PA viewer",
+    "draft": false,
+    "updatedAt": "2026-06-30",
+    "internalLinks": ["/en/tools/", "/en/tools/c2pa-validator/", "/en/methodology/"]
   },
   {
     "id": "exif-xmp-reader-zh",

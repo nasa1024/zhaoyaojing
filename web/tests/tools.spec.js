@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,11 +12,17 @@ const PNG_SAMPLE = path.join(__dirname, '../public/samples/generation-parameters
 const MP4_SAMPLE = path.join(__dirname, '../public/samples/signed-video.mp4');
 const TOOL_ROUTES = [
   '/tools/c2pa-validator/',
+  '/tools/c2pa-viewer/',
   '/tools/exif-xmp-reader/',
   '/tools/png-parameter-extractor/',
   '/tools/mp4-metadata-inspector/',
 ];
 const EN_TOOL_ROUTES = TOOL_ROUTES.map((route) => `/en${route}`);
+const METADATA_TOOL_ROUTES = [
+  '/tools/exif-xmp-reader/',
+  '/tools/png-parameter-extractor/',
+  '/tools/mp4-metadata-inspector/',
+];
 
 async function analyzeC2paFixture(page, sample) {
   await page.goto('/en/tools/c2pa-validator/');
@@ -78,10 +85,25 @@ test('English C2PA tool body copy is server-rendered at the localized URL', asyn
   await ctx.close();
 });
 
+test('C2PA viewer body copy is server-rendered at default and English URLs', async ({ browser }) => {
+  const ctx = await browser.newContext({ javaScriptEnabled: false });
+  const page = await ctx.newPage();
+  await page.goto('/tools/c2pa-viewer/');
+  await expect(page.locator('h1')).toHaveText('C2PA 查看器');
+  await expect(page.getByText('如何使用')).toBeVisible();
+  await expect(page.locator('#tool-inspector')).toBeVisible();
+
+  await page.goto('/en/tools/c2pa-viewer/');
+  await expect(page.locator('h1')).toHaveText('C2PA Viewer');
+  await expect(page.getByText('How to use')).toBeVisible();
+  await expect(page.locator('#tool-inspector')).toBeVisible();
+  await ctx.close();
+});
+
 test('all PRD tool pages are server-rendered and reachable without JS', async ({ browser }) => {
   const ctx = await browser.newContext({ javaScriptEnabled: false });
   const page = await ctx.newPage();
-  for (const route of TOOL_ROUTES.slice(1)) {
+  for (const route of METADATA_TOOL_ROUTES) {
     await page.goto(route);
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.locator('#tool-inspector')).toBeVisible();
@@ -126,6 +148,46 @@ test('C2PA tool analyzes a real signed sample and shows raw provenance', async (
   // Truthfulness/export: the last raw report is the exact engine return.
   const state = await page.evaluate(() => window.__AICHECK_TOOL_LAST__?.state);
   expect(['valid', 'trusted', 'invalid']).toContain(state);
+});
+
+test('C2PA viewer renders searchable raw JSON and supports copy/export', async ({ page }) => {
+  test.setTimeout(90000);
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (text) => { window.__COPIED_TEXT__ = text; },
+      },
+    });
+  });
+
+  await page.goto('/en/tools/c2pa-viewer/');
+  await page.locator('#tool-file-input').setInputFiles(SAMPLE);
+  const out = page.locator('#tool-output');
+  const pre = out.locator('pre.tool-raw-json');
+  await expect(out).toBeVisible({ timeout: 80000 });
+  await expect(pre).toBeVisible();
+  await expect(out.locator('.tool-raw-section, .tool-raw-table, .tool-raw-badge')).toHaveCount(0);
+
+  const rawText = await pre.innerText();
+  const parsed = JSON.parse(rawText);
+  expect(parsed.manifests).toBeTruthy();
+  expect(rawText).toContain('\n  "');
+
+  await page.locator('#tool-filter').fill('no-such-c2pa-viewer-token');
+  await expect(pre).toBeHidden();
+  await page.locator('#tool-filter').fill('manifests');
+  await expect(pre).toBeVisible();
+
+  await page.locator('#tool-copy').click();
+  await expect.poll(() => page.evaluate(() => window.__COPIED_TEXT__ || '')).toBe(rawText);
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.locator('#tool-export').click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('c2pa-viewer-manifest.json');
+  const exported = await fs.readFile(await download.path(), 'utf8');
+  expect(exported).toBe(rawText);
 });
 
 test('C2PA tool separates signature validity, trust, tamper, expiry, and no-manifest states', async ({ page }) => {

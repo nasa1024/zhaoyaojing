@@ -1,0 +1,161 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const DEFAULT_LANG = 'zh-CN';
+const TOOL_ALTERNATE_LANGS = ['zh-CN', 'en'];
+
+function getUrlLang(pathname) {
+  const seg = pathname.split('/').filter(Boolean)[0];
+  return SUPPORTED_LANGS.includes(seg) ? seg : null;
+}
+
+const urlLang = getUrlLang(Astro.url.pathname);
+const pageLang = urlLang === 'en' ? 'en' : DEFAULT_LANG;
+const isZh = pageLang !== 'en';
+const homePath = pageLang === 'en' ? '/en/' : '/';
+const toolsPath = pageLang === 'en' ? '/en/tools/' : '/tools/';
+const currentPath = `${toolsPath}c2pa-viewer/`;
+const currentUrl = `https://www.aicheck365.com${currentPath}`;
+const toolsUrl = `https://www.aicheck365.com${toolsPath}`;
+
+const COPY = {
+  'zh-CN': {
+    title: 'C2PA 查看器：提取 AIGC 图片视频原始凭证 | AICheck365',
+    description: 'C2PA 查看器：在浏览器本地解析并查看图片与视频的 C2PA Content Credentials 原始 JSON 结构。支持复制与导出，不上传文件。',
+    h1: 'C2PA 查看器',
+    lead: '上传图片或视频，直接提取文件内的 C2PA Content Credentials 原始 JSON。页面只显示格式化后的 Manifest JSON，方便开发者、安全研究员和内容审核人员搜索、复制和留存。',
+    uploadTitle: '上传文件提取 C2PA JSON',
+    uploadZone: '点击或拖拽图片/视频到此处',
+    formats: '支持图片与视频（JPEG / PNG / WebP / MP4 / MOV 等）',
+    howTo: '如何使用',
+    usage: ['选择尽量原始的图片或视频文件。', '解析完成后在 JSON 块内搜索 claim_generator、assertions、ingredients 或证书字段。', '复制或导出结果用于调试签名库、审计来源链或归档证据。'],
+    limitsH: '适用范围与限制',
+    limits: ['未发现 C2PA Manifest 不代表文件是真实拍摄，只说明当前副本没有可读 C2PA 数据。', '本页不展示可信度图表或解释性结论；需要分层解读请使用 C2PA 验证器。', '解析在浏览器本地通过 WebAssembly 完成，文件不会上传。'],
+    relatedH: '相关',
+    validator: 'C2PA 验证器',
+    allTools: '全部工具',
+    noScript: '该工具需要 JavaScript 才能在本地解析文件。',
+    ui: {
+      loading: '正在加载 C2PA 引擎…',
+      analyzing: '正在解析…',
+      done: '完成',
+      error: '错误：',
+      noFile: '请选择文件',
+      empty: '选择一个图片或视频文件开始解析',
+      filterPlaceholder: '搜索 JSON…',
+      copy: '复制 JSON',
+      copied: '已复制 ✓',
+      copyFailed: '复制失败',
+      exportJson: '导出 JSON',
+      none: '未发现可读 C2PA Manifest。',
+    },
+  },
+  en: {
+    title: 'C2PA Viewer: Extract Raw Content Credentials JSON | AICheck365',
+    description: 'C2PA Viewer: inspect and extract raw C2PA manifests JSON locally in your browser. Copy or export raw Content Credentials without uploading files.',
+    h1: 'C2PA Viewer',
+    lead: 'Upload an image or video and extract the raw C2PA Content Credentials JSON directly from the file. The page shows only formatted manifest JSON for developers, security researchers, and content auditors who need a distraction-free view.',
+    uploadTitle: 'Upload a file to extract C2PA JSON',
+    uploadZone: 'Click or drag an image/video here',
+    formats: 'Images and video supported (JPEG / PNG / WebP / MP4 / MOV, etc.)',
+    howTo: 'How to use',
+    usage: ['Choose the most original image or video file available.', 'After parsing, search the JSON block for claim_generator, assertions, ingredients, or certificate fields.', 'Copy or export the result for signing-library debugging, provenance audits, or evidence records.'],
+    limitsH: 'Scope & limits',
+    limits: ['No C2PA manifest does not mean the file is human-made; it only means this copy has no readable C2PA data.', 'This page does not show trust charts or interpretation layers; use the C2PA Validator for that.', 'Parsing runs locally in your browser via WebAssembly; the file is never uploaded.'],
+    relatedH: 'Related',
+    validator: 'C2PA Validator',
+    allTools: 'All tools',
+    noScript: 'This tool needs JavaScript to parse files locally.',
+    ui: {
+      loading: 'Loading C2PA engine…',
+      analyzing: 'Parsing…',
+      done: 'Done',
+      error: 'Error: ',
+      noFile: 'Please choose a file',
+      empty: 'Choose an image or video file to parse',
+      filterPlaceholder: 'Search JSON…',
+      copy: 'Copy JSON',
+      copied: 'Copied ✓',
+      copyFailed: 'Copy failed',
+      exportJson: 'Export JSON',
+      none: 'No readable C2PA manifest found.',
+    },
+  },
+};
+
+const c = COPY[pageLang] ?? COPY[DEFAULT_LANG];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: c.h1,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    description: c.description,
+    url: currentUrl,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    inLanguage: pageLang,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: isZh ? '首页' : 'Home', item: `https://www.aicheck365.com${homePath}` },
+      { '@type': 'ListItem', position: 2, name: isZh ? '工具' : 'Tools', item: toolsUrl },
+      { '@type': 'ListItem', position: 3, name: c.h1, item: currentUrl },
+    ],
+  },
+];
+---
+
+<Base title={c.title} description={c.description} canonical="https://www.aicheck365.com/tools/c2pa-viewer/" jsonLd={jsonLd} alternateLangs={TOOL_ALTERNATE_LANGS}>
+  <main class="page content-page">
+    <article class="card content-article">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href={homePath}>{isZh ? '首页' : 'Home'}</a>
+        <span aria-hidden="true"> › </span>
+        <a href={toolsPath}>{isZh ? '工具' : 'Tools'}</a>
+        <span aria-hidden="true"> › </span>
+        <span>{c.h1}</span>
+      </nav>
+      <h1>{c.h1}</h1>
+      <p class="lead-text">{c.lead}</p>
+
+      <section id="tool-inspector" data-tool="c2pa-viewer" class="card tool-card">
+        <h2>{c.uploadTitle}</h2>
+        <div class="tool-upload">
+          <label class="tool-drop-zone" id="tool-drop-zone" for="tool-file-input">
+            <input id="tool-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,video/mp4,video/quicktime,video/webm,video/x-m4v,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff,.mp4,.mov,.m4v,.webm" />
+            <span class="upload-icon" aria-hidden="true">↥</span>
+            <span>{c.uploadZone}</span>
+            <small class="muted">{c.formats}</small>
+          </label>
+          <p id="tool-status" class="status muted" role="status" aria-live="polite"></p>
+          <div class="tool-toolbar">
+            <input id="tool-filter" type="text" placeholder={c.ui.filterPlaceholder} aria-label={c.ui.filterPlaceholder} />
+            <button id="tool-copy" class="ghost">{c.ui.copy}</button>
+            <button id="tool-export" class="ghost">{c.ui.exportJson}</button>
+          </div>
+          <div id="tool-output" class="tool-output hidden"></div>
+        </div>
+        <noscript><p class="notice warning">{c.noScript}</p></noscript>
+      </section>
+      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(c.ui)} />
+
+      <h2>{c.howTo}</h2>
+      <ol class="content-list">{c.usage.map((item) => <li>{item}</li>)}</ol>
+
+      <h2>{c.limitsH}</h2>
+      <ul class="content-list">{c.limits.map((item) => <li>{item}</li>)}</ul>
+
+      <h2>{c.relatedH}</h2>
+      <ul class="content-list">
+        <li><a href={`${toolsPath}c2pa-validator/`}>{c.validator} →</a></li>
+        <li><a href={toolsPath}>{c.allTools} →</a></li>
+      </ul>
+    </article>
+  </main>
+</Base>
+
+<script>import '../../scripts/tool-inspector.js';</script>

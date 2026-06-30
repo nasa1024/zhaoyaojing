@@ -18,13 +18,16 @@ const currentUrl = `https://www.aicheck365.com${toolsPath}`;
 
 const title = isZh ? '专用检测工具 | AICheck365' : 'Detection Tools | AICheck365';
 const description = isZh
-  ? 'AICheck365 的专用取证工具：C2PA 验证器、EXIF/XMP 阅读器、PNG 参数提取器、MP4 元数据检查器。逐层查看文件原始来源数据，全部在浏览器本地完成。'
-  : 'AICheck365 forensic tools: C2PA Validator, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector. Inspect raw per-layer provenance data locally in your browser.';
+  ? 'AICheck365 的专用取证工具：C2PA 验证器、C2PA 查看器、EXIF/XMP 阅读器、PNG 参数提取器、MP4 元数据检查器。逐层查看文件原始来源数据，全部在浏览器本地完成。'
+  : 'AICheck365 forensic tools: C2PA Validator, C2PA Viewer, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector. Inspect raw per-layer provenance data locally in your browser.';
 
 const tools = [
   { slug: 'c2pa-validator', live: true,
     name: isZh ? 'C2PA 验证器' : 'C2PA Validator',
     desc: isZh ? '检查 C2PA Manifest、签名状态、Claim Generator、Assertions、Ingredient 链、证书与原始 JSON。' : 'Inspect C2PA manifest, signature state, claim generator, assertions, ingredient chain, certificate, and raw JSON.' },
+  { slug: 'c2pa-viewer', live: true,
+    name: isZh ? 'C2PA 查看器' : 'C2PA Viewer',
+    desc: isZh ? '只提取并显示格式化后的 C2PA Content Credentials 原始 JSON，支持搜索、复制和导出。' : 'Extract only formatted raw C2PA Content Credentials JSON, with search, copy, and export.' },
   { slug: 'exif-xmp-reader', live: true,
     name: isZh ? 'EXIF/XMP 阅读器' : 'EXIF/XMP Reader',
     desc: isZh ? '查看 EXIF、XMP、基础属性和 AI 工具字段；敏感字段标记，复制安全摘要，导出 JSON。' : 'Inspect EXIF, XMP, base properties, and AI-tool fields with sensitive-field labels, safe copy, and JSON export.' },

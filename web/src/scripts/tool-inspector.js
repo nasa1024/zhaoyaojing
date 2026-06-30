@@ -341,10 +341,37 @@ function renderProvenanceRaw(report, L) {
   return blocks.join('');
 }
 
+function formattedManifestJson(report, L) {
+  if (report?.raw_json) {
+    try {
+      return JSON.stringify(JSON.parse(report.raw_json), null, 2);
+    } catch {
+      return String(report.raw_json);
+    }
+  }
+  return JSON.stringify({
+    state: report?.state || 'unsigned',
+    message: L.none || 'No readable C2PA manifest found.',
+    validation_status: Array.isArray(report?.validation_status) ? report.validation_status : [],
+  }, null, 2);
+}
+
+function renderC2paViewerRaw(report, L) {
+  const raw = formattedManifestJson(report, L);
+  return `<pre class="tool-raw-json mono" data-search="${esc(raw.toLowerCase())}">${esc(raw)}</pre>`;
+}
+
 const TOOL_CONFIG = {
   'c2pa-validator': {
     call: (api, bytes, mime) => api.verifyC2pa(bytes, mime),
     view: renderProvenanceRaw,
+  },
+  'c2pa-viewer': {
+    call: (api, bytes, mime) => api.verifyC2pa(bytes, mime),
+    view: renderC2paViewerRaw,
+    copyPayload: formattedManifestJson,
+    exportPayload: formattedManifestJson,
+    exportName: 'c2pa-viewer-manifest.json',
   },
   'exif-xmp-reader': {
     call: (api, bytes) => api.inspectExifXmp(bytes),
@@ -484,26 +511,54 @@ function initToolInspector() {
     };
   }
 
-  copyBtn?.addEventListener('click', () => {
+  function payloadText(payload) {
+    return typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+  }
+
+  async function writeClipboard(text) {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    const ok = document.execCommand?.('copy');
+    textarea.remove();
+    if (!ok) throw new Error('clipboard_unavailable');
+  }
+
+  copyBtn?.addEventListener('click', async () => {
     if (!lastReport) return;
-    navigator.clipboard?.writeText(JSON.stringify(safeCopyPayload(lastReport), null, 2)).then(() => {
+    const payload = cfg.copyPayload ? cfg.copyPayload(lastReport, L) : safeCopyPayload(lastReport);
+    try {
+      await writeClipboard(payloadText(payload));
       ga('copy_result', { copy_type: 'json_summary' });
       copyBtn.textContent = L.copied || '✓';
       setTimeout(() => { copyBtn.textContent = L.copy || 'Copy JSON'; }, 1500);
-    }).catch(() => {});
+    } catch {
+      copyBtn.textContent = L.copyFailed || L.error || 'Copy failed';
+      setTimeout(() => { copyBtn.textContent = L.copy || 'Copy JSON'; }, 1500);
+    }
   });
 
   exportBtn?.addEventListener('click', () => {
     if (!lastReport) return;
-    if (hasSensitiveReportData(lastReport)) {
+    const payload = cfg.exportPayload ? cfg.exportPayload(lastReport, L) : lastReport;
+    if (!cfg.exportPayload && hasSensitiveReportData(lastReport)) {
       const ok = window.confirm(L.sensitiveExport || 'This export may include sensitive metadata such as GPS, author/contact data, prompts, or workflow JSON. Continue?');
       if (!ok) return;
     }
-    const blob = new Blob([JSON.stringify(lastReport, null, 2)], { type: 'application/json' });
+    const blob = new Blob([payloadText(payload)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${mount.dataset.tool}-report.json`;
+    a.download = cfg.exportName || `${mount.dataset.tool}-report.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
