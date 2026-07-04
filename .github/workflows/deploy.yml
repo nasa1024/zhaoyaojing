@@ -34,3 +34,8 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4"
           command: deploy
+
+      - name: Notify IndexNow
+        if: steps.cloudflare.outputs.deploy_enabled == 'true'
+        continue-on-error: true
+        run: node web/scripts/indexnow-submit.mjs

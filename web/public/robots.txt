@@ -25,6 +25,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Host: https://www.aicheck365.com
 Sitemap: https://www.aicheck365.com/sitemap-index.xml
-Sitemap: https://www.aicheck365.com/sitemap.xml

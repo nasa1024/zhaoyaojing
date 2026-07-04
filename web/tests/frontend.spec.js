@@ -104,7 +104,7 @@ test.beforeEach(async ({ page }) => {
 test('shows trust indicators, selected file metadata, and accessible controls', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { name: '别问它"像不像 AI"，看看它留下了什么' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'AI 图片/视频检测：别问它像不像，看它留下了什么' })).toBeVisible();
   await expect(page.getByText('文件在你的浏览器中处理，不会离开你的设备。')).toBeVisible();
   await expect(page.getByText('隐私优先')).toBeVisible();
   await expect(page.getByText('适合原图检测')).toBeVisible();
@@ -192,7 +192,7 @@ test('keeps the primary interface usable on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { name: '别问它"像不像 AI"，看看它留下了什么' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'AI 图片/视频检测：别问它像不像，看它留下了什么' })).toBeVisible();
   await expect(page.getByLabel('点击选择图片或视频')).toBeVisible();
 
   const metrics = await page.evaluate(() => ({
@@ -219,7 +219,7 @@ test('keeps language in the URL and localized links', async ({ page }) => {
 });
 
 test('serves sitemap entrypoint and includes localized routes', async ({ request }) => {
-  const sitemap = await request.get('/sitemap.xml');
+  const sitemap = await request.get('/sitemap-index.xml');
   expect(sitemap.ok()).toBeTruthy();
   expect(sitemap.headers()['content-type']).toMatch(/xml/);
 
