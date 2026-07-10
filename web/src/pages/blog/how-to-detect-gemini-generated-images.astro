@@ -27,7 +27,11 @@ const jsonLd = [
     "description": "用真实 Gemini 原图拆解 Google 写入的来源信号：PNG caBX chunk 里的 C2PA manifest、Google C2PA Core Generator Library、XMP Credit、SynthID 的边界，以及 Veo 视频线索。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/",
     "datePublished": "2026-05-26",
-    "dateModified": "2026-06-09",
+    "dateModified": "2026-07-10",
+    "inLanguage": "zh-CN",
+    "isAccessibleForFree": true,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/" },
+    "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -55,7 +59,8 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>如何检测 Gemini 生成的图片和视频？C2PA、XMP Credit 与 SynthID 详解</h1>
-      <p class="article-meta">2026年5月发布 · 2026年6月更新 · Gemini · C2PA · Content Credentials</p>
+      <p class="article-meta">2026年5月发布 · 2026年7月更新 · Gemini · C2PA · Content Credentials</p>
+      <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">Google 给 Gemini 生成内容上的"标记"其实有三套：标准化的 C2PA Content Credentials、XMP 里的署名字段，以及只有 Google 自己能读的 SynthID 像素水印。能不能检测出来，主要取决于你手里的文件经历过什么——原始 PNG 里证据相当扎实，截图和微信转图则基本什么都不剩。这篇用真实样本拆解每一套标记长什么样、存在哪、可信度如何。</p>
 
@@ -103,6 +108,13 @@ const jsonLd = [
 
       <h2>为什么坚持本地检测</h2>
       <p>需要鉴别 Gemini 图的场景里，很多文件并不适合上传到别人的服务器——客户给的素材、还没发布的设计稿、聊天里收到的私人图片。AICheck365 的所有解析（EXIF、XMP、PNG chunk、C2PA/JUMBF、MP4 box、抽帧）都在浏览器本机完成，检测过程中没有任何文件字节发往服务器。代价前面说过：快速扫描不等于法证审计，重要场合请保留原始文件做完整验证。</p>
+
+      <h2>来源与复现</h2>
+      <ul class="content-list">
+        <li><a href="https://deepmind.google/science/synthid/" rel="noopener" target="_blank">Google DeepMind SynthID</a>：像素级水印的官方范围与用途。</li>
+        <li><a href="https://c2pa.org/specifications/" rel="noopener" target="_blank">C2PA Specifications</a>：Content Credentials、JUMBF 和签名验证规范。</li>
+        <li><a href="/research/ai-media-provenance-report-2026-q3/">AICheck365 2026 Q3 实验汇总</a>：Google 生成式 AI 视频与其他样本的实测记录和边界。</li>
+      </ul>
 
       <div class="cta-box">
         <p>手里有 Gemini 原图或 Google AI 视频？拖进来看看 Google 留了哪些来源记录</p>

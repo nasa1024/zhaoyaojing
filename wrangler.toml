@@ -1,12 +1,15 @@
 name = "aicheck365"
+main = "web/worker.js"
 compatibility_date = "2026-05-19"
 
 [build]
-command = "cd web && npm install && npm run build"
+command = "cd web && npm ci && npm run build"
 
 [assets]
 directory = "web/dist"
+binding = "ASSETS"
 not_found_handling = "404-page"
+run_worker_first = ["/*"]
 
 [vars]
 ENVIRONMENT = "production"

@@ -11,6 +11,8 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](../LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.86%2B-orange.svg)](https://www.rust-lang.org/)
 
+[公式サイト](https://www.aicheck365.com/)
+
 </div>
 
 *あのバズった画像——AIか本物か？*

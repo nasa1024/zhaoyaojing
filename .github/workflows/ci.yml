@@ -10,6 +10,31 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+      - name: Build and run SEO QA
+        working-directory: web
+        run: npm run build
+      - name: Test canonical-host Worker
+        working-directory: web
+        run: npm run test:worker
+      - name: Install Playwright Chromium
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+      - name: Run web regression tests
+        working-directory: web
+        run: npm test
+
   lint:
     runs-on: ubuntu-latest
     steps:

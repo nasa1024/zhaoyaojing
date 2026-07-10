@@ -9,6 +9,8 @@
 - [AI video detection guide](https://www.aicheck365.com/blog/how-to-detect-ai-videos/): MP4/MOV metadata, C2PA-lite, SEI marker, file-name hints, and sampled frame watermark checks.
 - [AI media metadata guide](https://www.aicheck365.com/blog/ai-image-metadata-guide/): EXIF, XMP, C2PA, PNG tEXt, MP4/MOV, and AI platform writing patterns.
 - [What is C2PA](https://www.aicheck365.com/blog/what-is-c2pa/): Content Credentials and provenance signals for AI media.
+- [Research Center](https://www.aicheck365.com/research/): Reproducible browser-local provenance experiments with fixture sources, licenses, parser versions, observed signals, misses, and limitations.
+- [AI Media Provenance Report, 2026 Q3](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/): A dated comparison of 5 experiment records covering 6 tested sample instances across JPEG, PNG, and MP4 fixtures, with a public JSON registry and reproduction notes.
 - [Privacy policy](https://www.aicheck365.com/privacy/): Files are analyzed locally in the browser and are not uploaded.
 
 ## Platform Guides
@@ -18,7 +20,7 @@
 - [DALL-E / GPT Image detection](https://www.aicheck365.com/platforms/dall-e/): OpenAI C2PA metadata, XMP fields, and related Sora video provenance clues.
 - [Midjourney detection](https://www.aicheck365.com/platforms/midjourney/): XMP CreatorTool, IPTC digital source fields, and file-name patterns.
 - [Stable Diffusion detection](https://www.aicheck365.com/platforms/stable-diffusion/): PNG tEXt chunks, prompts, seeds, workflow metadata, and frame-export clues.
-- [Sora video detection](https://www.aicheck365.com/platforms/sora/): C2PA-lite text, MP4/MOV container metadata, OpenAI clues, and sampled frame watermarks.
+- [Sora video detection](https://www.aicheck365.com/platforms/sora/): Historical-file checks for preserved Sora exports after the Web/App discontinuation, using C2PA clues, MP4/MOV container metadata, file names, and sampled frame watermarks.
 - [Kling video detection](https://www.aicheck365.com/platforms/kling/): MP4/MOV metadata, SEI markers, AIGC labels, and video frame watermark signals.
 
 ## Useful Facts

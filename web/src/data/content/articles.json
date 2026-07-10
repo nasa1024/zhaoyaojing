@@ -26,7 +26,7 @@
     "canonical": "https://www.aicheck365.com/blog/ai-image-metadata-guide/",
     "primaryKeyword": "AI 媒体元数据",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-10",
     "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/mp4-metadata-inspector/", "/platforms/stable-diffusion/"]
   },
   {
@@ -41,7 +41,7 @@
     "canonical": "https://www.aicheck365.com/blog/how-to-detect-ai-images/",
     "primaryKeyword": "如何判断图片是否 AI 生成",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-10",
     "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/c2pa-validator/", "/platforms/"]
   },
   {
@@ -56,7 +56,7 @@
     "canonical": "https://www.aicheck365.com/blog/how-to-detect-ai-videos/",
     "primaryKeyword": "如何检测 AI 生成视频",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-10",
     "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/platforms/sora/", "/platforms/kling/"]
   },
   {
@@ -71,7 +71,7 @@
     "canonical": "https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/",
     "primaryKeyword": "检测 Gemini 生成图片",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-10",
     "internalLinks": ["/platforms/gemini/", "/platforms/imagen/", "/tools/c2pa-validator/", "/tools/exif-xmp-reader/"]
   },
   {
@@ -86,7 +86,7 @@
     "canonical": "https://www.aicheck365.com/blog/what-is-c2pa/",
     "primaryKeyword": "C2PA 是什么",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-10",
     "internalLinks": ["/tools/c2pa-validator/", "/platforms/dall-e/", "/platforms/firefly/", "/methodology/"]
   },
   {
@@ -118,5 +118,65 @@
     "draft": false,
     "updatedAt": "2026-06-21",
     "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/c2pa-validator/", "/pt-BR/platforms/gemini/"]
+  },
+  {
+    "id": "how-to-detect-ai-images-ja-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/ja/blog/how-to-detect-ai-images/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "AI画像の見分け方：C2PA・EXIF・PNGメタデータを原本で確認 | AICheck365",
+    "description": "AI生成画像かを調べる実践手順。元画像のC2PA署名、EXIF/XMP、PNG text、ComfyUI workflowを実サンプルで確認し、証拠の強さと限界を整理します。",
+    "canonical": "https://www.aicheck365.com/ja/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "AI画像 見分け方",
+    "draft": false,
+    "updatedAt": "2026-07-10",
+    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/ja/methodology/"]
+  },
+  {
+    "id": "how-to-detect-ai-videos-ja-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/ja/blog/how-to-detect-ai-videos/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "AI生成動画の見分け方：MP4メタデータ・C2PA・透かしを確認 | AICheck365",
+    "description": "AI生成動画の確認手順を実サンプルで解説。元のMP4/MOVからC2PA、コンテナmetadata、SEI marker、ファイル名、抽出フレーム透かしを順に調べます。",
+    "canonical": "https://www.aicheck365.com/ja/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "AI生成動画 見分け方",
+    "draft": false,
+    "updatedAt": "2026-07-10",
+    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/ja/platforms/sora/", "/ja/methodology/"]
+  },
+  {
+    "id": "how-to-detect-ai-images-zh-tw-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/zh-TW/blog/how-to-detect-ai-images/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測 | AICheck365",
+    "description": "用原始圖片依序檢查 C2PA 簽章、EXIF/XMP、PNG 文字區塊與 ComfyUI workflow，搭配 Firefly、ComfyUI 真實樣本說明證據強度與限制。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "AI 圖片檢測",
+    "draft": false,
+    "updatedAt": "2026-07-10",
+    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/zh-TW/methodology/"]
+  },
+  {
+    "id": "how-to-detect-ai-videos-zh-tw-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/zh-TW/blog/how-to-detect-ai-videos/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "如何判斷 AI 生成影片？MP4 Metadata、C2PA 與影格浮水印實測 | AICheck365",
+    "description": "從原始 MP4/MOV 依序檢查 C2PA、容器 metadata、SEI marker、檔名與抽樣影格浮水印，並用 Google Veo 真實樣本說明證據強弱。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "AI 影片檢測",
+    "draft": false,
+    "updatedAt": "2026-07-10",
+    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/zh-TW/platforms/sora/", "/zh-TW/methodology/"]
   }
 ]

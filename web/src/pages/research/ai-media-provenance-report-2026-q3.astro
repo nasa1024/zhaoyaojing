@@ -1,0 +1,374 @@
+---
+import Base from '../../layouts/Base.astro';
+import ResearchComparisonTable from '../../components/ResearchComparisonTable.astro';
+import experiments from '../../../public/data/experiments.json';
+
+const canonical = 'https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/';
+const title = 'AI Media Provenance Report, 2026 Q3 | AICheck365';
+const publicationDate = '2026-07-10';
+const sortedExperiments = [...experiments].sort((a: any, b: any) => String(b.testDate).localeCompare(String(a.testDate)));
+const totalSamples = sortedExperiments.reduce((sum: number, experiment: any) => sum + experiment.sampleCount, 0);
+const description = `A reproducible comparison of ${sortedExperiments.length} AI media provenance experiments covering ${totalSamples} tested sample instances, C2PA validation states, editable metadata, source licenses, methods, and limitations.`;
+const fileFormats = [...new Set(sortedExperiments.map((experiment: any) => experiment.fileFormat))].sort();
+const parserVersions = [...new Set(sortedExperiments.map((experiment: any) => experiment.parserVersion))];
+const latestTestDate = sortedExperiments[0]?.testDate;
+const earliestTestDate = sortedExperiments.at(-1)?.testDate;
+const dataVersion = `experiments-${latestTestDate}-${sortedExperiments.length}r-${totalSamples}s`;
+
+const sourceGroups = Array.from(
+  sortedExperiments.reduce((groups: Map<string, { url: string; licenses: Set<string>; records: string[] }>, experiment: any) => {
+    const current = groups.get(experiment.detailUrl) ?? {
+      url: experiment.detailUrl,
+      licenses: new Set<string>(),
+      records: [],
+    };
+    current.licenses.add(experiment.sourceLicense);
+    current.records.push(experiment.platform);
+    groups.set(experiment.detailUrl, current);
+    return groups;
+  }, new Map()),
+).map(([, source]) => ({
+  ...source,
+  licenses: [...source.licenses],
+}));
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Report',
+    headline: title,
+    name: 'AI Media Provenance Report, 2026 Q3',
+    description,
+    url: canonical,
+    mainEntityOfPage: canonical,
+    datePublished: publicationDate,
+    dateModified: publicationDate,
+    inLanguage: 'en',
+    version: dataVersion,
+    isAccessibleForFree: true,
+    about: ['AI media provenance', 'C2PA Content Credentials', 'PNG generation metadata', 'MP4 provenance metadata'],
+    author: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AICheck365',
+      url: 'https://www.aicheck365.com/',
+      logo: { '@type': 'ImageObject', url: 'https://www.aicheck365.com/og.png' },
+    },
+    isPartOf: {
+      '@type': 'CollectionPage',
+      name: 'AICheck365 Research Center',
+      url: 'https://www.aicheck365.com/research/',
+    },
+    isBasedOn: sourceGroups.map((source) => source.url),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: 'AICheck365 provenance experiment snapshot for the 2026 Q3 report',
+    description: `${sortedExperiments.length} experiment records and ${totalSamples} tested sample instances, with a data cutoff of ${latestTestDate}.`,
+    url: canonical,
+    dateModified: latestTestDate,
+    version: dataVersion,
+    temporalCoverage: earliestTestDate === latestTestDate ? latestTestDate : `${earliestTestDate}/${latestTestDate}`,
+    creator: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
+    inLanguage: 'en',
+    measurementTechnique: 'Browser-local file metadata and C2PA parsing',
+    distribution: {
+      '@type': 'DataDownload',
+      encodingFormat: 'application/json',
+      contentUrl: 'https://www.aicheck365.com/data/experiments.json',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aicheck365.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Research', item: 'https://www.aicheck365.com/research/' },
+      { '@type': 'ListItem', position: 3, name: '2026 Q3 report', item: canonical },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="en" singleLang={true}>
+  <main class="page content-page research-page">
+    <article class="research-detail report-page">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true"> › </span>
+        <a href="/research/">Research</a>
+        <span aria-hidden="true"> › </span>
+        <span>2026 Q3 report</span>
+      </nav>
+
+      <header class="content-hero">
+        <p class="eyebrow">Quarterly research report</p>
+        <h1>AI Media Provenance Report, 2026 Q3</h1>
+        <p class="lead-text">A transparent comparison of the AI media provenance fixtures currently published by AICheck365, including validation state, unsigned metadata, parser versions, source licenses, and known limits.</p>
+        <p class="muted compact">Published <time datetime={publicationDate}>{publicationDate}</time> · Data cutoff <time datetime={latestTestDate}>{latestTestDate}</time> · Version <code>{dataVersion}</code></p>
+      </header>
+
+      <section class="research-answer" aria-labelledby="executive-answer">
+        <p class="eyebrow">Executive answer</p>
+        <h2 id="executive-answer">What does the current evidence show?</h2>
+        <p><strong>File-level provenance checks can produce valid, invalid, or unsigned results, and those states answer different questions.</strong> In this snapshot, a cryptographically valid C2PA claim was not automatically trusted, an AI provenance claim with an expired credential was invalid, an unsigned PNG still exposed editable generation parameters, and a valid generic MP4 signature did not establish AI origin.</p>
+        <p>These findings cover {sortedExperiments.length} experiment records and {totalSamples} tested sample instances only. They are evidence about the named fixtures, not detection-rate estimates for the platforms.</p>
+      </section>
+
+      <section aria-labelledby="report-scope">
+        <p class="eyebrow">Scope</p>
+        <h2 id="report-scope">Dataset at a glance</h2>
+        <dl class="report-stats">
+          <div><dt>Experiment records</dt><dd>{sortedExperiments.length}</dd></div>
+          <div><dt>Tested sample instances</dt><dd>{totalSamples}</dd></div>
+          <div><dt>Formats</dt><dd>{fileFormats.join(', ')}</dd></div>
+          <div><dt>Upstream repositories</dt><dd>{sourceGroups.length}</dd></div>
+        </dl>
+        <p>The report is generated from the public <a href="/data/experiments.json">experiment registry</a>. The Q3 publication synthesizes records tested through {latestTestDate}; it does not claim that new platform exports were collected during Q3.</p>
+      </section>
+
+      <section aria-labelledby="report-comparison">
+        <p class="eyebrow">Results</p>
+        <h2 id="report-comparison">Full experiment comparison</h2>
+        <ResearchComparisonTable experiments={sortedExperiments} caption={`2026 Q3 report dataset: ${sortedExperiments.length} records, ${totalSamples} tested sample instances, cutoff ${latestTestDate}`} />
+      </section>
+
+      <section aria-labelledby="key-findings">
+        <p class="eyebrow">Interpretation</p>
+        <h2 id="key-findings">Five findings supported by the fixtures</h2>
+        <ol class="finding-list">
+          <li>
+            <h3>Cryptographic validity and configured trust are separate.</h3>
+            <p>The <a href="/research/firefly-jpeg-2026-06/">Adobe Firefly JPEG fixture</a> validated cryptographically while its signing certificate remained outside the browser-local trust list.</p>
+          </li>
+          <li>
+            <h3>A provenance claim can be present but unverifiable.</h3>
+            <p>The <a href="/research/openai-png-2026-06/">OpenAI PNG fixture</a> carried a trainedAlgorithmicMedia claim, but an expired signing credential produced an invalid state.</p>
+          </li>
+          <li>
+            <h3>Unsigned generation metadata is a clue, not signed proof.</h3>
+            <p>The <a href="/research/comfyui-sdxl-png-2026-06/">ComfyUI / SDXL PNG fixture</a> had no C2PA signature but exposed editable prompt and workflow chunks.</p>
+          </li>
+          <li>
+            <h3>“No manifest” and “tampered manifest” must not be collapsed.</h3>
+            <p>The <a href="/research/c2pa-conformance-images-2026-06/">C2PA conformance pair</a> separated an unsigned image from a deliberately tampered image with a content-hash mismatch.</p>
+          </li>
+          <li>
+            <h3>A valid C2PA manifest does not itself establish AI attribution.</h3>
+            <p>The <a href="/research/c2pa-signed-mp4-2026-06/">generic signed MP4 fixture</a> validated as a CreativeWork, while a heuristic tool-name match was explicitly recorded as spurious.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="research-columns" aria-label="Method and limitations">
+        <div>
+          <p class="eyebrow">Method</p>
+          <h2>How the comparison was produced</h2>
+          <ol class="content-list">
+            <li>Use each registry record’s named fixture source and declared license.</li>
+            <li>Run the recorded browser-local WASM or container parser in the stated Chromium/Playwright preview environment.</li>
+            <li>Compare expected signals with actual parser output and preserve misses.</li>
+            <li>Aggregate only the published fields; do not infer platform prevalence or accuracy rates.</li>
+          </ol>
+          <p>Parser strings represented in this snapshot:</p>
+          <ul class="content-list compact">{parserVersions.map((parser) => <li>{parser}</li>)}</ul>
+          <p><a href="/en/methodology/">Read the broader AICheck365 methodology →</a></p>
+        </div>
+        <div>
+          <p class="eyebrow">Limitations</p>
+          <h2>What this report cannot support</h2>
+          <ul class="content-list">
+            <li>No sensitivity, specificity, accuracy, or platform coverage rate can be calculated from {totalSamples} sample instances.</li>
+            <li>Public conformance fixtures are not a substitute for fresh exports from every production workflow.</li>
+            <li>Certificates, trust lists, and parser versions can change after the recorded test date.</li>
+            <li>PNG text chunks and other unsigned metadata are editable and commonly stripped.</li>
+            <li>Missing evidence does not distinguish human-made media from AI media whose evidence was never written or was removed.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="source-register">
+        <p class="eyebrow">Evidence provenance</p>
+        <h2 id="source-register">Fixture sources and declared licenses</h2>
+        <div class="comparison-scroll" role="region" aria-label="Fixture source and license table" tabindex="0">
+          <table class="source-table">
+            <thead>
+              <tr><th scope="col">Upstream source</th><th scope="col">Experiment records</th><th scope="col">Registry license text</th></tr>
+            </thead>
+            <tbody>
+              {sourceGroups.map((source) => (
+                <tr>
+                  <th scope="row"><a href={source.url} rel="noopener" target="_blank">Open repository ↗</a></th>
+                  <td>{source.records.join('; ')}</td>
+                  <td>{source.licenses.join('; ')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="muted compact">License labels above are copied from the experiment records and describe the upstream fixtures. They are not a new license grant by AICheck365.</p>
+      </section>
+
+      <section aria-labelledby="reproduce-report">
+        <p class="eyebrow">Reproduction</p>
+        <h2 id="reproduce-report">How to reproduce or audit this report</h2>
+        <ol class="content-list">
+          <li>Download the <a href="/data/experiments.json">JSON registry snapshot</a> and confirm version <code>{dataVersion}</code> from its {sortedExperiments.length} records, {totalSamples} summed sample count, and latest test date.</li>
+          <li>Open an experiment note from the comparison table and retrieve its named sample and upstream fixture source.</li>
+          <li>Use the linked <a href="/en/tools/c2pa-validator/">C2PA Validator</a>, <a href="/en/tools/png-parameter-extractor/">PNG Parameter Extractor</a>, or <a href="/en/tools/mp4-metadata-inspector/">MP4 Metadata Inspector</a>.</li>
+          <li>Compare the actual output with the expected signals, misses, and limitations in that record.</li>
+        </ol>
+      </section>
+
+      <section class="citation-box" aria-labelledby="citation-heading">
+        <p class="eyebrow">Citation</p>
+        <h2 id="citation-heading">Suggested citation</h2>
+        <p>AICheck365. (2026). <em>AI Media Provenance Report, 2026 Q3</em>. Published 2026-07-10; data cutoff {latestTestDate}. <a href={canonical}>{canonical}</a></p>
+        <p><strong>Author and publisher:</strong> AICheck365 (organization). No individual author is asserted.</p>
+      </section>
+
+      <section aria-labelledby="report-sources">
+        <p class="eyebrow">References</p>
+        <h2 id="report-sources">Sources</h2>
+        <ol class="content-list">
+          {sourceGroups.map((source) => (
+            <li><a href={source.url} rel="noopener" target="_blank">Upstream fixture repository ↗</a> — used by {source.records.join('; ')}; registry license text: {source.licenses.join('; ')}.</li>
+          ))}
+          <li><a href="/data/experiments.json">AICheck365 experiment registry (JSON)</a> — version <code>{dataVersion}</code>.</li>
+          <li><a href="/research/">AICheck365 Research Center</a> — experiment index, definitions, and record-level notes.</li>
+        </ol>
+      </section>
+    </article>
+  </main>
+</Base>
+
+<style>
+  .report-page > section {
+    margin-bottom: 36px;
+  }
+
+  .content-hero .lead-text {
+    color: var(--muted);
+  }
+
+  .eyebrow {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .research-answer,
+  .citation-box {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+  }
+
+  .research-answer {
+    border-left: 4px solid var(--accent);
+  }
+
+  .research-answer h2,
+  .citation-box h2 {
+    margin: 0 0 10px;
+  }
+
+  .report-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .report-stats div {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+  }
+
+  .report-stats dt {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .report-stats dd {
+    margin: 6px 0 0;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .finding-list {
+    display: grid;
+    gap: 14px;
+    padding-left: 24px;
+  }
+
+  .finding-list li {
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+  }
+
+  .finding-list h3 {
+    margin: 0 0 6px;
+    font-size: 17px;
+  }
+
+  .finding-list p {
+    margin: 0;
+  }
+
+  .comparison-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+  }
+
+  .comparison-scroll:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .source-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .source-table th,
+  .source-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .source-table thead th {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .source-table tbody th {
+    min-width: 160px;
+  }
+
+  @media (max-width: 760px) {
+    .report-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -5,62 +5,120 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
-const registryFiles = [
-  'src/data/content/tools.json',
-  'src/data/content/platforms.json',
-  'src/data/content/articles.json',
-];
-const META_FALLBACKS = {
-  'zh-CN': '适合检查原始文件中的 AI 来源信号，覆盖图片、视频、元数据、C2PA、MP4/MOV 字段、文件名线索、平台痕迹和抽样帧水印，所有分析均在浏览器本地完成，不上传文件。',
-  'zh-TW': '適合檢查原始檔案中的 AI 來源信號，涵蓋圖片、影片、metadata、C2PA、MP4/MOV 欄位、檔名線索、平台痕跡和抽樣幀浮水印，所有分析都在瀏覽器本機完成，不上傳檔案。',
-  en: 'Use it to inspect original AI media files locally for metadata, C2PA, MP4/MOV fields, file-name clues, and frame watermark signals.',
-  ja: '原本の AI 画像と動画からメタデータ、C2PA、MP4/MOV 項目、ファイル名、プラットフォーム痕跡、抽出フレーム透かしをブラウザ内でローカル確認できます。ファイルはアップロードされません。',
-  ko: '원본 AI 이미지와 비디오 파일의 메타데이터, C2PA, MP4/MOV 필드, 파일명 단서, 프레임 워터마크 신호를 브라우저에서 로컬로 확인합니다.',
-  de: 'Prüfe originale AI-Mediendateien lokal auf Metadaten, C2PA, MP4/MOV-Felder, Dateinamen und Frame-Wasserzeichen.',
-  fr: 'Inspectez localement les fichiers média IA originaux avec métadonnées, C2PA, champs MP4/MOV, noms de fichier et filigranes.',
-  es: 'Analiza archivos multimedia IA originales localmente con metadatos, C2PA, campos MP4/MOV, nombres de archivo y marcas de agua.',
-  'pt-BR': 'Verifique arquivos de mídia de IA originais localmente com metadados, C2PA, campos MP4/MOV, nomes de arquivo e marcas d agua.',
-};
+const contentDir = path.join(rootDir, 'src/data/content');
+const SITE_URL = 'https://www.aicheck365.com';
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const META_DESCRIPTION_MIN_LENGTH = 50;
+const COMPACT_DESCRIPTION_MIN_LENGTH = 35;
+const META_DESCRIPTION_MAX_LENGTH = 170;
+const META_DESCRIPTION_MIN_BOUNDARY = 50;
+const COMPACT_DESCRIPTION_LANGS = new Set(['zh-cn', 'zh-tw', 'ja', 'ko']);
+const registryFiles = fs.readdirSync(contentDir, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+  .map((entry) => `src/data/content/${entry.name}`)
+  .sort();
 
 const failures = [];
 
+function fail(message) {
+  failures.push(message);
+}
+
 function readJson(relPath) {
-  return JSON.parse(fs.readFileSync(path.join(rootDir, relPath), 'utf8'));
+  const parsed = JSON.parse(fs.readFileSync(path.join(rootDir, relPath), 'utf8'));
+  if (!Array.isArray(parsed)) {
+    fail(`${relPath}: content registry must be a JSON array`);
+    return [];
+  }
+  return parsed;
 }
 
 function decodeHtml(value = '') {
   return value
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number.parseInt(code, 10)))
     .replace(/&amp;/g, '&')
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
+    .replace(/&#39;|&apos;/g, "'")
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>');
 }
 
-function pathForRoute(route) {
-  const url = new URL(route, 'https://www.aicheck365.com');
-  const pathname = url.pathname;
-  if (pathname === '/') return path.join(distDir, 'index.html');
-  const trimmed = pathname.replace(/^\/|\/$/g, '');
-  return path.join(distDir, trimmed, 'index.html');
+function parseAttributes(tag) {
+  const attrs = {};
+  const source = tag
+    .replace(/^<\s*\/?\s*[^\s>]+/i, '')
+    .replace(/\/?>\s*$/i, '');
+  const pattern = /([^\s"'<>\/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+  for (const match of source.matchAll(pattern)) {
+    attrs[match[1].toLowerCase()] = decodeHtml(match[2] ?? match[3] ?? match[4] ?? '');
+  }
+  return attrs;
+}
+
+function openingTags(html, tagName) {
+  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, 'gi'))].map((match) => match[0]);
+}
+
+function elementContents(html, tagName) {
+  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>([\\s\\S]*?)<\\/${tagName}>`, 'gi'))]
+    .map((match) => decodeHtml(match[1].trim()));
+}
+
+function markupOnly(html) {
+  return html
+    .replace(/<!--([\s\S]*?)-->/g, '')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, '')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, '');
+}
+
+function stripHtml(html) {
+  return markupOnly(html)
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cjkCount(text) {
+  return (text.match(/[\u3400-\u9fff]/g) || []).length;
+}
+
+function builtFileForRoute(route) {
+  const url = new URL(route, SITE_URL);
+  if (url.origin !== SITE_URL) return null;
+  if (url.pathname === '/') return path.join(distDir, 'index.html');
+
+  const trimmed = decodeURIComponent(url.pathname).replace(/^\/|\/$/g, '');
+  const candidates = [
+    path.join(distDir, trimmed, 'index.html'),
+    path.join(distDir, `${trimmed}.html`),
+    path.join(distDir, trimmed),
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate)) ?? candidates[0];
 }
 
 function routeExists(route) {
-  const url = new URL(route, 'https://www.aicheck365.com');
-  if (url.origin !== 'https://www.aicheck365.com') return true;
-  const pathname = url.pathname;
-  if (pathname === '/') return fs.existsSync(path.join(distDir, 'index.html'));
-  const trimmed = pathname.replace(/^\/|\/$/g, '');
-  return fs.existsSync(path.join(distDir, trimmed, 'index.html')) ||
-    fs.existsSync(path.join(distDir, trimmed));
+  const url = new URL(route, SITE_URL);
+  if (url.origin !== SITE_URL) return true;
+  const filePath = builtFileForRoute(url.href);
+  return Boolean(filePath && fs.existsSync(filePath));
 }
 
-function extractMeta(html) {
-  return {
-    title: decodeHtml(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]?.trim() || ''),
-    description: decodeHtml(html.match(/<meta\s+name="description"\s+content="([^"]*)"/i)?.[1]?.trim() || ''),
-    canonical: decodeHtml(html.match(/<link\s+rel="canonical"\s+href="([^"]*)"/i)?.[1]?.trim() || ''),
-  };
+function routeForHtmlFile(filePath) {
+  const relative = path.relative(distDir, filePath).split(path.sep).join('/');
+  if (relative === 'index.html') return '/';
+  if (relative.endsWith('/index.html')) return `/${relative.slice(0, -'/index.html'.length)}/`;
+  return `/${relative.replace(/\.html$/i, '')}/`;
+}
+
+function walkFiles(dir, predicate) {
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...walkFiles(fullPath, predicate));
+    else if (predicate(fullPath)) files.push(fullPath);
+  }
+  return files;
 }
 
 function normalizeMetaTitle(value) {
@@ -95,32 +153,296 @@ function normalizeMetaTitle(value) {
   return normalized;
 }
 
-function normalizeMetaDescription(value, locale) {
-  const fallback = META_FALLBACKS[locale] ?? META_FALLBACKS.en;
-  if (value.length < 120) {
-    return `${value} ${fallback}`.slice(0, 170);
+function normalizeMetaDescription(value) {
+  const normalized = value.trim().replace(/\s+/g, ' ');
+  if (normalized.length <= META_DESCRIPTION_MAX_LENGTH) return normalized;
+
+  const candidate = normalized.slice(0, META_DESCRIPTION_MAX_LENGTH);
+  let sentenceEnd = -1;
+  for (const match of candidate.matchAll(/(?:[.!?](?=\s|$)|[。！？])/g)) {
+    sentenceEnd = (match.index ?? -1) + 1;
   }
-  if (value.length > 170) {
-    return `${value.slice(0, 167).replace(/\s+\S*$/, '')}...`;
+  if (sentenceEnd >= META_DESCRIPTION_MIN_BOUNDARY) {
+    return candidate.slice(0, sentenceEnd).trim();
   }
-  return value;
+
+  const wordEnd = candidate.lastIndexOf(' ', META_DESCRIPTION_MAX_LENGTH - 1);
+  if (wordEnd >= META_DESCRIPTION_MIN_BOUNDARY) {
+    return `${candidate.slice(0, wordEnd).replace(/[,;:，；：-]+$/u, '').trimEnd()}…`;
+  }
+
+  let clauseEnd = -1;
+  for (const match of candidate.matchAll(/[,;:，、；：]/gu)) {
+    clauseEnd = (match.index ?? -1) + 1;
+  }
+  if (clauseEnd >= META_DESCRIPTION_MIN_BOUNDARY) {
+    return `${candidate.slice(0, clauseEnd).replace(/[,;:，、；：]+$/u, '').trimEnd()}…`;
+  }
+
+  return normalized;
 }
 
-function stripHtml(html) {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+function minimumDescriptionLength(lang) {
+  return COMPACT_DESCRIPTION_LANGS.has(lang.toLowerCase())
+    ? COMPACT_DESCRIPTION_MIN_LENGTH
+    : META_DESCRIPTION_MIN_LENGTH;
 }
 
-function cjkCount(text) {
-  return (text.match(/[\u3400-\u9fff]/g) || []).length;
+function parseBuiltPage(filePath) {
+  const html = fs.readFileSync(filePath, 'utf8');
+  const markup = markupOnly(html);
+  const label = path.relative(rootDir, filePath);
+  const route = routeForHtmlFile(filePath);
+
+  const htmlTags = openingTags(markup, 'html').map(parseAttributes);
+  if (htmlTags.length !== 1) fail(`${label}: expected exactly one html element, found ${htmlTags.length}`);
+  const lang = htmlTags[0]?.lang?.trim() ?? '';
+  if (!lang) fail(`${label}: html lang must not be empty`);
+  else if (!/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i.test(lang)) fail(`${label}: invalid html lang value "${lang}"`);
+
+  const routeLang = route.split('/').filter(Boolean)[0];
+  if (SUPPORTED_LANGS.includes(routeLang) && routeLang.toLowerCase() !== lang.toLowerCase()) {
+    fail(`${label}: html lang "${lang}" does not match localized route prefix "${routeLang}"`);
+  }
+
+  const titles = elementContents(markup, 'title');
+  if (titles.length !== 1) fail(`${label}: expected exactly one <title>, found ${titles.length}`);
+  if (titles.length === 1 && !titles[0]) fail(`${label}: title must not be empty`);
+
+  const metaTags = openingTags(markup, 'meta').map(parseAttributes);
+  const descriptions = metaTags.filter((attrs) => attrs.name?.toLowerCase() === 'description');
+  if (descriptions.length !== 1) fail(`${label}: expected exactly one meta description, found ${descriptions.length}`);
+  const description = descriptions[0]?.content?.trim() ?? '';
+  if (descriptions.length === 1 && !description) fail(`${label}: meta description must not be empty`);
+  const descriptionMinLength = minimumDescriptionLength(lang);
+  if (description && description.length < descriptionMinLength) {
+    fail(`${label}: meta description is too short (${description.length}; minimum ${descriptionMinLength} for ${lang || 'unknown language'})`);
+  }
+  if (description.length > META_DESCRIPTION_MAX_LENGTH) {
+    fail(`${label}: meta description is too long (${description.length}; maximum ${META_DESCRIPTION_MAX_LENGTH})`);
+  }
+
+  const linkTags = openingTags(markup, 'link').map(parseAttributes);
+  const canonicals = linkTags.filter((attrs) => attrs.rel?.toLowerCase().split(/\s+/).includes('canonical'));
+  if (canonicals.length !== 1) fail(`${label}: expected exactly one canonical link, found ${canonicals.length}`);
+  const canonical = canonicals[0]?.href?.trim() ?? '';
+  if (canonicals.length === 1 && !canonical) fail(`${label}: canonical href must not be empty`);
+  if (canonical) {
+    try {
+      const canonicalUrl = new URL(canonical);
+      if (canonicalUrl.origin !== SITE_URL) fail(`${label}: canonical must use ${SITE_URL}, got ${canonical}`);
+      if (canonicalUrl.search || canonicalUrl.hash) fail(`${label}: canonical must not contain a query or hash: ${canonical}`);
+      if (canonicalUrl.pathname !== route) fail(`${label}: canonical path ${canonicalUrl.pathname} does not match built route ${route}`);
+    } catch {
+      fail(`${label}: canonical is not a valid absolute URL: ${canonical}`);
+    }
+  }
+
+  const h1Count = openingTags(markup, 'h1').length;
+  if (h1Count !== 1) fail(`${label}: expected exactly one H1, found ${h1Count}`);
+
+  const robotsTags = metaTags.filter((attrs) => attrs.name?.toLowerCase() === 'robots');
+  const robots = robotsTags.map((attrs) => attrs.content ?? '').join(',');
+  const noindex = /(?:^|[,\s])noindex(?:$|[,\s])/i.test(robots);
+
+  const alternateLinks = linkTags
+    .filter((attrs) => attrs.rel?.toLowerCase().split(/\s+/).includes('alternate') && attrs.hreflang !== undefined)
+    .map((attrs) => ({ lang: attrs.hreflang.trim(), href: attrs.href?.trim() ?? '' }));
+  const alternateByLang = new Map();
+  for (const alternate of alternateLinks) {
+    const key = alternate.lang.toLowerCase();
+    if (!alternate.lang) fail(`${label}: hreflang must not be empty`);
+    if (!alternate.href) fail(`${label}: hreflang ${alternate.lang || '(empty)'} is missing href`);
+    if (alternateByLang.has(key)) fail(`${label}: duplicate hreflang ${alternate.lang}`);
+    alternateByLang.set(key, alternate);
+  }
+
+  const jsonLdPattern = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
+  for (const match of html.matchAll(jsonLdPattern)) {
+    const attrs = parseAttributes(`<script${match[1]}>`);
+    if (attrs.type?.toLowerCase() !== 'application/ld+json') continue;
+    const payload = match[2].trim();
+    if (!payload) {
+      fail(`${label}: JSON-LD script must not be empty`);
+      continue;
+    }
+    try {
+      JSON.parse(payload);
+    } catch (error) {
+      fail(`${label}: JSON-LD is not valid JSON (${error.message})`);
+    }
+  }
+
+  return {
+    filePath,
+    html,
+    label,
+    route,
+    title: titles[0] ?? '',
+    description,
+    canonical,
+    lang,
+    noindex,
+    alternateLinks,
+    alternateByLang,
+  };
 }
 
-function fail(message) {
-  failures.push(message);
+function localToday() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function validLastmod(value) {
+  if (!/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2}))?$/.test(value)) return false;
+  const datePart = value.slice(0, 10);
+  const dateOnly = new Date(`${datePart}T00:00:00Z`);
+  if (Number.isNaN(dateOnly.getTime()) || dateOnly.toISOString().slice(0, 10) !== datePart) return false;
+  return !Number.isNaN(Date.parse(value));
+}
+
+function collectSitemapEntries() {
+  const entries = new Map();
+  const sitemapFiles = walkFiles(distDir, (filePath) => /^sitemap.*\.xml$/i.test(path.basename(filePath)));
+  if (!sitemapFiles.length) fail('dist: no sitemap XML files were generated');
+  const today = localToday();
+
+  for (const filePath of sitemapFiles) {
+    const xml = fs.readFileSync(filePath, 'utf8');
+    for (const match of xml.matchAll(/<url>([\s\S]*?)<\/url>/gi)) {
+      const block = match[1];
+      const locs = [...block.matchAll(/<loc>([\s\S]*?)<\/loc>/gi)].map((item) => decodeHtml(item[1].trim()));
+      const lastmods = [...block.matchAll(/<lastmod>([\s\S]*?)<\/lastmod>/gi)].map((item) => decodeHtml(item[1].trim()));
+      if (locs.length !== 1) {
+        fail(`${path.relative(rootDir, filePath)}: sitemap <url> must contain exactly one loc, found ${locs.length}`);
+        continue;
+      }
+      if (lastmods.length !== 1) {
+        fail(`${path.relative(rootDir, filePath)}: ${locs[0]} must contain exactly one lastmod, found ${lastmods.length}`);
+        continue;
+      }
+
+      const value = locs[0];
+      const lastmod = lastmods[0];
+      try {
+        const url = new URL(value);
+        if (entries.has(url.href)) fail(`${path.relative(rootDir, filePath)}: duplicate sitemap URL ${url.href}`);
+        else entries.set(url.href, lastmod);
+      } catch {
+        fail(`${path.relative(rootDir, filePath)}: invalid sitemap URL ${value}`);
+        continue;
+      }
+
+      if (!validLastmod(lastmod)) fail(`${path.relative(rootDir, filePath)}: ${value} has invalid lastmod ${lastmod}`);
+      else if (lastmod.slice(0, 10) > today) fail(`${path.relative(rootDir, filePath)}: ${value} has future lastmod ${lastmod} (today is ${today})`);
+    }
+  }
+  return entries;
+}
+
+if (!fs.existsSync(distDir)) {
+  console.error('SEO QA failed: dist directory does not exist. Run the Astro build first.');
+  process.exit(1);
+}
+
+const htmlFiles = walkFiles(distDir, (filePath) => filePath.endsWith('.html')).sort();
+if (!htmlFiles.length) fail('dist: no HTML pages were generated');
+const builtPages = htmlFiles.map(parseBuiltPage);
+const pageByFile = new Map(builtPages.map((page) => [path.resolve(page.filePath), page]));
+const pageByCanonical = new Map();
+
+for (const page of builtPages) {
+  if (!page.canonical) continue;
+  const previous = pageByCanonical.get(page.canonical);
+  if (previous) fail(`${page.label}: canonical ${page.canonical} is already used by ${previous.label}`);
+  else pageByCanonical.set(page.canonical, page);
+}
+
+for (const page of builtPages) {
+  if (!page.alternateLinks.length) continue;
+
+  const selfAlternate = page.alternateByLang.get(page.lang.toLowerCase());
+  if (!selfAlternate) {
+    fail(`${page.label}: hreflang set is missing self language ${page.lang}`);
+  } else {
+    try {
+      if (new URL(selfAlternate.href).href !== page.canonical) {
+        fail(`${page.label}: self hreflang ${page.lang} must point to canonical ${page.canonical}, got ${selfAlternate.href}`);
+      }
+    } catch {
+      fail(`${page.label}: self hreflang ${page.lang} has invalid URL ${selfAlternate.href}`);
+    }
+  }
+
+  const xDefault = page.alternateByLang.get('x-default');
+  if (!xDefault) fail(`${page.label}: multilingual page is missing x-default hreflang`);
+
+  for (const alternate of page.alternateLinks) {
+    let alternateUrl;
+    try {
+      alternateUrl = new URL(alternate.href);
+    } catch {
+      fail(`${page.label}: hreflang ${alternate.lang} has invalid URL ${alternate.href}`);
+      continue;
+    }
+    if (alternateUrl.origin !== SITE_URL) {
+      fail(`${page.label}: hreflang ${alternate.lang} must point to ${SITE_URL}, got ${alternate.href}`);
+      continue;
+    }
+    if (!routeExists(alternateUrl.href)) {
+      fail(`${page.label}: hreflang ${alternate.lang} target does not exist: ${alternateUrl.href}`);
+      continue;
+    }
+
+    const target = pageByCanonical.get(alternateUrl.href);
+    if (!target) {
+      fail(`${page.label}: hreflang ${alternate.lang} target is not self-canonical: ${alternateUrl.href}`);
+      continue;
+    }
+
+    if (alternate.lang.toLowerCase() === 'x-default') {
+      if (target.lang.toLowerCase() !== 'en') {
+        fail(`${page.label}: x-default must use the English fallback, got ${alternateUrl.href} (${target.lang})`);
+      }
+      continue;
+    }
+
+    const reciprocal = target.alternateByLang.get(page.lang.toLowerCase());
+    if (!reciprocal || reciprocal.href !== page.canonical) {
+      fail(`${page.label}: hreflang ${alternate.lang} target ${alternateUrl.href} does not reciprocate ${page.lang} -> ${page.canonical}`);
+    }
+    const targetXDefault = target.alternateByLang.get('x-default');
+    if (xDefault && (!targetXDefault || targetXDefault.href !== xDefault.href)) {
+      fail(`${page.label}: hreflang target ${alternateUrl.href} does not share x-default ${xDefault.href}`);
+    }
+  }
+}
+
+const notFoundPage = builtPages.find((page) => page.route === '/404/');
+if (!notFoundPage) fail('dist: 404 page was not generated');
+else if (!notFoundPage.noindex) fail(`${notFoundPage.label}: 404 page must include noindex`);
+
+const sitemapEntries = collectSitemapEntries();
+const sitemapUrls = new Set(sitemapEntries.keys());
+const indexableCanonicals = new Set(
+  builtPages.filter((page) => !page.noindex && page.canonical).map((page) => page.canonical),
+);
+for (const page of builtPages) {
+  if (!page.canonical) continue;
+  if (page.noindex) {
+    if (sitemapUrls.has(page.canonical)) fail(`${page.label}: noindex canonical must not appear in sitemap: ${page.canonical}`);
+  } else if (!sitemapUrls.has(page.canonical)) {
+    fail(`${page.label}: indexable canonical is missing from sitemap: ${page.canonical}`);
+  }
+}
+for (const sitemapUrl of sitemapUrls) {
+  if (!indexableCanonicals.has(sitemapUrl)) fail(`sitemap: URL is not an indexable built canonical: ${sitemapUrl}`);
+}
+if (sitemapUrls.size !== indexableCanonicals.size) {
+  fail(`sitemap: canonical set size mismatch (sitemap ${sitemapUrls.size}, indexable HTML ${indexableCanonicals.size})`);
 }
 
 const pages = registryFiles.flatMap(readJson);
@@ -137,26 +459,31 @@ for (const page of pages) {
   if (previous) fail(`${page.id}: duplicate registered title also used by ${previous}`);
   titleOwners.set(page.title, page.id);
 
-  const htmlPath = pathForRoute(page.route);
-  if (!fs.existsSync(htmlPath)) {
-    fail(`${page.id}: route ${page.route} did not build to ${path.relative(rootDir, htmlPath)}`);
+  const htmlPath = builtFileForRoute(page.route);
+  if (!htmlPath || !fs.existsSync(htmlPath)) {
+    fail(`${page.id}: route ${page.route} did not build to ${htmlPath ? path.relative(rootDir, htmlPath) : '(external route)'}`);
     continue;
   }
 
-  const html = fs.readFileSync(htmlPath, 'utf8');
-  const meta = extractMeta(html);
+  const builtPage = pageByFile.get(path.resolve(htmlPath));
+  if (!builtPage) {
+    fail(`${page.id}: route ${page.route} did not resolve to a parsed HTML page`);
+    continue;
+  }
+
   const expectedTitle = normalizeMetaTitle(page.title);
-  const expectedDescription = normalizeMetaDescription(page.description, page.locale);
-  if (meta.title !== expectedTitle) fail(`${page.id}: title mismatch. expected "${expectedTitle}", got "${meta.title}"`);
-  if (meta.description !== expectedDescription) fail(`${page.id}: description mismatch. expected "${expectedDescription}", got "${meta.description}"`);
-  if (meta.canonical !== page.canonical) fail(`${page.id}: canonical mismatch. expected "${page.canonical}", got "${meta.canonical}"`);
+  const expectedDescription = normalizeMetaDescription(page.description);
+  if (builtPage.title !== expectedTitle) fail(`${page.id}: title mismatch. expected "${expectedTitle}", got "${builtPage.title}"`);
+  if (builtPage.description !== expectedDescription) fail(`${page.id}: description mismatch. expected "${expectedDescription}", got "${builtPage.description}"`);
+  if (builtPage.canonical !== page.canonical) fail(`${page.id}: canonical mismatch. expected "${page.canonical}", got "${builtPage.canonical}"`);
+  if (page.locale && builtPage.lang !== page.locale) fail(`${page.id}: html lang mismatch. expected "${page.locale}", got "${builtPage.lang}"`);
 
   for (const href of page.internalLinks || []) {
     if (!routeExists(href)) fail(`${page.id}: internal link does not resolve after build: ${href}`);
   }
 
-  if (!page.locale.startsWith('zh')) {
-    const bodyText = stripHtml(html);
+  if (page.locale && !page.locale.startsWith('zh') && page.locale !== 'ja') {
+    const bodyText = stripHtml(builtPage.html);
     const count = cjkCount(bodyText);
     if (count > 20) fail(`${page.id}: non-Chinese priority page has ${count} CJK characters in rendered body`);
   }
@@ -168,4 +495,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`SEO QA passed for ${pages.length} registered pages.`);
+console.log(`SEO QA passed for ${builtPages.length} built HTML pages and ${pages.length} registered pages from ${registryFiles.length} registries.`);

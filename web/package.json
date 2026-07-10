@@ -8,7 +8,8 @@
     "build:astro": "astro build",
     "qa:seo": "node scripts/seo-qa.mjs",
     "preview": "astro preview",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:worker": "node --test tests/worker.test.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.0.0",

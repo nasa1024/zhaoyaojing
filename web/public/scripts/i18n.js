@@ -1115,8 +1115,17 @@ function withLangInPathname(pathname, lang) {
   return cleanPath === '/' ? `/${lang}/` : `/${lang}${cleanPath}`;
 }
 
+function singleLangPageLang() {
+  if (document.body?.dataset.singleLang !== 'true') return null;
+  const declaredLang = document.documentElement.lang;
+  return SUPPORTED_LANGS.includes(declaredLang) ? declaredLang : null;
+}
+
 // ─── Language detection ──────────────────────────────────────────
 function detectLang() {
+  const declaredSingleLang = singleLangPageLang();
+  if (declaredSingleLang) return declaredSingleLang;
+
   const urlLang = langFromPathname();
   if (urlLang) return urlLang;
 
@@ -1158,10 +1167,15 @@ export function setLang(lang, options = {}) {
 }
 
 export function applyI18n() {
-  const urlLang = langFromPathname();
-  if (urlLang && urlLang !== currentLang) {
-    currentLang = urlLang;
-    localStorage.setItem('lang', urlLang);
+  const declaredSingleLang = singleLangPageLang();
+  if (declaredSingleLang) {
+    currentLang = declaredSingleLang;
+  } else {
+    const urlLang = langFromPathname();
+    if (urlLang && urlLang !== currentLang) {
+      currentLang = urlLang;
+      localStorage.setItem('lang', urlLang);
+    }
   }
 
   document.documentElement.lang = currentLang;
@@ -1196,6 +1210,7 @@ export function applyI18n() {
 }
 
 function localizeInternalLinks() {
+  if (singleLangPageLang()) return;
   const urlLang = langFromPathname();
   if (!urlLang) return;
 

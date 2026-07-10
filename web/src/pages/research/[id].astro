@@ -18,6 +18,15 @@ const relatedSamples = (experiment.sampleRefs || [])
 const canonical = `https://www.aicheck365.com${experiment.researchUrl}`;
 const title = `${experiment.platform} provenance experiment (${experiment.testDate}) | AICheck365 Research`;
 const description = `${experiment.platform} research note: ${experiment.mainFindings} Includes sample count, source license, parser version, expected and actual signals, misses, limitations, and reproducible steps.`;
+const reportUrl = 'https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/';
+const pageUpdatedAt = '2026-07-10';
+const localizeInternalLink = (href: string) => href.startsWith('/platforms/') || href.startsWith('/methodology/')
+  ? `/en${href}`
+  : href.startsWith('/tools/')
+    ? `/en${href}`
+    : href;
+const relatedTools = experiment.relatedLinks.filter((link: any) => link.href.startsWith('/tools/'));
+const relatedGuides = experiment.relatedLinks.filter((link: any) => !link.href.startsWith('/tools/'));
 
 const jsonLd = [
   {
@@ -27,11 +36,24 @@ const jsonLd = [
     description,
     url: canonical,
     datePublished: experiment.testDate,
-    dateModified: experiment.testDate,
+    dateModified: pageUpdatedAt,
+    inLanguage: 'en',
     isAccessibleForFree: true,
     about: experiment.platform,
+    mainEntityOfPage: canonical,
+    isPartOf: {
+      '@type': 'CollectionPage',
+      name: 'AICheck365 Research Center',
+      url: 'https://www.aicheck365.com/research/',
+    },
+    citation: [experiment.detailUrl, reportUrl],
     author: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
-    publisher: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AICheck365',
+      url: 'https://www.aicheck365.com/',
+      logo: { '@type': 'ImageObject', url: 'https://www.aicheck365.com/og.png' },
+    },
   },
   {
     '@context': 'https://schema.org',
@@ -47,6 +69,7 @@ const jsonLd = [
 const rows = [
   ['Platform', experiment.platform],
   ['Tested at', experiment.testDate],
+  ['Research page updated', pageUpdatedAt],
   ['Sample count', experiment.sampleCount],
   ['File format', experiment.fileFormat],
   ['Parser version', experiment.parserVersion],
@@ -55,7 +78,7 @@ const rows = [
 ];
 ---
 
-<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} singleLang={true}>
+<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="en" singleLang={true}>
   <main class="page content-page research-page">
     <article class="research-detail">
       <nav class="breadcrumb" aria-label="breadcrumb">
@@ -72,15 +95,33 @@ const rows = [
         <p class="lead-text">{experiment.mainFindings}</p>
       </header>
 
+      <section class="research-answer" aria-labelledby="short-answer">
+        <p class="eyebrow">Answer</p>
+        <h2 id="short-answer">What did this experiment find?</h2>
+        <p><strong>{experiment.mainFindings}</strong></p>
+        <p>This result applies to the {experiment.sampleCount} documented sample{experiment.sampleCount === 1 ? '' : 's'} tested on <time datetime={experiment.testDate}>{experiment.testDate}</time> with {experiment.parserVersion}. It should not be generalized to every file exported by {experiment.platform}.</p>
+      </section>
+
       <section>
         <h2>Experiment Summary</h2>
         <table class="tool-glossary research-table">
           <tbody>
             {rows.map(([key, value]) => (
-              <tr><th>{key}</th><td>{value}</td></tr>
+              <tr><th scope="row">{key}</th><td>{value}</td></tr>
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section class="source-license" aria-labelledby="source-license-heading">
+        <p class="eyebrow">Provenance of this research record</p>
+        <h2 id="source-license-heading">Source, license, and authorship</h2>
+        <dl class="research-meta source-license-grid">
+          <div><dt>Fixture source</dt><dd><a href={experiment.detailUrl} rel="noopener" target="_blank">Open the upstream fixture repository ↗</a></dd></div>
+          <div><dt>Declared license</dt><dd>{experiment.sourceLicense}</dd></div>
+          <div><dt>Research operator</dt><dd><a href="/en/about/">AICheck365</a>, an organization; no individual author is claimed.</dd></div>
+          <div><dt>Environment</dt><dd>{experiment.environment}</dd></div>
+        </dl>
       </section>
 
       <section class="research-columns">
@@ -107,6 +148,11 @@ const rows = [
 
       <section>
         <h2>Reproducible Steps</h2>
+        {relatedTools.length > 0 && (
+          <p>Run the test locally with {relatedTools.map((link: any, index: number) => (
+            <><a href={localizeInternalLink(link.href)}>{link.label}</a>{index < relatedTools.length - 1 ? ', ' : ''}</>
+          ))}. The file remains in the browser.</p>
+        )}
         <ol class="content-list">{experiment.reproSteps.map((item: string) => <li>{item}</li>)}</ol>
       </section>
 
@@ -117,8 +163,12 @@ const rows = [
             {relatedSamples.map((sample: any) => (
               <article class="research-sample">
                 <h3>{sample.title}</h3>
-                <p class="muted compact">{sample.source}</p>
-                <p><a href={sample.fileRef}>Open sample file →</a></p>
+                <dl class="research-meta">
+                  <div><dt>Source</dt><dd>{sample.source}</dd></div>
+                  <div><dt>Format</dt><dd>{sample.fileFormat}</dd></div>
+                  <div><dt>Test date</dt><dd><time datetime={sample.testDate}>{sample.testDate}</time></dd></div>
+                </dl>
+                <p><a href={sample.fileRef}>Open the tested sample file →</a></p>
                 <ul class="content-list compact">{sample.knownLimits.map((item: string) => <li>{item}</li>)}</ul>
               </article>
             ))}
@@ -127,12 +177,69 @@ const rows = [
       )}
 
       <section>
-        <h2>Related Tools And Pages</h2>
+        <h2>Related Tools and Platform Guides</h2>
         <ul class="content-list">
-          {experiment.relatedLinks.map((link: any) => <li><a href={link.href}>{link.label} →</a></li>)}
-          <li><a href={experiment.detailUrl} rel="noopener" target="_blank">External source fixture →</a></li>
+          {relatedTools.map((link: any) => <li><a href={localizeInternalLink(link.href)}>{link.label} →</a></li>)}
+          {relatedGuides.map((link: any) => <li><a href={localizeInternalLink(link.href)}>{link.label} →</a></li>)}
+          <li><a href="/research/ai-media-provenance-report-2026-q3/">Compare this result in the 2026 Q3 report →</a></li>
         </ul>
+      </section>
+
+      <section aria-labelledby="sources-heading">
+        <p class="eyebrow">References</p>
+        <h2 id="sources-heading">Sources</h2>
+        <ol class="content-list sources-list">
+          <li><a href={experiment.detailUrl} rel="noopener" target="_blank">Upstream fixture repository ↗</a> — {experiment.sourceLicense}.</li>
+          {relatedSamples.map((sample: any) => (
+            <li><a href={sample.fileRef}>{sample.title}</a> — {sample.source}.</li>
+          ))}
+          <li><a href="/data/experiments.json">AICheck365 experiment registry (JSON)</a> — record ID <code>{experiment.id}</code>, tested {experiment.testDate}.</li>
+        </ol>
       </section>
     </article>
   </main>
 </Base>
+
+<style>
+  .research-detail > section {
+    margin-bottom: 32px;
+  }
+
+  .content-hero .lead-text {
+    color: var(--muted);
+  }
+
+  .eyebrow {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .research-answer,
+  .source-license {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+  }
+
+  .research-answer {
+    border-left: 4px solid var(--accent);
+  }
+
+  .research-answer h2,
+  .source-license h2 {
+    margin: 0 0 10px;
+  }
+
+  .source-license-grid dt {
+    min-width: 124px;
+  }
+
+  .sources-list code {
+    overflow-wrap: anywhere;
+  }
+</style>

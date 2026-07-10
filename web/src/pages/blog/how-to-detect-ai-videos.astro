@@ -25,8 +25,12 @@ const jsonLd = [
     "headline": "如何检测 AI 生成视频？容器元数据、SEI marker 与帧水印逐层排查",
     "description": "Sora、可灵、Runway、Pika、Veo 等平台的视频会留下哪些痕迹：MP4 ilst 工具字段、AIGC 隐式标识、码流 SEI marker、C2PA 与帧水印，逐层拆解检测原理。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-ai-videos/",
-    "datePublished": "2026-05-26",
-    "dateModified": "2026-06-09",
+    "datePublished": "2026-05-27",
+    "dateModified": "2026-07-10",
+    "inLanguage": "zh-CN",
+    "isAccessibleForFree": true,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/how-to-detect-ai-videos/" },
+    "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -54,7 +58,8 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>如何检测 AI 生成视频？容器元数据、SEI marker 与帧水印逐层排查</h1>
-      <p class="article-meta">2026年5月发布 · 2026年6月更新 · AI 视频检测 · MP4 元数据 · C2PA</p>
+      <p class="article-meta">2026年5月发布 · 2026年7月更新 · AI 视频检测 · MP4 元数据 · C2PA</p>
+      <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">判断一段视频是不是 AI 生成的，光盯着画面看不出名堂——Sora、可灵、Veo 这代模型的画面质量已经过了"一眼假"的阶段。真正有效的入手点在文件内部：视频文件从容器到码流有好几层可以藏来源信息的地方，生成平台或主动或被监管要求地在里面留了痕迹。这篇按从外到内的顺序，把每一层怎么查讲清楚。</p>
 
@@ -91,6 +96,13 @@ const jsonLd = [
         <li><strong>C2PA 命中或容器里有明确工具名/AIGC 标签</strong>：强线索。结合是不是原始文件判断，基本可以下结论。</li>
         <li><strong>只有文件名或低置信度水印指标</strong>：辅助线索，单独不构成结论，要结合视频来源和上下文。</li>
         <li><strong>什么都没有</strong>：最常见也最容易误读的结果。它只说明这份文件里没有可读信号——可能是真拍的，也可能是被转码洗干净的 AI 视频。这时候去找更接近源头的版本，比换十个检测工具都有用。</li>
+      </ul>
+
+      <h2>来源与复现</h2>
+      <ul class="content-list">
+        <li><a href="https://c2pa.org/specifications/" rel="noopener" target="_blank">C2PA Specifications</a>：BMFF/MP4 中 Content Credentials 的结构与验证规则。</li>
+        <li><a href="https://mp4ra.org/" rel="noopener" target="_blank">MP4 Registration Authority</a>：MP4 box 与注册标识的权威参考。</li>
+        <li><a href="/research/c2pa-signed-mp4-2026-06/">C2PA-signed MP4 实验</a> 与 <a href="/research/ai-media-provenance-report-2026-q3/">2026 Q3 汇总报告</a>：浏览器解析路径、真实输出和限制。</li>
       </ul>
 
       <div class="cta-box">

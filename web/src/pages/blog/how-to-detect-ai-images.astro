@@ -25,8 +25,12 @@ const jsonLd = [
     "headline": "如何判断一张图片是否 AI 生成？元数据、视觉特征与分类器实战",
     "description": "拿到一张可疑图片后的完整排查流程：先查 EXIF/XMP/C2PA/PNG 文本块里的来源信号，再做视觉检查和分类器交叉验证，并解释每种方法的可信边界。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-ai-images/",
-    "datePublished": "2025-05-01",
-    "dateModified": "2026-06-09",
+    "datePublished": "2026-05-24",
+    "dateModified": "2026-07-10",
+    "inLanguage": "zh-CN",
+    "isAccessibleForFree": true,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/how-to-detect-ai-images/" },
+    "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -54,7 +58,8 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>如何判断一张图片是否 AI 生成？元数据、视觉特征与分类器实战</h1>
-      <p class="article-meta">2025年5月发布 · 2026年6月更新 · AI 图片检测 · 元数据分析</p>
+      <p class="article-meta">2026年5月发布 · 2026年7月更新 · AI 图片检测 · 元数据分析</p>
+      <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">拿到一张可疑的图，多数人的第一反应是放大了盯着看——数手指、找破绽。其实更高效的第一步是查文件本身：生成工具往往在文件里留下了明明白白的来源记录，几秒钟就能确认，比肉眼判断可靠得多。这篇文章按照"先查文件、再看画面、最后交叉验证"的顺序，把每种方法的原理和可信边界都讲清楚。</p>
 
@@ -99,6 +104,13 @@ const jsonLd = [
         <li>原图也没信号，做视觉检查列疑点，再用一两个像素分类器交叉验证。</li>
         <li>结论重要的场合（新闻、纠纷、交易），加上来源核查，并保留原始文件以备完整的 C2PA 签名验证。</li>
       </ol>
+
+      <h2>来源与复现</h2>
+      <ul class="content-list">
+        <li><a href="https://c2pa.org/specifications/" rel="noopener" target="_blank">C2PA Specifications</a>：签名来源记录与 <code>digitalSourceType</code> 的技术背景。</li>
+        <li><a href="https://cv.iptc.org/newscodes/digitalsourcetype/" rel="noopener" target="_blank">IPTC Digital Source Type vocabulary</a>：算法生成、合成与编辑来源类型的正式定义。</li>
+        <li><a href="/research/ai-media-provenance-report-2026-q3/">AICheck365 2026 Q3 实验汇总</a>：真实 C2PA、ComfyUI PNG 与无 manifest 样本的可复现结果。</li>
+      </ul>
 
       <div class="cta-box">
         <p>先从零成本的第一步开始：查查文件里留了什么</p>

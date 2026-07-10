@@ -29,6 +29,8 @@ const SITE_DESCRIPTION = 'A browser-local AI image and video origin detector for
 const DEFAULT_LANG = 'zh-CN';
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
 const LOCALIZED_TOOL_LANGS = ['en'];
+const META_DESCRIPTION_MAX_LENGTH = 170;
+const META_DESCRIPTION_MIN_BOUNDARY = 50;
 const SEO_KEYWORDS = [
   'AI image detector',
   'AI video detector',
@@ -52,17 +54,6 @@ const OG_LOCALE: Record<string, string> = {
   fr: 'fr_FR',
   es: 'es_ES',
   'pt-BR': 'pt_BR',
-};
-const META_FALLBACKS: Record<string, string> = {
-  'zh-CN': '适合检查原始文件中的 AI 来源信号，覆盖图片、视频、元数据、C2PA、MP4/MOV 字段、文件名线索、平台痕迹和抽样帧水印，所有分析均在浏览器本地完成，不上传文件。',
-  'zh-TW': '適合檢查原始檔案中的 AI 來源信號，涵蓋圖片、影片、metadata、C2PA、MP4/MOV 欄位、檔名線索、平台痕跡和抽樣幀浮水印，所有分析都在瀏覽器本機完成，不上傳檔案。',
-  en: 'Use it to inspect original AI media files locally for metadata, C2PA, MP4/MOV fields, file-name clues, and frame watermark signals.',
-  ja: '原本の AI 画像と動画からメタデータ、C2PA、MP4/MOV 項目、ファイル名、プラットフォーム痕跡、抽出フレーム透かしをブラウザ内でローカル確認できます。ファイルはアップロードされません。',
-  ko: '원본 AI 이미지와 비디오 파일의 메타데이터, C2PA, MP4/MOV 필드, 파일명 단서, 프레임 워터마크 신호를 브라우저에서 로컬로 확인합니다.',
-  de: 'Prüfe originale AI-Mediendateien lokal auf Metadaten, C2PA, MP4/MOV-Felder, Dateinamen und Frame-Wasserzeichen.',
-  fr: 'Inspectez localement les fichiers média IA originaux avec métadonnées, C2PA, champs MP4/MOV, noms de fichier et filigranes.',
-  es: 'Analiza archivos multimedia IA originales localmente con metadatos, C2PA, campos MP4/MOV, nombres de archivo y marcas de agua.',
-  'pt-BR': 'Verifique arquivos de mídia de IA originais localmente com metadados, C2PA, campos MP4/MOV, nomes de arquivo e marcas d agua.',
 };
 const NAV_LABELS: Record<string, Record<string, string>> = {
   'zh-CN': {
@@ -208,12 +199,16 @@ const canonicalPath = pathFromCanonical(canonical);
 const canonicalHref = urlLang
   ? `${SITE_URL}${localizedPath(canonicalPath, pageLang)}`
   : canonical;
-const navPrefix = urlLang && urlLang !== DEFAULT_LANG ? `/${pageLang}` : '';
+const navPrefix = pageLang !== DEFAULT_LANG ? `/${pageLang}` : '';
 const homeHref = navPrefix ? `${navPrefix}/` : '/';
 const platformsHref = `${navPrefix}/platforms/`;
-const hasLocalizedTools = urlLang && LOCALIZED_TOOL_LANGS.includes(pageLang);
-const toolsHref = hasLocalizedTools ? `${navPrefix}/tools/` : '/tools/';
-const toolsNoLocalize = !hasLocalizedTools;
+const toolsLang = LOCALIZED_TOOL_LANGS.includes(pageLang)
+  ? pageLang
+  : pageLang.startsWith('zh')
+    ? DEFAULT_LANG
+    : 'en';
+const toolsHref = toolsLang === DEFAULT_LANG ? '/tools/' : `/${toolsLang}/tools/`;
+const toolsNoLocalize = toolsLang !== pageLang;
 const aboutHref = `${navPrefix}/about/`;
 const i18nPage = canonicalPath === '/' ? 'home' : 'content';
 const navLabels = NAV_LABELS[pageLang] ?? NAV_LABELS[DEFAULT_LANG];
@@ -250,14 +245,35 @@ function normalizeMetaTitle(value: string) {
   return normalized;
 }
 function normalizeMetaDescription(value: string) {
-  const fallback = META_FALLBACKS[pageLang] ?? META_FALLBACKS.en;
-  if (value.length < 120) {
-    return `${value} ${fallback}`.slice(0, 170);
+  const normalized = value.trim().replace(/\s+/g, ' ');
+  if (normalized.length <= META_DESCRIPTION_MAX_LENGTH) return normalized;
+
+  const candidate = normalized.slice(0, META_DESCRIPTION_MAX_LENGTH);
+  let sentenceEnd = -1;
+  for (const match of candidate.matchAll(/(?:[.!?](?=\s|$)|[。！？])/g)) {
+    sentenceEnd = (match.index ?? -1) + 1;
   }
-  if (value.length > 170) {
-    return `${value.slice(0, 167).replace(/\s+\S*$/, '')}...`;
+  if (sentenceEnd >= META_DESCRIPTION_MIN_BOUNDARY) {
+    return candidate.slice(0, sentenceEnd).trim();
   }
-  return value;
+
+  const wordEnd = candidate.lastIndexOf(' ', META_DESCRIPTION_MAX_LENGTH - 1);
+  if (wordEnd >= META_DESCRIPTION_MIN_BOUNDARY) {
+    return `${candidate.slice(0, wordEnd).replace(/[,;:，；：-]+$/u, '').trimEnd()}…`;
+  }
+
+  let clauseEnd = -1;
+  for (const match of candidate.matchAll(/[,;:，、；：]/gu)) {
+    clauseEnd = (match.index ?? -1) + 1;
+  }
+  if (clauseEnd >= META_DESCRIPTION_MIN_BOUNDARY) {
+    return `${candidate.slice(0, clauseEnd).replace(/[,;:，、；：]+$/u, '').trimEnd()}…`;
+  }
+
+  // If there is no safe sentence, clause, or word boundary, keep the authored
+  // description intact. The build-time SEO QA will reject the overlong value
+  // so the copy can be fixed without emitting a broken phrase.
+  return normalized;
 }
 const seoTitle = normalizeMetaTitle(title);
 const seoDescription = normalizeMetaDescription(description);
@@ -326,7 +342,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <link rel="canonical" href={canonicalHref} />
     {!singleLang && (
       <>
-        <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${canonicalPath}`} />
+        <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localizedPath(canonicalPath, 'en')}`} />
         {pageAlternateLangs.map((lang) => (
           <link rel="alternate" hreflang={lang} href={`${SITE_URL}${localizedPath(canonicalPath, lang)}`} />
         ))}

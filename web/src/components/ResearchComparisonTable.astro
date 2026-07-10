@@ -1,0 +1,107 @@
+---
+interface Experiment {
+  platform: string;
+  testDate: string;
+  fileFormat: string;
+  sampleCount: number;
+  parserVersion: string;
+  mainFindings: string;
+  researchUrl: string;
+}
+
+interface Props {
+  experiments: Experiment[];
+  caption?: string;
+}
+
+const {
+  experiments,
+  caption = 'Comparison of published AICheck365 provenance experiments',
+} = Astro.props;
+---
+
+<div class="comparison-scroll" role="region" aria-label={caption} tabindex="0">
+  <table class="comparison-table">
+    <caption>{caption}</caption>
+    <thead>
+      <tr>
+        <th scope="col">Platform or fixture</th>
+        <th scope="col">Format</th>
+        <th scope="col">Samples</th>
+        <th scope="col">Parser</th>
+        <th scope="col">Test date</th>
+        <th scope="col">Main finding</th>
+      </tr>
+    </thead>
+    <tbody>
+      {experiments.map((experiment) => (
+        <tr>
+          <th scope="row"><a href={experiment.researchUrl}>{experiment.platform}</a></th>
+          <td>{experiment.fileFormat}</td>
+          <td>{experiment.sampleCount}</td>
+          <td>{experiment.parserVersion}</td>
+          <td><time datetime={experiment.testDate}>{experiment.testDate}</time></td>
+          <td>{experiment.mainFindings}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .comparison-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+  }
+
+  .comparison-scroll:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .comparison-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .comparison-table caption {
+    padding: 14px 16px;
+    color: var(--muted);
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .comparison-table thead th {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .comparison-table tbody th {
+    min-width: 170px;
+    font-size: 14px;
+  }
+
+  .comparison-table td:nth-child(4) {
+    min-width: 210px;
+  }
+
+  .comparison-table td:last-child {
+    min-width: 320px;
+  }
+</style>

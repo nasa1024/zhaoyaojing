@@ -1,11 +1,17 @@
 ---
 import Base from '../../layouts/Base.astro';
+import ResearchComparisonTable from '../../components/ResearchComparisonTable.astro';
 import experiments from '../../../public/data/experiments.json';
 
 const title = 'Research Center: AI Media Provenance Experiments | AICheck365';
 const description = 'AICheck365 Research Center publishes reproducible browser-local AI media provenance experiments, including tested samples, parser versions, expected signals, actual signals, limitations, and source licenses.';
 const canonical = 'https://www.aicheck365.com/research/';
 const sortedExperiments = [...experiments].sort((a: any, b: any) => String(b.testDate).localeCompare(String(a.testDate)));
+const totalSamples = sortedExperiments.reduce((sum: number, experiment: any) => sum + experiment.sampleCount, 0);
+const fileFormats = [...new Set(sortedExperiments.map((experiment: any) => experiment.fileFormat))].sort();
+const latestTestDate = sortedExperiments[0]?.testDate;
+const reportUrl = '/research/ai-media-provenance-report-2026-q3/';
+const pageUpdatedAt = '2026-07-10';
 
 const jsonLd = [
   {
@@ -15,6 +21,35 @@ const jsonLd = [
     description,
     url: canonical,
     inLanguage: 'en',
+    dateModified: pageUpdatedAt,
+    hasPart: [
+      {
+        '@type': 'Report',
+        name: 'AI Media Provenance Report, 2026 Q3',
+        url: `https://www.aicheck365.com${reportUrl}`,
+      },
+      ...sortedExperiments.map((experiment: any) => ({
+        '@type': 'TechArticle',
+        name: `${experiment.platform} provenance experiment`,
+        url: `https://www.aicheck365.com${experiment.researchUrl}`,
+      })),
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: 'AICheck365 AI media provenance experiment registry',
+    description: `${sortedExperiments.length} experiment records covering ${totalSamples} tested sample instances across ${fileFormats.length} file formats.`,
+    url: canonical,
+    dateModified: latestTestDate,
+    creator: { '@type': 'Organization', name: 'AICheck365', url: 'https://www.aicheck365.com/' },
+    inLanguage: 'en',
+    measurementTechnique: 'Browser-local file metadata and C2PA parsing',
+    distribution: {
+      '@type': 'DataDownload',
+      encodingFormat: 'application/json',
+      contentUrl: 'https://www.aicheck365.com/data/experiments.json',
+    },
   },
   {
     '@context': 'https://schema.org',
@@ -27,7 +62,7 @@ const jsonLd = [
 ];
 ---
 
-<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} singleLang={true}>
+<Base title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="en" singleLang={true}>
   <main class="page content-page research-page">
     <section class="content-hero">
       <nav class="breadcrumb" aria-label="breadcrumb">
@@ -39,7 +74,73 @@ const jsonLd = [
       <p class="lead-text">Reproducible, browser-local tests for AI media provenance signals. Each note records the sample source, license, parser version, expected signals, actual output, misses, limitations, and steps to reproduce.</p>
     </section>
 
-    <section class="research-grid" aria-label="Research experiments">
+    <section class="research-answer" aria-labelledby="research-definition">
+      <p class="eyebrow">Direct definition</p>
+      <h2 id="research-definition">What is an AI media provenance test?</h2>
+      <p>An AI media provenance test checks evidence carried by the original file—such as C2PA Content Credentials, PNG text chunks, and MP4 container metadata—against a documented parser and expected result. It does not decide authenticity from appearance alone, and missing metadata is not proof that a file is human-made.</p>
+    </section>
+
+    <section aria-labelledby="dataset-snapshot">
+      <div class="section-heading-row">
+        <div>
+          <p class="eyebrow">Current dataset</p>
+          <h2 id="dataset-snapshot">Published evidence snapshot</h2>
+        </div>
+        <a href="/data/experiments.json">Download experiment registry (JSON) →</a>
+      </div>
+      <dl class="research-stats">
+        <div><dt>Experiment records</dt><dd>{sortedExperiments.length}</dd></div>
+        <div><dt>Tested sample instances</dt><dd>{totalSamples}</dd></div>
+        <div><dt>File formats</dt><dd>{fileFormats.join(', ')}</dd></div>
+        <div><dt>Latest test date</dt><dd><time datetime={latestTestDate}>{latestTestDate}</time></dd></div>
+      </dl>
+      <p class="muted compact">Counts come directly from the published experiment registry. They are not estimates of platform-wide coverage.</p>
+    </section>
+
+    <section class="report-callout" aria-labelledby="quarterly-report">
+      <div>
+        <p class="eyebrow">Quarterly synthesis</p>
+        <h2 id="quarterly-report">AI Media Provenance Report, 2026 Q3</h2>
+        <p>The stable quarterly report compares every published record, states the dataset cutoff, separates cryptographic validity from trust, and preserves the limits of this small fixture set.</p>
+      </div>
+      <a class="report-link" href={reportUrl}>Read the Q3 report →</a>
+    </section>
+
+    <section aria-labelledby="comparison-heading">
+      <p class="eyebrow">Comparison table</p>
+      <h2 id="comparison-heading">Platform, format, parser, date, and result</h2>
+      <ResearchComparisonTable experiments={sortedExperiments} caption={`AICheck365 experiment registry: ${sortedExperiments.length} records and ${totalSamples} tested sample instances`} />
+    </section>
+
+    <section class="research-columns" aria-label="Method and limitations">
+      <div>
+        <p class="eyebrow">Method</p>
+        <h2>How these tests are run</h2>
+        <ol class="content-list">
+          <li>Use the named public fixture or documented sample file without uploading it to AICheck365.</li>
+          <li>Run the browser-local parser version and environment recorded in the experiment note.</li>
+          <li>Compare expected signals with the parser’s actual state, fields, and validation issues.</li>
+          <li>Publish misses, source license, known limitations, and exact reproduction steps with the result.</li>
+        </ol>
+        <p><a href="/en/methodology/">Read the full detection methodology →</a></p>
+      </div>
+      <div>
+        <p class="eyebrow">Limits</p>
+        <h2>What this dataset cannot establish</h2>
+        <ul class="content-list">
+          <li>The registry is a small fixture set, not a representative benchmark of all exports from any platform.</li>
+          <li>A valid signature does not automatically mean the signer is in the browser-local trust list.</li>
+          <li>Unsigned or stripped metadata does not prove human creation.</li>
+          <li>Parser, certificate, and trust-store updates can change validation output.</li>
+          <li>Editable metadata and heuristic matches require lower confidence and manual review.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="experiment-notes">
+      <p class="eyebrow">Record-level evidence</p>
+      <h2 id="experiment-notes">Experiment notes</h2>
+    <div class="research-grid" aria-label="Research experiments">
       {sortedExperiments.map((experiment: any) => (
         <article class="research-card">
           <div class="research-card-head">
@@ -56,6 +157,125 @@ const jsonLd = [
           <a class="experiment-link" href={experiment.researchUrl}>Read experiment →</a>
         </article>
       ))}
+    </div>
+    </section>
+
+    <section aria-labelledby="research-next-steps">
+      <p class="eyebrow">Use the evidence</p>
+      <h2 id="research-next-steps">Inspect a file or learn the signal types</h2>
+      <ul class="content-list research-link-list">
+        <li><a href="/en/tools/c2pa-validator/">Validate C2PA Content Credentials locally →</a></li>
+        <li><a href="/en/tools/png-parameter-extractor/">Inspect PNG prompt and workflow chunks →</a></li>
+        <li><a href="/en/tools/mp4-metadata-inspector/">Inspect MP4 container metadata →</a></li>
+        <li><a href="/en/platforms/">Compare platform-specific provenance guides →</a></li>
+      </ul>
     </section>
   </main>
 </Base>
+
+<style>
+  .research-page > section {
+    margin-bottom: 36px;
+  }
+
+  .content-hero .lead-text {
+    color: var(--muted);
+  }
+
+  .eyebrow {
+    margin: 0 0 6px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .research-answer,
+  .report-callout {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+  }
+
+  .research-answer {
+    border-left: 4px solid var(--accent);
+  }
+
+  .research-answer h2,
+  .report-callout h2 {
+    margin: 0 0 10px;
+  }
+
+  .research-answer p:last-child,
+  .report-callout p:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-heading-row,
+  .report-callout {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-heading-row h2 {
+    margin-top: 0;
+  }
+
+  .research-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0 10px;
+  }
+
+  .research-stats div {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+  }
+
+  .research-stats dt {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .research-stats dd {
+    margin: 6px 0 0;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .report-link {
+    flex: 0 0 auto;
+    padding: 10px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    font-weight: 800;
+  }
+
+  .research-link-list {
+    columns: 2;
+  }
+
+  @media (max-width: 760px) {
+    .section-heading-row,
+    .report-callout {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .research-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .research-link-list {
+      columns: 1;
+    }
+  }
+</style>

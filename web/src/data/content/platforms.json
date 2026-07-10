@@ -15,18 +15,33 @@
     "internalLinks": ["/platforms/sora/", "/platforms/gemini/", "/platforms/comfyui/", "/platforms/stable-diffusion/", "/tools/"]
   },
   {
+    "id": "sora-zh-priority",
+    "slug": "sora",
+    "route": "/platforms/sora/",
+    "locale": "zh-CN",
+    "pageType": "platform",
+    "platform": "Sora",
+    "title": "如何检测 Sora AI 视频？C2PA、MP4 元数据与帧水印 | AICheck365",
+    "description": "上传 Sora 原始视频或帧图，在浏览器本地检查 C2PA、MP4/MOV 元数据、文件名和视频帧水印线索，不上传文件。",
+    "canonical": "https://www.aicheck365.com/platforms/sora/",
+    "primaryKeyword": "Sora AI 视频检测",
+    "draft": false,
+    "updatedAt": "2026-07-10",
+    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/research/ai-media-provenance-report-2026-q3/", "/platforms/dall-e/"]
+  },
+  {
     "id": "sora-en-priority",
     "slug": "sora",
     "route": "/en/platforms/sora/",
     "locale": "en",
     "pageType": "platform",
     "platform": "Sora",
-    "title": "Sora AI Detector: Check MP4 Metadata, C2PA and Frame Watermarks | AICheck365",
-    "description": "Check original Sora MP4/MOV exports locally for C2PA text, MP4/MOV metadata, SEI markers, file-name clues, and sampled frame watermark signals.",
+    "title": "Sora AI Detector for Existing Files: MP4 Metadata and C2PA | AICheck365",
+    "description": "Inspect existing and archived Sora MP4/MOV files for C2PA, container metadata, SEI markers, file-name clues, and frame watermarks after Sora Web/App ended.",
     "canonical": "https://www.aicheck365.com/en/platforms/sora/",
-    "primaryKeyword": "Sora AI detector",
+    "primaryKeyword": "Sora AI detector for existing files",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-10",
     "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/en/blog/how-to-detect-ai-videos/", "/en/platforms/kling/"]
   },
   {
@@ -58,5 +73,20 @@
     "draft": false,
     "updatedAt": "2026-06-21",
     "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/en/platforms/stable-diffusion/", "/en/blog/ai-image-metadata-guide/"]
+  },
+  {
+    "id": "comfyui-ko-priority",
+    "slug": "comfyui",
+    "route": "/ko/platforms/comfyui/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF 확인: PNG 워크플로 메타데이터 추출 | AICheck365",
+    "description": "ComfyUI 원본 PNG의 prompt, workflow JSON, 노드 구조, 모델명, seed, sampler, CFG와 크기 정보를 브라우저에서 로컬로 확인합니다.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/comfyui/",
+    "primaryKeyword": "comfyui exif 확인",
+    "draft": false,
+    "updatedAt": "2026-07-10",
+    "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/ko/platforms/stable-diffusion/", "/ko/methodology/"]
   }
 ]

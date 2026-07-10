@@ -2,9 +2,9 @@
 import Base from '../../layouts/Base.astro';
 
 const faq = [
-  { q: "Sora 原始视频现在可以直接检测吗？", a: "可以。AICheck365 浏览器版支持上传 MP4/MOV/M4V 等视频文件，会先检查 C2PA-lite 文本、MP4 容器元数据、文件名线索；没有命中时再抽样视频帧做水印分析。" },
+  { q: "已有的 Sora 原始视频现在可以直接检测吗？", a: "可以。虽然 Sora Web 和 App 已停止服务，但你已经导出的 MP4/MOV/M4V 文件仍可在本地检查。AICheck365 会先检查 C2PA、MP4 容器元数据和文件名线索；没有命中时再抽样视频帧做水印分析。" },
   { q: "Sora 生成的视频帧截图能被检测到吗？", a: "截图通常很难检测，因为截图不包含原始视频容器元数据。建议优先上传从 Sora 下载的原始视频文件，其次再检查导出的原始帧图。" },
-  { q: "Sora 是否支持 C2PA 标准？", a: "OpenAI 是 C2PA 标准的主要推动者，DALL-E 3 已全面支持 C2PA。Sora 作为 OpenAI 产品可能包含相似的内容凭证线索；浏览器版会扫描 C2PA/JUMBF 相关文本，但不做完整签名链验证。" },
+  { q: "Sora 是否支持 C2PA 标准？", a: "支持。OpenAI 的官方安全说明称 Sora 视频包含 C2PA 元数据；具体字段是否仍能读取取决于文件是不是原始导出、以及后来是否经过转码或清理。浏览器版会解析可读的 C2PA/JUMBF 线索，完整签名链可用 C2PA Validator 复核。" },
   { q: "为什么 Sora 视频检测可能没有结果？", a: "如果视频经过社交平台转码、录屏、剪辑软件重新导出或清理元数据，C2PA、MP4 元数据和文件名线索都可能消失。无信号不等于一定不是 AI 生成。" },
 ];
 
@@ -24,6 +24,11 @@ const jsonLd = [
     "headline": "如何检测 Sora AI 视频？C2PA、MP4 元数据与视频帧水印指南",
     "description": "了解 OpenAI Sora 原始视频和导出帧可能保留的 C2PA、MP4 容器元数据、文件名和视频帧水印线索。",
     "url": "https://www.aicheck365.com/platforms/sora/",
+    "datePublished": "2026-06-19",
+    "dateModified": "2026-07-10",
+    "inLanguage": "zh-CN",
+    "isAccessibleForFree": true,
+    "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -51,16 +56,20 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>Sora AI 视频检测：C2PA、MP4 元数据与帧水印</h1>
-      <p class="article-meta">信号类型：C2PA · MP4/MOV 元数据 · 文件名 · 视频帧水印</p>
+      <p class="article-meta">2026年7月更新 · 信号类型：C2PA · MP4/MOV 元数据 · 文件名 · 视频帧水印</p>
 
-      <p class="lead-text">Sora 是 OpenAI 的文生视频 AI 模型。检测 Sora 内容时，原始视频文件比截图和转码版本更有价值，因为 C2PA、MP4 容器元数据、文件名和视频帧水印线索更可能保留下来。</p>
+      <p class="lead-text">Sora Web 和 App 已于 2026 年 4 月 26 日停止服务，API 将于 2026 年 9 月 24 日停止。本页用于检查已经导出的 Sora 视频：原始文件比截图和转码版本更有价值，因为 C2PA、MP4 容器元数据、文件名和视频帧水印线索更可能保留下来。</p>
+
+      <div class="notice" role="note">
+        <strong>当前状态：</strong>OpenAI 已停止 Sora Web/App。请优先保留并检测历史原始导出；官方时间表见 <a href="https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation" rel="noopener" target="_blank">Sora discontinuation FAQ</a>。
+      </div>
 
       <h2>Sora 与 C2PA 标准</h2>
-      <p>OpenAI 是 <strong>C2PA（内容真实性倡议）</strong>的核心推动者，已在 DALL-E 3 中全面实施 C2PA 数字签名。Sora 视频文件可能保留类似的内容凭证或来源文本：</p>
+      <p>OpenAI 的官方安全说明称 Sora 视频带有 C2PA 元数据。原始文件可能保留内容凭证或来源文本：</p>
       <ul class="content-list">
         <li><strong>视频文件</strong>：C2PA Manifest 可能嵌入视频容器（MP4）中</li>
         <li><strong>导出图片帧</strong>：从 Sora 界面导出的静态图片可能包含 C2PA 签名</li>
-        <li><strong>浏览器版边界</strong>：AICheck365 会扫描 C2PA/JUMBF 相关文本，但不做完整签名链验证</li>
+        <li><strong>浏览器版边界</strong>：AICheck365 会读取 C2PA/JUMBF 线索；需要签名、证书和篡改状态时，继续使用 <a href="/tools/c2pa-validator/">C2PA Validator</a></li>
       </ul>
 
       <h2>Sora 视频的可检测信号</h2>
@@ -91,8 +100,15 @@ const jsonLd = [
       <h2>与 DALL-E 的关系</h2>
       <p>Sora 和 DALL-E 都是 OpenAI 的生成式 AI 产品，共享公司的内容溯源政策。如果你需要检测 OpenAI 图片生成产品，参考 <a href="/platforms/dall-e/">DALL-E 检测指南</a>也会有所帮助。</p>
 
+      <h2>来源与复现</h2>
+      <ul class="content-list">
+        <li><a href="https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation" rel="noopener" target="_blank">OpenAI：What to know about the Sora discontinuation</a>。</li>
+        <li><a href="https://openai.com/index/launching-sora-responsibly/" rel="noopener" target="_blank">OpenAI：Launching Sora responsibly</a>，包含水印和 C2PA 的官方说明。</li>
+        <li><a href="/research/ai-media-provenance-report-2026-q3/">AICheck365 2026 Q3 来源信号实验汇总</a>，记录当前解析器、样本和限制。</li>
+      </ul>
+
       <div class="cta-box">
-        <p>上传从 Sora 导出的原始视频或帧图进行检测</p>
+        <p>上传你已保存的 Sora 原始视频或帧图进行本地检测</p>
         <a href="/" class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">开始检测 →</a>
       </div>
 

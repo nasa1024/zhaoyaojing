@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-test('English Sora page has a non-template detector profile and tool CTA', async ({ page }) => {
+test('English Sora page has an archival provenance profile and tool CTA', async ({ page }) => {
   await page.goto('/en/platforms/sora/');
   await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-priority-page', 'platforms/sora');
-  await expect(page.locator('h1')).toContainText('Sora AI Detector');
-  await expect(page.locator('.lead-text')).toContainText('original MP4 or MOV export');
-  await expect(page.getByText('Bundled Sora original sample')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Sora provenance checks');
+  await expect(page.locator('.lead-text')).toContainText('original MP4 or MOV');
+  await expect(page.getByText('Sora regression fixtures')).toBeVisible();
   await expect(page.locator('a[href="/en/tools/mp4-metadata-inspector/"]')).toBeVisible();
 });
 

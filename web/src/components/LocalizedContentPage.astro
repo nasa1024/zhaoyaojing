@@ -454,9 +454,9 @@ const localizedCopy = {
 const pageTitles = {
   'blog/how-to-detect-ai-videos': {
     'zh-CN': '如何检测 AI 生成视频？MP4 元数据、C2PA 与帧水印指南',
-    'zh-TW': '如何檢測 AI 生成影片？MP4 metadata、C2PA 與幀浮水印指南',
+    'zh-TW': '如何判斷 AI 生成影片？MP4 metadata、C2PA 與影格浮水印實測',
     en: 'How to Detect AI-Generated Videos: MP4 Metadata, C2PA, and Frame Watermarks',
-    ja: 'AI 生成動画の検出方法：MP4 メタデータ、C2PA、フレーム透かし',
+    ja: 'AI 生成動画の見分け方：MP4 メタデータ、C2PA、フレーム透かし',
     ko: 'AI 생성 비디오 감지 방법: MP4 메타데이터, C2PA, 프레임 워터마크',
     de: 'AI-generierte Videos erkennen: MP4-Metadaten, C2PA und Frame-Wasserzeichen',
     fr: 'Détecter les vidéos générées par IA : métadonnées MP4, C2PA et filigranes',
@@ -465,9 +465,9 @@ const pageTitles = {
   },
   'blog/how-to-detect-ai-images': {
     'zh-CN': '如何判断图片或视频是否 AI 生成？先看这些线索',
-    'zh-TW': '如何判斷圖片或影片是否 AI 生成？先看這些線索',
+    'zh-TW': '如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG metadata 實測',
     en: 'How to Tell Whether an Image or Video Was AI-Generated',
-    ja: '画像や動画が AI 生成か確認する方法',
+    ja: 'AI 画像の見分け方：C2PA・EXIF・PNG メタデータを確認',
     ko: '이미지나 비디오가 AI 생성인지 확인하는 방법',
     de: 'Erkennen, ob ein Bild oder Video mit AI erstellt wurde',
     fr: 'Savoir si une image ou une vidéo a été générée par IA',
@@ -512,9 +512,9 @@ const pageTitles = {
 const articleDescriptions = {
   'blog/how-to-detect-ai-videos': {
     'zh-CN': '在浏览器本地检查 AI 视频的 C2PA-lite、MP4/MOV 元数据、SEI marker、文件名与视频帧水印线索。',
-    'zh-TW': '在瀏覽器本機檢查 AI 影片的 C2PA-lite、MP4/MOV metadata、SEI marker、檔名與影片幀浮水印線索。',
+    'zh-TW': '從原始 MP4/MOV 依序檢查 C2PA、容器 metadata、SEI marker、檔名與抽樣影格浮水印，並用真實 Veo 樣本說明證據強弱與轉檔限制。',
     en: 'Check original AI videos for C2PA-lite, MP4/MOV metadata, SEI markers, file-name hints, and sampled frame watermarks locally in the browser.',
-    ja: '元の AI 動画から C2PA-lite、MP4/MOV メタデータ、SEI marker、ファイル名、抽出フレーム透かしをブラウザ内で確認します。',
+    ja: '元の MP4/MOV を使い、C2PA、コンテナメタデータ、SEI marker、ファイル名、抽出フレーム透かしの順に AI 動画の出所を確認します。',
     ko: '원본 AI 비디오에서 C2PA-lite, MP4/MOV 메타데이터, SEI marker, 파일명, 샘플 프레임 워터마크를 브라우저에서 확인합니다.',
     de: 'Prüfe originale AI-Videos lokal auf C2PA-lite, MP4/MOV-Metadaten, SEI marker, Dateinamen und Frame-Wasserzeichen.',
     fr: 'Vérifiez localement les vidéos IA originales avec C2PA-lite, métadonnées MP4/MOV, SEI marker, noms de fichier et filigranes de frames.',
@@ -534,9 +534,9 @@ const articleDescriptions = {
   },
   'blog/how-to-detect-ai-images': {
     'zh-CN': '从元数据分析到视觉识别，全面介绍判断 AI 生成图片的方法、工具和局限性。涵盖 EXIF、XMP、C2PA 检测原理。',
-    'zh-TW': '從元數據分析到視覺識別，全面介紹判斷 AI 生成圖片的方法、工具和局限性。涵蓋 EXIF、XMP、C2PA 檢測原理。',
+    'zh-TW': '先保留原始圖片，再依序檢查 C2PA、EXIF/XMP、PNG 文字區塊與工作流程；搭配 Firefly、ComfyUI 真實樣本說明可驗證證據與限制。',
     en: 'A comprehensive guide to identifying AI-generated images, from metadata analysis to visual hints. Covers EXIF, XMP, and C2PA.',
-    ja: 'メタデータ分析から視覚的特徴まで、AI 生成画像を見分ける方法、ツール、限界について解説します。EXIF、XMP、C2PA 対応。',
+    ja: '元画像を保全し、C2PA、EXIF/XMP、PNG テキストとワークフローの順に確認します。Firefly と ComfyUI の実サンプルで証拠の強さと限界も解説します。',
     ko: '메타데이터 분석부터 시각적 식별까지, AI 생성 이미지를 판단하는 방법, 도구 및 한계를 소개합니다. EXIF, XMP, C2PA 포함.',
     de: 'Ein umfassender Leitfaden zur Identifizierung von KI-Bildern, von Metadatenanalysen bis zu visuellen Hinweisen. Deckt EXIF, XMP und C2PA ab.',
     fr: 'Guide complet pour identifier les images générées par IA, de l’analyse des métadonnées aux indices visuels. Couvre EXIF, XMP et C2PA.',
@@ -650,15 +650,20 @@ function platformMetaDescription(name) {
 const priorityPlatformProfiles = {
   en: {
     sora: {
-      title: 'Sora AI Detector: Check MP4 Metadata, C2PA and Frame Watermarks',
-      description: 'Check original Sora MP4/MOV exports locally for C2PA text, MP4/MOV metadata, SEI markers, file-name clues, and sampled frame watermark signals.',
-      h1: 'Sora AI Detector: what to check in the original video file',
-      meta: 'Target query: sora ai detector · Updated June 2026 · Parser: aicheck 0.2.0',
-      lead: 'To check a Sora video, start with the original MP4 or MOV export. AICheck365 looks for preserved file evidence first: C2PA/JUMBF text, MP4/MOV container fields, SEI markers, file-name clues, and only then sampled frame watermark signals. A screenshot or social-media reupload usually removes the strongest evidence.',
-      sampleHeading: 'Sample status and evidence profile',
+      title: 'Sora AI Detector for Existing Files: MP4 Metadata and C2PA',
+      description: 'Inspect existing and archived Sora MP4/MOV files for C2PA, container metadata, SEI markers, file-name clues, and frame watermarks after Sora Web/App ended.',
+      h1: 'Sora provenance checks for existing and archived video files',
+      meta: 'Target query: Sora AI detector for existing files · Updated July 10, 2026 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-10',
+      lead: 'OpenAI says the Sora Web/App service ended on April 26, 2026, and the Sora API is scheduled to stop on September 24, 2026. This page is therefore an archive and provenance workflow for files you already have, not a guide to accessing the discontinued product. Preserve the original MP4 or MOV: AICheck365 checks C2PA/JUMBF evidence, container fields, SEI markers, file-name clues, and sampled frame watermarks locally in the browser.',
+      directAnswer: {
+        heading: 'Service status: use this checker for existing Sora files',
+        body: 'Sora Web/App is no longer available. If you already have a Sora export, keep the untouched file and inspect its container evidence before editing or re-encoding it. A readable Sora or C2PA signal can support provenance; a missing signal cannot prove that the video was not made with Sora.',
+      },
+      sampleHeading: 'Repository coverage and evidence profile',
       sampleRows: [
-        ['Bundled Sora original sample', 'Not yet available in this repository. This page intentionally does not claim a Sora-specific test result until a licensed original export is added.'],
-        ['Closest video regression sample', 'A user-provided Google Veo MP4 with valid Google generative-AI C2PA is bundled for video-C2PA regression. It proves the MP4/C2PA path, not Sora-specific provenance.'],
+        ['Sora regression fixtures', 'The repository test suite analyzes Sora and Sora Pro MP4 fixtures and asserts both C2PA and Sora-specific detection. These fixtures validate the parser path; they are not presented as a public benchmark of all Sora exports.'],
+        ['Public browser video sample', 'The loadable Google Veo MP4 carries valid Google generative-AI C2PA and an MP4 encoding-tool value of Google. It validates browser-side BMFF/C2PA handling, not Sora-specific provenance.'],
         ['Tested parser', 'aicheck 0.2.0 (Rust/WASM, c2pa-rs 0.82 path for C2PA, MP4 container scanner for boxes and ilst fields).'],
       ],
       signalRows: [
@@ -667,22 +672,42 @@ const priorityPlatformProfiles = {
         ['SEI marker', 'Weak to medium: generator strings embedded in the video bitstream can survive remuxing, but not full re-encoding.'],
         ['Frame watermark', 'Weak: sampled frame checks are a fallback when metadata layers are empty.'],
       ],
+      steps: {
+        heading: 'How to preserve and check an existing Sora export',
+        items: [
+          ['Keep the original', 'Retain the direct MP4/MOV download and analyze a copy. Do not run it through an editor, messaging app, or social platform first.'],
+          ['Inspect the container', 'Open the MP4/MOV metadata inspector and review the box tree, tool/software fields, C2PA text, and any platform strings.'],
+          ['Interpret C2PA carefully', 'A valid manifest that declares algorithmically generated media is stronger than a plain file name or an isolated text match.'],
+          ['Use frame analysis as fallback', 'If container evidence is empty, run the full detector so it can sample frames for visible or invisible watermark clues.'],
+          ['Archive the result with context', 'Record the file name, acquisition date, source URL or transfer history, and the detector output; none of those items alone is a legal authenticity verdict.'],
+        ],
+      },
       limits: [
         'No readable signal does not prove the video is human-made.',
         'Social platforms, screen recording, editors, and transcoders can remove or overwrite container metadata.',
-        'The browser detector surfaces evidence clues; it is not a legal authenticity verdict.',
+        'Service shutdown dates describe product availability, not whether a particular archived file is authentic.',
+        'The browser detector surfaces provenance clues; it is not a legal authenticity verdict.',
       ],
-      ctaLead: 'Use the container-first tool for original Sora exports, or return to the full detector when you need fallback frame analysis.',
+      ctaLead: 'Start with container evidence for an untouched export, then use the full detector only when you need fallback frame analysis.',
       ctas: [
         { href: '/tools/mp4-metadata-inspector/', label: 'Inspect MP4/MOV metadata' },
         { href: '/', label: 'Run the full local detector' },
         { href: '/blog/how-to-detect-ai-videos/', label: 'Read the AI video workflow' },
       ],
       faq: [
-        ['Can AICheck365 detect every Sora video?', 'No. It can only show evidence that remains in the file you upload. If the file was transcoded, recorded from screen, or stripped, the strongest evidence may be gone.'],
+        ['Is Sora still available?', 'OpenAI states that Sora Web/App ended on April 26, 2026. The Sora API is scheduled to stop on September 24, 2026. This page is intended for existing and archived files.'],
+        ['Can AICheck365 identify every archived Sora video?', 'No. It can only show evidence that remains in the file. Transcoding, screen recording, editing, or metadata stripping may remove the strongest provenance signals.'],
         ['Should I upload a screenshot of a Sora frame?', 'Prefer the original video. A screenshot is a new image file and usually has none of the MP4/C2PA container evidence.'],
-        ['Is a Sora-specific sample bundled?', 'Not yet. The page records that gap explicitly so the SEO page does not overclaim.'],
       ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: 'https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation', label: 'OpenAI: What to know about the Sora discontinuation', note: 'Official service dates and API transition details.', localized: false },
+          { href: 'https://github.com/MatrixA/aicheck/blob/main/tests/video_detection.rs', label: 'aicheck Sora video regression tests', note: 'Repository assertions for Sora/Sora Pro C2PA detection.', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Browser-loadable sample provenance, test dates, signals, and known limits.', localized: false },
+          { href: '/methodology/', label: 'AICheck365 methodology', note: 'How evidence strength and missing signals are interpreted.' },
+        ],
+      },
     },
     gemini: {
       title: 'Gemini C2PA Checker: Inspect Google AI Content Credentials',
@@ -755,9 +780,322 @@ const priorityPlatformProfiles = {
       ],
     },
   },
+  ko: {
+    comfyui: {
+      title: 'ComfyUI EXIF 확인: PNG 워크플로 메타데이터 추출',
+      description: 'ComfyUI 원본 PNG의 prompt, workflow JSON, 노드 구조, 모델명, seed, sampler, CFG와 크기 정보를 브라우저에서 로컬로 확인합니다.',
+      h1: 'ComfyUI EXIF 확인: 실제 정보는 PNG 워크플로에 있습니다',
+      meta: '주요 검색어: comfyui exif 확인 · 업데이트: 2026-07-10 · 파서: aicheck 0.2.0',
+      updatedAt: '2026-07-10',
+      lead: '“ComfyUI EXIF”를 찾는 경우가 많지만, ComfyUI가 저장하는 핵심 생성 정보는 보통 카메라 EXIF가 아니라 PNG tEXt/iTXt/zTXt 청크의 prompt와 workflow JSON입니다. 생성 도구에서 바로 저장한 원본 PNG를 사용하면 노드 그래프, 체크포인트 이름, seed, sampler, scheduler, steps, CFG, 너비와 높이를 브라우저 안에서 확인할 수 있습니다.',
+      directAnswer: {
+        heading: '바로 답: ComfyUI 정보는 보통 EXIF가 아니라 PNG text chunk에 있습니다',
+        body: '원본 PNG의 prompt 또는 workflow 청크를 먼저 확인하세요. 값이 남아 있으면 워크플로 JSON과 생성 설정을 읽을 수 있습니다. 다만 이 데이터는 전자서명된 증명이 아니며 수정할 수 있습니다. 청크가 없다는 사실도 ComfyUI로 만들지 않았다는 뜻은 아닙니다.',
+      },
+      sampleHeading: '실제 샘플과 확인된 결과',
+      sampleRows: [
+        ['검증 샘플', 'ComfyUI 공식 예제 저장소의 Stable Diffusion XL 원본 PNG를 사용했습니다. 공개 샘플 목록에서 직접 불러와 검사할 수 있습니다.'],
+        ['실제 감지 결과', 'prompt와 workflow PNG 텍스트 청크, 전체 unsigned workflow JSON, 노드 그래프 및 생성 파라미터가 확인됩니다.'],
+        ['증거 수준', '워크플로는 출처를 설명하는 유용한 단서지만 암호학적 서명이 없어 낮은 신뢰도의 보조 증거로 표시됩니다.'],
+      ],
+      signalRows: [
+        ['prompt 청크', '노드의 class_type, 입력값, 모델과 생성 파라미터가 JSON으로 직렬화되어 있을 수 있습니다.'],
+        ['workflow 청크', 'ComfyUI 그래프의 노드와 연결 구조입니다. 원본에 그대로 남아 있으면 다시 불러올 수 있는 경우가 많습니다.'],
+        ['모델과 샘플링 설정', '체크포인트/모델 파일명, sampler, scheduler, steps, CFG, seed, width, height를 값이 있는 범위에서 정리합니다.'],
+        ['원시 PNG 텍스트', '도구는 tEXt/iTXt/zTXt의 원본 값을 보존해 검색, 복사, JSON 내보내기를 지원합니다. 프롬프트 등 민감한 내용이 포함될 수 있습니다.'],
+      ],
+      steps: {
+        heading: 'ComfyUI PNG 메타데이터 확인 순서',
+        items: [
+          ['원본 PNG를 확보합니다', '스크린샷이나 메신저에서 다시 저장한 이미지가 아니라 ComfyUI가 직접 내보낸 PNG를 사용합니다.'],
+          ['PNG 워크플로 추출기를 엽니다', '파일은 서버로 업로드되지 않고 현재 브라우저에서 처리됩니다.'],
+          ['prompt와 workflow 요약을 확인합니다', '노드 수, 첫 class_type, 모델명, seed, sampler, CFG와 이미지 크기가 표시되는지 봅니다.'],
+          ['필요할 때 원시 JSON을 검토합니다', '큰 워크플로는 접혀 표시됩니다. 공유 전에 프롬프트, 파일 경로, 사용자 정의 노드 정보가 포함됐는지 확인합니다.'],
+          ['증거 강도를 구분합니다', '워크플로가 있으면 ComfyUI 계열 생성 흔적을 뒷받침하지만, 서명된 C2PA처럼 위변조를 검증하지는 못합니다.'],
+        ],
+      },
+      limits: [
+        'PNG workflow와 prompt는 서명되지 않았으므로 편집하거나 새 파일에 복사할 수 있습니다.',
+        '메신저, SNS, 최적화 도구, 스크린샷은 PNG 텍스트 청크를 제거하는 경우가 많습니다.',
+        '워크플로가 없다는 결과만으로 사람이 만든 이미지 또는 비 AI 이미지라고 결론 내릴 수 없습니다.',
+        '사용자 정의 노드나 확장 기능의 모든 필드를 항상 사람이 읽기 쉬운 형태로 정규화할 수 있는 것은 아닙니다.',
+      ],
+      ctaLead: 'ComfyUI EXIF 확인 목적이라면 먼저 PNG 파라미터/워크플로 추출기를 사용하고, 실제 EXIF/XMP 필드가 필요할 때 보조 리더를 사용하세요.',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNG 워크플로 메타데이터 추출', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMP 필드도 확인', localized: false },
+        { href: '/platforms/stable-diffusion/', label: 'Stable Diffusion 신호 비교' },
+      ],
+      faq: [
+        ['ComfyUI 메타데이터는 정말 EXIF인가요?', '대부분 아닙니다. 핵심 생성 정보는 보통 PNG 텍스트 청크의 prompt와 workflow JSON에 저장됩니다.'],
+        ['원본 워크플로를 완전히 복구할 수 있나요?', 'workflow 청크가 기록되고 보존됐다면 가능한 경우가 많습니다. 다만 사용자 정의 노드와 외부 모델 파일은 별도로 설치해야 할 수 있습니다.'],
+        ['왜 C2PA보다 신뢰도가 낮나요?', 'ComfyUI workflow는 일반적으로 전자서명되지 않아 수정 가능하기 때문입니다. 출처 단서이지 위변조 방지 증명은 아닙니다.'],
+        ['이미지가 서버로 업로드되나요?', '아니요. 분석은 브라우저에서 로컬로 실행됩니다.'],
+      ],
+      sources: {
+        heading: '출처와 검증 기록',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 공식 예제 저장소', note: '이 페이지에서 설명한 SDXL PNG 샘플의 출처입니다.', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365 공개 샘플 기록', note: '샘플 출처, 테스트 날짜, 실제 신호와 제한 사항을 기록합니다.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG 제3판 사양', note: 'PNG 청크와 텍스트 청크 형식의 표준 참고 자료입니다.', localized: false },
+          { href: '/methodology/', label: 'AICheck365 검사 방법론', note: '서명된 증거와 편집 가능한 메타데이터의 차이를 설명합니다.' },
+        ],
+      },
+    },
+  },
 };
 
 const priorityArticleProfiles = {
+  'zh-TW': {
+    'blog/how-to-detect-ai-images': {
+      title: '如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測',
+      description: '用原始圖片依序檢查 C2PA 簽章、EXIF/XMP、PNG 文字區塊與 ComfyUI workflow，搭配 Firefly、ComfyUI 真實樣本說明證據強度與限制。',
+      h1: '如何判斷圖片是否由 AI 生成？先查原始檔裡的來源證據',
+      meta: '主要關鍵字：AI 圖片檢測 · 更新：2026-07-10 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-07-10',
+      lead: '判斷 AI 圖片時，只看手指、文字或光影是否怪異很容易誤判。更可說明的方法是保留原始檔，先讀 C2PA Content Credentials，再檢查 EXIF/XMP、PNG tEXt/iTXt/zTXt、ComfyUI prompt/workflow 與檔名。AICheck365 會在瀏覽器本機解析這些訊號，並區分可驗證簽章與可被修改的一般 metadata。',
+      directAnswer: {
+        heading: '直接答案：用多層來源證據判斷，不要只相信單一 AI 百分比',
+        body: '最強的情況是 C2PA 簽章有效，而且 manifest 的 digitalSourceType 明確寫出 trainedAlgorithmicMedia。XMP/EXIF 的生成工具欄位、PNG 的 prompt 或 workflow 可作為補強；檔名與視覺瑕疵只能當弱線索。沒有找到訊號，只代表這份檔案沒有保留可讀證據，不能證明它一定是真人創作。',
+      },
+      sampleHeading: '網站可重現的真實樣本',
+      sampleRows: [
+        ['Adobe Firefly JPEG', '來自 Content Authenticity Initiative 的公開樣本。可讀到 digitalSourceType = trainedAlgorithmicMedia，且 C2PA 簽章在密碼學上有效；簽署憑證不在目前信任清單中，所以結果是 valid 而非 trusted。'],
+        ['ComfyUI / Stable Diffusion XL PNG', '來自 ComfyUI 官方 examples。PNG 內保留 prompt、workflow 文字區塊與未簽章的生成參數。'],
+        ['沒有來源 metadata 的 JPEG', '分析結果為「沒有可讀來源證據」。這個對照樣本也說明：無訊號無法區分一般照片與已被清除 metadata 的 AI 圖片。'],
+      ],
+      signalRows: [
+        ['C2PA Content Credentials', '分開檢查 manifest、簽章狀態、信任狀態、digitalSourceType、claim generator 與 actions。有效簽章且宣告 AI 生成時證據最強。'],
+        ['EXIF / XMP', 'Software、CreatorTool、Credit、DigitalSourceType、UserComment 可能留下平台名或 AIGC 標籤；未簽章欄位可被修改。'],
+        ['PNG text / workflow', 'Stable Diffusion、AUTOMATIC1111、ComfyUI 可能寫入 prompt、negative prompt、seed、sampler、CFG、model 與 workflow JSON。'],
+        ['檔名與視覺檢查', '平台命名格式、文字變形、反射或物件連續性可協助找方向，但無法單獨證明來源。'],
+      ],
+      steps: {
+        heading: 'AI 圖片檢測的五個步驟',
+        items: [
+          ['保留原始圖片', '優先取得生成平台直接下載或傳送者提供的原始檔，不要先截圖、壓縮或經過社群平台另存。'],
+          ['執行本機檢測', '把檔案交給 AICheck365，先看 C2PA、EXIF/XMP、PNG text 與檔名摘要。分析在目前瀏覽器內完成，不上傳檔案。'],
+          ['確認 C2PA 是否真的有效', '不要只看「有 C2PA」；還要確認簽章有沒有通過、內容是否遭竄改，以及 manifest 是否真的宣告 AI 生成。'],
+          ['交叉比對補助欄位', '檢查工具名、模型、prompt、workflow 與檔案取得情境是否一致。一般 metadata 可以偽造，因此不能單獨定案。'],
+          ['記錄來源與限制', '保存原始 URL、取得時間、是否重新輸出及檢測結果。最後才用視覺特徵作為補充。'],
+        ],
+      },
+      limits: [
+        'LINE、Facebook、Instagram、通訊軟體、圖片最佳化與截圖常會移除 C2PA、XMP 或 PNG text。',
+        '沒有簽章的 EXIF/XMP 與 workflow JSON 可以編輯或複製，只能當來源線索，不能當法律鑑定。',
+        '有 C2PA 不等於一定是 AI；必須閱讀 manifest 宣告的 digitalSourceType 與 actions。',
+        '沒有任何訊號只代表目前這份副本沒有可讀證據，不能排除 AI 生成。',
+      ],
+      ctaLead: '先用完整檢測器建立證據摘要；若發現 C2PA 或 PNG workflow，再開啟專用工具查看簽章與原始欄位。',
+      ctas: [
+        { href: '/', label: '在瀏覽器本機檢查圖片' },
+        { href: '/en/tools/c2pa-validator/', label: '深入驗證 C2PA', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: '擷取 PNG 參數與 workflow', localized: false },
+      ],
+      faq: [
+        ['可以百分之百判斷 AI 圖片嗎？', '不行。工具只能呈現目前檔案仍保留、且 parser 已知的來源訊號；被清除 metadata 或尚未涵蓋的平台可能沒有結果。'],
+        ['圖片有 C2PA 就代表是 AI 生成嗎？', '不一定。C2PA 是內容來源標準，也可用於相機或編輯流程。要看 manifest 是否以 digitalSourceType 或 actions 明確宣告演算法生成。'],
+        ['EXIF 的 Software 欄位可以當證明嗎？', '它是可用的輔助線索，但一般 EXIF 沒有簽章保護，可以被修改，因此不能單獨定案。'],
+        ['圖片會被上傳到伺服器嗎？', '不會。分析在瀏覽器本機執行。'],
+      ],
+      sources: {
+        heading: '資料來源與驗證紀錄',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 公開樣本紀錄', note: '列出樣本來源、測試日期、實際訊號與已知限制。', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Firefly C2PA 測試檔的公開來源。', localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 官方 examples', note: '帶有 workflow 的 SDXL PNG 來源。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'manifest、assertion 與簽章驗證的官方規格。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 檢測方法', note: '說明證據強度與「無訊號」的正確解讀。' },
+        ],
+      },
+    },
+    'blog/how-to-detect-ai-videos': {
+      title: '如何判斷 AI 生成影片？MP4 Metadata、C2PA 與影格浮水印實測',
+      description: '從原始 MP4/MOV 依序檢查 C2PA、容器 metadata、SEI marker、檔名與抽樣影格浮水印，並用 Google Veo 真實樣本說明證據強弱。',
+      h1: '如何判斷 AI 生成影片？從原始 MP4/MOV 的內部證據開始',
+      meta: '主要關鍵字：AI 影片檢測 · 更新：2026-07-10 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-07-10',
+      lead: 'AI 影片畫質已經不適合只靠「看起來怪不怪」判斷。較可靠的流程是先保留原始 MP4/MOV，依序讀取 C2PA/JUMBF、ftyp 與 box tree、udta/meta/ilst 的 encoder/tool/software、AIGC 標籤、SEI marker 與檔名；容器沒有線索時，才抽樣影格檢查可見或不可見浮水印。',
+      directAnswer: {
+        heading: '直接答案：依照「容器 → 位元流 → 影格」三層檢查',
+        body: '有效 C2PA manifest 若宣告 trainedAlgorithmicMedia 或明確的生成式 AI claim generator，是最強的可說明證據。MP4 工具欄位、AIGC 標籤與 SEI marker 是補助訊號；影格浮水印則是 metadata 消失時的後備檢查。完全沒有命中，仍不能證明影片一定由真人拍攝。',
+      },
+      sampleHeading: '真實影片樣本與實際結果',
+      sampleRows: [
+        ['Google Veo 原始 MP4', '網站可載入的使用者提供樣本。含有效的 Google Generative AI C2PA、digitalSourceType = trainedAlgorithmicMedia，以及 MP4 encoding tool = Google；憑證不在目前信任清單，所以顯示 valid。'],
+        ['C2PA 內的 SynthID 描述', 'manifest 記錄了不可見 SynthID watermark。這是內容憑證裡的來源宣告，不代表 AICheck365 已從像素獨立驗證 Google SynthID。'],
+        ['瀏覽器處理流程', '先以 Rust/WASM 掃描 C2PA 與 MP4 容器；只有需要影格後備分析時，才延遲載入 ffmpeg.wasm 並擷取多個時間點。'],
+      ],
+      signalRows: [
+        ['C2PA / JUMBF', '檢查簽章狀態、digitalSourceType、claim generator 與生成 actions。簽章有效且明確宣告 AI 來源時，證據最容易驗證與說明。'],
+        ['MP4/MOV 容器 metadata', '讀取 ftyp brand、box tree、udta/meta/ilst、encoder、tool、software、©too、AIGC 字串及平台名稱。'],
+        ['SEI marker', '位於視訊位元流中的已知工具字串。remux 後可能保留，但重新編碼通常會消失，因此屬於中弱度補助線索。'],
+        ['抽樣影格浮水印', '當容器層沒有命中時，擷取數個時間點的影格，檢查已知的可見角標與不可見模式；它不是通用 AI 分類器。'],
+      ],
+      steps: {
+        heading: 'AI 影片檢測的五個步驟',
+        items: [
+          ['取得原始影片', '優先使用生成平台直接下載的 MP4/MOV，而不是社群平台下載、錄屏或剪輯後重新輸出的版本。'],
+          ['先查 MP4/MOV 容器', '用 metadata inspector 查看 box 路徑、encoding tool、software、AIGC 標籤、平台字串與 C2PA 位置。'],
+          ['閱讀 C2PA 內容與狀態', '確認簽章是否 valid、有沒有竄改錯誤，以及 manifest 是否真的以 digitalSourceType 或 claim generator 宣告 AI 生成。'],
+          ['再查 SEI 與抽樣影格', '容器沒有結果時，才執行完整檢測，掃描 SEI marker 並以多個影格做浮水印後備分析。'],
+          ['記錄轉檔與取得歷程', '保存原始來源、取得日期、是否剪輯或轉碼，以及檢測時間與結果，避免把「無訊號」誤讀為真人製作。'],
+        ],
+      },
+      limits: [
+        'YouTube、Facebook、Instagram、LINE 等平台的轉碼，以及剪輯軟體重新輸出、錄屏，都可能移除 C2PA、容器欄位與 SEI。',
+        'manifest 提到不可見浮水印，不等於第三方工具能直接從影格驗證該專有浮水印。',
+        '影格分析只檢查目前已知模式，不能取代來源查核、原始檔保存或專業鑑識。',
+        '大型影片擷取影格會使用較多記憶體與時間，部分瀏覽器或編碼格式可能無法完成。',
+      ],
+      ctaLead: '先使用輕量的 MP4/MOV metadata inspector；需要影格浮水印後備分析時，再開啟完整本機檢測器。',
+      ctas: [
+        { href: '/en/tools/mp4-metadata-inspector/', label: '檢查 MP4/MOV metadata', localized: false },
+        { href: '/en/tools/c2pa-validator/', label: '驗證 C2PA manifest', localized: false },
+        { href: '/', label: '執行包含影格分析的完整檢測' },
+      ],
+      faq: [
+        ['只看畫面能判斷 AI 影片嗎？', '高品質生成影片很難靠肉眼穩定判斷。應先查原始檔的 C2PA、容器欄位與取得歷程，再把視覺異常當補充。'],
+        ['社群平台下載的影片還能檢測嗎？', '有時仍會留下檔名或少量訊號，但平台通常會重新編碼並清除 metadata；沒有結果也不能排除 AI 生成。'],
+        ['C2PA 寫著 SynthID 就等於已驗證浮水印嗎？', '不是。那是 manifest 內的宣告。AICheck365 不會把這段文字誤稱為已從像素獨立驗證 Google SynthID。'],
+        ['影片會上傳到伺服器嗎？', '不會。容器解析與支援的影格處理都在瀏覽器本機執行。'],
+      ],
+      sources: {
+        heading: '資料來源與驗證紀錄',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 公開樣本紀錄', note: '包含 Veo MP4 的來源、測試日期、C2PA/MP4 訊號與已知限制。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: '包含 BMFF 內容憑證與簽章驗證規格。', localized: false },
+          { href: 'https://github.com/MatrixA/aicheck/blob/main/src/mp4_metadata_core.rs', label: 'aicheck MP4 metadata parser', note: 'MP4 欄位、AIGC 標籤與 SEI marker 的實作紀錄。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 檢測方法', note: '說明影片證據分層、信心等級與限制。' },
+        ],
+      },
+    },
+  },
+  ja: {
+    'blog/how-to-detect-ai-images': {
+      title: 'AI画像の見分け方：C2PA・EXIF・PNGメタデータを原本で確認',
+      description: 'AI生成画像かを調べる実践手順。元画像のC2PA署名、EXIF/XMP、PNG text、ComfyUI workflowを実サンプルで確認し、証拠の強さと限界を整理します。',
+      h1: 'AI画像の見分け方：見た目より先に元ファイルを確認する',
+      meta: '主要キーワード：AI画像 見分け方 · 更新日：2026-07-10 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-10',
+      lead: 'AI画像を見分けるとき、指や文字の崩れだけで断定するのは危険です。まず生成元から保存された元画像を保全し、C2PA Content Credentials、EXIF/XMP、PNG text chunk、ComfyUI workflow、ファイル名の順に調べます。AICheck365 はこれらをブラウザ内で解析し、検証可能な署名と編集可能なメタデータを分けて表示します。',
+      directAnswer: {
+        heading: '結論：単一のAI判定率ではなく、元画像に残る来歴証拠を重ねます',
+        body: '最も説明しやすいのは、C2PA署名が有効で digitalSourceType が trainedAlgorithmicMedia を示すケースです。次にXMP/EXIFの生成ツール名、PNGのprompt/workflowが補助証拠になります。ファイル名や見た目だけの違和感は弱い手掛かりです。何も見つからなくても、人間が作った画像だとは証明できません。',
+      },
+      sampleHeading: '実際に確認できる検証サンプル',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'Content Authenticity Initiative の実サンプル。C2PA の digitalSourceType = trainedAlgorithmicMedia と暗号学的に有効な署名を確認できます。署名証明書は現在の信頼リスト外のため、表示は trusted ではなく valid です。'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'ComfyUI 公式例の元PNG。prompt と workflow のテキストチャンク、および未署名の生成パラメータを確認できます。'],
+        ['来歴メタデータのない JPEG', '「読み取り可能な証拠なし」となります。この結果だけでは、通常写真と来歴情報を削除したAI画像を区別できません。'],
+      ],
+      signalRows: [
+        ['C2PA Content Credentials', '有効な署名付きmanifestがAI生成を宣言していれば強い証拠です。署名の有効性、信頼状態、digitalSourceType、claim generatorを別々に確認します。'],
+        ['XMP / EXIF', 'DigitalSourceType、CreatorTool、Credit、Software、UserCommentなどに生成ツール名やAIGCラベルが残る場合があります。署名されていなければ編集可能です。'],
+        ['PNG text / workflow', 'Stable Diffusion、AUTOMATIC1111、ComfyUIなどはprompt、seed、sampler、CFG、model、workflow JSONをPNGに保存することがあります。'],
+        ['ファイル名と視覚的特徴', 'プラットフォーム名を含むファイル名、文字や反射の不整合は調査の入口にはなりますが、単独では出所証明になりません。'],
+      ],
+      steps: {
+        heading: 'AI画像を確認する5つの手順',
+        items: [
+          ['元画像を保全する', 'SNSの保存画像やスクリーンショットではなく、可能なら生成サービスや送信者から直接得たファイルをコピーして調べます。'],
+          ['ローカル検出を実行する', 'AICheck365 に画像を読み込ませ、C2PA、XMP/EXIF、PNG text、ファイル名の結果をまとめて確認します。ファイルはブラウザ外へ送信されません。'],
+          ['C2PAの状態を読む', 'manifestが存在するだけでなく、署名がvalidか、改変エラーがないか、AI生成を示すdigitalSourceTypeがあるかを確認します。'],
+          ['補助メタデータを照合する', 'ツール名、モデル、prompt、workflowが互いに矛盾しないかを見ます。未署名フィールドは書き換え可能なので、単独で断定しません。'],
+          ['入手経路と限界を記録する', '元URL、受領日時、編集履歴、検出結果を一緒に残します。視覚的な違和感は最後の補助確認として扱います。'],
+        ],
+      },
+      limits: [
+        'SNS、メッセージアプリ、画像最適化、再保存、スクリーンショットでC2PAやXMP、PNG textが消えることがあります。',
+        '未署名のEXIF/XMPやworkflow JSONは編集・複製できるため、法的な真正性証明ではありません。',
+        'C2PAが有効でも、そのmanifestが何を宣言しているかを読む必要があります。単に署名があるだけでAI生成とは限りません。',
+        'メタデータがない結果は「このコピーから読める証拠がない」という意味であり、非AI画像の証明ではありません。',
+      ],
+      ctaLead: 'まず全体検出で証拠の有無を確認し、必要に応じてC2PA検証とPNG workflow抽出で詳細を掘り下げてください。',
+      ctas: [
+        { href: '/', label: 'ブラウザ内で画像を確認' },
+        { href: '/en/tools/c2pa-validator/', label: 'C2PA署名を詳しく検証', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNGパラメータを抽出', localized: false },
+      ],
+      faq: [
+        ['AI画像を100%見分けられますか？', 'いいえ。現在のファイルに残る既知の来歴シグナルを示すツールです。証拠が削除された画像や未対応の生成経路は判定できない場合があります。'],
+        ['C2PAがあれば必ずAI画像ですか？', 'いいえ。C2PAは来歴を記録する仕組みです。manifest内のdigitalSourceTypeや生成アクションがAI生成を示しているかを確認してください。'],
+        ['EXIFにSoftware名があれば証明になりますか？', '補助的な出所シグナルにはなりますが、通常のEXIFは編集できるため署名付き証拠ではありません。'],
+        ['画像はサーバーへアップロードされますか？', 'いいえ。解析はブラウザ内でローカルに実行されます。'],
+      ],
+      sources: {
+        heading: '参照資料と検証記録',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 公開サンプル記録', note: 'サンプルの出所、試験日、実際のシグナル、既知の限界を掲載しています。', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Firefly C2PAサンプルの公開元です。', localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 公式examples', note: 'workflow付きSDXL PNGサンプルの出所です。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'manifest、署名、assertionの公式仕様です。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 検出方法', note: '証拠の強さと「シグナルなし」の扱いを説明します。' },
+        ],
+      },
+    },
+    'blog/how-to-detect-ai-videos': {
+      title: 'AI生成動画の見分け方：MP4メタデータ・C2PA・透かしを確認',
+      description: 'AI生成動画の確認手順を実サンプルで解説。元のMP4/MOVからC2PA、コンテナmetadata、SEI marker、ファイル名、抽出フレーム透かしを順に調べます。',
+      h1: 'AI生成動画の見分け方：元のMP4/MOVを内側から確認する',
+      meta: '主要キーワード：AI生成動画 見分け方 · 更新日：2026-07-10 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-10',
+      lead: '高品質なAI動画は見た目だけでは判断しにくくなっています。そこで、元のMP4/MOVに残るC2PA/JUMBF、ftypとbox tree、udta/meta/ilstのtool・software情報、AIGCラベル、SEI marker、ファイル名を先に確認し、最後に抽出フレームの透かしを補助的に調べます。再エンコードや画面録画の前に原本を確保することが最も重要です。',
+      directAnswer: {
+        heading: '結論：AI動画は「コンテナ → ビットストリーム → フレーム」の順で確認します',
+        body: '元動画に有効なC2PAがあり、trainedAlgorithmicMediaや生成AIのclaim generatorが示されていれば強い来歴証拠です。MP4のencoder/tool、AIGCラベル、SEI markerは補助証拠です。フレーム透かしはメタデータが空のときのフォールバックであり、何も検出されないことは人間制作の証明ではありません。',
+      },
+      sampleHeading: '実際の動画サンプルで確認したこと',
+      sampleRows: [
+        ['Google Veo MP4', 'ユーザー提供の元動画。Google Generative AIの有効なC2PA、digitalSourceType = trainedAlgorithmicMedia、MP4 encoding tool = Googleを確認できます。署名証明書は現在の信頼リスト外なのでvalid表示です。'],
+        ['C2PA内のSynthID記述', 'manifestは不可視のSynthID watermarkを記録しています。これはC2PA内の宣言であり、AICheck365がピクセルからSynthIDを独立検証したという意味ではありません。'],
+        ['ブラウザ解析経路', 'Rust/WASMのC2PA・MP4スキャナーを先に実行し、必要な場合だけffmpeg.wasmを遅延読み込みして複数フレームを解析します。'],
+      ],
+      signalRows: [
+        ['C2PA / JUMBF', '署名状態、digitalSourceType、claim generator、生成アクションを確認します。AI生成を明示する有効なmanifestは最も説明しやすい証拠です。'],
+        ['MP4/MOVコンテナ', 'ftyp brand、box tree、udta/meta/ilst、encoder、tool、software、©too、AIGC文字列、プラットフォーム名を調べます。'],
+        ['SEI marker', '動画ビットストリーム内の既知ツール文字列です。remuxでは残る場合がありますが、再エンコードでは失われやすい補助証拠です。'],
+        ['抽出フレームの透かし', 'コンテナで手掛かりがない場合、複数時点のフレームを抽出し、可視・不可視の既知パターンを補助的に確認します。'],
+      ],
+      steps: {
+        heading: 'AI生成動画を確認する5つの手順',
+        items: [
+          ['元動画を入手する', 'SNSダウンロード、画面録画、編集後の書き出しより、生成サービスから直接保存されたMP4/MOVを優先します。'],
+          ['MP4/MOVメタデータを確認する', 'box tree、encoding tool、software、AIGCラベル、C2PA文字列がどの階層で見つかったかを確認します。'],
+          ['C2PAの内容と状態を読む', 'manifestの存在だけでなく、署名がvalidか、AI生成を示すdigitalSourceTypeやclaim generatorがあるかを見ます。'],
+          ['SEIとフレームを補助確認する', 'コンテナ情報が空なら、既知SEI markerと抽出フレームの透かし解析を実行します。弱い信号だけで断定しません。'],
+          ['変換履歴と結果を保存する', 'どこから入手したか、再エンコードや編集の有無、検出日時と結果を一緒に記録します。'],
+        ],
+      },
+      limits: [
+        'SNSのトランスコード、編集ソフトの再書き出し、画面録画はC2PAやMP4フィールド、SEIを削除・上書きします。',
+        'C2PA manifestに透かしの記述があっても、第三者がその不可視透かしをピクセルから検証できるとは限りません。',
+        'フレーム解析は既知パターンへの補助チェックであり、汎用的なAI動画分類器や法的鑑定ではありません。',
+        '大きな動画のフレーム抽出は時間と端末メモリを使い、ブラウザや形式によって完了しない場合があります。',
+      ],
+      ctaLead: '最初に軽量なMP4/MOVメタデータ検査を行い、必要な場合だけフレーム解析を含む全体検出へ進んでください。',
+      ctas: [
+        { href: '/en/tools/mp4-metadata-inspector/', label: 'MP4/MOVメタデータを確認', localized: false },
+        { href: '/en/tools/c2pa-validator/', label: 'C2PA manifestを検証', localized: false },
+        { href: '/', label: 'フレーム解析を含む全体検出' },
+      ],
+      faq: [
+        ['AI動画を見た目だけで判定できますか？', '高品質な生成動画では難しく、誤判定しやすいため、元ファイルの来歴情報と入手経路を先に確認してください。'],
+        ['再投稿された動画でも検出できますか？', '手掛かりが残る場合はありますが、再エンコードでC2PA、container metadata、SEIが消えることが多く、検出なしでもAI生成を否定できません。'],
+        ['C2PAにSynthIDと書かれていれば透かしを検証済みですか？', 'いいえ。その記述はmanifest内の来歴宣言です。AICheck365がGoogleのSynthIDをピクセルから独立検証したという意味ではありません。'],
+        ['動画はアップロードされますか？', 'いいえ。コンテナ解析と対応するフレーム処理はブラウザ内で実行されます。'],
+      ],
+      sources: {
+        heading: '参照資料と検証記録',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 公開サンプル記録', note: 'Veo MP4の出所、試験日、C2PA・MP4シグナル、既知の限界を掲載しています。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'BMFF内のmanifestと署名検証を含む公式仕様です。', localized: false },
+          { href: 'https://github.com/MatrixA/aicheck/blob/main/src/mp4_metadata_core.rs', label: 'aicheck MP4 metadata parser', note: 'box field、AIGC label、SEI markerの実装記録です。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 検出方法', note: '動画で証拠を重ねる順序と限界を説明します。' },
+        ],
+      },
+    },
+  },
   de: {
     'blog/how-to-detect-ai-videos': {
       title: 'Videoerkennung: AI-Videos über MP4-Metadaten, C2PA und Wasserzeichen prüfen',
@@ -835,9 +1173,35 @@ const priorityArticleProfiles = {
 
 const priorityPlatformProfile = platform ? priorityPlatformProfiles[lang]?.[platform.slug] : null;
 const priorityArticleProfile = priorityArticleProfiles[lang]?.[path] ?? null;
-const profileHref = (cta) => cta.localized === false ? cta.href : localHref(cta.href);
+const isExternalHref = (href) => /^https?:\/\//i.test(href);
+const profileHref = (link) => (link.localized === false || isExternalHref(link.href)) ? link.href : localHref(link.href);
+const absoluteProfileHref = (link) => {
+  const href = profileHref(link);
+  return isExternalHref(href) ? href : `${SITE_URL}${href}`;
+};
+const profileCitations = (profile) => profile.sources?.items?.map(absoluteProfileHref) ?? [];
 
-function jsonLdBase(type, name, description) {
+function profileHowToJsonLd(profile) {
+  if (!profile.steps?.items?.length) return [];
+  const pageUrl = `${SITE_URL}${prefix}/${path}/`;
+  return [{
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: profile.steps.heading,
+    description: profile.directAnswer?.body ?? profile.description,
+    url: pageUrl,
+    inLanguage: lang,
+    step: profile.steps.items.map(([name, text], index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name,
+      text,
+      url: `${pageUrl}#step-${index + 1}`,
+    })),
+  }];
+}
+
+function jsonLdBase(type, name, description, dateModified = modifiedAt, citations = []) {
   const pageUrl = `${SITE_URL}${prefix}/${path}/`;
   return [
     {
@@ -858,10 +1222,11 @@ function jsonLdBase(type, name, description) {
       inLanguage: lang,
       isAccessibleForFree: true,
       datePublished: publishedAt,
-      dateModified: modifiedAt,
+      dateModified,
       mainEntityOfPage: pageUrl,
       author: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
       publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+      ...(citations.length ? { citation: citations } : {}),
     },
   ];
 }
@@ -912,7 +1277,8 @@ if (priorityPlatformProfile) {
   pageTitle = priorityPlatformProfile.title;
   pageDescription = priorityPlatformProfile.description;
   jsonLd = [
-    ...jsonLdBase('Article', pageTitle, pageDescription),
+    ...jsonLdBase('Article', pageTitle, pageDescription, priorityPlatformProfile.updatedAt ?? modifiedAt, profileCitations(priorityPlatformProfile)),
+    ...profileHowToJsonLd(priorityPlatformProfile),
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -929,7 +1295,8 @@ if (priorityArticleProfile) {
   pageTitle = priorityArticleProfile.title;
   pageDescription = priorityArticleProfile.description;
   jsonLd = [
-    ...jsonLdBase('Article', pageTitle, pageDescription),
+    ...jsonLdBase('Article', pageTitle, pageDescription, priorityArticleProfile.updatedAt ?? modifiedAt, profileCitations(priorityArticleProfile)),
+    ...profileHowToJsonLd(priorityArticleProfile),
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -1016,6 +1383,13 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <p class="article-meta">{priorityArticleProfile.meta}</p>
         <p class="lead-text">{priorityArticleProfile.lead}</p>
 
+        {priorityArticleProfile.directAnswer && (
+          <section id="direct-answer" class="priority-direct-answer" data-content-section="direct-answer">
+            <h2>{priorityArticleProfile.directAnswer.heading}</h2>
+            <p>{priorityArticleProfile.directAnswer.body}</p>
+          </section>
+        )}
+
         <h2>{priorityArticleProfile.sampleHeading}</h2>
         <table class="tool-glossary">
           <tbody>
@@ -1029,6 +1403,17 @@ const articles = Object.keys(pageTitles).map((slug) => ({
             {priorityArticleProfile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
           </tbody>
         </table>
+
+        {priorityArticleProfile.steps?.items?.length > 0 && (
+          <section data-content-section="steps">
+            <h2>{priorityArticleProfile.steps.heading}</h2>
+            <ol class="content-list priority-steps">
+              {priorityArticleProfile.steps.items.map(([label, detail], index) => (
+                <li id={`step-${index + 1}`}><strong>{label}</strong> — {detail}</li>
+              ))}
+            </ol>
+          </section>
+        )}
 
         <h2>{c.sections.limits}</h2>
         <ul class="content-list">
@@ -1051,6 +1436,23 @@ const articles = Object.keys(pageTitles).map((slug) => ({
             </details>
           ))}
         </div>
+
+        {priorityArticleProfile.sources?.items?.length > 0 && (
+          <section id="sources" data-content-section="sources">
+            <h2>{priorityArticleProfile.sources.heading}</h2>
+            <ul class="content-list source-list">
+              {priorityArticleProfile.sources.items.map((source) => (
+                <li>
+                  <a
+                    href={profileHref(source)}
+                    target={isExternalHref(source.href) ? '_blank' : undefined}
+                    rel={isExternalHref(source.href) ? 'noopener' : undefined}
+                  >{source.label}</a>{source.note && <> — {source.note}</>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </article>
     )}
 
@@ -1085,6 +1487,13 @@ const articles = Object.keys(pageTitles).map((slug) => ({
           <p class="article-meta">{priorityPlatformProfile.meta}</p>
           <p class="lead-text">{priorityPlatformProfile.lead}</p>
 
+          {priorityPlatformProfile.directAnswer && (
+            <section id="direct-answer" class="priority-direct-answer" data-content-section="direct-answer">
+              <h2>{priorityPlatformProfile.directAnswer.heading}</h2>
+              <p>{priorityPlatformProfile.directAnswer.body}</p>
+            </section>
+          )}
+
           <h2>{priorityPlatformProfile.sampleHeading}</h2>
           <table class="tool-glossary">
             <tbody>
@@ -1098,6 +1507,17 @@ const articles = Object.keys(pageTitles).map((slug) => ({
               {priorityPlatformProfile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
             </tbody>
           </table>
+
+          {priorityPlatformProfile.steps?.items?.length > 0 && (
+            <section data-content-section="steps">
+              <h2>{priorityPlatformProfile.steps.heading}</h2>
+              <ol class="content-list priority-steps">
+                {priorityPlatformProfile.steps.items.map(([label, detail], index) => (
+                  <li id={`step-${index + 1}`}><strong>{label}</strong> — {detail}</li>
+                ))}
+              </ol>
+            </section>
+          )}
 
           <h2>{c.sections.limits}</h2>
           <ul class="content-list">
@@ -1120,6 +1540,23 @@ const articles = Object.keys(pageTitles).map((slug) => ({
               </details>
             ))}
           </div>
+
+          {priorityPlatformProfile.sources?.items?.length > 0 && (
+            <section id="sources" data-content-section="sources">
+              <h2>{priorityPlatformProfile.sources.heading}</h2>
+              <ul class="content-list source-list">
+                {priorityPlatformProfile.sources.items.map((source) => (
+                  <li>
+                    <a
+                      href={profileHref(source)}
+                      target={isExternalHref(source.href) ? '_blank' : undefined}
+                      rel={isExternalHref(source.href) ? 'noopener' : undefined}
+                    >{source.label}</a>{source.note && <> — {source.note}</>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </article>
         <div class="platform-disclaimer card" role="note">
           <p>{platformDisclaimer}</p>

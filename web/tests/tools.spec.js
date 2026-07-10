@@ -55,12 +55,18 @@ test('Tools nav link points to the localized English tools hub', async ({ page }
   await expect(link).toHaveText('Tools');
 });
 
-test('Tools nav link stays root-only for locales without tool translations yet', async ({ page }) => {
-  await page.goto('/es/');
-  const link = page.locator('.site-nav a[data-i18n="nav.tools"]');
-  await expect(link).toHaveAttribute('href', '/tools/');
-  await expect(link).toHaveAttribute('data-no-localize', 'true');
-  await expect(link).toHaveText('Herramientas');
+test('Tools nav falls back to English outside Chinese locales', async ({ page }) => {
+  for (const locale of ['ja', 'ko', 'de', 'fr', 'es', 'pt-BR']) {
+    await page.goto(`/${locale}/`);
+    const link = page.locator('.site-nav a[data-i18n="nav.tools"]');
+    await expect(link).toHaveAttribute('href', '/en/tools/');
+    await expect(link).toHaveAttribute('data-no-localize', 'true');
+  }
+
+  await page.goto('/zh-TW/');
+  const traditionalChineseLink = page.locator('.site-nav a[data-i18n="nav.tools"]');
+  await expect(traditionalChineseLink).toHaveAttribute('href', '/tools/');
+  await expect(traditionalChineseLink).toHaveAttribute('data-no-localize', 'true');
 });
 
 test('C2PA tool body copy is server-rendered (works with JS disabled)', async ({ browser }) => {
@@ -281,7 +287,7 @@ test('tool pages emit only the available zh-CN and en hreflang alternates', asyn
     );
     await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(3);
     await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
-      'href', `https://www.aicheck365.com${route}`
+      'href', `https://www.aicheck365.com/en${route}`
     );
     await expect(page.locator('link[rel="alternate"][hreflang="zh-CN"]')).toHaveAttribute(
       'href', `https://www.aicheck365.com${route}`
@@ -296,6 +302,9 @@ test('tool pages emit only the available zh-CN and en hreflang alternates', asyn
       'href', `https://www.aicheck365.com/en${route}`
     );
     await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(3);
+    await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+      'href', `https://www.aicheck365.com/en${route}`
+    );
     await expect(page.locator('link[rel="alternate"][hreflang="zh-CN"]')).toHaveAttribute(
       'href', `https://www.aicheck365.com${route}`
     );
@@ -314,5 +323,7 @@ test('language switch keeps supported tool paths and avoids unsupported tool loc
 
   await page.locator('#lang-switch').selectOption('es');
   await page.waitForURL('/es/');
-  await expect(page.locator('.site-nav a[data-i18n="nav.tools"]')).toHaveAttribute('href', '/tools/');
+  const toolsLink = page.locator('.site-nav a[data-i18n="nav.tools"]');
+  await expect(toolsLink).toHaveAttribute('href', '/en/tools/');
+  await expect(toolsLink).toHaveAttribute('data-no-localize', 'true');
 });

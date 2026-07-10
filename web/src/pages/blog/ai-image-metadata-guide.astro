@@ -17,8 +17,12 @@ const jsonLd = [
     "headline": "AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 全解析",
     "description": "逐字节拆解 AI 平台写入图片和视频的元数据：EXIF UserComment 里的 AIGC JSON、XMP DigitalSourceType、PNG tEXt 生成参数、MP4 ilst 与 SEI marker。",
     "url": "https://www.aicheck365.com/blog/ai-image-metadata-guide/",
-    "datePublished": "2025-04-01",
-    "dateModified": "2026-06-09",
+    "datePublished": "2026-05-24",
+    "dateModified": "2026-07-10",
+    "inLanguage": "zh-CN",
+    "isAccessibleForFree": true,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/ai-image-metadata-guide/" },
+    "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   }
 ];
@@ -37,7 +41,8 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>AI 媒体元数据完整指南：EXIF、XMP、C2PA、PNG tEXt、MP4 全解析</h1>
-      <p class="article-meta">2025年4月发布 · 2026年6月更新 · 技术深度 · 元数据</p>
+      <p class="article-meta">2026年5月发布 · 2026年7月更新 · 技术深度 · 元数据</p>
+      <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">几乎每个 AI 生成平台都会在导出的文件里留下点东西。有的写得大大方方，比如 Stable Diffusion 把完整提示词塞进 PNG 文本块；有的藏得很深，比如 Gemini 的 XMP 块可能出现在文件几 MB 之后的位置；还有的用了加密签名（C2PA）。这篇文章按文件格式逐一拆解这些元数据到底存在哪、长什么样、怎么读。文中提到的字段名、chunk 名和偏移量都来自 AICheck365 检测器的实际实现，不是泛泛而谈。</p>
 
@@ -151,6 +156,13 @@ exiftool -b -UserComment image.jpg
 # 提取 XMP 原文
 exiftool -xmp -b image.jpg</code></pre>
       <p>C2PA 用官方的 <code>c2patool</code> 或 Adobe 的 <a href="https://contentcredentials.org/verify" rel="noopener" target="_blank">contentcredentials.org/verify</a> 可以做完整的签名链验证。如果只是想快速看一个文件里有没有 AI 来源信号、不想装工具，<a href="/">AICheck365</a> 在浏览器里就能把上面提到的所有位置扫一遍——文件在本地解析，不会上传。</p>
+
+      <h2>来源与复现</h2>
+      <ul class="content-list">
+        <li><a href="https://c2pa.org/specifications/" rel="noopener" target="_blank">C2PA Specifications</a>：JUMBF、manifest、签名与文件嵌入方式。</li>
+        <li><a href="https://cv.iptc.org/newscodes/digitalsourcetype/" rel="noopener" target="_blank">IPTC Digital Source Type vocabulary</a>：<code>trainedAlgorithmicMedia</code> 等受控值的定义。</li>
+        <li><a href="https://exiftool.org/" rel="noopener" target="_blank">ExifTool</a> 与 <a href="/research/ai-media-provenance-report-2026-q3/">AICheck365 2026 Q3 实验汇总</a>：用于复查文中的字段和真实样本结果。</li>
+      </ul>
 
       <div class="cta-box">
         <p>把你手里的图片或视频拖进来，看看里面留了哪些来源信号</p>

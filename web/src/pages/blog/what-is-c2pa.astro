@@ -25,8 +25,12 @@ const jsonLd = [
     "headline": "C2PA 是什么？AI 图片/视频溯源标准完整解读",
     "description": "从 JUMBF 容器、manifest 结构、COSE 签名到 digitalSourceType 词表，拆解 C2PA 的技术实现，以及它在 JPEG APP11、PNG caBX、MP4 uuid box 中的存放方式。",
     "url": "https://www.aicheck365.com/blog/what-is-c2pa/",
-    "datePublished": "2025-04-01",
-    "dateModified": "2026-06-09",
+    "datePublished": "2026-05-24",
+    "dateModified": "2026-07-10",
+    "inLanguage": "zh-CN",
+    "isAccessibleForFree": true,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/what-is-c2pa/" },
+    "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
   },
   {
@@ -54,7 +58,8 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>C2PA 是什么？AI 图片/视频溯源标准完整解读</h1>
-      <p class="article-meta">2025年4月发布 · 2026年6月更新 · 内容溯源 · 行业标准</p>
+      <p class="article-meta">2026年5月发布 · 2026年7月更新 · 内容溯源 · 行业标准</p>
+      <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">普通元数据（EXIF、XMP）的问题是谁都能改：一行 exiftool 命令就能把"Midjourney"改成"Canon EOS R5"。C2PA（Coalition for Content Provenance and Authenticity）解决的就是这个问题——它把内容的来源记录做成带数字签名的 manifest 嵌进文件，改动任何一个字节，签名校验就会失败。这让它成为目前 AI 内容溯源里唯一具备防篡改能力的方案。</p>
 
@@ -127,6 +132,13 @@ const jsonLd = [
         <li><strong>只能证有，不能证无。</strong>没有 C2PA 的图片可能是真照片，也可能出自不写 C2PA 的工具，或者被洗过元数据。</li>
         <li><strong>覆盖不了不合作的生成方。</strong>本地跑 Stable Diffusion 的人不会给自己的图签 AI 标记。</li>
         <li><strong>"有签名"不等于"可信"。</strong>验证时要看签名方是谁，任何人都能用自己的证书签 manifest。</li>
+      </ul>
+
+      <h2>来源与复现</h2>
+      <ul class="content-list">
+        <li><a href="https://c2pa.org/specifications/" rel="noopener" target="_blank">C2PA Specifications</a>：规范正文、勘误和实现指南。</li>
+        <li><a href="https://github.com/contentauth/c2pa-rs" rel="noopener" target="_blank">contentauth/c2pa-rs</a>：AICheck365 使用的开源 C2PA 实现。</li>
+        <li><a href="https://contentcredentials.org/verify" rel="noopener" target="_blank">Content Credentials Verify</a> 与 <a href="/research/c2pa-conformance-images-2026-06/">AICheck365 conformance 实验</a>：用于对照完整验证、篡改和无 manifest 状态。</li>
       </ul>
 
       <div class="cta-box">
