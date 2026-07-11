@@ -48,7 +48,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "aicheck365"
+name = "aicheck"
 version = "0.2.0"
 dependencies = [
  "anyhow",

@@ -39,7 +39,7 @@ cargo install --path .
 ```
 
 > [Rust 1.86+](https://rust-lang.org/tools/install/) 필요.
-> 참고: `cargo install aicheck`는 [MatrixA/aicheck](https://github.com/MatrixA/aicheck)가 crates.io에 배포한 업스트림 버전을 설치하며, 이 저장소의 변경 사항은 포함되지 않습니다. 이 저장소의 변경 사항을 사용해 보려면 소스에서 빌드하세요. 이 저장소는 `aicheck365`라는 패키지 이름으로 crates.io에 배포됩니다(`aicheck`는 업스트림이 이미 사용 중). 배포 후에는 `cargo install aicheck365`로 설치할 수 있습니다.
+> 참고: `cargo install aicheck`는 [MatrixA/aicheck](https://github.com/MatrixA/aicheck)가 crates.io에 배포한 업스트림 버전을 설치하며, 이 저장소의 변경 사항은 포함되지 않습니다. 이 저장소의 변경 사항을 사용해 보려면 소스에서 빌드하세요.
 
 ```bash
 aic check photo.jpg
