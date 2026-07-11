@@ -193,6 +193,18 @@ aic info photo.jpg
 
 ---
 
+## 🔗 Más Recursos
+
+- [AICheck365](https://www.aicheck365.com/es/) — detector de imágenes y video con IA, gratis y en línea, sin instalación
+- [Validador de C2PA](https://www.aicheck365.com/en/tools/c2pa-validator/) (en inglés) — verifica firmas de procedencia C2PA de imágenes/video en línea
+- [Metodología de detección y limitaciones](https://www.aicheck365.com/es/methodology/)
+- [Cómo detectar imágenes generadas por IA](https://www.aicheck365.com/es/blog/how-to-detect-ai-images/)
+- [Cómo detectar videos generados por IA](https://www.aicheck365.com/es/blog/how-to-detect-ai-videos/)
+- [¿Qué es C2PA?](https://www.aicheck365.com/es/blog/what-is-c2pa/)
+- [Informe de retención de metadatos en plataformas de IA](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) (en chino) — pruebas reales de cuántos metadatos de procedencia sobreviven a la exportación desde Sora, Midjourney, Kling y más
+
+---
+
 ## 📄 Licencia
 
 [AGPL-3.0](../LICENSE)

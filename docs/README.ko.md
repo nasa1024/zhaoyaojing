@@ -193,6 +193,18 @@ aic info photo.jpg
 
 ---
 
+## 🔗 더 많은 자료
+
+- [AICheck365](https://www.aicheck365.com/ko/) — 무료 온라인 AI 이미지·동영상 감지 도구, 설치 불필요
+- [C2PA 검증 도구](https://www.aicheck365.com/en/tools/c2pa-validator/)(영어) — 이미지/동영상의 C2PA 출처 서명을 온라인으로 검증
+- [감지 방법론 및 한계](https://www.aicheck365.com/ko/methodology/)
+- [AI 생성 이미지 판별 방법](https://www.aicheck365.com/ko/blog/how-to-detect-ai-images/)
+- [AI 생성 동영상 판별 방법](https://www.aicheck365.com/ko/blog/how-to-detect-ai-videos/)
+- [C2PA란 무엇인가](https://www.aicheck365.com/ko/blog/what-is-c2pa/)
+- [AI 플랫폼 메타데이터 보존 리포트](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/)(중국어) — Sora, Midjourney, Kling 등에서 내보낸 파일에 출처 메타데이터가 얼마나 남는지 실측한 자료
+
+---
+
 ## 📄 라이선스
 
 [AGPL-3.0](../LICENSE)

@@ -193,6 +193,18 @@ aic info photo.jpg
 
 ---
 
+## 🔗 更多资源
+
+- [AICheck365 官网](https://www.aicheck365.com/) — 免费在线使用，无需安装
+- [C2PA 验证工具](https://www.aicheck365.com/tools/c2pa-validator/) — 在线校验图片/视频的 C2PA 来源签名
+- [检测方法论与局限性](https://www.aicheck365.com/methodology/)
+- [怎么判断图片是不是 AI 生成的](https://www.aicheck365.com/blog/how-to-detect-ai-images/)
+- [AI 视频检测指南](https://www.aicheck365.com/blog/how-to-detect-ai-videos/)
+- [C2PA 是什么](https://www.aicheck365.com/blog/what-is-c2pa/)
+- [AI 平台元数据留存报告](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) — Sora/Midjourney/Kling 等平台导出文件的溯源信号留存实测
+
+---
+
 ## 📄 许可证
 
 [AGPL-3.0](../LICENSE)

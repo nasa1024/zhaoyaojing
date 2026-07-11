@@ -193,6 +193,18 @@ aic info photo.jpg
 
 ---
 
+## 🔗 अधिक संसाधन
+
+- [AICheck365](https://www.aicheck365.com/en/) (अंग्रेज़ी में) — मुफ़्त ऑनलाइन AI इमेज व वीडियो डिटेक्टर, इंस्टॉल की ज़रूरत नहीं
+- [C2PA वैलिडेटर](https://www.aicheck365.com/en/tools/c2pa-validator/) (अंग्रेज़ी में) — इमेज/वीडियो के C2PA उत्पत्ति हस्ताक्षर ऑनलाइन जांचें
+- [डिटेक्शन मेथडोलॉजी और सीमाएं](https://www.aicheck365.com/en/methodology/) (अंग्रेज़ी में)
+- [AI-जनित इमेज कैसे पहचानें](https://www.aicheck365.com/en/blog/how-to-detect-ai-images/) (अंग्रेज़ी में)
+- [AI-जनित वीडियो कैसे पहचानें](https://www.aicheck365.com/en/blog/how-to-detect-ai-videos/) (अंग्रेज़ी में)
+- [C2PA क्या है?](https://www.aicheck365.com/en/blog/what-is-c2pa/) (अंग्रेज़ी में)
+- [AI प्लेटफ़ॉर्म मेटाडेटा रिटेंशन रिपोर्ट](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) (चीनी में) — Sora, Midjourney, Kling आदि से एक्सपोर्ट की गई फ़ाइलों में उत्पत्ति मेटाडेटा कितना बचता है, इसका वास्तविक परीक्षण
+
+---
+
 ## 📄 लाइसेंस
 
 [AGPL-3.0](../LICENSE)

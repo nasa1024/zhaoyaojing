@@ -193,6 +193,18 @@ aic info photo.jpg
 
 ---
 
+## 🔗 その他のリソース
+
+- [AICheck365](https://www.aicheck365.com/ja/) — 無料オンライン AI 画像・動画検出ツール、インストール不要
+- [C2PA 検証ツール](https://www.aicheck365.com/en/tools/c2pa-validator/)（英語）— 画像・動画の C2PA 来歴署名をオンラインで検証
+- [検出方法論と限界](https://www.aicheck365.com/ja/methodology/)
+- [AI生成画像の見分け方](https://www.aicheck365.com/ja/blog/how-to-detect-ai-images/)
+- [AI生成動画の見分け方](https://www.aicheck365.com/ja/blog/how-to-detect-ai-videos/)
+- [C2PAとは何か](https://www.aicheck365.com/ja/blog/what-is-c2pa/)
+- [AIプラットフォーム メタデータ保持レポート](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/)（中国語）— Sora、Midjourney、Kling などから書き出したファイルに来歴メタデータがどれだけ残るかを実測
+
+---
+
 ## 📄 ライセンス
 
 [AGPL-3.0](../LICENSE)
