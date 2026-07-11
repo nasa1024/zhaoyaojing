@@ -6,14 +6,15 @@
 
 **KI-generierte Inhalte erkennen. Offline. Keine API-Keys. Keine Einrichtung.**
 
-[![CI](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml/badge.svg)](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/aicheck)](https://crates.io/crates/aicheck)
+[![CI](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml/badge.svg)](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](../LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.86%2B-orange.svg)](https://www.rust-lang.org/)
 
 [Offizielle Website](https://www.aicheck365.com/)
 
 </div>
+
+> **Hinweis:** Dieses Projekt ist ein Fork von [MatrixA/aicheck](https://github.com/MatrixA/aicheck) unter der AGPL-3.0-Lizenz. Dank an den ursprünglichen Autor. Die wesentliche Ergänzung in diesem Repository ist eine lokale Browser-/WASM-Demo zur Bild- und Videoerkennung (siehe Verzeichnis `web/`). Dieses Repository steht ebenfalls unter **AGPL-3.0**; der vollständige Quellcode ist hier verfügbar.
 
 *Dieses virale Bild — KI oder echt?*
 *Welches Modell hat dieses Video generiert?*
@@ -32,10 +33,13 @@ AICheck beantwortet diese Fragen durch Analyse von Datei-Metadaten und unsichtba
 ## ⚡ Schnellstart
 
 ```bash
-cargo install aicheck
+git clone https://github.com/nasa1024/zhaoyaojing.git
+cd zhaoyaojing
+cargo install --path .
 ```
 
-> Erfordert [Rust 1.86+](https://rust-lang.org/tools/install/). Oder aus dem Quellcode bauen: `cargo install --path .`
+> Erfordert [Rust 1.86+](https://rust-lang.org/tools/install/).
+> Hinweis: `cargo install aicheck` installiert die von [MatrixA/aicheck](https://github.com/MatrixA/aicheck) auf crates.io veröffentlichte Upstream-Version, die die Änderungen dieses Repositorys nicht enthält. Baue aus dem Quellcode, um die Änderungen dieses Repositorys auszuprobieren.
 
 ```bash
 aic check photo.jpg
@@ -189,6 +193,20 @@ aic info photo.jpg
 
 ---
 
+## 🔗 Weitere Ressourcen
+
+- [AICheck365](https://www.aicheck365.com/de/) — kostenloser Online-KI-Bild- und Videodetektor, keine Installation nötig
+- [C2PA Validator](https://www.aicheck365.com/en/tools/c2pa-validator/) (Englisch) — C2PA-Herkunftssignaturen von Bildern/Videos online prüfen
+- [Erkennungsmethodik und Einschränkungen](https://www.aicheck365.com/de/methodology/)
+- [Wie man KI-generierte Bilder erkennt](https://www.aicheck365.com/de/blog/how-to-detect-ai-images/)
+- [Wie man KI-generierte Videos erkennt](https://www.aicheck365.com/de/blog/how-to-detect-ai-videos/)
+- [Was ist C2PA?](https://www.aicheck365.com/de/blog/what-is-c2pa/)
+- [AI Platform Metadata Retention Report](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) (Chinesisch) — Praxistests, wie viele Herkunftsmetadaten den Export von Sora, Midjourney, Kling und weiteren überstehen
+
+---
+
 ## 📄 Lizenz
 
 [AGPL-3.0](../LICENSE)
+
+Dieses Projekt ist ein Fork von [MatrixA/aicheck](https://github.com/MatrixA/aicheck) (AGPL-3.0); der Urheberrechtshinweis des ursprünglichen Autors bleibt in `LICENSE` erhalten.

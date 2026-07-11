@@ -6,14 +6,15 @@
 
 **AI-जनित सामग्री का पता लगाएं। ऑफ़लाइन। API कुंजी अनावश्यक। सेटअप अनावश्यक।**
 
-[![CI](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml/badge.svg)](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/aicheck)](https://crates.io/crates/aicheck)
+[![CI](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml/badge.svg)](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](../LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.86%2B-orange.svg)](https://www.rust-lang.org/)
 
 [आधिकारिक वेबसाइट](https://www.aicheck365.com/)
 
 </div>
+
+> **नोट:** यह प्रोजेक्ट [MatrixA/aicheck](https://github.com/MatrixA/aicheck) (AGPL-3.0 लाइसेंस) पर आधारित एक व्युत्पन्न (derivative) प्रोजेक्ट है। मूल लेखक का धन्यवाद। इस रिपॉज़िटरी में मुख्य जोड़ ब्राउज़र / WASM आधारित लोकल इमेज व वीडियो डिटेक्शन डेमो है (देखें `web/` डायरेक्टरी)। यह रिपॉज़िटरी भी **AGPL-3.0** के तहत ओपन-सोर्स है; पूरा सोर्स कोड यहीं उपलब्ध है।
 
 *वह वायरल इमेज — AI है या असली?*
 *यह वीडियो किस मॉडल ने बनाया?*
@@ -32,10 +33,13 @@ AICheck फ़ाइल मेटाडेटा और अदृश्य व�
 ## ⚡ त्वरित शुरुआत
 
 ```bash
-cargo install aicheck
+git clone https://github.com/nasa1024/zhaoyaojing.git
+cd zhaoyaojing
+cargo install --path .
 ```
 
-> [Rust 1.86+](https://rust-lang.org/tools/install/) आवश्यक। सोर्स से बिल्ड करें: `cargo install --path .`
+> [Rust 1.86+](https://rust-lang.org/tools/install/) आवश्यक।
+> नोट: `cargo install aicheck` [MatrixA/aicheck](https://github.com/MatrixA/aicheck) द्वारा crates.io पर प्रकाशित अपस्ट्रीम वर्शन इंस्टॉल करता है, जिसमें इस रिपॉज़िटरी के बदलाव शामिल नहीं हैं। इस रिपॉज़िटरी के बदलावों को आज़माने के लिए सोर्स से बिल्ड करें।
 
 ```bash
 aic check photo.jpg
@@ -189,6 +193,20 @@ aic info photo.jpg
 
 ---
 
+## 🔗 अधिक संसाधन
+
+- [AICheck365](https://www.aicheck365.com/en/) (अंग्रेज़ी में) — मुफ़्त ऑनलाइन AI इमेज व वीडियो डिटेक्टर, इंस्टॉल की ज़रूरत नहीं
+- [C2PA वैलिडेटर](https://www.aicheck365.com/en/tools/c2pa-validator/) (अंग्रेज़ी में) — इमेज/वीडियो के C2PA उत्पत्ति हस्ताक्षर ऑनलाइन जांचें
+- [डिटेक्शन मेथडोलॉजी और सीमाएं](https://www.aicheck365.com/en/methodology/) (अंग्रेज़ी में)
+- [AI-जनित इमेज कैसे पहचानें](https://www.aicheck365.com/en/blog/how-to-detect-ai-images/) (अंग्रेज़ी में)
+- [AI-जनित वीडियो कैसे पहचानें](https://www.aicheck365.com/en/blog/how-to-detect-ai-videos/) (अंग्रेज़ी में)
+- [C2PA क्या है?](https://www.aicheck365.com/en/blog/what-is-c2pa/) (अंग्रेज़ी में)
+- [AI प्लेटफ़ॉर्म मेटाडेटा रिटेंशन रिपोर्ट](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) (चीनी में) — Sora, Midjourney, Kling आदि से एक्सपोर्ट की गई फ़ाइलों में उत्पत्ति मेटाडेटा कितना बचता है, इसका वास्तविक परीक्षण
+
+---
+
 ## 📄 लाइसेंस
 
 [AGPL-3.0](../LICENSE)
+
+यह प्रोजेक्ट [MatrixA/aicheck](https://github.com/MatrixA/aicheck) (AGPL-3.0) पर आधारित एक व्युत्पन्न प्रोजेक्ट है; मूल लेखक का कॉपीराइट नोटिस `LICENSE` फ़ाइल में सुरक्षित रखा गया है।

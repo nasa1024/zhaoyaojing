@@ -6,14 +6,15 @@
 
 **检测 AI 生成的内容。离线运行。无需 API key。无需配置。**
 
-[![CI](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml/badge.svg)](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/aicheck)](https://crates.io/crates/aicheck)
+[![CI](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml/badge.svg)](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](../LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.86%2B-orange.svg)](https://www.rust-lang.org/)
 
 [官方网站](https://www.aicheck365.com/)
 
 </div>
+
+> **说明：** 本项目基于开源项目 [MatrixA/aicheck](https://github.com/MatrixA/aicheck)（AGPL-3.0 协议）二次开发而来，感谢原作者的工作。本仓库的主要新增内容是浏览器 / WASM 本地图片与视频检测 demo（见 `web/` 目录）。本仓库同样遵循 **AGPL-3.0** 协议开源，完整源码见本仓库。
 
 *那张疯传的图片——是 AI 还是真的？*
 *这个视频是用哪个模型生成的？*
@@ -32,10 +33,13 @@ AICheck 通过分析文件元数据和隐形水印来回答这些问题。不需
 ## ⚡ 快速开始
 
 ```bash
-cargo install aicheck
+git clone https://github.com/nasa1024/zhaoyaojing.git
+cd zhaoyaojing
+cargo install --path .
 ```
 
-> 需要 [Rust 1.86+](https://rust-lang.org/tools/install/)。从源码构建：`cargo install --path .`
+> 需要 [Rust 1.86+](https://rust-lang.org/tools/install/)。
+> 注意：`cargo install aicheck` 安装的是上游 [MatrixA/aicheck](https://github.com/MatrixA/aicheck) 发布到 crates.io 的版本，不包含本仓库的修改；如需体验本仓库的改动，请从源码构建。
 
 ```bash
 aic check photo.jpg
@@ -189,6 +193,20 @@ aic info photo.jpg
 
 ---
 
+## 🔗 更多资源
+
+- [AICheck365 官网](https://www.aicheck365.com/) — 免费在线使用，无需安装
+- [C2PA 验证工具](https://www.aicheck365.com/tools/c2pa-validator/) — 在线校验图片/视频的 C2PA 来源签名
+- [检测方法论与局限性](https://www.aicheck365.com/methodology/)
+- [怎么判断图片是不是 AI 生成的](https://www.aicheck365.com/blog/how-to-detect-ai-images/)
+- [AI 视频检测指南](https://www.aicheck365.com/blog/how-to-detect-ai-videos/)
+- [C2PA 是什么](https://www.aicheck365.com/blog/what-is-c2pa/)
+- [AI 平台元数据留存报告](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) — Sora/Midjourney/Kling 等平台导出文件的溯源信号留存实测
+
+---
+
 ## 📄 许可证
 
 [AGPL-3.0](../LICENSE)
+
+本项目基于 [MatrixA/aicheck](https://github.com/MatrixA/aicheck)（AGPL-3.0）修改而来，`LICENSE` 文件中保留了原作者的版权声明。
