@@ -6,14 +6,15 @@
 
 **AI生成コンテンツを検出。オフライン。APIキー不要。セットアップ不要。**
 
-[![CI](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml/badge.svg)](https://github.com/MatrixA/aicheck/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/aicheck)](https://crates.io/crates/aicheck)
+[![CI](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml/badge.svg)](https://github.com/nasa1024/zhaoyaojing/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](../LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.86%2B-orange.svg)](https://www.rust-lang.org/)
 
 [公式サイト](https://www.aicheck365.com/)
 
 </div>
+
+> **注記:** 本プロジェクトは [MatrixA/aicheck](https://github.com/MatrixA/aicheck)（AGPL-3.0 ライセンス）を基にした派生プロジェクトです。オリジナルの作者に感謝します。本リポジトリの主な追加点は、ブラウザ / WASM によるローカル画像・動画検出デモ（`web/` ディレクトリ参照）です。本リポジトリも同様に **AGPL-3.0** で公開されており、完全なソースコードは本リポジトリで入手できます。
 
 *あのバズった画像——AIか本物か？*
 *この動画はどのモデルで生成された？*
@@ -32,10 +33,13 @@ AICheckはファイルのメタデータと不可視ウォーターマークを�
 ## ⚡ クイックスタート
 
 ```bash
-cargo install aicheck
+git clone https://github.com/nasa1024/zhaoyaojing.git
+cd zhaoyaojing
+cargo install --path .
 ```
 
-> [Rust 1.86+](https://rust-lang.org/tools/install/)が必要です。ソースからビルド：`cargo install --path .`
+> [Rust 1.86+](https://rust-lang.org/tools/install/)が必要です。
+> 注意：`cargo install aicheck` は上流の [MatrixA/aicheck](https://github.com/MatrixA/aicheck) が crates.io に公開しているバージョンをインストールするもので、本リポジトリの変更は含まれません。本リポジトリの変更を試すにはソースからビルドしてください。
 
 ```bash
 aic check photo.jpg
@@ -192,3 +196,5 @@ aic info photo.jpg
 ## 📄 ライセンス
 
 [AGPL-3.0](../LICENSE)
+
+本プロジェクトは [MatrixA/aicheck](https://github.com/MatrixA/aicheck)（AGPL-3.0）を基にした派生プロジェクトであり、`LICENSE` ファイルには原著作者の著作権表示が保持されています。
