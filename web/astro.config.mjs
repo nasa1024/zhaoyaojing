@@ -38,8 +38,30 @@ for (const page of registeredPages) {
   setLatest(exactLastmodByPath, route, page.updatedAt);
 }
 
+// Dev-only middleware: src modules dynamically import plain JS files served
+// from /public (e.g. /scripts/i18n.js, /pkg/aicheck.js). Vite dev appends
+// `?import` to those requests and then refuses to serve public files as
+// modules (500 + error overlay). Stripping the query before vite's own
+// middlewares lets the static middleware serve the file as-is. Production
+// builds are unaffected (the files are fetched directly at runtime).
+const devPublicModuleFix = {
+  name: 'dev-public-module-fix',
+  apply: 'serve',
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (req.url?.includes('?import') && (req.url.startsWith('/scripts/') || req.url.startsWith('/pkg/'))) {
+        req.url = req.url.replace('?import', '');
+      }
+      next();
+    });
+  },
+};
+
 export default defineConfig({
   site: 'https://www.aicheck365.com',
+  vite: {
+    plugins: [devPublicModuleFix],
+  },
   integrations: [
     sitemap({
       filter: (page) => !page.endsWith('/404/'),

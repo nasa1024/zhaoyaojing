@@ -51,10 +51,10 @@
     "locale": "en",
     "pageType": "platform",
     "platform": "Gemini",
-    "title": "Gemini C2PA Checker: Inspect Google AI Content Credentials | AICheck365",
-    "description": "Inspect original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.",
+    "title": "Gemini AI Scanner & C2PA Checker: Content Credentials | AICheck365",
+    "description": "Scan original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.",
     "canonical": "https://www.aicheck365.com/en/platforms/gemini/",
-    "primaryKeyword": "Gemini C2PA checker",
+    "primaryKeyword": "gemini scanner",
     "draft": false,
     "updatedAt": "2026-06-21",
     "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/platforms/imagen/", "/en/blog/how-to-detect-gemini-generated-images/"]

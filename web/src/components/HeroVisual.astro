@@ -1,0 +1,182 @@
+---
+// Decorative "file specimen" panel for the homepage hero.
+// Purely presentational: hidden from assistive tech and from narrow viewports.
+---
+<figure class="hero-visual" aria-hidden="true">
+  <svg viewBox="0 0 520 400" role="presentation" xmlns="http://www.w3.org/2000/svg">
+    <!-- panel -->
+    <rect class="hv-panel" x="1" y="1" width="518" height="398" rx="18" />
+
+    <!-- corner crosshairs -->
+    <g class="hv-crosshair">
+      <path d="M18 12v12M12 18h12" />
+      <path d="M502 12v12M508 18h-12" />
+      <path d="M18 388v-12M12 382h12" />
+      <path d="M502 388v-12M508 382h-12" />
+    </g>
+
+    <!-- header row -->
+    <circle class="hv-dot" cx="34" cy="42" r="5" />
+    <text class="hv-tag" x="50" y="47">SPECIMEN</text>
+    <text class="hv-mono hv-dim" x="140" y="47">sample.png · 1.8 MB</text>
+    <line class="hv-rule" x1="24" y1="64" x2="496" y2="64" />
+
+    <!-- photo glyph with magnifier -->
+    <g>
+      <rect class="hv-surface" x="40" y="92" width="200" height="200" rx="12" />
+      <circle class="hv-dim-stroke" cx="100" cy="142" r="18" />
+      <polyline class="hv-dim-stroke" points="56,262 110,196 148,236 178,206 224,262" />
+      <!-- magnifier -->
+      <g class="hv-magnifier">
+        <circle class="hv-lens" cx="168" cy="170" r="52" />
+        <g class="hv-pixels">
+          <rect x="140" y="146" width="13" height="13" />
+          <rect x="157" y="146" width="13" height="13" class="on" />
+          <rect x="174" y="146" width="13" height="13" />
+          <rect x="140" y="163" width="13" height="13" class="on" />
+          <rect x="157" y="163" width="13" height="13" />
+          <rect x="174" y="163" width="13" height="13" class="on" />
+          <rect x="140" y="180" width="13" height="13" />
+          <rect x="157" y="180" width="13" height="13" />
+          <rect x="174" y="180" width="13" height="13" />
+        </g>
+        <line class="hv-lens-handle" x1="205" y1="207" x2="232" y2="234" />
+      </g>
+    </g>
+
+    <!-- metadata rows -->
+    <g class="hv-mono">
+      <text class="hv-dim" x="272" y="112">exif:Make</text>
+      <text class="hv-text" x="398" y="112">—</text>
+
+      <text class="hv-dim" x="272" y="148">xmp:CreatorTool</text>
+      <text class="hv-text" x="398" y="148">Firefly</text>
+
+      <rect class="hv-row-hit" x="260" y="164" width="236" height="34" rx="8" />
+      <text class="hv-dim" x="272" y="186">c2pa:signature</text>
+      <text class="hv-accent" x="398" y="186">valid</text>
+
+      <text class="hv-dim" x="272" y="224">digitalSource</text>
+      <text class="hv-text" x="398" y="224">trained…</text>
+
+      <text class="hv-dim" x="272" y="260">png:tEXt</text>
+      <text class="hv-text" x="398" y="260">params</text>
+    </g>
+
+    <!-- footer verdict strip -->
+    <line class="hv-rule" x1="24" y1="316" x2="496" y2="316" />
+    <rect class="hv-chip" x="40" y="336" width="172" height="36" rx="18" />
+    <circle class="hv-dot" cx="62" cy="354" r="5" />
+    <text class="hv-chip-text" x="78" y="359">4 signals found</text>
+    <text class="hv-mono hv-dim" x="236" y="359">confidence 0.93 · local only</text>
+
+    <!-- scan line -->
+    <line class="hv-scan" x1="8" y1="0" x2="512" y2="0" />
+  </svg>
+</figure>
+
+<style>
+  .hero-visual {
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    align-self: center;
+  }
+  .hero-visual svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.35));
+  }
+  .hv-panel {
+    fill: var(--surface-2);
+    stroke: var(--border-strong);
+    stroke-width: 1;
+  }
+  .hv-surface {
+    fill: rgb(var(--overlay-rgb) / 0.04);
+    stroke: var(--border);
+  }
+  .hv-crosshair path {
+    stroke: var(--muted);
+    stroke-width: 1.5;
+    opacity: 0.7;
+  }
+  .hv-rule {
+    stroke: var(--border);
+  }
+  .hv-dot {
+    fill: var(--accent);
+  }
+  .hv-tag {
+    fill: var(--text-strong);
+    font: 600 13px var(--font-body);
+    letter-spacing: 0.14em;
+  }
+  .hv-mono {
+    font: 13px var(--font-mono);
+  }
+  .hv-dim {
+    fill: var(--muted);
+    font: 13px var(--font-mono);
+  }
+  .hv-text {
+    fill: var(--text);
+  }
+  .hv-accent {
+    fill: var(--accent-text);
+    font-weight: 600;
+  }
+  .hv-dim-stroke {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2;
+    opacity: 0.65;
+  }
+  .hv-lens {
+    fill: rgb(var(--accent-rgb) / 0.08);
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+  .hv-lens-handle {
+    stroke: var(--accent);
+    stroke-width: 5;
+    stroke-linecap: round;
+  }
+  .hv-pixels rect {
+    fill: rgb(var(--overlay-rgb) / 0.10);
+  }
+  .hv-pixels rect.on {
+    fill: rgb(var(--accent-rgb) / 0.55);
+  }
+  .hv-row-hit {
+    fill: rgb(var(--accent-rgb) / 0.10);
+    stroke: rgb(var(--accent-rgb) / 0.35);
+  }
+  .hv-chip {
+    fill: rgb(var(--accent-rgb) / 0.14);
+    stroke: rgb(var(--accent-rgb) / 0.4);
+  }
+  .hv-chip-text {
+    fill: var(--text-strong);
+    font: 600 14px var(--font-body);
+  }
+  .hv-scan {
+    stroke: var(--accent);
+    stroke-width: 2;
+    opacity: 0.55;
+    animation: hv-scan-sweep 4.2s var(--ease) infinite;
+  }
+  @keyframes hv-scan-sweep {
+    0%, 12% { transform: translateY(70px); opacity: 0; }
+    22% { opacity: 0.55; }
+    62% { transform: translateY(310px); opacity: 0.55; }
+    74%, 100% { transform: translateY(330px); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hv-scan { animation: none; opacity: 0; }
+  }
+  @media (max-width: 900px) {
+    .hero-visual { display: none; }
+  }
+</style>

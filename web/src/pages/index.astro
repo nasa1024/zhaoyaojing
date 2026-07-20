@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Detector from '../components/Detector.astro';
+import HeroVisual from '../components/HeroVisual.astro';
 import FileAnatomy from '../components/FileAnatomy.astro';
 import EvidenceVanish from '../components/EvidenceVanish.astro';
 import FiveLayer from '../components/FiveLayer.astro';
@@ -70,11 +71,11 @@ const homeCopy = {
     videoGuideLink: 'AI video detection guide',
   },
   ja: {
-    title: 'AICheck365 · AI画像/動画検出 | AI生成メディアを無料で識別',
-    description: '画像/動画ファイル内の AI 由来の手がかりをブラウザ内で確認。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、動画フレーム透かしを読み取ります。',
+    title: 'AICheck365 · AI画像/動画 判定・検出ツール | 無料でAI生成メディアを判別',
+    description: 'AI画像・動画の無料判定ツール。画像/動画ファイル内の AI 由来の手がかりをブラウザ内で検出・判別。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、動画フレーム認識を読み取ります。',
     eyebrow: 'AI画像/動画の出所検出',
-    h1: 'AI画像・動画検出ツール：残された痕跡を見る',
-    lead: 'オリジナルの画像や動画をドロップしてください。AICheck365 は C2PA、EXIF、XMP、PNG テキスト、生成パラメータ、動画コンテナの出所手がかりを検査します。',
+    h1: 'AI画像・動画の判定ツール：残された痕跡を見る',
+    lead: 'オリジナルの画像や動画をドロップして AI 生成かどうかを判定。AICheck365 は C2PA、EXIF、XMP、PNG テキスト、生成パラメータ、動画コンテナの出所手がかりを検査します。',
     uploads: 'サーバーアップロード',
     local: 'ローカル処理',
     privacy: 'プライバシー優先',
@@ -96,11 +97,11 @@ const homeCopy = {
     videoGuideLink: 'AI動画検出ガイド',
   },
   ko: {
-    title: 'AICheck365 · AI 이미지/비디오 감지 | 무료 AI 생성 미디어 검사',
-    description: '브라우저에서 이미지/비디오 파일의 AI 출처 단서를 로컬로 확인합니다. EXIF, XMP, C2PA, PNG 텍스트, MP4/MOV 메타데이터, 비디오 프레임 워터마크를 읽습니다.',
+    title: 'AICheck365 · AI 이미지/비디오 판독기 | 무료 AI 생성 이미지 판별',
+    description: 'AI 생성 이미지 판별 도구. 브라우저에서 이미지/비디오 파일의 AI 출처 단서를 로컬로 판독합니다. EXIF, XMP, C2PA, PNG 텍스트, MP4/MOV 메타데이터, 비디오 프레임 워터마크를 읽습니다.',
     eyebrow: 'AI 이미지/비디오 출처 감지',
-    h1: 'AI 이미지·영상 검사 도구: 파일에 남은 흔적을 확인',
-    lead: '원본 이미지나 동영상을 드롭하세요. AICheck365는 C2PA, EXIF, XMP, PNG 텍스트, 생성 파라미터, 동영상 컨테이너의 출처 단서를 검사합니다.',
+    h1: 'AI 이미지·영상 판독기: 파일에 남은 흔적을 확인',
+    lead: '원본 이미지나 동영상을 드롭해 AI 생성 여부를 판별하세요. AICheck365는 C2PA, EXIF, XMP, PNG 텍스트, 생성 파라미터, 동영상 컨테이너의 출처 단서를 검사합니다.',
     uploads: '서버 업로드',
     local: '로컬 처리',
     privacy: '개인정보 우선',
@@ -174,11 +175,11 @@ const homeCopy = {
     videoGuideLink: "Guide de détection vidéo IA",
   },
   es: {
-    title: 'AICheck365 · Detector de imágenes/videos IA | Detección gratuita',
-    description: 'Comprueba señales de origen IA en imágenes y videos localmente: EXIF, XMP, C2PA, texto PNG, metadatos MP4/MOV y marcas de agua en frames.',
+    title: 'AICheck365 · Detector de Imágenes y Videos IA Gratis',
+    description: 'Detector de imágenes y videos IA gratis: comprueba si una imagen es IA revisando EXIF, XMP, C2PA, texto PNG y metadatos MP4/MOV en tu navegador. Sin subidas.',
     eyebrow: 'Detección de origen IA en imagen/video',
     h1: 'Detector de imágenes y videos IA: mira lo que dejó el archivo',
-    lead: 'Suelta una imagen o video original. AICheck365 inspecciona C2PA, EXIF, XMP, texto PNG, parámetros de generación y contenedores de video en busca de pistas de origen.',
+    lead: 'Comprueba gratis si una imagen o video es IA. Suelta el archivo original: AICheck365 inspecciona C2PA, EXIF, XMP, texto PNG, parámetros de generación y contenedores de video.',
     uploads: 'Subidas al servidor',
     local: 'Procesamiento local',
     privacy: 'Privacidad primero',
@@ -229,14 +230,15 @@ const homeCopy = {
 
 homeCopy['zh-TW'] = {
   ...homeCopy['zh-CN'],
-  title: 'AICheck365 · AI 圖片/影片檢測 | 免費識別 AI 生成內容',
-  description: '在瀏覽器本機檢查圖片/影片裡的 AI 來源線索。支援 EXIF、XMP、C2PA、PNG 文字區塊、MP4/MOV metadata 與影片幀浮水印線索，不上傳檔案。',
+  title: 'AICheck365 · AI 圖片/影片檢測辨識 | 免費判斷 AI 生成內容',
+  description: '在瀏覽器本機辨識圖片/影片裡的 AI 來源線索，快速判斷內容是否由 AI 生成。支援 EXIF、XMP、C2PA、PNG 文字區塊、MP4/MOV metadata 與影片幀浮水印線索，不上傳檔案。',
   eyebrow: 'AI 圖片/影片來源檢測',
-  h1: 'AI 圖片/影片檢測：不要問它像不像，看它留下了什麼',
-  lead: '拖入原始圖片或影片。AICheck365 會檢查 C2PA、EXIF、XMP、PNG 文字、生成參數和影片容器中的來源線索。',
+  h1: 'AI 圖片/影片辨識：不要問它像不像，看它留下了什麼',
+  lead: '拖入原始圖片或影片，立即判斷是否為 AI 生成。AICheck365 會檢查 C2PA、EXIF、XMP、PNG 文字、生成參數和影片容器中的來源線索。',
   heroPrivacy: '檔案在你的瀏覽器中處理，不會離開你的裝置。',
   ctaPrimary: '拖入原始檔案',
   ctaSecondary: '先拆一個真實樣本',
+  seoP2: '想判斷圖片或影片是不是 AI 生成？AICheck365 提供免費的 AI 圖片辨識與 AI 影片檢測，可識別 Gemini、Google Imagen、DALL-E / GPT Image、Midjourney、Stable Diffusion、Adobe Firefly、可靈 Kling、Sora、Runway、Pika 等平台留下的常見痕跡。',
   platformsLink: '平台檢測指南',
   videoGuideLink: 'AI 影片檢測指南',
 };
@@ -279,14 +281,15 @@ const jsonLd = {
         <div>
           <h1 data-i18n="hero.h1">{copy.h1}</h1>
           <p class="lead" data-i18n-html="hero.lead" set:html={copy.lead} />
-        </div>
-        <div class="hero-actions">
-          <p class="hero-privacy" data-i18n="hero.privacy">{copy.heroPrivacy ?? homeCopy.en.heroPrivacy}</p>
-          <div class="hero-cta">
-            <a href="#upload-zone" class="btn-primary" data-i18n="hero.cta.primary">{copy.ctaPrimary ?? homeCopy.en.ctaPrimary}</a>
-            <button id="open-sample" class="btn-secondary" data-i18n="hero.cta.secondary">{copy.ctaSecondary ?? homeCopy.en.ctaSecondary}</button>
+          <div class="hero-actions">
+            <p class="hero-privacy" data-i18n="hero.privacy">{copy.heroPrivacy ?? homeCopy.en.heroPrivacy}</p>
+            <div class="hero-cta">
+              <a href="#upload-zone" class="btn-primary" data-i18n="hero.cta.primary">{copy.ctaPrimary ?? homeCopy.en.ctaPrimary}</a>
+              <button id="open-sample" class="btn-secondary" data-i18n="hero.cta.secondary">{copy.ctaSecondary ?? homeCopy.en.ctaSecondary}</button>
+            </div>
           </div>
         </div>
+        <HeroVisual />
       </div>
 
       <ul class="trust-list">

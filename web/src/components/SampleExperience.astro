@@ -20,6 +20,17 @@ const h = homeStrings(resolveLang(Astro.url.pathname)).sample;
           role="button"
           aria-label={`${s.title} — ${h.title}`}
         >
+          {/\.(jpe?g|png|webp|gif|avif)$/i.test(s.fileRef ?? '') ? (
+            <img class="sample-thumb" src={s.fileRef} alt={s.title} loading="lazy" decoding="async" />
+          ) : (
+            <div class="sample-thumb sample-thumb--video" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5" />
+              </svg>
+              <span>{s.fileFormat}</span>
+            </div>
+          )}
           <div class="sample-card-header">
             <strong class="sample-title">{s.title}</strong>
             <span class="tag-inline">{s.platform}</span>

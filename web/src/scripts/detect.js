@@ -3,7 +3,7 @@ import { saveHistory, loadHistoryRaw, renderHistory } from './history.js';
 import { escapeHtml, labelForConfidence } from './format.js';
 
 const i18nModuleUrl = '/scripts/i18n.js';
-const { t, applyI18n, setLang } = await import(/* @vite-ignore */ i18nModuleUrl);
+const { t, applyI18n } = await import(/* @vite-ignore */ i18nModuleUrl);
 const renderModuleUrl = '/scripts/render.js';
 const { renderResult, setTranslator } = await import(/* @vite-ignore */ renderModuleUrl);
 setTranslator(t);
@@ -25,11 +25,7 @@ export function initDetector() {
   const emptyStateEl   = document.querySelector('#empty-state');
   const fileMetaEl     = document.querySelector('#file-meta');
   const uploadZoneEl   = document.querySelector('#upload-zone');
-  const langBtn        = document.querySelector('#lang-switch');
   const historyListEl  = document.querySelector('#history-list');
-  const themeBtn       = document.getElementById('theme-toggle');
-  const hamburger      = document.getElementById('hamburger');
-  const mobileMenu     = document.getElementById('mobile-menu');
   const expertModeEl   = document.getElementById('expert-mode');
 
   let wasmApi       = null;
@@ -55,13 +51,12 @@ export function initDetector() {
   }
 
   // ─── Init ────────────────────────────────────────────────────────
+  // Theme, language switch, and hamburger menu are owned by /scripts/lang-init.js
+  // (loaded on every page by Base.astro). Do not re-bind them here.
   applyI18n();
-  applyTheme(localStorage.getItem('theme') ?? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
   renderHistory({ historyListEl, emptyStateEl, reportEl, t, renderSingleReport });
   setStatus(t('status.ready'));
   syncAnalyzeButton();
-
-  langBtn?.addEventListener('change', (e) => setLang(e.target.value));
 
   expertModeEl?.addEventListener('change', () => {
     if (lastSingleReport && !reportEl.classList.contains('hidden')) {
@@ -126,6 +121,9 @@ export function initDetector() {
     try {
       isAnalyzing = true;
       syncAnalyzeButton();
+      emptyStateEl.classList.add('hidden');
+      reportEl.classList.add('hidden');
+      document.getElementById('report-skeleton')?.classList.remove('hidden');
       setStatus(t('status.loading_engine') || '正在加载检测引擎…');
       await ensureWasm();
       setStatus(t('status.analyzing'));
@@ -158,10 +156,12 @@ export function initDetector() {
       setStatus(t('status.done'));
     } catch (error) {
       console.error(error);
+      if (reportEl.classList.contains('hidden')) emptyStateEl.classList.remove('hidden');
       setStatus(error?.message || String(error), true);
       ga('analysis_failed', { error_type: error?.constructor?.name || 'UnknownError' });
     } finally {
       isAnalyzing = false;
+      document.getElementById('report-skeleton')?.classList.add('hidden');
       syncAnalyzeButton();
     }
   });
@@ -550,17 +550,6 @@ export function initDetector() {
     statusEl.classList.toggle('error', isError);
   }
 
-  // ─── Theme ───────────────────────────────────────────────────────
-  function applyTheme(theme) {
-    document.body.dataset.theme = theme;
-    if (themeBtn) themeBtn.textContent = theme === 'light' ? '☽' : '☀';
-    localStorage.setItem('theme', theme);
-  }
-
-  themeBtn?.addEventListener('click', () => {
-    applyTheme(document.body.dataset.theme === 'light' ? 'dark' : 'light');
-  });
-
   // ─── Open-sample button ──────────────────────────────────────────
   const openSampleBtn = document.querySelector('#open-sample');
   // Load a specific sample file (by its public fileRef) into the detector and analyze it.
@@ -615,21 +604,5 @@ export function initDetector() {
     if (e.key !== 'Enter' && e.key !== ' ') return;
     const card = e.target?.closest?.('.sample-card[data-file-ref]');
     if (card) { e.preventDefault(); handleSampleCard(card); }
-  });
-
-  // ─── Hamburger ───────────────────────────────────────────────────
-  hamburger?.addEventListener('click', () => {
-    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
-    hamburger.setAttribute('aria-expanded', String(!expanded));
-    mobileMenu?.classList.toggle('open', !expanded);
-    mobileMenu?.setAttribute('aria-hidden', String(expanded));
-  });
-
-  document.addEventListener('click', (e) => {
-    if (hamburger && mobileMenu && !hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
-      hamburger.setAttribute('aria-expanded', 'false');
-      mobileMenu.classList.remove('open');
-      mobileMenu.setAttribute('aria-hidden', 'true');
-    }
   });
 }

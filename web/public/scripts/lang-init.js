@@ -39,7 +39,7 @@ const themeBtn = document.getElementById('theme-toggle');
 
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
-  if (themeBtn) themeBtn.textContent = theme === 'light' ? '☽' : '☀';
+  // Icon visibility is driven by [data-theme] in CSS; no text swap needed.
   localStorage.setItem('theme', theme);
 }
 

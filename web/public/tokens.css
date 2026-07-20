@@ -17,9 +17,42 @@
   --bg: var(--fp-ink);
   --surface: #1c1c1c;
   --surface-2: #232323;
+  --surface-3: #2b2b2b;
+  --card: var(--surface);
+  --card-strong: var(--surface-2);
+  --accent-strong: var(--info);
+  --danger-text: var(--fail);
   --border: rgba(244,240,232,0.14);
+  --border-strong: rgba(244,240,232,0.28);
   --text: #ECE7DC;
+  --text-strong: #F4F0E8;
+  --text-soft: #C9C3B6;
   --muted: #A39E92;
+
+  /* 主题感知的 RGB 三元组：配合 rgb(var(--x-rgb) / α) 使用 */
+  --accent-rgb: 200 255 61;      /* lime 主行动色 */
+  --overlay-rgb: 255 255 255;    /* 中性叠层（深主题=白，浅主题=墨） */
+  --muted-rgb: 163 158 146;
+  --info-rgb: 110 168 255;       /* 中性信息（蓝，仅作语义色） */
+  --ok-rgb: 138 230 176;
+  --warn-rgb: 255 198 92;
+  --fail-rgb: 255 92 85;
+
+  /* 语义实色（文本/图标级，需满足对比度） */
+  --accent: var(--fp-verified);
+  --accent-text: var(--fp-verified);  /* lime 文字色（深主题）；浅主题为橄榄绿 */
+  --on-accent: #0f1a02;          /* lime 底色上的文字 */
+  --info: #6ea8ff;
+  --info-strong: #8fbaff;
+  --info-text: #cfe1ff;          /* info 底色上的文字 */
+  --ok: #8ae6b0;
+  --warn: #ffd792;
+  --on-warn: #3a2e00;            /* 黄底上的文字 */
+  --fail: #ff8b84;
+  --fail-strong: #ffb3b3;
+
+  --shadow: 0 18px 60px rgba(0,0,0,0.35);
+  --focus-ring: 0 0 0 3px rgb(var(--accent-rgb) / 0.45);
 
   /* 字体 */
   --font-display: "Space Grotesk", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -37,9 +70,36 @@
   --bg: var(--fp-bone);
   --surface: var(--fp-white);
   --surface-2: #ECE7DC;
+  --surface-3: #E2DCCD;
+  --card: var(--surface);
+  --card-strong: var(--surface-2);
+  --accent-strong: var(--info);
+  --danger-text: var(--fail);
   --border: rgba(21,21,21,0.14);
+  --border-strong: rgba(21,21,21,0.28);
   --text: var(--fp-ink);
+  --text-strong: #101010;
+  --text-soft: #4A463C;
   --muted: #5A564E;
+
+  --overlay-rgb: 21 21 21;
+  --muted-rgb: 90 86 78;
+  --info-rgb: 37 82 190;
+  --ok-rgb: 21 128 61;
+  --warn-rgb: 190 130 20;
+  --fail-rgb: 185 28 28;
+
+  --on-accent: #0f1a02;
+  --accent-text: #4d7c0f;        /* 骨白底上对比 ≈ 4.9:1 */
+  --info: #1d4ed8;
+  --info-strong: #1e40af;
+  --info-text: #1d4ed8;
+  --ok: #15803d;
+  --warn: #92600a;
+  --fail: #b91c1c;
+  --fail-strong: #b91c1c;
+
+  --shadow: 0 16px 44px rgba(21,21,21,0.10);
 }
 
 @media (prefers-reduced-motion: reduce) {

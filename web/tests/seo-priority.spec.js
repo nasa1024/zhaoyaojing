@@ -9,10 +9,10 @@ test('English Sora page has an archival provenance profile and tool CTA', async 
   await expect(page.locator('a[href="/en/tools/mp4-metadata-inspector/"]')).toBeVisible();
 });
 
-test('English Gemini page targets C2PA intent with sample-status honesty', async ({ page }) => {
+test('English Gemini page targets scanner intent with sample-status honesty', async ({ page }) => {
   await page.goto('/en/platforms/gemini/');
   await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-priority-page', 'platforms/gemini');
-  await expect(page.locator('h1')).toContainText('Gemini C2PA checker');
+  await expect(page.locator('h1')).toContainText('Gemini AI scanner');
   await expect(page.getByText('Bundled Gemini image sample')).toBeVisible();
   await expect(page.locator('.priority-seo-page').getByText('digitalSourceType = trainedAlgorithmicMedia').first()).toBeVisible();
   await expect(page.locator('a[href="/en/tools/c2pa-validator/"]')).toBeVisible();

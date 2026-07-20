@@ -497,9 +497,9 @@ const pageTitles = {
     'pt-BR': 'O que é C2PA e o que ele registra em imagens e vídeos de IA?',
   },
   'blog/ai-image-metadata-guide': {
-    'zh-CN': 'AI 媒体元数据指南：EXIF、XMP、C2PA、PNG tEXt、MP4',
-    'zh-TW': 'AI 媒體 metadata 指南：EXIF、XMP、C2PA、PNG tEXt、MP4',
-    en: 'AI Media Metadata Guide: EXIF, XMP, C2PA, PNG tEXt, and MP4',
+    'zh-CN': 'AI 图片元数据里藏着什么？EXIF、XMP、C2PA 逐字节拆解',
+    'zh-TW': 'AI 圖片 metadata 裡藏著什麼？EXIF、XMP、C2PA 逐位元組拆解',
+    en: 'AI Image Metadata Guide: Hidden AI Traces in EXIF & XMP',
     ja: 'AI メディアメタデータガイド：EXIF、XMP、C2PA、PNG tEXt、MP4',
     ko: 'AI 미디어 메타데이터 가이드: EXIF, XMP, C2PA, PNG tEXt, MP4',
     de: 'AI-Medienmetadaten: EXIF, XMP, C2PA, PNG tEXt und MP4',
@@ -546,7 +546,7 @@ const articleDescriptions = {
   'blog/ai-image-metadata-guide': {
     'zh-CN': '图片/视频元数据类型详解，包括 EXIF、XMP、C2PA、PNG tEXt 和 MP4 格式，以及主流 AI 平台的写入策略 and 检测方法。',
     'zh-TW': '圖片/影片元數據類型詳計，包括 EXIF、XMP、C2PA、PNG tEXt 和 MP4 格式，以及主流 AI 平台的寫入策略 and 檢測方法。',
-    en: 'A guide to media metadata formats including EXIF, XMP, C2PA, PNG tEXt, and MP4, along with AI platform writing policies.',
+    en: 'Where AI platforms hide their traces: EXIF UserComment, XMP digitalSourceType, C2PA manifests, PNG tEXt parameters, and MP4 boxes — with real field names from the detector implementation.',
     ja: 'EXIF、XMP、C2PA、PNG tEXt、MP4 メタデータの解説と、主要 AI プラットフォームの書き込みポリシーおよび検出方法。',
     ko: 'EXIF, XMP, C2PA, PNG tEXt 및 MP4 메타데이터 규격과 주요 AI 플랫폼의 기록 정책 및 감지 방법 안내.',
     de: 'Erklärung von Metadatenformaten wie EXIF, XMP, C2PA, PNG tEXt und MP4, sowie den Schreibrichtlinien von KI-Plattformen.',
@@ -710,10 +710,10 @@ const priorityPlatformProfiles = {
       },
     },
     gemini: {
-      title: 'Gemini C2PA Checker: Inspect Google AI Content Credentials',
-      description: 'Inspect original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.',
-      h1: 'Gemini C2PA checker: read the evidence in the original file',
-      meta: 'Target query: gemini c2pa · Updated June 2026 · Parser: aicheck 0.2.0',
+      title: 'Gemini AI Scanner & C2PA Checker: Content Credentials',
+      description: 'Scan original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.',
+      h1: 'Gemini AI scanner: read the evidence in the original file',
+      meta: 'Target query: gemini scanner · Updated June 2026 · Parser: aicheck 0.2.0',
       lead: 'For Gemini or Google AI files, the most useful evidence is usually inside the original download, not in the pixels. AICheck365 checks C2PA/JUMBF data, PNG caBX-style provenance containers, digitalSourceType, Google claim-generator strings, XMP/EXIF fields, and MP4/MOV metadata locally in the browser.',
       sampleHeading: 'Sample status and evidence profile',
       sampleRows: [
@@ -1248,15 +1248,15 @@ if (path === 'blog') {
   pageDescription = c.platformsDesc;
   jsonLd = jsonLdBase('CollectionPage', pageTitle, pageDescription);
 } else if (platform) {
-  pageTitle = `${platformSeoName} Image/Video Detection Guide`;
+  pageTitle = `${platformSeoName} AI Image/Video Detector & Scanner`;
   if (lang === 'zh-CN') pageTitle = `${platformSeoName} 图片/视频检测指南`;
-  if (lang === 'zh-TW') pageTitle = `${platformSeoName} 圖片/影片檢測指南`;
-  if (lang === 'ja') pageTitle = `${platformSeoName} 画像/動画検出ガイド`;
-  if (lang === 'ko') pageTitle = `${platformSeoName} 이미지/비디오 감지 가이드`;
-  if (lang === 'de') pageTitle = `${platform.name} AI-Bild- und Videoprüfung`;
-  if (lang === 'fr') pageTitle = `Guide de détection image/vidéo IA ${platform.name}`;
-  if (lang === 'es') pageTitle = `Guía de detección de imagen/video IA de ${platform.name}`;
-  if (lang === 'pt-BR') pageTitle = `Guia de detecção de imagem/vídeo de IA do ${platform.name}`;
+  if (lang === 'zh-TW') pageTitle = `${platformSeoName} 圖片/影片辨識・檢測指南`;
+  if (lang === 'ja') pageTitle = `${platformSeoName} 画像/動画 判定・検出ガイド`;
+  if (lang === 'ko') pageTitle = `${platformSeoName} 이미지/비디오 판별·감지 가이드`;
+  if (lang === 'de') pageTitle = `${platform.name} AI-Bild- und Video-Detektor`;
+  if (lang === 'fr') pageTitle = `Détecteur d'images/vidéos IA ${platform.name}`;
+  if (lang === 'es') pageTitle = `Detector de imágenes/videos IA de ${platform.name}`;
+  if (lang === 'pt-BR') pageTitle = `Detector de imagens/vídeos IA do ${platform.name}`;
   pageDescription = platformMetaDescription(platform.name);
   jsonLd = jsonLdBase('Article', pageTitle, pageDescription);
 } else if (path === 'contact') {
