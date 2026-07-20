@@ -272,6 +272,40 @@ const platformNames = [
     </noscript>
   </div>
 
+  <section class="card result-card" id="result-card">
+    <div class="section-heading">
+      <div>
+        <h2 data-i18n="results.title">{copy.results}</h2>
+        <p class="muted compact" data-i18n="results.subtitle">{copy.resultsSubtitle}</p>
+      </div>
+      <label class="expert-toggle"><input type="checkbox" id="expert-mode" /> <span data-i18n="result.expert">{expertLabel}</span></label>
+    </div>
+    <div id="empty-state" class="empty-state">
+      <svg class="empty-illust" viewBox="0 0 200 140" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <rect class="ei-doc" x="46" y="18" width="86" height="104" rx="8" />
+        <line class="ei-row" x1="62" y1="42" x2="116" y2="42" />
+        <line class="ei-row" x1="62" y1="60" x2="104" y2="60" />
+        <line class="ei-row" x1="62" y1="78" x2="112" y2="78" />
+        <line class="ei-row" x1="62" y1="96" x2="92" y2="96" />
+        <circle class="ei-lens" cx="122" cy="88" r="30" />
+        <line class="ei-handle" x1="144" y1="110" x2="162" y2="128" />
+        <path class="ei-query" d="M114 84c0-5 4-8 8-8s8 3 8 8c0 6-8 6-8 12" />
+        <circle class="ei-query-dot" cx="122" cy="102" r="1.6" />
+      </svg>
+      <p data-i18n="results.empty">{copy.empty}</p>
+    </div>
+    <div id="report-skeleton" class="report-skeleton hidden" aria-hidden="true">
+      <div class="sk-row sk-w40"></div>
+      <div class="sk-block"></div>
+      <div class="sk-row sk-w80"></div>
+      <div class="sk-row sk-w60"></div>
+      <div class="sk-block sk-block-sm"></div>
+    </div>
+    <div id="report" class="report hidden"></div>
+  </section>
+</section>
+
+<section class="grid two-col">
   <div class="card">
     <h2 data-i18n="platforms.title">{copy.platformsTitle}</h2>
     <p class="muted" data-i18n-html="platforms.desc" set:html={copy.platformsDesc} />
@@ -279,9 +313,6 @@ const platformNames = [
       {platformNames.map((name) => <li>{name}</li>)}
     </ul>
   </div>
-</section>
-
-<section class="grid two-col">
   <div class="card">
     <h2 data-i18n="signals.title">{copy.signals}</h2>
     <ul id="signal-types" class="bullet-list">
@@ -294,6 +325,9 @@ const platformNames = [
       <li>Filename heuristics</li>
     </ul>
   </div>
+</section>
+
+<section class="grid">
   <div class="card">
     <h2 data-i18n="formats.title">{copy.formatsTitle}</h2>
     <ul id="format-list" class="tag-list">
@@ -310,38 +344,6 @@ const platformNames = [
       <li>video/x-msvideo</li>
     </ul>
   </div>
-</section>
-
-<section class="card result-card" id="result-card">
-  <div class="section-heading">
-    <div>
-      <h2 data-i18n="results.title">{copy.results}</h2>
-      <p class="muted compact" data-i18n="results.subtitle">{copy.resultsSubtitle}</p>
-    </div>
-    <label class="expert-toggle"><input type="checkbox" id="expert-mode" /> <span data-i18n="result.expert">{expertLabel}</span></label>
-  </div>
-  <div id="empty-state" class="empty-state">
-    <svg class="empty-illust" viewBox="0 0 200 140" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-      <rect class="ei-doc" x="46" y="18" width="86" height="104" rx="8" />
-      <line class="ei-row" x1="62" y1="42" x2="116" y2="42" />
-      <line class="ei-row" x1="62" y1="60" x2="104" y2="60" />
-      <line class="ei-row" x1="62" y1="78" x2="112" y2="78" />
-      <line class="ei-row" x1="62" y1="96" x2="92" y2="96" />
-      <circle class="ei-lens" cx="122" cy="88" r="30" />
-      <line class="ei-handle" x1="144" y1="110" x2="162" y2="128" />
-      <path class="ei-query" d="M114 84c0-5 4-8 8-8s8 3 8 8c0 6-8 6-8 12" />
-      <circle class="ei-query-dot" cx="122" cy="102" r="1.6" />
-    </svg>
-    <p data-i18n="results.empty">{copy.empty}</p>
-  </div>
-  <div id="report-skeleton" class="report-skeleton hidden" aria-hidden="true">
-    <div class="sk-row sk-w40"></div>
-    <div class="sk-block"></div>
-    <div class="sk-row sk-w80"></div>
-    <div class="sk-row sk-w60"></div>
-    <div class="sk-block sk-block-sm"></div>
-  </div>
-  <div id="report" class="report hidden"></div>
 </section>
 
 <div class="ad-slot ad-slot--horizontal" data-ad-placement="after-detector-results">

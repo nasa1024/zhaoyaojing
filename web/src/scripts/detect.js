@@ -124,6 +124,14 @@ export function initDetector() {
       emptyStateEl.classList.add('hidden');
       reportEl.classList.add('hidden');
       document.getElementById('report-skeleton')?.classList.remove('hidden');
+      // Bring the result card into view if it is off-screen (mobile especially)
+      const resultCard = document.getElementById('result-card');
+      if (resultCard) {
+        const r = resultCard.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > window.innerHeight) {
+          resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
       setStatus(t('status.loading_engine') || '正在加载检测引擎…');
       await ensureWasm();
       setStatus(t('status.analyzing'));
@@ -364,6 +372,14 @@ export function initDetector() {
     reportEl._lastReports = results;
     emptyStateEl.classList.add('hidden');
     reportEl.classList.remove('hidden');
+
+    // Draw the eye to the fresh report
+    const resultCard = document.getElementById('result-card');
+    if (resultCard) {
+      resultCard.classList.remove('flash');
+      void resultCard.offsetWidth; // restart the animation
+      resultCard.classList.add('flash');
+    }
 
     if (results.length === 1) {
       renderSingleReport(results[0].report);

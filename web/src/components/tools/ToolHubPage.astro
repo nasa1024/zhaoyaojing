@@ -18,10 +18,13 @@ const currentUrl = `https://www.aicheck365.com${toolsPath}`;
 
 const title = isZh ? '专用检测工具 | AICheck365' : 'Detection Tools | AICheck365';
 const description = isZh
-  ? 'AICheck365 的专用取证工具：C2PA 验证器、C2PA 查看器、EXIF/XMP 阅读器、PNG 参数提取器、MP4 元数据检查器。逐层查看文件原始来源数据，全部在浏览器本地完成。'
-  : 'AICheck365 forensic tools: C2PA Validator, C2PA Viewer, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector. Inspect raw per-layer provenance data locally in your browser.';
+  ? 'AICheck365 工具集：主页的 AI 图片/视频检测器负责一键识别 AI 来源线索；下方专用取证工具（C2PA 验证器、C2PA 查看器、EXIF/XMP 阅读器、PNG 参数提取器、MP4 元数据检查器）逐层查看原始来源数据，全部在浏览器本地完成。'
+  : 'AICheck365 tools: the AI Image & Video Detector on the homepage runs the one-click origin check, while the forensic tools below (C2PA Validator, C2PA Viewer, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector) inspect raw per-layer data locally in your browser.';
 
 const tools = [
+  { slug: null, live: true, href: `${homePath}#upload-zone`,
+    name: isZh ? 'AI 图片/视频检测器（主工具）' : 'AI Image & Video Detector (main tool)',
+    desc: isZh ? '一键检测图片/视频里的 AI 来源线索：C2PA、EXIF、XMP、PNG 文本、MP4 元数据、文件名和视频帧水印，给出信号、置信度与字段详情。' : 'One-click AI-origin check for images and videos: C2PA, EXIF, XMP, PNG text, MP4 metadata, file-name clues, and frame watermarks, with signals, confidence, and field details.' },
   { slug: 'c2pa-validator', live: true,
     name: isZh ? 'C2PA 验证器' : 'C2PA Validator',
     desc: isZh ? '检查 C2PA Manifest、签名状态、Claim Generator、Assertions、Ingredient 链、证书与原始 JSON。' : 'Inspect C2PA manifest, signature state, claim generator, assertions, ingredient chain, certificate, and raw JSON.' },
@@ -63,7 +66,7 @@ const jsonLd = [
       <p class="lead-text">{description}</p>
       <div class="tool-hub-grid">
         {tools.map((tool) => tool.live ? (
-          <a class="tool-hub-card" href={`${toolsPath}${tool.slug}/`}>
+          <a class="tool-hub-card" href={tool.href ?? `${toolsPath}${tool.slug}/`}>
             <h3>{tool.name} →</h3>
             <p class="muted compact">{tool.desc}</p>
           </a>
