@@ -32,13 +32,13 @@ pub mod detector;
 pub mod i18n;
 pub mod known_tools;
 mod mp4_metadata_core;
-pub mod web_c2pa_verify;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod scanner;
 #[cfg(target_arch = "wasm32")]
 pub mod web;
 #[cfg(target_arch = "wasm32")]
 mod web_c2pa;
+pub mod web_c2pa_verify;
 #[cfg(target_arch = "wasm32")]
 mod web_watermark;
 

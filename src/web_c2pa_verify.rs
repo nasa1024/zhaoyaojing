@@ -161,7 +161,9 @@ pub(crate) fn extract_digital_source_type(manifest_json: &str) -> Option<String>
     let key_pos = manifest_json.find(key)?;
     let after_key = &manifest_json[key_pos + key.len()..];
     // Skip optional whitespace and colon
-    let after_colon = after_key.trim_start_matches(|c: char| c.is_whitespace() || c == ':').trim_start();
+    let after_colon = after_key
+        .trim_start_matches(|c: char| c.is_whitespace() || c == ':')
+        .trim_start();
     if after_colon.starts_with('"') {
         let inner = &after_colon[1..];
         let end = inner.find('"')?;
@@ -204,7 +206,11 @@ mod tests {
         let result = extract_digital_source_type(json);
         assert!(result.is_some(), "expected Some but got None");
         let val = result.unwrap();
-        assert!(val.contains("trainedAlgorithmicMedia"), "value='{}' missing trainedAlgorithmicMedia", val);
+        assert!(
+            val.contains("trainedAlgorithmicMedia"),
+            "value='{}' missing trainedAlgorithmicMedia",
+            val
+        );
     }
 
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
