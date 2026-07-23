@@ -127,11 +127,11 @@
     "pageType": "article",
     "topic": "ai-image-detection",
     "title": "AI画像の見分け方：C2PA・EXIF・PNGメタデータを原本で確認 | AICheck365",
-    "description": "AI生成画像かを調べる実践手順。元画像のC2PA署名、EXIF/XMP、PNG text、ComfyUI workflowを実サンプルで確認し、証拠の強さと限界を整理します。",
+    "description": "AI画像かどうかを無料で確認する方法。ブラウザ内でC2PA署名・EXIF/XMP・PNG生成パラメータを読み取り、実サンプルで証拠の強さと限界を解説。アップロード不要。",
     "canonical": "https://www.aicheck365.com/ja/blog/how-to-detect-ai-images/",
     "primaryKeyword": "AI画像 見分け方",
     "draft": false,
-    "updatedAt": "2026-07-10",
+    "updatedAt": "2026-07-23",
     "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/ja/methodology/"]
   },
   {
@@ -157,11 +157,11 @@
     "pageType": "article",
     "topic": "ai-image-detection",
     "title": "如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測 | AICheck365",
-    "description": "用原始圖片依序檢查 C2PA 簽章、EXIF/XMP、PNG 文字區塊與 ComfyUI workflow，搭配 Firefly、ComfyUI 真實樣本說明證據強度與限制。",
+    "description": "免費 AI 圖片辨識與檢測：在瀏覽器本機讀取 C2PA 簽章、EXIF/XMP 與 PNG 生成參數，用 Firefly、ComfyUI 真實樣本說明證據強弱與限制，不上傳檔案。",
     "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-images/",
-    "primaryKeyword": "AI 圖片檢測",
+    "primaryKeyword": "AI 圖片辨識",
     "draft": false,
-    "updatedAt": "2026-07-10",
+    "updatedAt": "2026-07-23",
     "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/zh-TW/methodology/"]
   },
   {
@@ -178,5 +178,35 @@
     "draft": false,
     "updatedAt": "2026-07-10",
     "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/zh-TW/platforms/sora/", "/zh-TW/methodology/"]
+  },
+  {
+    "id": "what-is-c2pa-ja-priority",
+    "slug": "what-is-c2pa",
+    "route": "/ja/blog/what-is-c2pa/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "C2PAとは？AI画像・動画の来歴を記録する国際規格を解説 | AICheck365",
+    "description": "C2PAとはコンテンツの来歴を電子署名付きで記録する国際規格。仕組み、記録される項目、対応企業、ブラウザ内で無料の確認方法を実サンプルで解説します。",
+    "canonical": "https://www.aicheck365.com/ja/blog/what-is-c2pa/",
+    "primaryKeyword": "C2PAとは",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": ["/en/tools/c2pa-validator/", "/ja/blog/how-to-detect-ai-images/", "/ja/platforms/gemini/", "/ja/methodology/"]
+  },
+  {
+    "id": "how-to-detect-ai-images-es-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/es/blog/how-to-detect-ai-images/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "¿Cómo saber si una imagen fue creada con IA? | AICheck365",
+    "description": "Detector de imágenes IA gratis: revisa en tu navegador el C2PA, los metadatos EXIF/XMP y los parámetros PNG, con muestras reales y límites honestos. Sin subir archivos.",
+    "canonical": "https://www.aicheck365.com/es/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "cómo saber si una imagen es IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/png-parameter-extractor/", "/es/methodology/"]
   }
 ]

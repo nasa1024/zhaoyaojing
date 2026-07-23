@@ -783,10 +783,10 @@ const priorityPlatformProfiles = {
   ko: {
     comfyui: {
       title: 'ComfyUI EXIF 확인: PNG 워크플로 메타데이터 추출',
-      description: 'ComfyUI 원본 PNG의 prompt, workflow JSON, 노드 구조, 모델명, seed, sampler, CFG와 크기 정보를 브라우저에서 로컬로 확인합니다.',
+      description: 'ComfyUI 원본 PNG의 prompt, workflow JSON, 노드 구조, 모델명, seed, sampler, CFG와 크기를 브라우저에서 무료로 확인하고 추출합니다. 파일 업로드 없음.',
       h1: 'ComfyUI EXIF 확인: 실제 정보는 PNG 워크플로에 있습니다',
-      meta: '주요 검색어: comfyui exif 확인 · 업데이트: 2026-07-10 · 파서: aicheck 0.2.0',
-      updatedAt: '2026-07-10',
+      meta: '주요 검색어: comfyui exif 확인·추출 · 업데이트: 2026-07-23 · 파서: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
       lead: '“ComfyUI EXIF”를 찾는 경우가 많지만, ComfyUI가 저장하는 핵심 생성 정보는 보통 카메라 EXIF가 아니라 PNG tEXt/iTXt/zTXt 청크의 prompt와 workflow JSON입니다. 생성 도구에서 바로 저장한 원본 PNG를 사용하면 노드 그래프, 체크포인트 이름, seed, sampler, scheduler, steps, CFG, 너비와 높이를 브라우저 안에서 확인할 수 있습니다.',
       directAnswer: {
         heading: '바로 답: ComfyUI 정보는 보통 EXIF가 아니라 PNG text chunk에 있습니다',
@@ -803,6 +803,21 @@ const priorityPlatformProfiles = {
         ['workflow 청크', 'ComfyUI 그래프의 노드와 연결 구조입니다. 원본에 그대로 남아 있으면 다시 불러올 수 있는 경우가 많습니다.'],
         ['모델과 샘플링 설정', '체크포인트/모델 파일명, sampler, scheduler, steps, CFG, seed, width, height를 값이 있는 범위에서 정리합니다.'],
         ['원시 PNG 텍스트', '도구는 tEXt/iTXt/zTXt의 원본 값을 보존해 검색, 복사, JSON 내보내기를 지원합니다. 프롬프트 등 민감한 내용이 포함될 수 있습니다.'],
+      ],
+      insights: [
+        {
+          heading: 'comfyui exif 확인은 어떻게 하나요? (3단계)',
+          body: '먼저 짚어둘 점은, ComfyUI가 남기는 정보는 카메라 EXIF 태그가 아니라 PNG의 tEXt/iTXt/zTXt 텍스트 청크에 들어 있는 prompt와 workflow(JSON)라는 것입니다. 그래서 “comfyui exif 확인”은 실제로는 이 PNG 텍스트 청크를 읽는 작업입니다. 브라우저에서 무료로, 파일을 업로드하지 않고 다음 3단계로 확인·추출할 수 있습니다.',
+          list: [
+            '1. ComfyUI에서 바로 저장한 원본 PNG를 준비합니다(스크린샷이나 다시 저장한 사본은 제외).',
+            '2. PNG 파라미터/워크플로 추출기를 열고 이미지를 불러옵니다. 처리는 현재 브라우저 안에서 끝납니다.',
+            '3. prompt·workflow 청크에서 노드 수, 모델명, seed, sampler, CFG, 크기를 확인하고 필요하면 JSON으로 내보냅니다.',
+          ],
+        },
+        {
+          heading: '카톡·SNS로 보내거나 다시 저장하면 정보가 사라지나요?',
+          body: '네, 그럴 수 있습니다. 카카오톡, 인스타그램, 트위터(X) 같은 서비스와 이미지 최적화 도구는 PNG를 다시 인코딩하면서 tEXt/iTXt/zTXt 청크를 제거하는 경우가 많습니다. JPG로 변환하거나 스크린샷을 찍어도 workflow 정보는 사라집니다. 따라서 값이 비어 있다고 해서 ComfyUI로 만들지 않았다는 뜻은 아니며, 가능하면 원본 PNG를 다시 받아 확인하는 것이 좋습니다.',
+        },
       ],
       steps: {
         heading: 'ComfyUI PNG 메타데이터 확인 순서',
@@ -827,6 +842,8 @@ const priorityPlatformProfiles = {
         { href: '/platforms/stable-diffusion/', label: 'Stable Diffusion 신호 비교' },
       ],
       faq: [
+        ['comfyui exif 확인은 어떻게 하나요?', '엄밀히는 EXIF가 아니라 PNG 텍스트 청크(prompt·workflow)를 확인해야 합니다. 원본 PNG를 PNG 파라미터/워크플로 추출기에 올리면 노드, 모델, seed, sampler, CFG를 브라우저에서 무료로 볼 수 있고 파일은 업로드되지 않습니다.'],
+        ['comfyui exif 추출은 어떻게 하나요?', 'prompt와 workflow 청크를 추출해 JSON으로 내보낼 수 있습니다. 원본 PNG라면 워크플로를 다시 ComfyUI로 불러올 수 있는 경우가 많지만, 재인코딩되었거나 청크가 제거된 파일에서는 추출되지 않습니다.'],
         ['ComfyUI 메타데이터는 정말 EXIF인가요?', '대부분 아닙니다. 핵심 생성 정보는 보통 PNG 텍스트 청크의 prompt와 workflow JSON에 저장됩니다.'],
         ['원본 워크플로를 완전히 복구할 수 있나요?', 'workflow 청크가 기록되고 보존됐다면 가능한 경우가 많습니다. 다만 사용자 정의 노드와 외부 모델 파일은 별도로 설치해야 할 수 있습니다.'],
         ['왜 C2PA보다 신뢰도가 낮나요?', 'ComfyUI workflow는 일반적으로 전자서명되지 않아 수정 가능하기 때문입니다. 출처 단서이지 위변조 방지 증명은 아닙니다.'],
@@ -849,11 +866,11 @@ const priorityArticleProfiles = {
   'zh-TW': {
     'blog/how-to-detect-ai-images': {
       title: '如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測',
-      description: '用原始圖片依序檢查 C2PA 簽章、EXIF/XMP、PNG 文字區塊與 ComfyUI workflow，搭配 Firefly、ComfyUI 真實樣本說明證據強度與限制。',
+      description: '免費 AI 圖片辨識與檢測：在瀏覽器本機讀取 C2PA 簽章、EXIF/XMP 與 PNG 生成參數，用 Firefly、ComfyUI 真實樣本說明證據強弱與限制，不上傳檔案。',
       h1: '如何判斷圖片是否由 AI 生成？先查原始檔裡的來源證據',
-      meta: '主要關鍵字：AI 圖片檢測 · 更新：2026-07-10 · Parser：aicheck 0.2.0',
-      updatedAt: '2026-07-10',
-      lead: '判斷 AI 圖片時，只看手指、文字或光影是否怪異很容易誤判。更可說明的方法是保留原始檔，先讀 C2PA Content Credentials，再檢查 EXIF/XMP、PNG tEXt/iTXt/zTXt、ComfyUI prompt/workflow 與檔名。AICheck365 會在瀏覽器本機解析這些訊號，並區分可驗證簽章與可被修改的一般 metadata。',
+      meta: '主要關鍵字：AI 圖片辨識・檢測 · 更新：2026-07-23 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: '想辨識一張圖片是不是 AI 生成，只看手指、文字或光影怪不怪其實很容易誤判。比較能說明的做法是先保留原始檔，依序讀取 C2PA Content Credentials，再檢查 EXIF/XMP、PNG tEXt/iTXt/zTXt、ComfyUI 的 prompt/workflow 與檔名。AICheck365 會在你的瀏覽器本機解析這些訊號，把「可驗證的數位簽章」和「可以被修改的一般 metadata」分開呈現，全程不上傳檔案。',
       directAnswer: {
         heading: '直接答案：用多層來源證據判斷，不要只相信單一 AI 百分比',
         body: '最強的情況是 C2PA 簽章有效，而且 manifest 的 digitalSourceType 明確寫出 trainedAlgorithmicMedia。XMP/EXIF 的生成工具欄位、PNG 的 prompt 或 workflow 可作為補強；檔名與視覺瑕疵只能當弱線索。沒有找到訊號，只代表這份檔案沒有保留可讀證據，不能證明它一定是真人創作。',
@@ -869,6 +886,31 @@ const priorityArticleProfiles = {
         ['EXIF / XMP', 'Software、CreatorTool、Credit、DigitalSourceType、UserComment 可能留下平台名或 AIGC 標籤；未簽章欄位可被修改。'],
         ['PNG text / workflow', 'Stable Diffusion、AUTOMATIC1111、ComfyUI 可能寫入 prompt、negative prompt、seed、sampler、CFG、model 與 workflow JSON。'],
         ['檔名與視覺檢查', '平台命名格式、文字變形、反射或物件連續性可協助找方向，但無法單獨證明來源。'],
+      ],
+      insights: [
+        {
+          heading: '為什麼只看手指、文字、光影容易誤判？',
+          body: '用肉眼辨識 AI 圖片，最大的問題是兩個方向都會出錯。現在的生成模型已經修正掉很多早期破綻，所以一張圖可能完全是 AI 生成、看起來卻毫無異狀；反過來，真正用相機拍的相片經過壓縮或動態模糊，也可能出現手指變形或線條扭曲。下面這些常被拿來當「破綻」的特徵，其實都已經不夠可靠：',
+          list: [
+            '手指、牙齒、耳環或髮絲：新版模型多半已經畫得自然，而真實相片被壓縮後也可能糊掉，兩者不易單靠這點區分。',
+            '圖片裡的文字：拼字或字形錯亂曾是明顯線索，但文字生成進步很快，已經不能只靠這點下定論。',
+            '光影與反射：物理是否合理很難用肉眼穩定判斷，容易看走眼，也容易把正常照片誤判成 AI。',
+          ],
+        },
+        {
+          heading: '來源證據的強弱怎麼排？',
+          body: '當不同線索彼此矛盾時，可以照「偽造難度」由強到弱排序，先相信最難假造的那一層：',
+          list: [
+            '第一層（最強）：有效的 C2PA 簽章，而且 manifest 明確宣告 AI 生成（例如 digitalSourceType = trainedAlgorithmicMedia）。這是最能驗證、也最難偽造的證據。',
+            '第二層：未簽章的 metadata，例如 EXIF/XMP 的生成工具欄位、PNG 的 prompt 或 workflow。有參考價值，但可以被編輯或複製。',
+            '第三層：檔名，例如平台的命名前綴。只能當作情境線索，改個名字就沒了。',
+            '第四層（最弱）：視覺直覺。只適合當作起點去找方向，不能單獨當結論。',
+          ],
+        },
+        {
+          heading: '從 LINE 或社群轉傳、截圖後還能判斷嗎？',
+          body: '通常會變難。LINE、Facebook、Instagram、Threads 以及各種圖片最佳化工具，在轉傳時多半會重新壓縮圖片，並把 C2PA、XMP 與 PNG 文字區塊一起清掉；截圖或另存成 JPG 同樣會讓 workflow 資訊消失。因此如果檢測結果是空的，並不代表這張圖不是 AI，只代表這份副本已經沒有可讀證據。最實際的做法是向最初製作或分享的人索取原始檔，或找到更高解析度的原始來源；你手上的檔案越接近「剛從生成工具輸出的原檔」，能讀到的訊號就越多。',
+        },
       ],
       steps: {
         heading: 'AI 圖片檢測的五個步驟',
@@ -893,10 +935,11 @@ const priorityArticleProfiles = {
         { href: '/en/tools/png-parameter-extractor/', label: '擷取 PNG 參數與 workflow', localized: false },
       ],
       faq: [
-        ['可以百分之百判斷 AI 圖片嗎？', '不行。工具只能呈現目前檔案仍保留、且 parser 已知的來源訊號；被清除 metadata 或尚未涵蓋的平台可能沒有結果。'],
-        ['圖片有 C2PA 就代表是 AI 生成嗎？', '不一定。C2PA 是內容來源標準，也可用於相機或編輯流程。要看 manifest 是否以 digitalSourceType 或 actions 明確宣告演算法生成。'],
-        ['EXIF 的 Software 欄位可以當證明嗎？', '它是可用的輔助線索，但一般 EXIF 沒有簽章保護，可以被修改，因此不能單獨定案。'],
-        ['圖片會被上傳到伺服器嗎？', '不會。分析在瀏覽器本機執行。'],
+        ['有沒有免費的 AI 圖片辨識網站？', '有。AICheck365 就是免費的線上工具，會在你的瀏覽器本機讀取 C2PA、EXIF/XMP 與 PNG 生成參數，不需註冊、也不會上傳檔案。它呈現的是檔案裡實際留下的來源訊號，而不是只給一個「AI 機率」數字。'],
+        ['AI 圖片檢測可以 100% 準確嗎？', '不行。工具只能呈現目前檔案仍保留、而且 parser 已知的來源訊號；metadata 被清除或平台尚未涵蓋時可能沒有結果。你可以用它把可驗證的證據整理出來，但要記得「沒有訊號」不等於「不是 AI」。'],
+        ['LINE 傳來的圖片可以判斷嗎？', '可以試，但成功率較低。LINE 轉傳通常會重新壓縮並移除 metadata，直接丟進 AICheck365 有時會讀不到訊號。比較可靠的做法是請對方以「檔案」而不是「照片」的方式傳原始檔，再本機檢查一次。'],
+        ['圖片有 C2PA 就代表是 AI 生成嗎？', '不一定。C2PA 是內容來源標準，也可用於相機或編輯流程。要看 manifest 是否以 digitalSourceType 或 actions 明確宣告演算法生成；AICheck365 的 C2PA 檢視會把簽章狀態與宣告內容分開列出。'],
+        ['圖片會被上傳到伺服器嗎？', '不會。分析在你的瀏覽器本機執行，檔案不會離開你的裝置。'],
       ],
       sources: {
         heading: '資料來源與驗證紀錄',
@@ -974,10 +1017,10 @@ const priorityArticleProfiles = {
   ja: {
     'blog/how-to-detect-ai-images': {
       title: 'AI画像の見分け方：C2PA・EXIF・PNGメタデータを原本で確認',
-      description: 'AI生成画像かを調べる実践手順。元画像のC2PA署名、EXIF/XMP、PNG text、ComfyUI workflowを実サンプルで確認し、証拠の強さと限界を整理します。',
+      description: 'AI画像かどうかを無料で確認する方法。ブラウザ内でC2PA署名・EXIF/XMP・PNG生成パラメータを読み取り、実サンプルで証拠の強さと限界を解説。アップロード不要。',
       h1: 'AI画像の見分け方：見た目より先に元ファイルを確認する',
-      meta: '主要キーワード：AI画像 見分け方 · 更新日：2026-07-10 · パーサー：aicheck 0.2.0',
-      updatedAt: '2026-07-10',
+      meta: '主要キーワード：AI画像 見分け方 · 更新日：2026-07-23 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
       lead: 'AI画像を見分けるとき、指や文字の崩れだけで断定するのは危険です。まず生成元から保存された元画像を保全し、C2PA Content Credentials、EXIF/XMP、PNG text chunk、ComfyUI workflow、ファイル名の順に調べます。AICheck365 はこれらをブラウザ内で解析し、検証可能な署名と編集可能なメタデータを分けて表示します。',
       directAnswer: {
         heading: '結論：単一のAI判定率ではなく、元画像に残る来歴証拠を重ねます',
@@ -1095,6 +1138,78 @@ const priorityArticleProfiles = {
         ],
       },
     },
+    'blog/what-is-c2pa': {
+      title: 'C2PAとは？AI画像・動画の来歴を記録する国際規格を解説',
+      description: 'C2PAとはコンテンツの来歴を電子署名付きで記録する国際規格。仕組み、記録される項目、対応企業、ブラウザ内で無料の確認方法を実サンプルで解説します。',
+      h1: 'C2PAとは？AIコンテンツの来歴を証明する国際規格',
+      meta: '主要キーワード：C2PAとは · 更新日：2026-07-23 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'C2PA（Coalition for Content Provenance and Authenticity）は、画像・動画・音声などの来歴を電子署名付きで記録するための国際規格です。Adobe や Microsoft が中心となって策定し、現在は Content Credentials という名称で実装が広がっています。「いつ・何のツールで作られ・どう編集されたか」を、あとから第三者が検証できる形でファイルの中に埋め込みます。',
+      directAnswer: {
+        heading: '結論：C2PAは「来歴を署名付きで記録・検証する」規格',
+        body: 'C2PAは画像や動画が本物かどうかを判定する仕組みではなく、誰が・何のツールで作り・どう編集したかという来歴（プロベナンス）を電子署名付きで記録し、あとから検証できるようにする規格です。AI生成物では digitalSourceType = trainedAlgorithmicMedia のように「学習済みアルゴリズムによる生成」が明示されることがあります。署名を確認できれば強い証拠になりますが、署名が無いことはAIではないことの証明にはなりません。',
+      },
+      sampleHeading: '実際のC2PAサンプルで確認できること',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'Content Authenticity Initiative の公開サンプル。C2PA の digitalSourceType = trainedAlgorithmicMedia と暗号学的に有効な署名を確認できます。署名証明書は現在の信頼リスト外のため、表示は trusted ではなく valid です。'],
+        ['Google Veo MP4', 'ユーザー提供の元動画。Google Generative AI の有効な C2PA、digitalSourceType = trainedAlgorithmicMedia、MP4 encoding tool = Google を確認できます。動画（BMFF）へC2PAが格納された例です。'],
+        ['来歴メタデータのない JPEG', '「読み取り可能な C2PA なし」と表示されます。C2PAが無いことは、その画像がAI生成ではない証明にはなりません。'],
+      ],
+      signalRows: [
+        ['manifest / claim', 'ファイルの来歴を束ねる単位です。作成・編集の各操作（actions）や使用ツールが assertion として格納されます。'],
+        ['digitalSourceType', 'コンテンツの由来を示す語彙です。trainedAlgorithmicMedia は学習済みモデルによる生成を表します。'],
+        ['claim_generator', 'manifestや署名を生成したアプリ・サービス名です（例：Adobe Firefly、Google の生成AI）。'],
+        ['署名の状態（valid / trusted）', '署名が暗号学的に正しいか（valid）と、その証明書が信頼リストに含まれるか（trusted）は別々の判定です。'],
+        ['格納場所（JUMBF）', 'データは JUMBF というコンテナにまとめられ、JPEG は APP11、PNG は caBX チャンク、MP4/MOV は BMFF ボックスとして埋め込まれます。'],
+      ],
+      insights: [
+        {
+          heading: 'C2PAはどんな仕組みで来歴を記録するのか？',
+          body: 'C2PAはmanifestに、作成や編集の操作（actions）、使用ツール、生成の由来といった情報を assertion として書き込みます。manifest全体は COSE（CBOR Object Signing and Encryption）で電子署名されるため、あとから改ざんされていれば検証時に検出できます。これらのデータはピクセルではなくファイルの構造に埋め込まれるので、見た目を分析するのではなく、ファイルのバイト列を読むことで来歴を確認します。だからスクリーンショットや再エンコードで構造が失われると、C2PAも一緒に消えてしまいます。',
+        },
+        {
+          heading: 'どの企業がC2PAに対応しているのか？',
+          body: 'C2PAはAdobeとMicrosoftが主導するCAI（Content Authenticity Initiative）を母体に標準化が進み、カメラメーカーやAI各社が実装を広げています。画像・動画の生成では、OpenAI（DALL·E／GPT Image／Sora）、Adobe Firefly、Google（Gemini・Imagen・Veo）などが Content Credentials（C2PA）を付与する取り組みを進めています。ただし対応状況は製品やエクスポート経路によって変わり、すべてのファイルに署名が残るとは限りません。',
+        },
+      ],
+      steps: {
+        heading: 'C2PAを自分で確認する手順',
+        items: [
+          ['元ファイルを用意する', 'SNSの再保存やスクリーンショットではなく、生成サービスから直接ダウンロードした元のJPEG／PNG／MP4を使います。'],
+          ['C2PA検証ツールを開く', 'AICheck365 のC2PAバリデーターにファイルを読み込ませます。解析はブラウザ内で完結し、ファイルはサーバーへ送信されません。無料で利用できます。'],
+          ['manifestと署名状態を読む', 'manifestが存在するか、署名が valid か、そして digitalSourceType や claim_generator がAI生成を示しているかを確認します。'],
+          ['valid と trusted を区別する', '署名が暗号学的に正しくても（valid）、その証明書が信頼リストに含まれるか（trusted）は別問題です。両者を分けて解釈します。'],
+          ['結果を文脈とともに記録する', '取得元、日時、編集の有無、検証結果を一緒に残します。単一の項目だけで真正性を断定しません。'],
+        ],
+      },
+      limits: [
+        'SNS、メッセージアプリ、画像最適化、スクリーンショット、再エンコードはC2PA/JUMBFを削除することがあります。',
+        '署名が valid でも、証明書が信頼リスト外なら trusted ではありません。valid と trusted は別の意味です。',
+        'C2PAが無いことは、AI生成ではない証明にはなりません。来歴は最初から書き込まれていない場合もあります。',
+        'C2PAは来歴を記録・検証する仕組みであり、ピクセルからAIを推定する分類器ではありません。',
+      ],
+      ctaLead: 'まずC2PA検証で署名とmanifestを確認し、必要に応じてAI画像の見分け方やGeminiのC2PA解説も参照してください。',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: 'C2PAをブラウザ内で検証', localized: false },
+        { href: '/blog/how-to-detect-ai-images/', label: 'AI画像の見分け方を読む' },
+        { href: '/platforms/gemini/', label: 'GeminiのC2PAを確認' },
+      ],
+      faq: [
+        ['C2PAとは何ですか？', 'コンテンツの来歴（いつ・何で作られ・どう編集されたか）を電子署名付きで記録・検証するための国際規格です。Content Credentials として実装されています。'],
+        ['C2PAがあれば必ずAI生成ですか？', 'いいえ。C2PAはカメラや編集ソフトの来歴記録にも使われます。manifest内の digitalSourceType が trainedAlgorithmicMedia などAI生成を示しているかを確認してください。'],
+        ['「valid」と「trusted」の違いは何ですか？', 'valid は署名が暗号学的に正しいこと、trusted はその署名証明書が信頼リストに含まれることを指します。valid でも trusted とは限りません。'],
+        ['C2PAはどうやって確認できますか？', 'AICheck365 のC2PA検証ツールに元ファイルを読み込ませると、manifest、署名状態、digitalSourceType をブラウザ内で無料で確認できます。ファイルはアップロードされません。'],
+      ],
+      sources: {
+        heading: '参照資料と検証記録',
+        items: [
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'manifest、assertion、署名検証の公式仕様です。', localized: false },
+          { href: 'https://contentcredentials.org/', label: 'Content Credentials（CAI）', note: 'C2PAを実装するContent Credentialsの公式サイトです。', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365 公開サンプル記録', note: 'Firefly／Veo サンプルの出所、試験日、実際のC2PAシグナルを掲載しています。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 検出方法', note: '証拠の強さと「シグナルなし」の扱いを説明します。' },
+        ],
+      },
+    },
   },
   de: {
     'blog/how-to-detect-ai-videos': {
@@ -1130,6 +1245,95 @@ const priorityArticleProfiles = {
         ['Warum ist ein Originalvideo wichtig?', 'Weil Transcoding C2PA, MP4-Felder und Encoderdaten entfernen oder überschreiben kann.'],
         ['Werden Videos hochgeladen?', 'Nein. Die Analyse läuft lokal im Browser.'],
       ],
+    },
+  },
+  es: {
+    'blog/how-to-detect-ai-images': {
+      title: '¿Cómo saber si una imagen fue creada con IA?',
+      description: 'Detector de imágenes IA gratis: revisa en tu navegador el C2PA, los metadatos EXIF/XMP y los parámetros PNG, con muestras reales y límites honestos. Sin subir archivos.',
+      h1: '¿Cómo saber si una imagen fue creada con IA?',
+      meta: 'Consulta objetivo: cómo saber si una imagen es IA · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Para saber si una imagen fue creada con IA, no te fíes solo del ojo: empieza por el archivo original. AICheck365 busca señales legibles —C2PA/Content Credentials, EXIF/XMP, parámetros y workflow en los textos PNG, y el nombre del archivo— directamente en tu navegador, sin subir nada. Si la imagen es una captura de pantalla o una copia de redes sociales, muchas de esas señales pueden haber desaparecido.',
+      directAnswer: {
+        heading: 'En resumen: combina varias capas de evidencia, no un único porcentaje',
+        body: 'La evidencia más fuerte es una firma C2PA válida cuyo manifiesto declare digitalSourceType = trainedAlgorithmicMedia. Los campos EXIF/XMP y los parámetros PNG (prompt, workflow) sirven de apoyo; el nombre del archivo y las rarezas visuales son pistas débiles. Que no aparezca ninguna señal no demuestra que la imagen sea humana: puede que los metadatos nunca se escribieran o que se hayan eliminado.',
+      },
+      sampleHeading: 'Muestras reales que puedes reproducir',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'Muestra pública de la Content Authenticity Initiative. Se lee digitalSourceType = trainedAlgorithmicMedia y una firma C2PA criptográficamente válida; como el certificado no está en la lista de confianza actual, el resultado es «valid», no «trusted».'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'Muestra de los ejemplos oficiales de ComfyUI. El PNG conserva los chunks de texto prompt y workflow con parámetros de generación sin firmar.'],
+        ['JPEG sin metadatos de origen', 'El análisis devuelve «sin evidencia legible de origen». Este caso de control recuerda que la ausencia de señales no distingue una foto normal de una imagen IA a la que le borraron los metadatos.'],
+      ],
+      signalRows: [
+        ['C2PA / Content Credentials', 'La señal más fuerte cuando un manifiesto firmado declara trainedAlgorithmicMedia o una fuente algorítmica. Se comprueban la firma, el estado de confianza y digitalSourceType por separado.'],
+        ['EXIF / XMP', 'Software, CreatorTool, Credit, DigitalSourceType o UserComment pueden conservar el nombre de la herramienta o una etiqueta AIGC. Sin firma, estos campos se pueden editar.'],
+        ['Texto y workflow PNG', 'Stable Diffusion, AUTOMATIC1111 y ComfyUI pueden guardar prompt, seed, sampler, CFG, modelo y el workflow JSON en los chunks de texto del PNG.'],
+        ['Nombre de archivo y pistas visuales', 'El formato del nombre o las incoherencias visuales orientan la búsqueda, pero por sí solos no prueban el origen.'],
+      ],
+      insights: [
+        {
+          heading: '¿Por qué fallan los «detectores por píxeles» y el ojo humano?',
+          body: 'Mirar solo las manos, los dientes, el texto o los reflejos lleva a errores en las dos direcciones. Los modelos actuales ya corrigen muchos de esos defectos, así que una imagen puede ser IA y parecer perfecta; y una foto real puede tener manos raras por el desenfoque o la compresión. Los clasificadores que «adivinan» a partir de los píxeles dan una probabilidad, no una prueba, y fallan con recortes, filtros, capturas de pantalla o estilos poco frecuentes.',
+          list: [
+            'Manos, dientes o joyas: hoy muchos modelos ya los generan bien, y una foto real comprimida también puede deformarlos.',
+            'Texto dentro de la imagen: mejora rápido y ya no es un indicio fiable por sí solo.',
+            'Luces y reflejos: difíciles de juzgar a simple vista y fáciles de malinterpretar.',
+          ],
+        },
+        {
+          heading: '¿Qué evidencia pesa más? Una jerarquía sencilla',
+          body: 'Cuando varias pistas se contradicen, ordénalas por lo difícil que es falsificarlas y cree primero a la más robusta:',
+          list: [
+            '1. Firma C2PA válida que declara generación por IA: la evidencia más fuerte y verificable.',
+            '2. Metadatos sin firmar (EXIF/XMP, texto PNG con prompt o workflow): útiles, pero editables.',
+            '3. Nombre del archivo (por ejemplo, un prefijo de plataforma): contexto débil y fácil de cambiar.',
+            '4. Intuición visual: solo un punto de partida, nunca una conclusión.',
+          ],
+        },
+        {
+          heading: '¿Se puede comprobar una imagen descargada de redes sociales?',
+          body: 'A menudo no del todo. WhatsApp, Instagram, Facebook, Telegram y las capturas de pantalla vuelven a comprimir la imagen y suelen eliminar el C2PA, el XMP y los textos PNG. Si el resultado sale vacío, no significa que la imagen no sea IA: pide el archivo original a quien lo creó o lo compartió, o busca la fuente en mayor resolución. Cuanto más cerca estés del archivo tal como salió de la herramienta, más señales podrás leer.',
+        },
+      ],
+      steps: {
+        heading: 'Cómo comprobar una imagen paso a paso',
+        items: [
+          ['Conserva el archivo original', 'Usa el archivo descargado de la plataforma o enviado por quien lo generó, no una captura ni una copia de redes sociales.'],
+          ['Ejecuta el análisis local', 'Carga la imagen en AICheck365 y revisa el resumen de C2PA, EXIF/XMP, texto PNG y nombre de archivo. Todo ocurre en tu navegador, sin subir el archivo.'],
+          ['Confirma si el C2PA es realmente válido', 'No basta con que «haya C2PA»: comprueba si la firma es válida, si hay errores de manipulación y si el manifiesto declara generación por IA.'],
+          ['Contrasta los campos de apoyo', 'Revisa que herramienta, modelo, prompt y workflow sean coherentes entre sí y con el origen del archivo. Los metadatos sin firma se pueden falsificar.'],
+          ['Anota el origen y los límites', 'Guarda la URL de origen, la fecha, si hubo reexportación y el resultado. Deja las rarezas visuales como apoyo final, no como veredicto.'],
+        ],
+      },
+      limits: [
+        'WhatsApp, Instagram, Facebook, Telegram, la optimización de imágenes y las capturas de pantalla suelen eliminar el C2PA, el XMP y el texto PNG.',
+        'Los campos EXIF/XMP y el workflow JSON sin firmar se pueden editar o copiar: trátalos como pista, no como prueba legal.',
+        'Tener C2PA no significa automáticamente que sea IA; hay que leer qué declara el manifiesto (digitalSourceType y actions).',
+        'Que no aparezca ninguna señal solo indica que esta copia no conserva evidencia legible; no descarta que sea IA.',
+      ],
+      ctaLead: 'Empieza con el detector completo para reunir la evidencia; si aparece C2PA o un workflow PNG, ábrelo con la herramienta específica.',
+      ctas: [
+        { href: '/', label: 'Comprobar una imagen en el navegador' },
+        { href: '/en/tools/c2pa-validator/', label: 'Validar el C2PA en detalle', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: 'Extraer parámetros y workflow PNG', localized: false },
+      ],
+      faq: [
+        ['¿Existe un detector de imágenes IA gratis?', 'Sí. AICheck365 revisa el C2PA, los metadatos EXIF/XMP y los parámetros PNG de forma gratuita y en tu navegador, sin subir el archivo. Muestra las señales que quedan en el archivo, no una simple etiqueta.'],
+        ['¿Se puede comprobar una imagen descargada de redes sociales?', 'A veces quedan pistas, pero las redes suelen recomprimir la imagen y borrar los metadatos. Si no aparece nada, pide el archivo original: es la mejor forma de recuperar señales legibles y volver a analizarlo.'],
+        ['¿Se puede identificar un logo hecho con IA?', 'Solo si el archivo conserva evidencia, como un C2PA firmado o parámetros PNG. Un logo suele exportarse y editarse varias veces, así que a menudo esas señales ya no están y el resultado es «sin evidencia».'],
+        ['¿Qué significa que no se encuentren señales?', 'Que esta copia no conserva evidencia legible de origen. No prueba que la imagen sea humana ni que no sea IA: los metadatos pueden no haberse escrito nunca o haberse eliminado.'],
+      ],
+      sources: {
+        heading: 'Fuentes y registros de verificación',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de muestras de AICheck365', note: 'Origen de las muestras, fechas de prueba, señales reales y límites conocidos.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Fuente pública de la muestra C2PA de Firefly.', localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'Ejemplos oficiales de ComfyUI', note: 'Fuente del PNG SDXL con workflow.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificación técnica C2PA 2.2', note: 'Especificación oficial de manifest, assertions y verificación de firma.', localized: false },
+          { href: '/methodology/', label: 'Metodología de AICheck365', note: 'Cómo se interpretan la fuerza de la evidencia y la ausencia de señales.' },
+        ],
+      },
     },
   },
   'pt-BR': {
@@ -1404,6 +1608,18 @@ const articles = Object.keys(pageTitles).map((slug) => ({
           </tbody>
         </table>
 
+        {priorityArticleProfile.insights?.length > 0 && priorityArticleProfile.insights.map((block) => (
+          <section data-content-section="insight">
+            <h2>{block.heading}</h2>
+            {block.body && <p>{block.body}</p>}
+            {block.list?.length > 0 && (
+              <ul class="content-list">
+                {block.list.map((item) => <li>{item}</li>)}
+              </ul>
+            )}
+          </section>
+        ))}
+
         {priorityArticleProfile.steps?.items?.length > 0 && (
           <section data-content-section="steps">
             <h2>{priorityArticleProfile.steps.heading}</h2>
@@ -1507,6 +1723,18 @@ const articles = Object.keys(pageTitles).map((slug) => ({
               {priorityPlatformProfile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
             </tbody>
           </table>
+
+          {priorityPlatformProfile.insights?.length > 0 && priorityPlatformProfile.insights.map((block) => (
+            <section data-content-section="insight">
+              <h2>{block.heading}</h2>
+              {block.body && <p>{block.body}</p>}
+              {block.list?.length > 0 && (
+                <ul class="content-list">
+                  {block.list.map((item) => <li>{item}</li>)}
+                </ul>
+              )}
+            </section>
+          ))}
 
           {priorityPlatformProfile.steps?.items?.length > 0 && (
             <section data-content-section="steps">

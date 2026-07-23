@@ -72,29 +72,87 @@ const homeCopy = {
   },
   ja: {
     title: 'AICheck365 · AI画像/動画 判定・検出ツール | 無料でAI生成メディアを判別',
-    description: 'AI画像・動画の無料判定ツール。画像/動画ファイル内の AI 由来の手がかりをブラウザ内で検出・判別。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、動画フレーム認識を読み取ります。',
+    description: 'AI画像・動画の無料判定・検出ツール。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、動画フレームの透かしなど、ファイルに残る手がかりをブラウザ内で読み取り、AI 生成かどうかの判別を支援します。ファイルはアップロードされません。',
     eyebrow: 'AI画像/動画の出所検出',
     h1: 'AI画像・動画の判定ツール：残された痕跡を見る',
-    lead: 'オリジナルの画像や動画をドロップして AI 生成かどうかを判定。AICheck365 は C2PA、EXIF、XMP、PNG テキスト、生成パラメータ、動画コンテナの出所手がかりを検査します。',
+    lead: 'オリジナルの画像や動画をドロップするだけ。AICheck365 が C2PA、EXIF、XMP、PNG テキスト、生成パラメータ、動画コンテナを調べ、AI 生成の痕跡が残っていないかを確認します。',
     uploads: 'サーバーアップロード',
     local: 'ローカル処理',
     privacy: 'プライバシー優先',
     privacyDesc: 'ファイルはブラウザ内でのみ読み込まれます',
-    heroPrivacy: 'ファイルはブラウザ内で処理され、デバイスから送信されません。',
+    heroPrivacy: 'ファイルはブラウザ内で処理され、端末の外に送信されることはありません。',
     ctaPrimary: 'オリジナルファイルをドロップ',
-    ctaSecondary: '実際のサンプルを先に確認',
-    original: '原本に最適',
-    originalDesc: '原本ほど検出可能なシグナルが残ります',
+    ctaSecondary: 'まずサンプルで試してみる',
+    original: 'オリジナルファイルに最適',
+    originalDesc: '加工や転送を経ていない元ファイルほどシグナルが残っています',
     explain: '説明可能な結果',
-    explainDesc: '一致したフィールドと信頼度を表示',
-    notice: '<strong>重要：</strong>万能の AI 判定器ではありません。ファイルに残る EXIF / XMP / C2PA / PNG テキスト / MP4/MOV メタデータ / ファイル名などの手がかりを読み取ります。動画フレーム分析はローカルで実行され、遅くなる場合があります。',
+    explainDesc: '一致したシグナル・信頼度・フィールドの詳細を表示します',
+    notice: '<strong>ご注意：</strong>これは「何でも見抜ける」万能の AI 判定ツールではありません。ファイルに現在も残っている EXIF / XMP / C2PA / PNG テキストチャンク / MP4・MOV メタデータ / ファイル名などの手がかりを読み取り、判断を補助します。SNS での再圧縮やスクリーンショット、再書き出しを経たファイルでは、多くのシグナルがすでに失われています。動画のフレーム分析はブラウザ内で実行されるため、時間がかかる場合があります。',
     seoTitle: 'このツールは何を確認しますか？',
-    seoP1: 'AICheck365 は画像/動画ファイルに残る<strong>出所シグナル</strong>を確認します。EXIF、XMP、C2PA、PNG テキスト、MP4/MOV メタデータ、ファイル名、抽出フレーム透かしなどです。',
-    seoP2: 'Gemini、Google Imagen、DALL-E / GPT Image、Midjourney、Stable Diffusion、Adobe Firefly、Kling、Sora、Runway、Pika などの一般的な痕跡を識別できます。',
+    seoP1: 'AICheck365 は、画像・動画ファイルの内部に残る<strong>出所シグナル</strong>を確認します。対象となるのは EXIF、XMP、C2PA、PNG テキストチャンク、MP4/MOV メタデータ、ファイル名、抽出した動画フレームの透かしなどです。これらの領域には、生成に使われたツールやモデル、コンテンツの由来が記録されていることがあります。',
+    seoP2: '現在は Gemini、Google Imagen、DALL-E / GPT Image、Midjourney、Stable Diffusion、Adobe Firefly、Kling、Sora、Runway、Pika など、主要な生成 AI プラットフォームが残す代表的な痕跡を識別できます。',
     usageTitle: '利用上の注意',
-    usage: ['検出はメタデータとコンテナ信号に基づき、画素だけで判断しません', 'SNS の圧縮や再エンコードでメタデータは失われやすくなります', 'スクリーンショット、画面録画、再書き出しでは原始シグナルが消えます', '結果は迅速な参考であり、法的鑑定ではありません'],
-    platformsLink: 'プラットフォームガイド',
+    usage: ['検出はメタデータやコンテナ情報などの「シグナル」に基づきます。見た目（ピクセル）だけから AI かどうかを推測するものではありません', 'SNS やメッセージアプリを経由したファイルは、圧縮・再エンコードによってメタデータが失われていることがよくあります', 'スクリーンショットや画面録画、再書き出しを行うと、元ファイルにあったシグナルはほぼ失われます', '検出結果はあくまで一次的な参考情報です。法的な証拠や専門的な鑑定の代わりにはなりません'],
+    platformsLink: 'プラットフォーム別検出ガイド',
     videoGuideLink: 'AI動画検出ガイド',
+    article: {
+      title: 'AI生成メディアの基礎知識：なぜ「見た目」だけでは見抜けないのか',
+      sections: [
+        {
+          paragraphs: [
+            '「この写真、本物だろうか？」——SNS やニュースで画像・動画を目にして、ふとそう感じたことはありませんか。Midjourney や Stable Diffusion が生成する画像、Sora や Runway が生成する動画の品質は急速に向上し、いまでは専門家でも、見た目だけで本物と区別するのは難しくなっています。',
+            'かつては「指の本数がおかしい」「背景の文字が崩れている」「光の向きが不自然」といった目視チェックがある程度有効でした。しかし最新の生成モデルはこうした弱点の多くを克服しており、見た目の違和感だけに頼った判別は、もはや確実な方法とは言えません。誤情報の拡散、なりすまし広告、フェイク画像を使った詐欺など、AI生成メディアをめぐるトラブルが世界的に増えるなか、「印象」ではなく「証拠」で確認する手段が求められています。',
+          ],
+        },
+        {
+          heading: '手がかりは「ファイルの中」に残っている',
+          paragraphs: [
+            'そこで注目したいのが、画像や動画の<strong>ファイル内部に残る出所情報</strong>です。多くの生成 AI ツールは、コンテンツを書き出す際に、次のような形で痕跡をファイルに埋め込んでいます。',
+          ],
+          list: [
+            '<strong>C2PA / Content Credentials</strong>：「いつ・どのツールで・どのように作られたか」を電子署名付きで記録する国際規格です。OpenAI（DALL-E / GPT Image）、Adobe Firefly、Google などが対応を進めています。',
+            '<strong>EXIF / XMP メタデータ</strong>：本来はカメラの機種や撮影設定を記録する領域ですが、生成 AI ツールの名前やソフトウェア情報が書き込まれていることがあります。',
+            '<strong>PNG テキストチャンク</strong>：Stable Diffusion 系のツールは、プロンプトや生成パラメータを PNG ファイル内のテキスト領域に保存することがあります。',
+            '<strong>動画コンテナ（MP4/MOV）のメタデータ・SEI</strong>：AI 動画では、コンテナのメタデータや映像ストリーム内の付加情報に、生成ツールの痕跡が残ることがあります。',
+          ],
+          closing: [
+            'AICheck365 は、こうした痕跡をブラウザ内で解析し、「どのフィールドに・何が記録されていたか」を根拠つきで提示します。根拠の見えない「AI っぽさ 87%」のようなスコアではなく、検証可能な証拠を示すことを大切にしています。',
+          ],
+        },
+        {
+          heading: '使い方は 3 ステップ：無料・登録不要',
+          ordered: [
+            '確認したい画像または動画ファイルを用意します。SNS やチャットアプリを経由していない<strong>オリジナルのファイル</strong>が理想です。',
+            'このページ上部の検出ツールにファイルをドラッグ＆ドロップ（またはクリックして選択）し、「検出開始」を押します。',
+            '数秒〜数十秒で結果が表示されます。見つかったシグナル、信頼度、フィールドの詳細、そして検出の限界までまとめて確認できます。',
+          ],
+          closing: [
+            '解析はすべてお使いのブラウザ内で完結し、ファイルがサーバーにアップロードされることはありません。仕事の資料や個人的な写真でも、安心してチェックできます。',
+          ],
+        },
+        {
+          heading: '結果を読むときの 2 つのポイント',
+          list: [
+            '<strong>シグナルが見つかった場合</strong>：AI 生成の可能性を示す具体的な根拠が得られたことになります。特に C2PA の署名付き記録は、信頼性の高い証拠です。',
+            '<strong>シグナルが見つからなかった場合</strong>：「AI 生成ではない」という証明にはなりません。転送や圧縮の過程で証拠が消えただけの可能性があります。判断を保留し、できれば配布元のオリジナルファイルを入手して再確認してください。',
+          ],
+          closing: [
+            'より詳しい手順は <a href="/ja/blog/how-to-detect-ai-images/">AI画像の見分け方ガイド</a> と <a href="/ja/blog/how-to-detect-ai-videos/">AI動画検出ガイド</a> で、C2PA の仕組みは <a href="/ja/blog/what-is-c2pa/">「C2PA とは何か」</a> で解説しています。',
+          ],
+        },
+      ],
+      cta: '今すぐ無料でチェックする',
+    },
+    faq: {
+      title: 'よくある質問',
+      items: [
+        ['本当に無料で使えますか？', 'はい。すべての機能を無料で利用でき、アカウント登録も不要です。ファイルはブラウザ内で解析され、サーバーにアップロードされることはありません。'],
+        ['AI 生成かどうかを 100% 判定できますか？', 'いいえ。100% の判定はどんなツールにも不可能です。AICheck365 は、ファイルに実際に残っている出所シグナルを根拠つきで提示し、確度の高い判断を支援します。シグナルが見つからない場合でも、AI 生成の可能性を完全に否定することはできません。'],
+        ['SNS からダウンロードした画像やスクリーンショットでも判定できますか？', '解析自体は可能ですが、SNS の再圧縮やスクリーンショットの過程でメタデータの大部分が失われるため、シグナルは検出されにくくなります。できるだけ加工や転送を経ていないオリジナルのファイルで確認することをおすすめします。'],
+        ['ディープフェイク動画も検出できますか？', 'MP4/MOV コンテナのメタデータ、SEI、抽出フレームの透かしなど、動画ファイルに残る出所シグナルを確認できます。ただし、すべてのディープフェイクを検出できるわけではありません。動画特有の注意点は AI動画検出ガイドで詳しく解説しています。'],
+        ['どの生成 AI プラットフォームに対応していますか？', 'Gemini、Google Imagen、DALL-E / GPT Image、Midjourney、Stable Diffusion、Adobe Firefly、Kling、Sora、Runway、Pika などの代表的な痕跡パターンに対応しています。各プラットフォームの詳細はプラットフォーム別検出ガイドで確認できます。'],
+      ],
+    },
   },
   ko: {
     title: 'AICheck365 · AI 이미지/비디오 판독기 | 무료 AI 생성 이미지 판별',
@@ -244,6 +302,17 @@ homeCopy['zh-TW'] = {
 };
 
 const copy = homeCopy[pageLang] ?? homeCopy.en;
+const faqJsonLd = copy.faq
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": copy.faq.items.map(([question, answer]) => ({
+        "@type": "Question",
+        "name": question,
+        "acceptedAnswer": { "@type": "Answer", "text": answer },
+      })),
+    }
+  : null;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
@@ -272,7 +341,7 @@ const jsonLd = {
   title={copy.title}
   description={copy.description}
   canonical="https://www.aicheck365.com/"
-  jsonLd={jsonLd}
+  jsonLd={faqJsonLd ? [jsonLd, faqJsonLd] : jsonLd}
 >
   <main class="page">
     <section class="hero card">
@@ -332,6 +401,48 @@ const jsonLd = {
         {copy.usage.map((item) => <li>{item}</li>)}
       </ul>
     </section>
+
+    {copy.article && (
+      <section class="card content-section">
+        <h2>{copy.article.title}</h2>
+        {copy.article.sections.map((section) => (
+          <>
+            {section.heading && <h3>{section.heading}</h3>}
+            {(section.paragraphs ?? []).map((paragraph) => <p set:html={paragraph} />)}
+            {section.list && (
+              <ul class="content-list">
+                {section.list.map((item) => <li set:html={item} />)}
+              </ul>
+            )}
+            {section.ordered && (
+              <ol class="content-list">
+                {section.ordered.map((item) => <li set:html={item} />)}
+              </ol>
+            )}
+            {(section.closing ?? []).map((paragraph) => <p set:html={paragraph} />)}
+          </>
+        ))}
+        {copy.article.cta && (
+          <div class="hero-cta">
+            <a href="#upload-zone" class="btn-primary">{copy.article.cta}</a>
+          </div>
+        )}
+      </section>
+    )}
+
+    {copy.faq && (
+      <section class="card content-section">
+        <h2>{copy.faq.title}</h2>
+        <div class="faq-list">
+          {copy.faq.items.map(([question, answer]) => (
+            <details class="faq-item">
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
 
     <MethodologyBlock />
 
