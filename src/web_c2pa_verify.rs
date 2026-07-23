@@ -164,8 +164,7 @@ pub(crate) fn extract_digital_source_type(manifest_json: &str) -> Option<String>
     let after_colon = after_key
         .trim_start_matches(|c: char| c.is_whitespace() || c == ':')
         .trim_start();
-    if after_colon.starts_with('"') {
-        let inner = &after_colon[1..];
+    if let Some(inner) = after_colon.strip_prefix('"') {
         let end = inner.find('"')?;
         let value = &inner[..end];
         if !value.is_empty() {
