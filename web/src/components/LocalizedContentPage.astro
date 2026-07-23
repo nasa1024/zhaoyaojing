@@ -1213,10 +1213,11 @@ const priorityArticleProfiles = {
   },
   de: {
     'blog/how-to-detect-ai-videos': {
-      title: 'Videoerkennung: AI-Videos über MP4-Metadaten, C2PA und Wasserzeichen prüfen',
-      description: 'Videoerkennung für AI-Clips: Prüfe Originalvideos lokal auf C2PA, MP4/MOV-Metadaten, SEI marker, Dateinamen und Frame-Wasserzeichen.',
-      h1: 'Videoerkennung für AI-Videos: zuerst die Originaldatei prüfen',
-      meta: 'Ziel-Keyword: videoerkennung · Aktualisiert Juni 2026 · Parser: aicheck 0.2.0',
+      title: 'Videoerkennung für KI-Videos: MP4, C2PA & Wasserzeichen',
+      description: 'Videoerkennung für KI-Videos, kostenlos im Browser: Originalvideo lokal auf C2PA, MP4/MOV-Metadaten, SEI-Marker und Frame-Wasserzeichen prüfen – ohne Upload.',
+      h1: 'Videoerkennung für KI-Videos: zuerst die Originaldatei prüfen',
+      meta: 'Ziel-Keyword: videoerkennung · Aktualisiert: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
       lead: 'Für die Videoerkennung ist die Originaldatei entscheidend. AICheck365 prüft MP4/MOV-Metadaten, C2PA/JUMBF-Text, SEI marker, Dateinamen und erst danach einzelne Frames auf Wasserzeichen. Ein Social-Media-Upload oder eine Bildschirmaufnahme kann die stärksten Signale entfernen.',
       sampleHeading: 'Getestete Beispiele',
       sampleRows: [
@@ -1230,6 +1231,21 @@ const priorityArticleProfiles = {
         ['SEI marker', 'Kann Remuxing überleben, verschwindet aber häufig beim Neucodieren.'],
         ['Frame-Wasserzeichen', 'Fallback mit niedrigerem Gewicht, wenn Metadaten fehlen.'],
       ],
+      insights: [
+        {
+          heading: 'Warum Sichtprüfung allein nicht mehr reicht',
+          body: 'Sora, Kling, Runway oder Veo erzeugen inzwischen Clips, in denen die klassischen Fehler – unmögliche Hände, flackernde Kanten, unlesbare Schrift – oft gar nicht mehr auftreten. Umgekehrt wirken stark komprimierte echte Videos schnell „künstlich“. Der Augenschein taugt deshalb nur noch als schwaches Zusatzindiz; belastbarer ist, was in der Datei selbst steht: Content Credentials, Container-Felder und bekannte Tool-Marker.',
+        },
+        {
+          heading: 'Video-Metadaten online auslesen – ohne die Datei hochzuladen',
+          body: 'Wer Video-Metadaten online auslesen möchte, muss die Datei bei AICheck365 nirgendwohin hochladen: Die Analyse läuft vollständig lokal im Browser. So gehst du vor:',
+          list: [
+            '1. Originaldatei sichern – direkt aus dem ursprünglichen Download oder vom Ersteller, nicht aus Messenger oder Social Media.',
+            '2. Datei in den MP4/MOV-Metadaten-Inspector oder den Detektor auf der Startseite ziehen.',
+            '3. Ergebnis lesen: encoder-, tool- und ©too-Felder, ilst-Boxen, C2PA-Status und gefundene AIGC-Labels werden mit Fundstelle angezeigt.',
+          ],
+        },
+      ],
       limits: [
         'Kein Treffer beweist nicht, dass ein Video menschlich erstellt wurde.',
         'Transcoding, Screenshots und Schnittprogramme überschreiben häufig Containerdaten.',
@@ -1242,6 +1258,8 @@ const priorityArticleProfiles = {
       ],
       faq: [
         ['Was bedeutet Videoerkennung hier?', 'Es geht um lesbare Herkunftssignale in der Datei, nicht um ein intransparentes Prozenturteil.'],
+        ['Wie erkenne ich ein KI-Video kostenlos?', 'Originalvideo in den Detektor auf der Startseite ziehen: Die Prüfung ist kostenlos, läuft ohne Anmeldung lokal im Browser und listet jedes gefundene Signal mit Fundstelle und Gewicht auf.'],
+        ['Kann ich Video-Metadaten auslesen, ohne die Datei hochzuladen?', 'Ja. AICheck365 liest MP4/MOV-Container direkt im Browser aus; das Video verlässt dein Gerät nicht. Das gilt auch für die C2PA-Prüfung und die Frame-Analyse.'],
         ['Warum ist ein Originalvideo wichtig?', 'Weil Transcoding C2PA, MP4-Felder und Encoderdaten entfernen oder überschreiben kann.'],
         ['Werden Videos hochgeladen?', 'Nein. Die Analyse läuft lokal im Browser.'],
       ],

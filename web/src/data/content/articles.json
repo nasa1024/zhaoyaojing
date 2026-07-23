@@ -96,12 +96,12 @@
     "locale": "de",
     "pageType": "article",
     "topic": "ai-video-detection",
-    "title": "Videoerkennung: AI-Videos über MP4-Metadaten, C2PA und Wasserzeichen prüfen | AICheck365",
-    "description": "Videoerkennung für AI-Clips: Prüfe Originalvideos lokal auf C2PA, MP4/MOV-Metadaten, SEI marker, Dateinamen und Frame-Wasserzeichen.",
+    "title": "Videoerkennung für KI-Videos: MP4, C2PA & Wasserzeichen | AICheck365",
+    "description": "Videoerkennung für KI-Videos, kostenlos im Browser: Originalvideo lokal auf C2PA, MP4/MOV-Metadaten, SEI-Marker und Frame-Wasserzeichen prüfen – ohne Upload.",
     "canonical": "https://www.aicheck365.com/de/blog/how-to-detect-ai-videos/",
     "primaryKeyword": "Videoerkennung AI",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-07-23",
     "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/de/platforms/sora/", "/de/platforms/kling/"]
   },
   {
