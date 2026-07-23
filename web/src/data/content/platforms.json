@@ -82,11 +82,11 @@
     "pageType": "platform",
     "platform": "ComfyUI",
     "title": "ComfyUI EXIF 확인: PNG 워크플로 메타데이터 추출 | AICheck365",
-    "description": "ComfyUI 원본 PNG의 prompt, workflow JSON, 노드 구조, 모델명, seed, sampler, CFG와 크기 정보를 브라우저에서 로컬로 확인합니다.",
+    "description": "ComfyUI 원본 PNG의 prompt, workflow JSON, 노드 구조, 모델명, seed, sampler, CFG와 크기를 브라우저에서 무료로 확인하고 추출합니다. 파일 업로드 없음.",
     "canonical": "https://www.aicheck365.com/ko/platforms/comfyui/",
     "primaryKeyword": "comfyui exif 확인",
     "draft": false,
-    "updatedAt": "2026-07-10",
+    "updatedAt": "2026-07-23",
     "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/ko/platforms/stable-diffusion/", "/ko/methodology/"]
   }
 ]
