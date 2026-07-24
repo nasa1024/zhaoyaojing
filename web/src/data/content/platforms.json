@@ -339,5 +339,45 @@
       "/en/blog/ai-image-metadata-guide/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "leonardo-en-priority",
+    "slug": "leonardo",
+    "route": "/en/platforms/leonardo/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Leonardo AI",
+    "title": "Leonardo AI Check: XMP, EXIF and Video Metadata | AICheck365",
+    "description": "Check Leonardo AI images and video for provenance clues: XMP and EXIF tool fields, model strings and container metadata. Free in your browser, with no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/leonardo/",
+    "primaryKeyword": "Leonardo AI metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/ai-image-metadata-guide/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "ideogram-en-priority",
+    "slug": "ideogram",
+    "route": "/en/platforms/ideogram/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Ideogram",
+    "title": "Ideogram Check: XMP, EXIF and File-Name Clues | AICheck365",
+    "description": "Check Ideogram images for provenance clues: XMP and EXIF tool fields plus file-name patterns, read locally in your browser. Free, no upload and no account needed.",
+    "canonical": "https://www.aicheck365.com/en/platforms/ideogram/",
+    "primaryKeyword": "Ideogram metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/platforms/",
+      "/en/methodology/"
+    ]
   }
 ]

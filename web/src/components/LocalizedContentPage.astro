@@ -786,6 +786,134 @@ const priorityPlatformProfiles = {
         ],
       },
     },
+    leonardo: {
+      title: 'Leonardo AI Check: XMP, EXIF and Video Metadata',
+      description: 'Check Leonardo AI images and video for provenance clues: XMP and EXIF tool fields, model strings and container metadata. Free in your browser, with no upload.',
+      h1: 'Leonardo AI check: reading the descriptive fields',
+      meta: 'Target query: Leonardo AI metadata · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Leonardo output is worth reading the way you would read any platform that leaves descriptive metadata rather than a signature: check the XMP and EXIF fields for a tool or model name, and for video output walk the container as well. AICheck365 does that locally in your browser and reports each hit with the field it came from, so you can judge how much weight it deserves rather than taking a verdict on faith.',
+      directAnswer: {
+        heading: 'Short answer: expect unsigned tool fields, corroborate with provenance',
+        body: 'Read the original export for tool strings in XMP and EXIF — Software, CreatorTool, Credit and any model identifier — and, for video, the MP4/MOV container fields. These are readable and often specific, but unsigned, which means they can be edited, copied onto another file, or lost the first time the file is re-encoded. Treat a hit as a supporting clue checked against where the file actually came from.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Leonardo sample', 'Not bundled yet. This page does not claim a reproduced Leonardo test until a licensed original can be published alongside the other samples.'],
+        ['What the parser matches', 'The tool-pattern matcher recognises Leonardo strings in metadata field values and in file names, and reports which field produced the match.'],
+        ['Evidence level', 'Unsigned descriptive metadata: weaker than a verifiable C2PA manifest, and reported as a lower-confidence supporting signal.'],
+      ],
+      signalRows: [
+        ['XMP / EXIF fields', 'CreatorTool, Software, Credit and model identifiers can name the generating stack when the original export survives intact.'],
+        ['Model strings', 'Named models sometimes appear in the descriptive fields, which helps distinguish pipelines within the same platform.'],
+        ['Video container metadata', 'For video output, ftyp, the box tree and udta/meta/ilst entries carry encoder and tool fields the same way as any other MP4.'],
+        ['File name', 'Download names can carry a platform pattern or job identifier. Context only — renaming removes it.'],
+      ],
+      insights: [
+        {
+          heading: 'Unsigned does not mean useless',
+          body: 'It is easy to move from "this metadata can be faked" to "this metadata is worthless", and that leap is wrong. Forging a plausible tool field requires someone to have deliberately done it; the ordinary case is that the field is either present and honest, or absent because a re-encode stripped it. What unsigned really means is that the field cannot stand alone against an adversary — so it is read alongside where the file came from, who supplied it, and whether the other fields agree with it.',
+        },
+        {
+          heading: 'When to escalate to a signed check',
+          body: 'If the question is consequential — a dispute, a publication decision, anything with a cost attached — descriptive fields are a starting point rather than an answer. The escalation is to look for a C2PA manifest, either on this file or on a copy obtained closer to the source, because that is the only layer whose integrity can be verified rather than trusted. When neither is available, the honest report is that the file no longer supports a firm conclusion.',
+        },
+      ],
+      limits: [
+        'Leonardo signals are unsigned metadata: they can be edited, removed or copied onto an unrelated file.',
+        'Social platforms, messaging apps, screenshots and re-exports routinely strip XMP and EXIF fields entirely.',
+        'No bundled Leonardo sample is published yet, so this page describes field coverage rather than a reproduced test result.',
+        'No signals found means this copy carries no readable evidence — it does not indicate the file is not from Leonardo.',
+      ],
+      ctaLead: 'Use the EXIF/XMP reader for the descriptive fields; run the full detector when you also want C2PA and PNG parameters checked.',
+      ctas: [
+        { href: '/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields' },
+        { href: '/', label: 'Run the full detector' },
+        { href: '/blog/how-to-detect-ai-images/', label: 'Read the image detection guide' },
+      ],
+      faq: [
+        ['How do I check whether an image came from Leonardo?', 'Read the original export\'s XMP and EXIF fields for a tool or model name. The check is free, runs in your browser without uploading the file, and reports each hit with the field it came from.'],
+        ['Does Leonardo add C2PA Content Credentials?', 'Do not assume so. The dependable signals here are descriptive metadata fields. If a signed manifest appears, it was most likely added by a later editing step rather than at generation.'],
+        ['Can it be identified after posting to social media?', 'Often not from the file alone. Platforms re-encode uploads and drop XMP and EXIF data, leaving nothing readable to report. The original export is far more informative.'],
+        ['Are files uploaded for checking?', 'No. Parsing runs locally in your browser, so the file never leaves your device.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Which samples are bundled, their provenance, test dates and known limits.', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'IPTC Digital Source Type vocabulary', note: 'Definitions of controlled values such as trainedAlgorithmicMedia.', localized: false },
+          { href: '/en/blog/ai-image-metadata-guide/', label: 'AI image metadata guide', note: 'How the descriptive and signed layers are weighted against each other.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How unsigned metadata is reported and rated.', localized: false },
+        ],
+      },
+    },
+    ideogram: {
+      title: 'Ideogram Check: XMP, EXIF and File-Name Clues',
+      description: 'Check Ideogram images for provenance clues: XMP and EXIF tool fields plus file-name patterns, read locally in your browser. Free, no upload and no account needed.',
+      h1: 'Ideogram check: metadata beats reading the lettering',
+      meta: 'Target query: Ideogram metadata · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Ideogram is known for rendering legible text inside images, which makes it a useful case for explaining why visual reasoning has stopped working. The old tell — garbled lettering — is exactly what this generation of models fixed, so an image with clean typography tells you nothing about its origin. What can still be checked is the file: XMP and EXIF tool fields, and the download file name. AICheck365 reads those in your browser and reports which field each hit came from.',
+      directAnswer: {
+        heading: 'Short answer: read the fields, not the typography',
+        body: 'Check the original download for tool strings in XMP and EXIF — Software, CreatorTool, Credit — and note the file-name pattern. These are unsigned, so they can be edited or stripped, and a re-encode usually removes them. Legible or well-kerned text in the image itself is not evidence either way, in either direction.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Ideogram sample', 'Not bundled yet. This page does not claim a reproduced Ideogram test until a licensed original can be published alongside the other samples.'],
+        ['What the parser matches', 'The tool-pattern matcher recognises Ideogram strings in metadata field values and in file names, and reports which field produced the match.'],
+        ['Evidence level', 'Unsigned descriptive metadata: useful and readable, but weaker than a verifiable C2PA manifest.'],
+      ],
+      signalRows: [
+        ['XMP / EXIF fields', 'CreatorTool, Software and Credit can name the generating tool when the original export is intact.'],
+        ['File name', 'Download names sometimes carry a platform pattern or identifier. Useful context, trivially renamed.'],
+        ['Text rendering', 'Not a signal this tool uses. Clean typography is what current models produce, so it cannot separate generated images from photographed or designed ones.'],
+        ['C2PA Content Credentials', 'Not something to count on here. A signed manifest, if present, was most likely added by a later editing step.'],
+      ],
+      insights: [
+        {
+          heading: 'Why "the text looks right" cuts both ways',
+          body: 'Garbled lettering was once a dependable tell, and its disappearance is often described as models getting better at text. The more useful framing is that the heuristic was never measuring what people thought: it flagged a rendering limitation, not synthetic origin. Now that the limitation is largely gone, clean text carries no signal — and its converse never worked either, since photographs of real signage get mangled by compression and low resolution all the time. This is precisely the gap that file-level evidence is meant to fill.',
+        },
+        {
+          heading: 'What to do when the fields are empty',
+          body: 'Because these fields are unsigned and easily stripped, an empty result is the normal outcome for anything that has been shared. A few follow-ups help more than re-running the check:',
+          list: [
+            'Ask for the file as downloaded from the platform, before it was posted or forwarded.',
+            'Look for the highest-resolution published copy — social platforms re-encode downward and drop metadata on the way.',
+            'Check whether the file is a screenshot: those carry the capture tool\'s own metadata and none of the original.',
+            'Compare against platforms that sign their exports, where a valid manifest can settle the question outright.',
+          ],
+        },
+      ],
+      limits: [
+        'Ideogram signals are unsigned metadata: they can be edited, removed or copied onto an unrelated file.',
+        'Social platforms, messaging apps, screenshots and re-exports routinely strip XMP and EXIF fields.',
+        'No bundled Ideogram sample is published yet, so this page describes field coverage rather than a reproduced test result.',
+        'No signals found means this copy carries no readable evidence — it is not an indication that the image was not generated.',
+      ],
+      ctaLead: 'Use the EXIF/XMP reader for the descriptive fields; run the full detector when you also want C2PA and PNG parameters checked.',
+      ctas: [
+        { href: '/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields' },
+        { href: '/', label: 'Run the full detector' },
+        { href: '/blog/how-to-detect-ai-images/', label: 'Read the image detection guide' },
+      ],
+      faq: [
+        ['How do I check whether an image came from Ideogram?', 'Read the original download\'s XMP and EXIF fields for a tool name, and note the file-name pattern. The check is free, runs in your browser, and the file is never uploaded.'],
+        ['Can I tell from the text in the image?', 'No. Rendering legible text is something current models do well, so clean typography is not evidence of anything — and garbled text in a real photograph is common once compression gets involved.'],
+        ['Does Ideogram add C2PA Content Credentials?', 'Do not count on it. The dependable signals here are descriptive metadata fields, which are readable but unsigned.'],
+        ['Are files uploaded for checking?', 'No. Parsing runs locally in your browser through Rust compiled to WebAssembly.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Which samples are bundled, their provenance, test dates and known limits.', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'IPTC Digital Source Type vocabulary', note: 'Definitions of controlled values such as trainedAlgorithmicMedia.', localized: false },
+          { href: '/en/blog/how-to-detect-ai-images/', label: 'How to tell if an image is AI-generated', note: 'Why visual inspection misfires in both directions.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How unsigned metadata is reported and rated.', localized: false },
+        ],
+      },
+    },
     imagen: {
       title: 'Google Imagen Check: C2PA Content Credentials',
       description: 'Check Google Imagen files for Content Credentials: C2PA manifest, digitalSourceType, Google claim generator and XMP fields. Read locally in your browser, no upload.',
