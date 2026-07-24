@@ -709,6 +709,145 @@ const priorityPlatformProfiles = {
         ],
       },
     },
+    'dall-e': {
+      title: 'DALL-E C2PA Check: Read OpenAI Content Credentials',
+      description: 'Check DALL-E and GPT Image files for OpenAI Content Credentials: C2PA manifest, signature and certificate state, digitalSourceType and XMP. Free, in your browser.',
+      h1: 'DALL-E C2PA check: when a claim exists but cannot be verified',
+      meta: 'Target query: DALL-E C2PA · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'OpenAI attaches Content Credentials to image output, which makes DALL-E and GPT Image files checkable rather than guessable — but this platform also illustrates the most instructive failure mode in the whole standard. The bundled OpenAI sample carries a proper trainedAlgorithmicMedia claim whose signing certificate has expired, so validation fails outright. The claim is there; it simply cannot be relied upon. AICheck365 reports that as its own outcome instead of collapsing it into a pass or a fail.',
+      directAnswer: {
+        heading: 'Short answer: read the claim and the certificate as two separate findings',
+        body: 'Look for a C2PA manifest declaring digitalSourceType = trainedAlgorithmicMedia with an OpenAI claim generator. Then check the certificate independently: valid and trusted is the strong case, valid but untrusted is routine, and an expired certificate means validation fails and the provenance claim cannot be verified at all. XMP fields and file names add context but carry no signature.',
+      },
+      sampleHeading: 'Bundled sample and verified result',
+      sampleRows: [
+        ['OpenAI PNG with an expired certificate', 'A Content Authenticity Initiative sample bundled on this site and reproducible from the sample list.'],
+        ['Verified result', 'A C2PA claim marked trainedAlgorithmicMedia is present, but the signing certificate is expired and untrusted, so validation fails — reported as evidence state D rather than as a clean detection.'],
+        ['Why that matters', 'It is the clearest available demonstration that "has C2PA" and "has verifiable C2PA" are different statements, and that a tool collapsing them into one badge is hiding the distinction.'],
+      ],
+      signalRows: [
+        ['C2PA manifest', 'Claims, assertions, actions and the claim generator, read out so you can see what the file asserts about its own creation.'],
+        ['Certificate state', 'Whether the signing certificate is current, expired, or outside the trust list. Expired is a validation failure, not merely a trust question.'],
+        ['digitalSourceType', 'trainedAlgorithmicMedia is the value indicating generative AI. Its presence inside a failed validation is a claim, not a confirmed finding.'],
+        ['XMP / EXIF', 'OpenAI and editing-software strings can corroborate the manifest, but they are unsigned and editable.'],
+      ],
+      insights: [
+        {
+          heading: 'Four outcomes, not two',
+          body: 'Content Credentials fail in distinguishable ways, and the bundled samples on this site demonstrate each one. Reducing them to pass or fail throws away the part you would act on:',
+          list: [
+            'Valid and trusted — the signature verifies and the certificate chains to a trusted root. The strongest available evidence.',
+            'Valid but untrusted — the Firefly sample: cryptography checks out, but the certificate is not in the list being used. Normal, not suspicious.',
+            'Expired — this OpenAI sample: a trainedAlgorithmicMedia claim exists, but validation fails, so the claim cannot be relied upon.',
+            'Tampered — the asset no longer matches the hash recorded in the manifest. A genuine integrity failure rather than a trust question.',
+          ],
+        },
+        {
+          heading: 'Why an expired certificate is not the same as a fake',
+          body: 'It is tempting to read a failed validation as evidence of forgery, and that reading is usually wrong. Certificates have finite lifetimes by design, so a file signed legitimately can drift past its certificate expiry simply by getting old, without anyone touching it. What the failure actually tells you is narrower and more useful: this copy no longer supports a verified provenance conclusion. If the origin matters, go back to the publisher for a current copy rather than treating the expiry as an accusation.',
+        },
+      ],
+      steps: {
+        heading: 'Checking a DALL-E file step by step',
+        items: [
+          ['Start from the original download', 'Use the file as saved from ChatGPT or the API, not a screenshot or a re-shared copy.'],
+          ['Open the C2PA validator', 'The manifest is parsed in your browser; nothing is uploaded.'],
+          ['Read whether validation succeeded', 'Check for signature errors and certificate expiry before reading anything the manifest declares.'],
+          ['Then read the declared source type', 'Look for digitalSourceType = trainedAlgorithmicMedia and an OpenAI claim generator.'],
+          ['Weigh the outcome honestly', 'A failed validation means the claim cannot be verified from this copy — not that the file is fake, and not that it is genuine.'],
+        ],
+      },
+      limits: [
+        'Re-encoding, screenshots, format conversion and non-preserving editors remove Content Credentials entirely.',
+        'An expired or untrusted certificate is a statement about verification, not proof that the file was forged.',
+        'Whether credentials are present can vary with the product entry point, format and export path.',
+        'No credentials found does not mean the file is not from DALL-E, only that this copy carries no readable manifest.',
+      ],
+      ctaLead: 'Use the C2PA validator for manifest and certificate detail; run the full detector to read EXIF/XMP alongside it.',
+      ctas: [
+        { href: '/tools/c2pa-validator/', label: 'Open the C2PA validator' },
+        { href: '/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields' },
+        { href: '/blog/what-is-c2pa/', label: 'How C2PA works' },
+      ],
+      faq: [
+        ['Do DALL-E images include C2PA?', 'OpenAI attaches Content Credentials to image output, so an original download usually carries a manifest. Whether it survives depends on what happened to the file afterwards — any re-encode or screenshot drops it.'],
+        ['What does an expired certificate mean?', 'That validation fails: the provenance claim exists in the manifest but cannot be verified. It is not evidence of forgery — certificates expire by design, so a legitimately signed file can reach that state just by aging.'],
+        ['Is a failed validation worse than no credentials at all?', 'It is more informative. No credentials tells you nothing; a failed validation tells you a claim was made, what it said, and precisely why it cannot currently be confirmed.'],
+        ['Is checking free here?', 'Yes, and the file stays on your device. The manifest is parsed in your browser through Rust compiled to WebAssembly, with no account required.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Provenance of the OpenAI expired-certificate sample, test date and known limits.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Public source of the bundled OpenAI PNG.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Manifest structure, assertions and signature verification requirements.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How signature state, certificate state and evidence tiers are defined.', localized: false },
+        ],
+      },
+    },
+    kling: {
+      title: 'Kling AI Video Check: MP4 Metadata and Frame Marks',
+      description: 'Check Kling video files for AI-origin signals: MP4/MOV container metadata, AIGC labels, SEI markers and sampled frame watermarks. Free, in your browser, no upload.',
+      h1: 'Kling AI video check: reading the container first',
+      meta: 'Target query: Kling AI detector · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Kling output is video, so the evidence lives in different places than it would for a still image. AICheck365 walks the MP4/MOV container first — ftyp, the box tree, udta/meta/ilst, encoder, tool and software fields, plus AIGC label strings — then looks for known tool markers in the bitstream, and only falls back to sampling frames when the container yields nothing. All of it runs locally, which matters more for video than for images.',
+      directAnswer: {
+        heading: 'Short answer: container fields and AIGC labels, then frames as fallback',
+        body: 'Start with the original MP4 or MOV and read the container: encoder, tool, software and ©too fields, platform strings, and any AIGC label. SEI markers in the video bitstream can survive a remux but rarely a re-encode. Frame watermark checks are the last resort. None of these are signed the way a C2PA manifest is, so treat them as clues corroborated by where the file came from.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Kling sample', 'Not bundled yet. This page does not claim a reproduced Kling test until a licensed original can be published alongside the other samples.'],
+        ['Related bundled video', 'A Google Veo MP4 is included and exercises the same container and frame paths, though its credentials are Google\'s rather than Kling\'s.'],
+        ['Evidence level', 'Container metadata and AIGC labels are unsigned descriptive signals — useful and readable, but weaker than a verifiable C2PA manifest.'],
+      ],
+      signalRows: [
+        ['MP4/MOV container metadata', 'ftyp brand, box tree, udta/meta/ilst, encoder, tool, software and ©too entries are read where present, each reported with the box path it came from.'],
+        ['AIGC label strings', 'Some platforms write an explicit AI-generated marker into the container. Readable and informative, but unsigned.'],
+        ['SEI markers', 'Known tool strings inside the video bitstream. These can survive a remux but usually disappear on re-encoding.'],
+        ['Sampled frame watermarks', 'When the container yields nothing, frames from several timestamps are checked against known visible marks and invisible patterns. Not a general AI classifier.'],
+      ],
+      insights: [
+        {
+          heading: 'Why the container is checked before the pixels',
+          body: 'Reading a container costs a few header bytes; decoding frames costs real time and memory, especially in a browser. Beyond speed, the ordering reflects evidence quality: a tool field naming the generating platform is a concrete, quotable finding with a box path attached, whereas a frame watermark match is a pattern comparison against what the tool currently knows about. Checking cheap and specific before expensive and approximate is also why the frame pass is lazy-loaded rather than run every time.',
+        },
+        {
+          heading: 'What a re-upload destroys',
+          body: 'Video is transcoded far more aggressively than images, so evidence attrition is fast and predictable. A social platform re-encode typically removes container tool fields, AIGC labels and SEI markers together, leaving a file that looks identical and carries nothing. An editor that re-exports the timeline does the same. A screen recording keeps none of the original container at all. This is why an empty result on a Kling clip is genuinely uninformative, and why tracking down the first published copy usually beats any amount of frame inspection.',
+        },
+      ],
+      limits: [
+        'Container fields, AIGC labels and SEI markers are unsigned: they can be edited, removed or copied onto another file.',
+        'Transcoding by video platforms and messaging apps, along with re-exports and screen recordings, removes them routinely.',
+        'No bundled Kling sample is published yet, so this page describes field coverage rather than a reproduced test result.',
+        'Frame analysis only matches currently known patterns and cannot replace source verification or professional forensics.',
+      ],
+      ctaLead: 'Start with the MP4/MOV metadata inspector, then open the full detector when you need the frame watermark fallback.',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'Inspect MP4/MOV metadata' },
+        { href: '/', label: 'Run the full detection with frame analysis' },
+        { href: '/blog/how-to-detect-ai-videos/', label: 'Read the video detection guide' },
+      ],
+      faq: [
+        ['How do I check whether a video came from Kling?', 'Load the original MP4 or MOV into the metadata inspector and read the container fields — encoder, tool, software and any AIGC label — before anything else. The check is free, runs in your browser, and reports each hit with its box path.'],
+        ['Is there a free Kling detector?', 'AICheck365 checks Kling videos free of charge with no account, and the file is never uploaded. It reports the container and frame signals actually present rather than a confidence percentage.'],
+        ['Does a video downloaded from social media still work?', 'Often not. Video platforms re-encode uploads, which strips container tool fields, AIGC labels and SEI markers in one pass. An empty result cannot rule out AI generation.'],
+        ['Why is frame analysis slower?', 'Because it decodes real video frames in your browser rather than reading header bytes. It runs only as a fallback, after the container and bitstream layers come back empty.'],
+        ['Are videos uploaded for checking?', 'No. Container parsing runs locally through Rust compiled to WebAssembly, and frame extraction, when needed, also runs on your machine.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Which video samples are bundled, their provenance, test dates and known limits.', localized: false },
+          { href: 'https://www.iso.org/standard/83102.html', label: 'ISO/IEC 14496-12 (ISO base media file format)', note: 'The standard behind the MP4/MOV box structure this parser walks.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Includes BMFF content credentials, for comparison with unsigned container fields.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How video evidence layers, confidence tiers and limits are defined.', localized: false },
+        ],
+      },
+    },
     'stable-diffusion': {
       title: 'Stable Diffusion PNG Info: Read Prompts and Parameters',
       description: 'Read Stable Diffusion PNG info in your browser: the parameters chunk from A1111, ComfyUI prompt and workflow JSON, and NovelAI metadata. Free, with no upload.',

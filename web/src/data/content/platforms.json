@@ -219,5 +219,45 @@
       "/ja/blog/what-is-c2pa/",
       "/ja/methodology/"
     ]
+  },
+  {
+    "id": "dall-e-en-priority",
+    "slug": "dall-e",
+    "route": "/en/platforms/dall-e/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "DALL-E / GPT Image",
+    "title": "DALL-E C2PA Check: Read OpenAI Content Credentials | AICheck365",
+    "description": "Check DALL-E and GPT Image files for OpenAI Content Credentials: C2PA manifest, signature and certificate state, digitalSourceType and XMP. Free, in your browser.",
+    "canonical": "https://www.aicheck365.com/en/platforms/dall-e/",
+    "primaryKeyword": "DALL-E C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/what-is-c2pa/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "kling-en-priority",
+    "slug": "kling",
+    "route": "/en/platforms/kling/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Kling",
+    "title": "Kling AI Video Check: MP4 Metadata and Frame Marks | AICheck365",
+    "description": "Check Kling video files for AI-origin signals: MP4/MOV container metadata, AIGC labels, SEI markers and sampled frame watermarks. Free, in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/kling/",
+    "primaryKeyword": "Kling AI detector",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/platforms/sora/",
+      "/en/methodology/"
+    ]
   }
 ]
