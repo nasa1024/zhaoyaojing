@@ -517,5 +517,45 @@
       "/fr/blog/how-to-detect-ai-videos/",
       "/fr/methodology/"
     ]
+  },
+  {
+    "id": "gemini-generated-images-ja-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/ja/blog/how-to-detect-gemini-generated-images/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Gemini生成画像の見分け方：C2PAとSynthIDの違い | AICheck365",
+    "description": "Gemini・Google AIの画像がAI生成かを確認する手順。C2PA manifest、digitalSourceType、claim generator、XMPをブラウザ内で無料解析。SynthIDとの違いも解説。",
+    "canonical": "https://www.aicheck365.com/ja/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini 生成画像 見分け方",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/platforms/gemini/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-fr-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/fr/blog/how-to-detect-ai-videos/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "Comment savoir si une vidéo est générée par IA ? | AICheck365",
+    "description": "Vérifiez une vidéo depuis le fichier d'origine : C2PA, métadonnées du conteneur MP4/MOV, marqueurs SEI et filigranes de trames. Gratuit, sans envoyer le fichier.",
+    "canonical": "https://www.aicheck365.com/fr/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "comment savoir si une vidéo est générée par IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/fr/blog/how-to-detect-ai-images/",
+      "/fr/methodology/"
+    ]
   }
 ]
