@@ -437,5 +437,25 @@
       "/zh-TW/platforms/firefly/",
       "/zh-TW/methodology/"
     ]
+  },
+  {
+    "id": "ki-bilder-erkennen-de-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/de/blog/how-to-detect-ai-images/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "KI-Bilder erkennen: C2PA, EXIF und PNG-Daten prüfen | AICheck365",
+    "description": "KI-Bilder erkennen, ohne zu raten: Originaldatei auf C2PA Content Credentials, EXIF/XMP-Felder und PNG-Generierungsparameter prüfen — kostenlos im Browser, ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "KI-Bilder erkennen",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/tools/png-parameter-extractor/",
+      "/de/blog/how-to-detect-ai-videos/",
+      "/de/methodology/"
+    ]
   }
 ]

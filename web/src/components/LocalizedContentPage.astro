@@ -2104,6 +2104,94 @@ const priorityArticleProfiles = {
     },
   },
   de: {
+    'blog/how-to-detect-ai-images': {
+      title: 'KI-Bilder erkennen: C2PA, EXIF und PNG-Daten prüfen',
+      description: 'KI-Bilder erkennen, ohne zu raten: Originaldatei auf C2PA Content Credentials, EXIF/XMP-Felder und PNG-Generierungsparameter prüfen — kostenlos im Browser, ohne Upload.',
+      h1: 'KI-Bilder erkennen: die Datei prüfen, nicht das Motiv',
+      meta: 'Ziel-Keyword: KI-Bilder erkennen · Aktualisiert: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Finger zählen und nach verunglückter Schrift suchen ist als Prüfverfahren unbrauchbar geworden — es erzeugt Fehler in beide Richtungen. Belastbarer ist der Blick in die Originaldatei: AICheck365 liest C2PA Content Credentials, EXIF- und XMP-Felder, PNG-Textblöcke mit Generierungsparametern oder ComfyUI-Workflow sowie den Dateinamen, und zwar lokal in Ihrem Browser. Kryptografisch prüfbare Signaturen werden dabei konsequent von frei editierbaren Metadaten getrennt.',
+      directAnswer: {
+        heading: 'Kurz gesagt: mehrere Beweisebenen abwägen, keine einzelne Prozentzahl',
+        body: 'Am stärksten ist eine gültige C2PA-Signatur, deren Manifest digitalSourceType = trainedAlgorithmicMedia deklariert. Unsignierte EXIF/XMP-Werkzeugfelder sowie PNG-Prompt- oder Workflow-Daten stützen diesen Befund, lassen sich aber bearbeiten. Dateiname und visuelle Auffälligkeiten sind nur schwache Hinweise. Werden keine Signale gefunden, heißt das: diese Kopie trägt keine lesbaren Belege — es ist kein Nachweis menschlicher Urheberschaft.',
+      },
+      sampleHeading: 'Echte Beispiele, die Sie hier nachvollziehen können',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'Ein öffentliches Beispiel der Content Authenticity Initiative. digitalSourceType = trainedAlgorithmicMedia ist lesbar und die C2PA-Signatur kryptografisch gültig, das Signaturzertifikat liegt jedoch außerhalb der Vertrauensliste — das Ergebnis lautet daher valid statt trusted.'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'Ein Original aus den offiziellen ComfyUI-Beispielen. Die PNG enthält weiterhin prompt- und workflow-Textblöcke samt unsignierter Generierungsparameter.'],
+        ['JPEG ohne Herkunftsmetadaten', 'Ergibt „keine lesbaren Belege". Dieses Kontrollbeispiel zeigt, warum ein leeres Ergebnis ein gewöhnliches Foto nicht von einem KI-Bild mit entfernten Metadaten unterscheiden kann.'],
+      ],
+      signalRows: [
+        ['C2PA Content Credentials', 'Manifest, Signaturstatus, Vertrauensstatus, digitalSourceType, Claim Generator und Actions werden getrennt ausgewiesen. Eine gültige Signatur mit KI-Deklaration ist der stärkste verfügbare Beleg.'],
+        ['EXIF / XMP', 'Software, CreatorTool, Credit, DigitalSourceType und UserComment enthalten mitunter einen Plattformnamen oder ein AIGC-Label. Unsignierte Felder sind editierbar.'],
+        ['PNG-Text / Workflow', 'Stable Diffusion, AUTOMATIC1111, ComfyUI und NovelAI schreiben teils Prompt, Negative Prompt, Seed, Sampler, CFG, Modellname und komplettes Workflow-JSON.'],
+        ['Dateiname und visueller Kontext', 'Ein Plattform-Präfix oder eine misslungene Hand ist notierenswert, aber beides ist trivial änderbar beziehungsweise fehldeutbar.'],
+      ],
+      insights: [
+        {
+          heading: 'Warum die Sichtprüfung in beide Richtungen scheitert',
+          body: 'Aktuelle Modelle haben die frühen Erkennungsmerkmale weitgehend beseitigt, sodass ein vollständig synthetisches Bild unauffällig wirken kann. Der umgekehrte Fehler ist ebenso häufig: ein echtes Foto, das durch starke Kompression oder Bewegungsunschärfe gegangen ist, zeigt verschmierte Finger und verzogene Linien, die als „KI" gelesen werden. Die folgenden Merkmale taugen für sich genommen nicht mehr als Beweis.',
+          list: [
+            'Hände, Zähne, Schmuck und Haare: moderne Modelle rendern das überzeugend, während Kompression es in echten Fotos zerstört.',
+            'Text im Bild: verunglückte Schrift war lange ein verlässliches Indiz, doch die Textwiedergabe hat schnell aufgeholt.',
+            'Licht und Reflexionen: physikalische Konsistenz mit dem Auge zu beurteilen ist unzuverlässig und stempelt häufig gewöhnliche Fotos ab.',
+          ],
+        },
+        {
+          heading: 'Eine Rangfolge für widersprüchliche Hinweise',
+          body: 'Wenn Signale einander widersprechen, ordnen Sie sie danach, wie schwer sie zu fälschen sind, und vertrauen Sie der robustesten Ebene zuerst:',
+          list: [
+            '1. Gültige C2PA-Signatur mit KI-Deklaration — der stärkste und unabhängig prüfbare Beleg.',
+            '2. Unsignierte Metadaten (EXIF/XMP, PNG-Prompt oder -Workflow) — informativ, aber editierbar.',
+            '3. Der Dateiname, etwa ein Plattform-Präfix — schwacher Kontext, trivial änderbar.',
+            '4. Visuelle Intuition — ein Ausgangspunkt für die Recherche, niemals ein Ergebnis.',
+          ],
+        },
+        {
+          heading: 'Lässt sich ein Bild aus sozialen Netzwerken noch prüfen?',
+          body: 'Oft nur eingeschränkt. WhatsApp, Instagram, Facebook, X und Screenshots kodieren das Bild neu, wobei C2PA, XMP und PNG-Textblöcke in der Regel verloren gehen. Ein leeres Ergebnis sagt deshalb nichts darüber aus, ob das Bild synthetisch ist. Praktisch hilft nur der Schritt zurück: die Datei so anfragen, wie sie das Werkzeug verlassen hat, oder die höchstaufgelöste veröffentlichte Fassung suchen. Je näher an dieser ersten Kopie, desto mehr lesbare Belege überleben.',
+        },
+      ],
+      steps: {
+        heading: 'Ein Bild Schritt für Schritt prüfen',
+        items: [
+          ['Originaldatei sichern', 'Verwenden Sie die von der Plattform heruntergeladene oder vom Ersteller gesendete Datei — keinen Screenshot und keine Kopie aus sozialen Netzwerken.'],
+          ['Analyse lokal ausführen', 'Bild in AICheck365 laden und die Zusammenfassung zu C2PA, EXIF/XMP, PNG-Text und Dateiname lesen. Alles läuft im Browser, nichts wird hochgeladen.'],
+          ['Prüfen, ob das C2PA tatsächlich gültig ist', 'Das Vorhandensein von C2PA ist noch kein Befund. Verifiziert die Signatur? Gibt es Manipulationsfehler? Deklariert das Manifest wirklich KI-Erzeugung?'],
+          ['Stützende Felder gegenprüfen', 'Stimmen Werkzeug, Modell, Prompt und Workflow untereinander und mit der Herkunft der Datei überein? Unsignierte Metadaten lassen sich fälschen.'],
+          ['Herkunft und Grenzen festhalten', 'Quell-URL, Datum, mögliche Re-Exporte und Ergebnis notieren. Visuelle Auffälligkeiten gehören ans Ende, nicht in die Schlussfolgerung.'],
+        ],
+      },
+      limits: [
+        'Messenger, soziale Plattformen, Bildoptimierer und Screenshots entfernen C2PA, XMP und PNG-Text routinemäßig.',
+        'Unsignierte EXIF/XMP-Felder und Workflow-JSON lassen sich bearbeiten oder zwischen Dateien kopieren — Hinweis, kein Beweis.',
+        'Vorhandenes C2PA bedeutet nicht automatisch KI: entscheidend ist, was das Manifest deklariert (digitalSourceType und Actions).',
+        'Keine gefundenen Signale heißt nur, dass diese Kopie keine lesbaren Belege enthält — KI-Erzeugung ist damit nicht ausgeschlossen.',
+      ],
+      ctaLead: 'Beginnen Sie mit dem vollständigen Detektor; öffnen Sie C2PA- oder PNG-Workflow-Funde anschließend im Spezialwerkzeug.',
+      ctas: [
+        { href: '/', label: 'Ein Bild im Browser prüfen' },
+        { href: '/tools/c2pa-validator/', label: 'C2PA im Detail validieren', localized: false },
+        { href: '/tools/png-parameter-extractor/', label: 'PNG-Parameter und Workflow auslesen', localized: false },
+      ],
+      faq: [
+        ['Gibt es einen kostenlosen KI-Bild-Detektor?', 'Ja. AICheck365 liest C2PA, EXIF/XMP und PNG-Generierungsparameter kostenlos im Browser, ohne Konto und ohne Upload. Ausgegeben werden die tatsächlich vorhandenen Signale statt eines bloßen Urteils.'],
+        ['Kann ein Werkzeug zu 100 % sicher sein?', 'Nein — wer das verspricht, verspricht zu viel. Feststellbar ist, welche Herkunftssignale diese Datei noch trägt. Sind die Belege entfernt, lautet die ehrliche Antwort, dass die Datei keine Schlussfolgerung mehr stützt.'],
+        ['Was bedeutet „keine Signale gefunden"?', 'Dass diese Kopie keine lesbaren Herkunftsbelege enthält. Die Metadaten wurden nie geschrieben oder unterwegs entfernt. Ein Beleg für menschliche Urheberschaft ist das nicht.'],
+        ['Heißt vorhandenes C2PA immer KI?', 'Nein. C2PA dokumentiert Herkunft allgemein, auch bei gewöhnlichen Kamerafotos. Entscheidend ist, ob das Manifest über digitalSourceType oder einen generativen Claim Generator eine KI-Quelle deklariert.'],
+        ['Werden meine Dateien hochgeladen?', 'Nein. Die Auswertung läuft lokal im Browser über Rust, das nach WebAssembly kompiliert wurde — das Bild verlässt Ihr Gerät nicht.'],
+      ],
+      sources: {
+        heading: 'Quellen und Prüfprotokolle',
+        items: [
+          { href: '/data/samples.json', label: 'Öffentliche Beispieldaten von AICheck365', note: 'Herkunft der Beispiele, Testdaten, beobachtete Signale und bekannte Grenzen.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Öffentliche Quelle des Firefly-C2PA-Beispiels.', localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'Offizielle ComfyUI-Beispiele', note: 'Quelle der SDXL-PNG mit Workflow.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Offizielle Spezifikation für Manifeste, Assertions und Signaturprüfung.', localized: false },
+          { href: '/de/methodology/', label: 'Methodik von AICheck365', note: 'Wie Beweiskraft und fehlende Signale interpretiert werden.' },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-videos': {
       title: 'Videoerkennung für KI-Videos: MP4, C2PA & Wasserzeichen',
       description: 'Videoerkennung für KI-Videos, kostenlos im Browser: Originalvideo lokal auf C2PA, MP4/MOV-Metadaten, SEI-Marker und Frame-Wasserzeichen prüfen – ohne Upload.',
