@@ -857,5 +857,65 @@
       "/pt-BR/blog/what-is-c2pa/",
       "/pt-BR/methodology/"
     ]
+  },
+  {
+    "id": "gemini-generated-images-zh-tw-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/zh-TW/blog/how-to-detect-gemini-generated-images/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "如何判斷圖片是不是 Gemini 生成？C2PA 實測 | AICheck365",
+    "description": "用 C2PA Content Credentials 檢查 Gemini 與 Google AI 檔案：digitalSourceType、claim generator 與 XMP 欄位，在瀏覽器本機讀取，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/blog/what-is-c2pa/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-ko-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/ko/blog/how-to-detect-gemini-generated-images/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Gemini 생성 이미지 판별: C2PA와 SynthID 차이 | AICheck365",
+    "description": "Gemini와 Google AI 파일을 C2PA Content Credentials로 확인하는 방법. digitalSourceType, claim generator, XMP 필드를 브라우저에서 무료로 읽습니다. 업로드 없음.",
+    "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/blog/what-is-c2pa/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-de-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/de/blog/how-to-detect-gemini-generated-images/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Gemini-Bilder erkennen: C2PA und SynthID im Vergleich | AICheck365",
+    "description": "Gemini- und Google-AI-Dateien über C2PA Content Credentials prüfen: digitalSourceType, Claim Generator und XMP-Felder, gelesen im Browser und ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/tools/exif-xmp-reader/",
+      "/de/blog/what-is-c2pa/",
+      "/de/methodology/"
+    ]
   }
 ]
