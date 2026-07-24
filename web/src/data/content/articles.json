@@ -697,5 +697,45 @@
       "/fr/platforms/flux/",
       "/fr/methodology/"
     ]
+  },
+  {
+    "id": "ai-image-metadata-guide-es-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/es/blog/ai-image-metadata-guide/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Metadatos de imágenes IA: EXIF, XMP, C2PA y PNG | AICheck365",
+    "description": "Dónde escriben los datos de procedencia las plataformas de IA y cómo leerlos: campos EXIF/XMP, manifiestos C2PA, textos PNG y metadatos MP4. Gratis, en tu navegador.",
+    "canonical": "https://www.aicheck365.com/es/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "metadatos de imágenes IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/es/blog/what-is-c2pa/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-fr-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/fr/blog/ai-image-metadata-guide/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Métadonnées des images IA : EXIF, XMP, C2PA et PNG | AICheck365",
+    "description": "Où les plateformes d'IA inscrivent les données de provenance et comment les lire : champs EXIF/XMP, manifestes C2PA, textes PNG et métadonnées MP4. Gratuit, en local.",
+    "canonical": "https://www.aicheck365.com/fr/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "métadonnées images IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/fr/blog/what-is-c2pa/",
+      "/fr/methodology/"
+    ]
   }
 ]

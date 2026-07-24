@@ -832,11 +832,11 @@ const priorityPlatformProfiles = {
         'No bundled Midjourney sample is published yet, so this page describes field coverage rather than a reproduced test result.',
         'No signals found means this copy carries no readable evidence — it does not indicate the image is not from Midjourney.',
       ],
-      ctaLead: 'Use the EXIF/XMP reader for the descriptive fields; run the full detector when you also want C2PA and PNG parameters checked.',
+      ctaLead: 'Compare against a platform that signs its exports, then use the EXIF/XMP reader for the descriptive fields here.',
       ctas: [
-        { href: '/en/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields', localized: false },
-        { href: '/', label: 'Run the full detector' },
-        { href: '/en/blog/how-to-detect-ai-images/', label: 'Read the image detection guide', localized: false },
+        { href: '/platforms/dall-e/', label: 'Compare with a platform that signs exports' },
+        { href: '/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields' },
+        { href: '/blog/how-to-detect-ai-images/', label: 'Read the image detection guide' },
       ],
       faq: [
         ['Is there a free Midjourney scanner?', 'Yes. AICheck365 checks Midjourney downloads free of charge in your browser, with no account and no upload. It reports the XMP, IPTC and file-name evidence actually present rather than a synthetic confidence score.'],
@@ -2348,6 +2348,88 @@ const priorityArticleProfiles = {
     },
   },
   fr: {
+    'blog/ai-image-metadata-guide': {
+      title: "Métadonnées des images IA : EXIF, XMP, C2PA et PNG",
+      description: "Où les plateformes d'IA inscrivent les données de provenance et comment les lire : champs EXIF/XMP, manifestes C2PA, textes PNG et métadonnées MP4. Gratuit, en local.",
+      h1: "Métadonnées des images IA : où la preuve est réellement inscrite",
+      meta: "Requête cible : métadonnées images IA · Mis à jour : 2026-07-23 · Parser : aicheck 0.2.0",
+      updatedAt: '2026-07-23',
+      lead: "Les métadonnées ne forment pas un seul emplacement mais plusieurs couches, et savoir de laquelle il s'agit détermine le poids d'une trouvaille. Une image ou une vidéo peut porter simultanément un manifeste C2PA signé, des champs descriptifs EXIF et XMP, des blocs de texte PNG contenant les paramètres de génération, et des entrées au niveau du conteneur MP4 ou MOV. Elles diffèrent par ce qu'elles enregistrent, par la facilité avec laquelle on les modifie et par la vitesse à laquelle elles disparaissent au partage. Ce guide parcourt chaque couche dans l'ordre où l'analyseur les lit.",
+      directAnswer: {
+        heading: "En résumé : la provenance signée d'abord, les champs descriptifs ensuite",
+        body: "Lisez le manifeste C2PA avant tout, car c'est la seule couche dont l'intégrité se vérifie cryptographiquement. Passez ensuite à l'EXIF et au XMP, où apparaissent souvent des noms de plateforme et des étiquettes d'IA que n'importe qui peut réécrire. Les blocs de texte PNG sont l'endroit où l'écosystème Stable Diffusion range prompts et workflows, et les métadonnées du conteneur jouent le même rôle pour la vidéo. Tout ce qui se situe sous la signature est un indice, pas une preuve.",
+      },
+      sampleHeading: "Échantillons correspondant à chaque couche",
+      sampleRows: [
+        ["JPEG Adobe Firefly", "La couche signée : un manifeste C2PA valide déclarant digitalSourceType = trainedAlgorithmicMedia, rapporté en valid et non trusted car son certificat sort de la liste."],
+        ["PNG ComfyUI / Stable Diffusion XL", "La couche texte PNG : des blocs prompt et workflow portant le graphe de nœuds et les paramètres de génération, aucun n'étant signé."],
+        ["MP4 Google Veo", "La couche conteneur : références et champs d'outil rangés dans la structure de boîtes de l'ISO base media plutôt que dans un marqueur d'image."],
+      ],
+      signalRows: [
+        ["EXIF", "Un standard de l'ère des appareils photo. Software, Artist et UserComment portent parfois un nom d'outil ou une étiquette JSON d'IA, et l'absence complète de champs d'appareil est déjà légèrement informative."],
+        ["XMP", "Les métadonnées XML d'Adobe. CreatorTool, Credit et DigitalSourceType sont les champs les plus susceptibles de nommer le générateur quand l'export d'origine subsiste."],
+        ["C2PA", "La couche signée, sérialisée en JUMBF et intégrée selon le format : segment APP11 en JPEG, chunk dédié en PNG, boîte en MP4."],
+        ["Blocs de texte PNG", "tEXt, iTXt et zTXt acceptent des chaînes clé/valeur arbitraires : c'est pourquoi prompts, seeds, samplers et workflow JSON complet atterrissent ici plutôt que dans l'EXIF."],
+        ["Conteneur MP4 / MOV", "ftyp brand, arbre de boîtes, udta/meta/ilst, entrées encoder, tool et software, plus les chaînes AIGC et les marqueurs SEI du flux."],
+      ],
+      insights: [
+        {
+          heading: "Pourquoi les paramètres de génération vivent hors de l'EXIF",
+          body: "L'EXIF a été conçu pour les appareils photo : des balises fixes pour l'exposition, l'ouverture, la sensibilité et l'objectif. Un prompt de plusieurs lignes ou un graphe de nœuds sérialisé n'entrent pas dans ce moule, si bien que l'écosystème Stable Diffusion les inscrit dans des blocs de texte PNG, qui acceptent des chaînes clé/valeur arbitraires. C'est le malentendu le plus répandu du domaine : chercher « ComfyUI EXIF » ou « PNG info », c'est chercher des blocs de texte et non des balises d'appareil. Conséquence pratique : un outil qui n'analyse que l'EXIF renverra un résultat vide sur un fichier pourtant rempli de preuves lisibles.",
+        },
+        {
+          heading: "À quelle vitesse chaque couche disparaît",
+          body: "Les couches ne sont pas également fragiles, et connaître l'ordre aide à interpréter un résultat vide :",
+          list: [
+            "Applications de messagerie : les blocs de texte PNG partent en premier, avec la plupart des champs XMP et les données GPS de l'EXIF.",
+            "Transcodage par les réseaux sociaux : l'EXIF, le manifeste C2PA, le XMP CreatorTool et tous les paramètres de génération disparaissent généralement d'un coup.",
+            "Captures et enregistrements d'écran : rien de l'original ne subsiste ; il reste les métadonnées de l'outil de capture.",
+            "Ré-export ou enregistrement sous : les champs de provenance sont abandonnés, et un nouveau logiciel peut écrire par-dessus un EXIF sans rapport.",
+          ],
+        },
+        {
+          heading: "Lire les métadonnées sans confier le fichier",
+          body: "Inspecter des métadonnées est une opération en lecture seule sur des octets que vous détenez déjà : rien n'oblige techniquement à téléverser quoi que ce soit. AICheck365 analyse l'EXIF, le XMP, le C2PA, les chunks PNG et les boîtes MP4 en local via du Rust compilé en WebAssembly, ce qui garde documents de travail et photographies personnelles sur votre machine. Les résultats s'affichent donc sans aller-retour serveur, et les grosses vidéos sont limitées par votre matériel plutôt que par un plafond de téléversement.",
+        },
+      ],
+      steps: {
+        heading: "Lire un fichier couche par couche",
+        items: [
+          ["Travaillez depuis l'original", "Utilisez le fichier tel qu'exporté par l'outil ou téléchargé depuis la plateforme, car chaque copie ultérieure perd des couches."],
+          ["Vérifiez d'abord la couche signée", "Cherchez un manifeste C2PA et lisez son état de signature, son état de confiance et le digitalSourceType déclaré avant toute chose."],
+          ["Lisez l'EXIF et le XMP", "Examinez Software, CreatorTool, Credit, DigitalSourceType et UserComment pour d'éventuels noms d'outil ou étiquettes d'IA, en gardant à l'esprit qu'ils ne sont pas signés."],
+          ["Ouvrez les blocs de texte PNG", "Pour les fichiers PNG, lisez tEXt/iTXt/zTXt pour le prompt, la seed, le sampler, le CFG, le modèle et un éventuel workflow JSON."],
+          ["Pour la vidéo, parcourez le conteneur", "Lisez ftyp, l'arbre de boîtes et udta/meta/ilst à la recherche des champs encoder et tool, puis cherchez des marqueurs SEI dans le flux."],
+        ],
+      },
+      limits: [
+        "Tout sauf un manifeste C2PA signé peut être modifié, supprimé ou copié vers un fichier sans rapport.",
+        "Partage, transcodage, captures d'écran et ré-exports érodent ces couches à des rythmes différents, en commençant généralement par le texte PNG.",
+        "L'absence de métadonnées n'est pas une preuve de création humaine : elle indique seulement que cette copie ne conserve rien de lisible.",
+        "Les noms de champs varient selon les outils et les versions, toutes les valeurs ne peuvent donc pas être normalisées en une étiquette propre.",
+      ],
+      ctaLead: "Lancez le détecteur complet pour lire toutes les couches d'un coup, ou ouvrez un outil précis quand vous savez déjà laquelle vous intéresse.",
+      ctas: [
+        { href: '/', label: "Lire toutes les couches d'un coup" },
+        { href: '/en/tools/exif-xmp-reader/', label: "Ouvrir le lecteur EXIF/XMP", localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: "Extraire les paramètres PNG", localized: false },
+      ],
+      faq: [
+        ["Où les outils d'IA écrivent-ils leurs métadonnées ?", "Cela dépend de l'outil et du format. La provenance signée va dans un manifeste C2PA, les noms d'outil descriptifs dans l'EXIF et le XMP, les paramètres de génération et les workflows dans des blocs de texte PNG, et les détails vidéo dans le conteneur MP4 ou MOV."],
+        ["Pourquoi n'y a-t-il pas d'information d'IA dans l'EXIF ?", "Parce que la plupart des paramètres de génération n'y sont pas stockés. L'EXIF contient des balises orientées appareil photo, tandis que prompts, seeds et workflows sont écrits dans des blocs de texte PNG, qu'il faut analyser séparément."],
+        ["Les métadonnées d'IA peuvent-elles être falsifiées ?", "Toutes les couches hormis une signature C2PA valide peuvent être modifiées ou copiées d'un fichier à l'autre. C'est précisément pour cela que l'état de signature et l'état de confiance sont rapportés séparément des champs descriptifs."],
+        ["Est-il sûr de lire des métadonnées en ligne ?", "Ici, elles ne quittent jamais votre appareil : l'analyse s'exécute dans votre navigateur, donc aucun téléversement n'a lieu et rien n'est conservé."],
+      ],
+      sources: {
+        heading: "Sources et registres de vérification",
+        items: [
+          { href: '/data/samples.json', label: "Registres publics d'échantillons AICheck365", note: "Provenance des échantillons, dates de test, signaux observés et limites connues.", localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: "W3C PNG Third Edition", note: "Référence standard des chunks PNG et des formats de blocs de texte.", localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: "Spécification technique C2PA 2.2", note: "Structure du manifeste et intégration des références selon le format.", localized: false },
+          { href: '/fr/methodology/', label: "Méthodologie AICheck365", note: "Comment chaque couche est pondérée et rapportée." },
+        ],
+      },
+    },
     'blog/what-is-c2pa': {
       title: "Qu'est-ce que le C2PA ? Les Content Credentials",
       description: "Le C2PA est le standard ouvert derrière les Content Credentials : un enregistrement signé de la fabrication d'un fichier. Manifeste, vérification et limites.",
@@ -2825,6 +2907,88 @@ const priorityArticleProfiles = {
     },
   },
   es: {
+    'blog/ai-image-metadata-guide': {
+      title: 'Metadatos de imágenes IA: EXIF, XMP, C2PA y PNG',
+      description: 'Dónde escriben los datos de procedencia las plataformas de IA y cómo leerlos: campos EXIF/XMP, manifiestos C2PA, textos PNG y metadatos MP4. Gratis, en tu navegador.',
+      h1: 'Metadatos de imágenes IA: dónde está escrita la evidencia',
+      meta: 'Consulta objetivo: metadatos de imágenes IA · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Los metadatos no son un solo lugar sino varios, y distinguir cuál es cuál decide cuánto vale un hallazgo. Una imagen o un vídeo pueden llevar a la vez un manifiesto C2PA firmado, campos descriptivos EXIF y XMP, bloques de texto PNG con los parámetros de generación y entradas a nivel de contenedor en MP4 o MOV. Se diferencian en qué registran, con qué facilidad se editan y con qué rapidez desaparecen al compartir el archivo. Esta guía recorre cada capa en el orden en que las lee el analizador.',
+      directAnswer: {
+        heading: 'En resumen: primero la procedencia firmada, después los campos descriptivos',
+        body: 'Lee el manifiesto C2PA antes que nada, porque es la única capa cuya integridad puede comprobarse criptográficamente. Después revisa EXIF y XMP, donde suelen aparecer nombres de plataforma y etiquetas de IA que cualquiera puede reescribir. Los bloques de texto PNG son donde el ecosistema de Stable Diffusion guarda prompts y workflows, y los metadatos del contenedor hacen el trabajo equivalente en vídeo. Todo lo que está por debajo de la firma es una pista, no una prueba.',
+      },
+      sampleHeading: 'Muestras que ilustran cada capa',
+      sampleRows: [
+        ['JPEG de Adobe Firefly', 'La capa firmada: un manifiesto C2PA válido que declara digitalSourceType = trainedAlgorithmicMedia, informado como válido y no de confianza porque su certificado queda fuera de la lista.'],
+        ['PNG ComfyUI / Stable Diffusion XL', 'La capa de texto PNG: bloques prompt y workflow con el grafo de nodos y los parámetros de generación, ninguno firmado.'],
+        ['MP4 de Google Veo', 'La capa de contenedor: credenciales y campos de herramienta guardados en la estructura de cajas del ISO base media en lugar de un marcador de imagen.'],
+      ],
+      signalRows: [
+        ['EXIF', 'Un estándar de la era de las cámaras. Software, Artist y UserComment a veces llevan un nombre de herramienta o una etiqueta JSON de IA, y la ausencia total de campos de cámara ya es levemente informativa.'],
+        ['XMP', 'Los metadatos XML de Adobe. CreatorTool, Credit y DigitalSourceType son los campos con más probabilidades de nombrar al generador cuando sobrevive la exportación original.'],
+        ['C2PA', 'La capa firmada, serializada como JUMBF e incrustada según el formato: un segmento APP11 en JPEG, un chunk propio en PNG, una caja en MP4.'],
+        ['Bloques de texto PNG', 'tEXt, iTXt y zTXt admiten cadenas clave/valor arbitrarias, y por eso prompts, semillas, samplers y el workflow JSON completo acaban aquí y no en EXIF.'],
+        ['Contenedor MP4 / MOV', 'ftyp brand, el árbol de cajas, udta/meta/ilst, entradas de encoder, tool y software, más cadenas AIGC y marcadores SEI en el flujo.'],
+      ],
+      insights: [
+        {
+          heading: 'Por qué los parámetros de generación viven fuera del EXIF',
+          body: 'EXIF se diseñó para cámaras: etiquetas fijas de exposición, apertura, ISO y objetivo. Un prompt de varias líneas o un grafo de nodos serializado no encajan en esa forma, así que el ecosistema de Stable Diffusion los escribe en bloques de texto PNG, que admiten cadenas clave/valor arbitrarias. Este es el malentendido más común del área: quien busca «ComfyUI EXIF» o «PNG info» está buscando bloques de texto, no etiquetas de cámara. La consecuencia práctica es que una herramienta que solo analiza EXIF informará de un resultado vacío sobre un archivo lleno de evidencia legible.',
+        },
+        {
+          heading: 'Con qué rapidez desaparece cada capa',
+          body: 'Las capas no son igual de frágiles, y conocer el orden ayuda a interpretar un resultado vacío:',
+          list: [
+            'Apps de mensajería: los bloques de texto PNG caen primero, junto con la mayoría de campos XMP y los datos GPS del EXIF.',
+            'Transcodificación en redes sociales: EXIF, el manifiesto C2PA, XMP CreatorTool y todos los parámetros de generación suelen desaparecer de golpe.',
+            'Capturas y grabaciones de pantalla: no sobrevive nada del original; queda el metadato de la propia herramienta de captura.',
+            'Reexportar o guardar como: se pierden los campos de procedencia y el nuevo software puede escribir encima EXIF sin relación.',
+          ],
+        },
+        {
+          heading: 'Leer metadatos sin entregar el archivo',
+          body: 'Inspeccionar metadatos es una operación de solo lectura sobre bytes que ya tienes, así que no hay razón técnica para subir nada. AICheck365 analiza EXIF, XMP, C2PA, chunks PNG y cajas MP4 localmente mediante Rust compilado a WebAssembly, lo que mantiene documentos de trabajo y fotografías personales en tu propia máquina. También significa que los resultados aparecen sin ida y vuelta al servidor, y que los vídeos grandes están limitados por tu hardware y no por un límite de subida.',
+        },
+      ],
+      steps: {
+        heading: 'Leer un archivo capa por capa',
+        items: [
+          ['Trabaja desde el original', 'Usa el archivo tal como lo exportó la herramienta o lo descargaste de la plataforma, ya que cada copia posterior pierde capas.'],
+          ['Comprueba primero la capa firmada', 'Busca un manifiesto C2PA y lee su estado de firma, su estado de confianza y el digitalSourceType declarado antes que nada.'],
+          ['Lee EXIF y XMP', 'Revisa Software, CreatorTool, Credit, DigitalSourceType y UserComment por si hay nombres de herramienta o etiquetas de IA, recordando que no están firmados.'],
+          ['Abre los bloques de texto PNG', 'En archivos PNG, lee tEXt/iTXt/zTXt para prompt, semilla, sampler, CFG, modelo y cualquier workflow JSON.'],
+          ['Para vídeo, recorre el contenedor', 'Lee ftyp, el árbol de cajas y udta/meta/ilst en busca de campos de encoder y herramienta, y después busca marcadores SEI en el flujo.'],
+        ],
+      },
+      limits: [
+        'Todo salvo un manifiesto C2PA firmado puede editarse, eliminarse o copiarse a un archivo sin relación.',
+        'Compartir, transcodificar, capturar pantalla y reexportar van eliminando estas capas a distinto ritmo, normalmente empezando por el texto PNG.',
+        'La ausencia de metadatos no es evidencia de autoría humana: solo indica que esta copia no conserva nada legible.',
+        'Los nombres de campo varían entre herramientas y versiones, así que no todos los valores pueden normalizarse en una etiqueta limpia.',
+      ],
+      ctaLead: 'Ejecuta el detector completo para leer todas las capas a la vez, o abre una herramienta concreta cuando ya sepas qué capa necesitas.',
+      ctas: [
+        { href: '/', label: 'Leer todas las capas a la vez' },
+        { href: '/en/tools/exif-xmp-reader/', label: 'Abrir el lector EXIF/XMP', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: 'Extraer parámetros PNG', localized: false },
+      ],
+      faq: [
+        ['¿Dónde escriben sus metadatos las herramientas de IA?', 'Depende de la herramienta y del formato. La procedencia firmada va a un manifiesto C2PA, los nombres descriptivos de herramienta a EXIF y XMP, los parámetros de generación y los workflows a bloques de texto PNG, y los detalles de vídeo al contenedor MP4 o MOV.'],
+        ['¿Por qué no hay información de IA en el EXIF?', 'Porque la mayoría de los parámetros de generación no se guardan ahí. EXIF contiene etiquetas orientadas a cámaras, mientras que prompts, semillas y workflows se escriben en bloques de texto PNG, que hay que analizar por separado.'],
+        ['¿Se pueden falsificar los metadatos de IA?', 'Todas las capas salvo una firma C2PA válida pueden editarse o copiarse entre archivos. Precisamente por eso el estado de firma y el de confianza se informan aparte de los campos descriptivos.'],
+        ['¿Es seguro leer metadatos online?', 'Aquí nunca salen de tu dispositivo: el análisis corre en tu navegador, así que no hay subida ni se retiene nada.'],
+      ],
+      sources: {
+        heading: 'Fuentes y registros de verificación',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de muestras de AICheck365', note: 'Procedencia de las muestras, fechas de prueba, señales observadas y límites conocidos.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Referencia estándar de los chunks PNG y los formatos de bloques de texto.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificación técnica C2PA 2.2', note: 'Estructura del manifiesto y cómo se incrustan las credenciales en cada formato.', localized: false },
+          { href: '/es/methodology/', label: 'Metodología de AICheck365', note: 'Cómo se pondera e informa cada capa.' },
+        ],
+      },
+    },
     'blog/what-is-c2pa': {
       title: '¿Qué es C2PA? Las Content Credentials explicadas',
       description: 'C2PA es el estándar abierto tras las Content Credentials: un registro firmado de cómo se creó un archivo. Cómo funciona el manifiesto y cómo verificarlo gratis.',
