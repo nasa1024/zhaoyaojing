@@ -737,5 +737,45 @@
       "/fr/blog/what-is-c2pa/",
       "/fr/methodology/"
     ]
+  },
+  {
+    "id": "ai-image-metadata-guide-de-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/de/blog/ai-image-metadata-guide/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Metadaten von KI-Bildern: EXIF, XMP, C2PA und PNG | AICheck365",
+    "description": "Wo KI-Plattformen Herkunftsdaten hinterlegen und wie man sie liest: EXIF/XMP-Felder, C2PA-Manifeste, PNG-Textblöcke und MP4-Metadaten. Kostenlos, im Browser.",
+    "canonical": "https://www.aicheck365.com/de/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "Metadaten KI-Bilder",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/de/blog/what-is-c2pa/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-ko-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/ko/blog/ai-image-metadata-guide/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI 이미지 메타데이터: EXIF·XMP·C2PA·PNG 정리 | AICheck365",
+    "description": "AI 플랫폼이 출처 정보를 어디에 쓰고 어떻게 읽는지 정리했습니다. EXIF/XMP 필드, C2PA manifest, PNG 텍스트 청크, MP4 컨테이너를 층별로 설명합니다.",
+    "canonical": "https://www.aicheck365.com/ko/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI 이미지 메타데이터",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/ko/blog/what-is-c2pa/",
+      "/ko/methodology/"
+    ]
   }
 ]
