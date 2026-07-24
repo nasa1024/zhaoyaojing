@@ -649,6 +649,72 @@ function platformMetaDescription(name) {
 
 const priorityPlatformProfiles = {
   'pt-BR': {
+    midjourney: {
+      title: 'Verificar imagens do Midjourney: XMP, IPTC e nome do arquivo',
+      description: 'Verifique quais pistas de procedência sobrevivem em imagens do Midjourney: campos XMP e IPTC, strings de sistema de IA e padrões de nome. Grátis no navegador, sem upload.',
+      h1: 'Imagens do Midjourney: quais pistas realmente sobrevivem no arquivo',
+      meta: 'Termo principal: verificar imagem Midjourney · Atualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Vale examinar o resultado do Midjourney de um jeito diferente do usado em plataformas que assinam seus exports. Em vez de uma credencial criptográfica, o que costuma restar são metadados descritivos: campos XMP e IPTC com o nome da ferramenta, uma string de sistema de IA e o nome de arquivo característico atribuído no download. O AICheck365 lê esses campos localmente no seu navegador e informa, para cada achado, de qual campo ele veio — assim você julga quanto peso ele merece.',
+      directAnswer: {
+        heading: 'Resposta curta: espere metadados descritivos, não assinatura',
+        body: 'Examine no download original as strings de ferramenta em campos XMP e EXIF — Software, CreatorTool, Credit, DigitalSourceType e entradas de sistema de IA — além do padrão do nome do arquivo. São legíveis e úteis, mas nenhuma delas é assinada: podem ser editadas, removidas ou copiadas para outro arquivo. Trate um achado como indício de apoio e confirme de onde o arquivo realmente veio.',
+      },
+      sampleHeading: 'Status da amostra e nível de evidência',
+      sampleRows: [
+        ['Amostra Midjourney embutida', 'Ainda não há. Esta página não afirma ter feito um teste direto até que um original licenciado possa ser publicado junto com as demais amostras.'],
+        ['O que o parser procura', 'O comparador de padrões reconhece a string midjourney em valores de campos de metadados e em nomes de arquivo, e informa qual campo gerou a correspondência.'],
+        ['Nível de evidência', 'Metadados descritivos sem assinatura. Mais fracos que um manifest C2PA válido e tratados no relatório como sinal de apoio de menor confiança.'],
+      ],
+      signalRows: [
+        ['Campos XMP / IPTC', 'CreatorTool, Software, Credit, DigitalSourceType e entradas de sistema de IA podem nomear a ferramenta geradora quando o export original está intacto.'],
+        ['Nome do arquivo', 'Nomes de download costumam trazer a conta, um trecho do prompt e um identificador do job. Útil como contexto, mas renomear é trivial.'],
+        ['C2PA Content Credentials', 'Não é o que esperar aqui. Se um manifest assinado aparecer, normalmente foi adicionado por uma edição posterior, como um aplicativo da Adobe.'],
+        ['Estilo visual', 'Não é um sinal usado por esta ferramenta. Adivinhar pelo traço é justamente o julgamento que a evidência de metadados pretende substituir.'],
+      ],
+      insights: [
+        {
+          heading: 'Por que não existe uma porcentagem',
+          body: 'Ferramentas que devolvem uma pontuação de confiança para imagens do Midjourney inferem a partir dos pixels, e essa inferência se degrada muito em cópias comprimidas, recortadas ou ampliadas. Esta verificação faz de propósito algo mais estreito e conferível: informa quais campos de procedência existem no arquivo e o que dizem. Se a resposta for nada, isso é reportado como nada encontrado, e não maquiado como baixa probabilidade de IA.',
+        },
+        {
+          heading: 'Quando os metadados já sumiram',
+          body: 'Como esses campos não são assinados e saem com facilidade, o resultado vazio é comum em qualquer arquivo que já circulou. Em geral, estes caminhos ajudam mais do que repetir a verificação:',
+          list: [
+            'Peça o arquivo como foi baixado da plataforma, antes de ser publicado ou encaminhado.',
+            'Procure a cópia publicada de maior resolução; redes sociais recodificam para baixo e levam os metadados junto.',
+            'Verifique se é uma captura de tela: ela guarda os metadados do próprio capturador e nada do original.',
+            'Compare com plataformas que assinam seus exports, onde um manifest válido pode encerrar a dúvida.',
+          ],
+        },
+      ],
+      limits: [
+        'Os sinais do Midjourney são metadados sem assinatura: podem ser editados, removidos ou copiados para um arquivo sem relação.',
+        'Redes sociais, mensageiros, capturas de tela e reexportações costumam remover por completo os campos XMP e IPTC.',
+        'Ainda não há amostra Midjourney embutida publicada, então esta página descreve a cobertura de campos, não um resultado de teste reproduzido.',
+        'Nenhum sinal encontrado significa que esta cópia não carrega evidência legível — não que a imagem não venha do Midjourney.',
+      ],
+      ctaLead: 'Compare com uma plataforma que assina seus exports e use o leitor EXIF/XMP para os campos descritivos daqui.',
+      ctas: [
+        { href: '/platforms/comfyui/', label: 'Comparar com outra plataforma' },
+        { href: '/en/tools/exif-xmp-reader/', label: 'Inspecionar campos EXIF/XMP', localized: false },
+        { href: '/blog/how-to-detect-ai-images/', label: 'Como identificar imagens de IA' },
+      ],
+      faq: [
+        ['Existe verificação gratuita para imagens do Midjourney?', 'Sim. O AICheck365 verifica downloads do Midjourney gratuitamente no navegador, sem conta e sem upload. Ele relata a evidência de XMP, IPTC e nome de arquivo realmente presente, em vez de uma pontuação de confiança inventada.'],
+        ['O Midjourney adiciona C2PA Content Credentials?', 'Não parta desse princípio. Os sinais confiáveis aqui são campos de metadados descritivos e o nome do arquivo. Quando um manifest assinado aparece, costuma ter sido acrescentado numa etapa posterior de edição, não na geração.'],
+        ['Dá para identificar uma imagem do Midjourney depois de postada?', 'Muitas vezes não, só pelo arquivo. As plataformas recodificam o upload e descartam XMP e IPTC, o que deixa a verificação sem nada legível. O download original é bem mais informativo.'],
+        ['Os arquivos são enviados para verificação?', 'Não. A análise roda localmente no navegador, então a imagem não sai do seu dispositivo.'],
+      ],
+      sources: {
+        heading: 'Fontes e registros de verificação',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de amostras do AICheck365', note: 'Procedência das amostras, datas de teste, sinais observados e limites conhecidos.', localized: false },
+          { href: 'https://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata', label: 'IPTC Photo Metadata Standard', note: 'Definição dos campos Credit, Source e DigitalSourceType.', localized: false },
+          { href: '/methodology/', label: 'Metodologia do AICheck365', note: 'Como metadados sem assinatura são ponderados e reportados.' },
+        ],
+      },
+    },
     comfyui: {
       title: 'ComfyUI: ler prompt e workflow do PNG',
       description: 'Leia os metadados do ComfyUI no navegador: blocos de texto PNG com prompt e workflow JSON, modelo, seed, sampler e CFG. De graça e sem enviar o arquivo.',
@@ -860,6 +926,72 @@ const priorityPlatformProfiles = {
     },
   },
   'zh-TW': {
+    midjourney: {
+      title: 'Midjourney 圖片檢測：XMP、IPTC 與檔名線索',
+      description: '檢查 Midjourney 圖片中真正留存的線索：XMP 與 IPTC 工具欄位、AI 系統字串與檔名樣式。在瀏覽器內免費檢測，檔案不會上傳。',
+      h1: 'Midjourney 圖片：檔案裡真正留下的線索是什麼',
+      meta: '主要搜尋詞：Midjourney 圖片檢測 · 更新：2026-07-23 · 解析器：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Midjourney 的產出，值得用跟「會簽章的平台」不同的方式來看。這裡通常不會有加密憑證，留下來的多半是描述性的中繼資料：寫著工具名稱的 XMP 與 IPTC 欄位、AI 系統字串，以及下載時那組很有辨識度的檔名。AICheck365 會在你的瀏覽器裡讀取這些欄位，並標明每一項命中來自哪個欄位，你才能判斷它到底有多少份量。',
+      directAnswer: {
+        heading: '重點：這裡該期待的是描述性中繼資料，不是簽章',
+        body: '請檢查原始下載檔中 XMP 與 EXIF 的工具字串，包含 Software、CreatorTool、Credit、DigitalSourceType 與 AI 系統項目，再加上檔名樣式。這些可以讀、也有用，但都沒有簽章，因此可以被修改、刪除，或複製到另一個不相干的檔案上。把命中當成佐證線索，並和「這個檔案實際從哪裡來」一起判斷。',
+      },
+      sampleHeading: '樣本狀態與證據等級',
+      sampleRows: [
+        ['內建 Midjourney 樣本', '尚未提供。在能夠與其他樣本一併公開、且授權清楚的原始檔出現之前，本頁不宣稱做過直接測試。'],
+        ['解析器實際比對的內容', '工具樣式比對會在中繼資料欄位值與檔名中辨識 midjourney 字串，並回報是哪個欄位產生了命中。'],
+        ['證據等級', '未簽章的描述性中繼資料。弱於有效的 C2PA manifest，在報告中視為信心較低的輔助訊號。'],
+      ],
+      signalRows: [
+        ['XMP / IPTC 欄位', '當原始匯出檔完整時，CreatorTool、Software、Credit、DigitalSourceType 與 AI 系統項目可能指出生成工具。'],
+        ['檔名', '下載名稱常帶有帳號名、提示詞片段與工作編號。作為脈絡很有用，但改名毫不費力。'],
+        ['C2PA 內容憑證', '不該指望在這裡看到。若真的出現已簽章的 manifest，通常是後續編輯階段（例如 Adobe 應用程式）加上去的。'],
+        ['視覺風格', '本工具不使用這個訊號。用畫風猜測，正是中繼資料證據想要取代的那種判斷。'],
+      ],
+      insights: [
+        {
+          heading: '為什麼不給你一個百分比',
+          body: '那些會回傳信心分數的工具，是從像素去推論的，而這種推論在壓縮、裁切或放大過的副本上會迅速失準。這裡刻意做一件範圍更窄、但可以被查核的事：回報檔案裡有哪些來源欄位、內容是什麼。如果什麼都沒有，就照實說沒有發現，而不是包裝成「AI 機率偏低」。',
+        },
+        {
+          heading: '中繼資料已經不見了怎麼辦',
+          body: '因為這些欄位沒有簽章又容易被移除，只要檔案流傳過，空結果其實很常見。這時候，下面這些做法通常比重跑一次檢測更有幫助：',
+          list: [
+            '向對方索取「發佈或轉傳之前」、直接從平台下載的原始檔。',
+            '找出已公開副本中解析度最高的那一份；社群平台會重新編碼，中繼資料也一起消失。',
+            '確認它是不是截圖：截圖只會保留截圖工具自己的中繼資料，原始資訊一概不留。',
+            '拿會簽章的平台來對照，那邊的有效 manifest 往往能直接把問題定案。',
+          ],
+        },
+      ],
+      limits: [
+        'Midjourney 的訊號屬於未簽章中繼資料：可被修改、移除，或複製到無關的檔案上。',
+        '社群平台、通訊軟體、截圖與重新匯出，經常會把 XMP 與 IPTC 欄位整組清掉。',
+        '目前尚未公開內建的 Midjourney 樣本，因此本頁說明的是欄位涵蓋範圍，而非重現過的測試結果。',
+        '沒有發現訊號，代表這份副本沒有可讀的證據，不代表這張圖不是 Midjourney 產出的。',
+      ],
+      ctaLead: '先和會簽章的平台對照，再用 EXIF/XMP 讀取器檢查這裡的描述性欄位。',
+      ctas: [
+        { href: '/platforms/imagen/', label: '對照會簽章的平台' },
+        { href: '/en/tools/exif-xmp-reader/', label: '檢查 EXIF/XMP 欄位', localized: false },
+        { href: '/blog/how-to-detect-ai-images/', label: '閱讀如何判斷 AI 圖片' },
+      ],
+      faq: [
+        ['有免費的 Midjourney 圖片檢測嗎？', '有。AICheck365 在你的瀏覽器裡免費檢查，不需要帳號、也不會上傳。它回報的是檔案中實際存在的 XMP、IPTC 與檔名證據，而不是一個湊出來的信心分數。'],
+        ['Midjourney 會加上 C2PA 內容憑證嗎？', '請不要預設會。這裡比較可靠的訊號是描述性中繼資料欄位與檔名。若出現已簽章的 manifest，通常是後續編輯加上的，而非生成當下就寫入。'],
+        ['圖片發到社群平台之後還能判斷嗎？', '單看檔案往往不行。平台會重新編碼上傳內容並丟棄 XMP 與 IPTC，檢測也就無從讀起。原始下載檔的資訊量高出許多。'],
+        ['檢測時檔案會被上傳嗎？', '不會。解析在你的瀏覽器內執行，圖片不會離開你的裝置。'],
+      ],
+      sources: {
+        heading: '來源與驗證紀錄',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 公開樣本紀錄', note: '各樣本的出處、測試日期、觀察到的訊號與已知限制。', localized: false },
+          { href: 'https://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata', label: 'IPTC Photo Metadata Standard', note: 'Credit、Source 與 DigitalSourceType 等欄位的定義。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 檢測方法', note: '說明未簽章的中繼資料如何評估與呈現。' },
+        ],
+      },
+    },
     imagen: {
       title: 'Google Imagen 檢測：C2PA 內容憑證怎麼查',
       description: '檢查 Google Imagen 檔案的內容憑證：C2PA manifest、digitalSourceType、Google claim generator 與 XMP 欄位，在瀏覽器本機讀取，不上傳檔案。',
@@ -923,6 +1055,72 @@ const priorityPlatformProfiles = {
     },
   },
   de: {
+    midjourney: {
+      title: 'Midjourney-Bilder prüfen: XMP, IPTC und Dateinamen',
+      description: 'Midjourney-Bilder auf verbliebene Herkunftsspuren prüfen: XMP- und IPTC-Werkzeugfelder, KI-System-Strings und Dateinamensmuster. Kostenlos im Browser, ohne Upload.',
+      h1: 'Midjourney-Bilder: Welche Spuren wirklich in der Datei bleiben',
+      meta: 'Zielsuchbegriff: Midjourney Bilder erkennen · Aktualisiert: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Midjourney-Ausgaben prüft man sinnvollerweise anders als Dateien von Plattformen, die ihre Exporte signieren. Statt eines kryptografischen Nachweises bleibt hier meist beschreibende Metadatenspur: XMP- und IPTC-Felder mit dem Werkzeugnamen, ein KI-System-String und der charakteristische Dateiname aus dem Download. AICheck365 liest diese Felder lokal im Browser und nennt zu jedem Treffer das Feld, aus dem er stammt — damit Sie einschätzen können, wie viel Gewicht er verdient.',
+      directAnswer: {
+        heading: 'Kurz gesagt: beschreibende Metadaten, keine Signatur',
+        body: 'Prüfen Sie im Originaldownload die Werkzeug-Strings in XMP- und EXIF-Feldern — Software, CreatorTool, Credit, DigitalSourceType und KI-System-Einträge — sowie das Dateinamensmuster. Diese Angaben sind lesbar und nützlich, aber keine davon ist signiert. Sie lassen sich bearbeiten, entfernen oder auf eine fremde Datei kopieren. Behandeln Sie einen Treffer als unterstützendes Indiz und prüfen Sie zusätzlich, woher die Datei tatsächlich stammt.',
+      },
+      sampleHeading: 'Beispielstatus und Beweisprofil',
+      sampleRows: [
+        ['Mitgeliefertes Midjourney-Beispiel', 'Bisher keines. Diese Seite beansprucht keinen direkten Midjourney-Test, solange kein lizenziertes Original zusammen mit den übrigen Beispielen veröffentlicht werden kann.'],
+        ['Was der Parser abgleicht', 'Der Werkzeugmuster-Abgleich erkennt einen midjourney-String in Metadaten-Feldwerten und in Dateinamen und meldet, welches Feld den Treffer erzeugt hat.'],
+        ['Beweisstufe', 'Unsignierte beschreibende Metadaten. Schwächer als ein gültiges C2PA-Manifest und im Bericht als Hilfssignal mit geringerer Konfidenz geführt.'],
+      ],
+      signalRows: [
+        ['XMP-/IPTC-Felder', 'CreatorTool, Software, Credit, DigitalSourceType und KI-System-Einträge können das erzeugende Werkzeug benennen, sofern der Originalexport unangetastet ist.'],
+        ['Dateiname', 'Downloadnamen tragen häufig Kontoname, ein Fragment des Prompts und eine Auftrags-ID. Als Kontext nützlich, aber trivial umbenennbar.'],
+        ['C2PA Content Credentials', 'Hier nicht zu erwarten. Taucht doch ein signiertes Manifest auf, hat es meist ein späterer Editor wie eine Adobe-Anwendung hinzugefügt.'],
+        ['Bildstil', 'Kein Signal, das dieses Werkzeug verwendet. Das Raten anhand des Stils ist genau die Einschätzung, die Metadatenbeweise ersetzen sollen.'],
+      ],
+      insights: [
+        {
+          heading: 'Warum es hier keine Prozentzahl gibt',
+          body: 'Werkzeuge, die für Midjourney-Bilder einen Konfidenzwert ausgeben, schließen aus Pixeln — und diese Schlussfolgerung bricht bei komprimierten, beschnittenen oder hochskalierten Kopien schnell ein. Diese Prüfung tut bewusst etwas Engeres und Überprüfbares: Sie meldet, welche Herkunftsfelder in der Datei stehen und was darin steht. Ist die Antwort nichts, wird das als nichts gefunden berichtet und nicht als niedrige KI-Wahrscheinlichkeit verkleidet.',
+        },
+        {
+          heading: 'Wenn die Metadaten bereits fehlen',
+          body: 'Da diese Felder unsigniert und leicht zu entfernen sind, ist ein leeres Ergebnis bei allem, was schon herumgereicht wurde, völlig normal. Statt die Prüfung zu wiederholen, helfen meist diese Schritte weiter:',
+          list: [
+            'Fragen Sie nach der Datei, wie sie von der Plattform geladen wurde — vor dem Posten oder Weiterleiten.',
+            'Suchen Sie die höchstaufgelöste veröffentlichte Kopie; soziale Netzwerke rechnen herunter, und die Metadaten gehen mit.',
+            'Prüfen Sie, ob es ein Screenshot ist: der trägt nur die Metadaten des Screenshot-Werkzeugs und nichts vom Original.',
+            'Vergleichen Sie mit Plattformen, die ihre Exporte signieren — dort kann ein gültiges Manifest die Frage klären.',
+          ],
+        },
+      ],
+      limits: [
+        'Midjourney-Signale sind unsignierte Metadaten: bearbeitbar, entfernbar und auf eine fremde Datei kopierbar.',
+        'Soziale Netzwerke, Messenger, Screenshots und Re-Exporte entfernen XMP- und IPTC-Felder regelmäßig vollständig.',
+        'Es ist noch kein mitgeliefertes Midjourney-Beispiel veröffentlicht; diese Seite beschreibt daher die Feldabdeckung statt eines reproduzierten Testergebnisses.',
+        'Keine Signale gefunden heißt: diese Kopie trägt keine lesbaren Beweise — nicht, dass das Bild nicht von Midjourney stammt.',
+      ],
+      ctaLead: 'Vergleichen Sie mit einer Plattform, die ihre Exporte signiert, und lesen Sie hier die beschreibenden Felder mit dem EXIF/XMP-Reader.',
+      ctas: [
+        { href: '/platforms/runway/', label: 'Mit einer Plattform vergleichen, die signiert' },
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMP-Felder prüfen', localized: false },
+        { href: '/blog/how-to-detect-ai-images/', label: 'KI-Bilder erkennen' },
+      ],
+      faq: [
+        ['Gibt es eine kostenlose Prüfung für Midjourney-Bilder?', 'Ja. AICheck365 prüft Midjourney-Downloads kostenlos im Browser, ohne Konto und ohne Upload. Berichtet werden die tatsächlich vorhandenen XMP-, IPTC- und Dateinamensbeweise statt eines synthetischen Konfidenzwerts.'],
+        ['Fügt Midjourney C2PA Content Credentials hinzu?', 'Gehen Sie nicht davon aus. Verlässlich sind hier beschreibende Metadatenfelder und der Dateiname. Wenn doch ein signiertes Manifest erscheint, stammt es meist aus einem späteren Bearbeitungsschritt und nicht aus der Erzeugung.'],
+        ['Lässt sich ein Midjourney-Bild nach dem Posten noch erkennen?', 'Aus der Datei allein oft nicht. Plattformen kodieren Uploads neu und verwerfen XMP- und IPTC-Daten, sodass der Prüfung nichts Lesbares bleibt. Der Originaldownload ist deutlich aussagekräftiger.'],
+        ['Werden Dateien zur Prüfung hochgeladen?', 'Nein. Das Parsen läuft lokal im Browser, das Bild verlässt Ihr Gerät nicht.'],
+      ],
+      sources: {
+        heading: 'Quellen und Prüfprotokolle',
+        items: [
+          { href: '/data/samples.json', label: 'Öffentliche Beispieldaten von AICheck365', note: 'Herkunft der Beispiele, Testdaten, beobachtete Signale und bekannte Grenzen.', localized: false },
+          { href: 'https://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata', label: 'IPTC Photo Metadata Standard', note: 'Definition der Felder Credit, Source und DigitalSourceType.', localized: false },
+          { href: '/methodology/', label: 'Methodik von AICheck365', note: 'Wie unsignierte Metadaten gewichtet und berichtet werden.' },
+        ],
+      },
+    },
     runway: {
       title: 'Runway-Videos prüfen: Container-Metadaten und Frames',
       description: 'Runway-Videos auf KI-Herkunftssignale prüfen: MP4/MOV-Container-Metadaten, SEI-Marker, Dateinamen und Frame-Wasserzeichen. Kostenlos und lokal im Browser.',
@@ -1781,6 +1979,72 @@ const priorityPlatformProfiles = {
     },
   },
   ko: {
+    midjourney: {
+      title: 'Midjourney 이미지 확인: XMP·IPTC와 파일명 단서',
+      description: 'Midjourney 이미지에 남는 단서를 확인합니다. XMP·IPTC 도구 필드, AI 시스템 문자열, 파일명 패턴을 브라우저에서 무료로 검사하며 업로드하지 않습니다.',
+      h1: 'Midjourney 이미지: 파일에 실제로 남는 단서는 무엇인가',
+      meta: '주요 검색어: Midjourney 이미지 확인 · 업데이트: 2026-07-23 · 파서: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Midjourney 결과물은 서명을 붙이는 플랫폼과는 다른 방식으로 살펴봐야 합니다. 암호학적 자격 증명 대신 대개 남는 것은 서술적 메타데이터입니다. 도구 이름이 담긴 XMP·IPTC 필드, AI 시스템 문자열, 그리고 내려받을 때 붙는 특유의 파일명입니다. AICheck365는 이 필드들을 브라우저 안에서 읽고, 어떤 필드에서 나온 값인지까지 함께 보여줍니다. 그래야 그 단서에 얼마나 무게를 둘지 판단할 수 있기 때문입니다.',
+      directAnswer: {
+        heading: '핵심: 서명이 아니라 서술적 메타데이터를 기대하세요',
+        body: '원본 다운로드 파일에서 XMP·EXIF의 도구 문자열, 즉 Software, CreatorTool, Credit, DigitalSourceType과 AI 시스템 항목을 확인하고 파일명 패턴도 함께 보세요. 읽을 수 있고 쓸모도 있지만 어느 것도 서명되어 있지 않습니다. 수정하거나 지우거나 다른 파일에 복사해 붙일 수 있다는 뜻입니다. 하나의 단서로 다루고, 그 파일이 실제로 어디서 왔는지와 함께 판단하세요.',
+      },
+      sampleHeading: '샘플 상태와 증거 등급',
+      sampleRows: [
+        ['내장 Midjourney 샘플', '아직 없습니다. 라이선스가 확인된 원본을 다른 샘플들과 함께 공개할 수 있을 때까지, 이 페이지는 직접 테스트했다고 주장하지 않습니다.'],
+        ['파서가 찾는 것', '도구 패턴 매처가 메타데이터 필드 값과 파일명에서 midjourney 문자열을 인식하고, 어떤 필드에서 일치했는지 보고합니다.'],
+        ['증거 등급', '서명 없는 서술적 메타데이터입니다. 유효한 C2PA manifest보다 약하며, 보고서에서도 낮은 신뢰도의 보조 신호로 다룹니다.'],
+      ],
+      signalRows: [
+        ['XMP / IPTC 필드', '원본 내보내기가 온전하다면 CreatorTool, Software, Credit, DigitalSourceType, AI 시스템 항목이 생성 도구를 가리킬 수 있습니다.'],
+        ['파일명', '내려받은 이름에는 계정명, 프롬프트 일부, 작업 식별자가 담기곤 합니다. 맥락으로는 유용하지만 이름은 얼마든지 바꿀 수 있습니다.'],
+        ['C2PA Content Credentials', '여기서 기대할 신호는 아닙니다. 서명된 manifest가 보인다면 대개 이후 편집 단계에서, 예를 들어 Adobe 애플리케이션이 추가한 것입니다.'],
+        ['시각적 스타일', '이 도구가 쓰는 신호가 아닙니다. 그림체로 추측하는 방식이야말로 메타데이터 증거가 대체하려는 판단입니다.'],
+      ],
+      insights: [
+        {
+          heading: '왜 확률로 답해 주지 않는가',
+          body: 'Midjourney 이미지에 몇 퍼센트라는 점수를 돌려주는 도구들은 픽셀에서 추론합니다. 그 추론은 압축되거나 잘리거나 업스케일된 사본에서 급격히 무너집니다. 이 검사는 일부러 더 좁고 검증 가능한 일을 합니다. 파일에 어떤 출처 필드가 있고 무엇이라고 적혀 있는지를 보고할 뿐입니다. 아무것도 없으면 낮은 확률로 포장하지 않고 발견된 것이 없다고 그대로 알립니다.',
+        },
+        {
+          heading: '메타데이터가 이미 사라졌다면',
+          body: '이 필드들은 서명이 없고 쉽게 제거되기 때문에, 여기저기 거친 파일에서는 빈 결과가 흔합니다. 이럴 때는 다시 검사하는 것보다 다음이 대체로 더 도움이 됩니다.',
+          list: [
+            '게시하거나 전달하기 전, 플랫폼에서 내려받은 그대로의 파일을 요청하세요.',
+            '공개된 사본 중 해상도가 가장 높은 것을 찾으세요. SNS는 재인코딩하며 메타데이터도 함께 버립니다.',
+            '스크린샷인지 확인하세요. 스크린샷에는 캡처 도구의 정보만 남고 원본의 것은 남지 않습니다.',
+            '내보내기에 서명을 붙이는 플랫폼과 비교해 보세요. 그쪽은 유효한 manifest로 결론이 나기도 합니다.',
+          ],
+        },
+      ],
+      limits: [
+        'Midjourney 신호는 서명 없는 메타데이터입니다. 수정, 삭제할 수 있고 무관한 파일에 복사해 붙일 수도 있습니다.',
+        'SNS, 메신저, 스크린샷, 재내보내기는 XMP와 IPTC 필드를 통째로 제거하는 일이 흔합니다.',
+        '아직 공개된 내장 Midjourney 샘플이 없어, 이 페이지는 재현된 테스트 결과가 아니라 필드 적용 범위를 설명합니다.',
+        '신호를 찾지 못했다는 것은 이 사본에 읽을 증거가 없다는 뜻이지, 그 이미지가 Midjourney 산출물이 아니라는 뜻이 아닙니다.',
+      ],
+      ctaLead: '내보내기에 서명을 붙이는 플랫폼과 비교해 보고, 여기서는 EXIF/XMP 리더로 서술적 필드를 확인하세요.',
+      ctas: [
+        { href: '/platforms/dall-e/', label: '서명을 붙이는 플랫폼과 비교하기' },
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMP 필드 확인하기', localized: false },
+        { href: '/blog/how-to-detect-ai-images/', label: 'AI 사진 확인 방법 읽기' },
+      ],
+      faq: [
+        ['Midjourney 이미지를 무료로 확인할 수 있나요?', '네. AICheck365는 브라우저 안에서 무료로 확인하며 계정도, 업로드도 필요 없습니다. 만들어낸 신뢰도 점수 대신 실제로 존재하는 XMP·IPTC와 파일명 증거를 보고합니다.'],
+        ['Midjourney는 C2PA Content Credentials를 붙이나요?', '그렇다고 전제하지 마세요. 여기서 믿을 만한 신호는 서술적 메타데이터 필드와 파일명입니다. 서명된 manifest가 나타난다면 생성 시점이 아니라 이후 편집 단계에서 추가되었을 가능성이 큽니다.'],
+        ['SNS에 올라간 뒤에도 Midjourney 이미지를 알아볼 수 있나요?', '파일만으로는 어려운 경우가 많습니다. 플랫폼이 업로드를 재인코딩하면서 XMP와 IPTC를 버리기 때문에 읽을 것이 남지 않습니다. 원본 다운로드가 훨씬 많은 정보를 담고 있습니다.'],
+        ['검사할 때 파일이 업로드되나요?', '아니요. 파싱은 브라우저 안에서 실행되므로 이미지는 기기를 벗어나지 않습니다.'],
+      ],
+      sources: {
+        heading: '출처와 검증 기록',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 공개 샘플 기록', note: '각 샘플의 출처, 테스트 날짜, 관찰된 신호와 알려진 한계입니다.', localized: false },
+          { href: 'https://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata', label: 'IPTC Photo Metadata Standard', note: 'Credit, Source, DigitalSourceType 필드의 정의입니다.', localized: false },
+          { href: '/methodology/', label: 'AICheck365 검사 방법론', note: '서명 없는 메타데이터를 어떻게 평가하고 보고하는지 설명합니다.' },
+        ],
+      },
+    },
     firefly: {
       title: 'Adobe Firefly Content Credentials: C2PA 검증',
       description: 'Adobe Firefly 파일의 Content Credentials를 확인합니다. C2PA manifest, 서명과 신뢰 상태, digitalSourceType을 브라우저에서 무료로 검증합니다. 실제 샘플로 검증됨.',
@@ -1938,6 +2202,83 @@ const priorityPlatformProfiles = {
     },
   },
   ja: {
+    sora: {
+      title: 'Sora動画の来歴チェック：MP4メタデータとC2PA',
+      description: 'Sora の MP4/MOV に残る来歴を調べます。C2PA/JUMBF、コンテナのボックス、SEI マーカー、フレーム透かしをブラウザ内で無料検査。アップロードは不要です。',
+      h1: '手元に残る Sora 動画の来歴を確かめる',
+      meta: '主要検索語: Sora 動画 判定 · 更新: 2026-07-23 · パーサー: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'OpenAI の案内では、Sora の Web/App は 2026年4月26日に提供を終了し、Sora API も 2026年9月24日に停止が予定されています。そのため、このページは終了したサービスの使い方ではなく、すでに手元にある、あるいは保存済みのファイルを調べるための手順です。鍵になるのは元の MP4/MOV をそのまま保つことです。AICheck365 は C2PA/JUMBF、コンテナのフィールド、SEI マーカー、抽出したフレームの透かしを、ブラウザの中だけで確認します。',
+      directAnswer: {
+        heading: '結論：判断材料はコンテナに残った証拠です',
+        body: '編集や再エンコードをする前に、ダウンロードしたままのファイルを調べてください。読み取れる C2PA 宣言や Sora 由来の文字列が見つかれば来歴の裏づけになります。ただし逆は成り立ちません。シグナルが無いことは、その動画が Sora で作られていない証明にはならず、単にこのコピーに読める証拠が残っていないという意味です。',
+      },
+      sampleHeading: 'テスト範囲と証拠の強さ',
+      sampleRows: [
+        ['Sora 回帰テスト', 'リポジトリのテストスイートは Sora と Sora Pro の MP4 フィクスチャを解析し、C2PA と Sora 固有の検出の両方を検証しています。これはパーサーの動作確認であり、あらゆる Sora 書き出しを網羅したベンチマークではありません。'],
+        ['ブラウザで試せる動画サンプル', '読み込める Google Veo の MP4 には有効な Google 生成 AI の C2PA があり、MP4 のエンコードツール値も Google です。ブラウザ側の BMFF/C2PA 処理を確かめるためのもので、Sora 固有の来歴ではありません。'],
+        ['検証したパーサー', 'aicheck 0.2.0（Rust/WASM、C2PA は c2pa-rs 0.82 経路、ボックスと ilst フィールドは MP4 コンテナスキャナ）。'],
+      ],
+      signalRows: [
+        ['C2PA / JUMBF', '最も強い層です。元のコンテナに digitalSourceType、claim_generator、contentauth、OpenAI 関連の来歴文字列が残っていれば読み取れます。'],
+        ['MP4/MOV メタデータ', '中程度です。ftyp ブランド、ボックスツリー、udta/meta/ilst、エンコーダーやソフトウェアのフィールド、AIGC 系のラベルなどが対象になります。'],
+        ['SEI マーカー', '弱〜中程度です。ビットストリームに埋め込まれた生成器の文字列は、リマックスなら残ることがありますが、完全な再エンコードでは失われます。'],
+        ['フレーム透かし', '弱い層です。メタデータが空だったときの最後の手掛かりとして、抽出したフレームを調べます。'],
+      ],
+      insights: [
+        {
+          heading: 'サービス終了と、ファイルの真正性は別の話です',
+          body: '提供終了の日付が意味するのは製品を使えるかどうかであって、手元のファイルが本物かどうかではありません。むしろ終了後は、新しく生成し直して比較するという手が使えなくなるため、元ファイルを保全することの価値が上がります。共有用に書き出したものではなく、ダウンロードしたままのファイルを保管してください。',
+        },
+        {
+          heading: '動画の証拠が消える経路は画像より多い',
+          body: '動画は配信の途中で何度も書き換えられます。どの段階で何が失われるかを知っておくと、空の結果を正しく読めます。',
+          list: [
+            'SNS への投稿：ほぼ確実に再エンコードされ、コンテナのメタデータは作り直されます。',
+            'メッセージアプリでの転送：圧縮と共に udta/meta の中身が失われがちです。',
+            '画面録画：まったく新しいファイルになり、録画ソフト自身の情報だけが残ります。',
+            'トリミングや書き出し：編集ソフトが C2PA を引き継がない場合、マニフェストは破棄されます。',
+          ],
+        },
+      ],
+      steps: {
+        heading: '保存済み Sora ファイルの調べ方',
+        items: [
+          ['元ファイルを確保する', 'ダウンロードした MP4/MOV をそのまま残し、複製の方を解析します。編集アプリや SNS を経由させないでください。'],
+          ['コンテナを調べる', 'MP4/MOV メタデータ検査ツールを開き、ボックスツリー、ツールやソフトウェアのフィールド、C2PA のテキストを確認します。'],
+          ['C2PA は慎重に読む', 'アルゴリズム生成を宣言した有効なマニフェストは、ファイル名や単発の文字列一致よりはるかに強い証拠です。'],
+          ['必要ならフレームを見る', 'コンテナ側が空だった場合に限り、フル検出を実行してフレームの透かしを調べます。'],
+          ['文脈ごと記録する', 'ファイル名、入手日、入手元の URL や受け渡しの経緯、検出結果を残します。どれか一つで真正性が確定するわけではありません。'],
+        ],
+      },
+      limits: [
+        '読める信号が無いことは、その動画が人間の手によるものだという証明にはなりません。',
+        'SNS、画面録画、編集ソフト、トランスコーダーはコンテナのメタデータを削除または上書きします。',
+        'サービス終了日は製品の提供状況を示すもので、個々の保存ファイルの真正性とは関係ありません。',
+        'このツールが示すのは来歴の手掛かりであり、法的な真正性の判定ではありません。',
+      ],
+      ctaLead: '手を加えていない書き出しなら、まずコンテナの証拠から始めてください。フレーム解析はそれが空だったときの次の一手です。',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'MP4/MOV メタデータを調べる', localized: false },
+        { href: '/', label: 'フル検出をブラウザで実行' },
+        { href: '/blog/how-to-detect-ai-videos/', label: 'AI動画の見分け方を読む' },
+      ],
+      faq: [
+        ['Sora はまだ使えますか？', 'OpenAI は Sora の Web/App が 2026年4月26日に終了したと案内しています。Sora API も 2026年9月24日に停止予定です。このページは、すでに手元にあるファイルや保存済みのファイルを対象にしています。'],
+        ['保存した Sora 動画なら必ず判別できますか？', 'いいえ。示せるのはファイルに残っている証拠だけです。トランスコード、画面録画、編集、メタデータの削除によって、最も強い来歴の信号は失われることがあります。'],
+        ['Sora 動画のスクリーンショットでも調べられますか？', '元の動画を使ってください。スクリーンショットは新しい画像ファイルであり、MP4 や C2PA のコンテナ証拠はまず残っていません。'],
+        ['ファイルはアップロードされますか？', 'いいえ。解析は WebAssembly にコンパイルされた Rust がブラウザ内で行うため、動画は端末から出ません。'],
+      ],
+      sources: {
+        heading: '出典と検証記録',
+        items: [
+          { href: 'https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation', label: 'OpenAI: Sora の提供終了について', note: '公式の終了日と API 移行の詳細です。', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365 公開サンプル記録', note: 'サンプルの出所、テスト日、観測された信号と既知の限界です。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA 技術仕様 2.2', note: 'マニフェスト構造とアサーション、署名検証の要件です。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 の検査方法論', note: '証拠の強さと、信号が無い場合の解釈を説明しています。' },
+        ],
+      },
+    },
     firefly: {
       title: 'Adobe FireflyのContent Credentials：C2PA検証',
       description: 'Adobe FireflyのファイルをContent Credentialsで確認。C2PA manifest、署名と信頼の状態、digitalSourceTypeをブラウザ内で無料検証。実サンプルで検証済みです。',

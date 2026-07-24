@@ -519,5 +519,105 @@
       "/pt-BR/blog/ai-image-metadata-guide/",
       "/pt-BR/methodology/"
     ]
+  },
+  {
+    "id": "sora-ja-priority",
+    "slug": "sora",
+    "route": "/ja/platforms/sora/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Sora",
+    "title": "Sora動画の来歴チェック：MP4メタデータとC2PA | AICheck365",
+    "description": "Sora の MP4/MOV に残る来歴を調べます。C2PA/JUMBF、コンテナのボックス、SEI マーカー、フレーム透かしをブラウザ内で無料検査。アップロードは不要です。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/sora/",
+    "primaryKeyword": "Sora 動画 判定",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/ja/",
+      "/ja/blog/how-to-detect-ai-videos/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-ko-priority",
+    "slug": "midjourney",
+    "route": "/ko/platforms/midjourney/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney 이미지 확인: XMP·IPTC와 파일명 단서 | AICheck365",
+    "description": "Midjourney 이미지에 남는 단서를 확인합니다. XMP·IPTC 도구 필드, AI 시스템 문자열, 파일명 패턴을 브라우저에서 무료로 검사하며 업로드하지 않습니다.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/midjourney/",
+    "primaryKeyword": "Midjourney 이미지 확인",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/ko/platforms/dall-e/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/blog/how-to-detect-ai-images/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-de-priority",
+    "slug": "midjourney",
+    "route": "/de/platforms/midjourney/",
+    "locale": "de",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney-Bilder prüfen: XMP, IPTC und Dateinamen | AICheck365",
+    "description": "Midjourney-Bilder auf verbliebene Herkunftsspuren prüfen: XMP- und IPTC-Werkzeugfelder, KI-System-Strings und Dateinamensmuster. Kostenlos im Browser, ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/platforms/midjourney/",
+    "primaryKeyword": "Midjourney Bilder erkennen",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/de/platforms/runway/",
+      "/en/tools/exif-xmp-reader/",
+      "/de/blog/how-to-detect-ai-images/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-zh-tw-priority",
+    "slug": "midjourney",
+    "route": "/zh-TW/platforms/midjourney/",
+    "locale": "zh-TW",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney 圖片檢測：XMP、IPTC 與檔名線索 | AICheck365",
+    "description": "檢查 Midjourney 圖片中真正留存的線索：XMP 與 IPTC 工具欄位、AI 系統字串與檔名樣式。在瀏覽器內免費檢測，檔案不會上傳。",
+    "canonical": "https://www.aicheck365.com/zh-TW/platforms/midjourney/",
+    "primaryKeyword": "Midjourney 圖片檢測",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/zh-TW/platforms/imagen/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/blog/how-to-detect-ai-images/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-pt-br-priority",
+    "slug": "midjourney",
+    "route": "/pt-BR/platforms/midjourney/",
+    "locale": "pt-BR",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Verificar imagens do Midjourney: XMP, IPTC e nome do arquivo | AICheck365",
+    "description": "Verifique quais pistas de procedência sobrevivem em imagens do Midjourney: campos XMP e IPTC, strings de sistema de IA e padrões de nome. Grátis no navegador, sem upload.",
+    "canonical": "https://www.aicheck365.com/pt-BR/platforms/midjourney/",
+    "primaryKeyword": "verificar imagem Midjourney",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/pt-BR/platforms/comfyui/",
+      "/en/tools/exif-xmp-reader/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/methodology/"
+    ]
   }
 ]
