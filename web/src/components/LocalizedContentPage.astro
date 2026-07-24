@@ -1524,6 +1524,83 @@ const priorityPlatformProfiles = {
     },
   },
   ja: {
+    firefly: {
+      title: 'Adobe FireflyのContent Credentials：C2PA検証',
+      description: 'Adobe FireflyのファイルをContent Credentialsで確認。C2PA manifest、署名と信頼の状態、digitalSourceTypeをブラウザ内で無料検証。実サンプルで検証済みです。',
+      h1: 'Adobe FireflyのContent Credentials：ファイルは何を証明するのか',
+      meta: '対象キーワード：Adobe Firefly Content Credentials · 更新日：2026-07-23 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Adobe Firefly は、出力に Content Credentials（C2PA の実装）を付与しているプラットフォームのひとつです。そのためファイルの検証可能性が際立って高くなります。画像から推測する代わりに、そのアセットがどう作られたかを述べた署名付き manifest を読めるからです。AICheck365 はこの manifest をブラウザ内で解析し、重要な点として、署名の状態と信頼の状態を分けて報告します。この2つは別々の問いに答えているためです。',
+      directAnswer: {
+        heading: '結論：manifest を読み、valid と trusted を切り分ける',
+        body: '資格情報が保たれた Firefly ファイルには、digitalSourceType = trainedAlgorithmicMedia を宣言する C2PA manifest があります。まず署名が暗号学的に検証できるかを確認し、次にその署名証明書が、あなたが照合している信頼リストに含まれるかを確認してください。ファイルが正真正銘 valid でありながら untrusted と表示されることはあり得ます。それは証明書チェーンについての記述であって、改ざんの話ではありません。',
+      },
+      sampleHeading: '同梱サンプルと検証済みの結果',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'Content Authenticity Initiative の公開サンプルを同梱しており、サンプル一覧からそのまま再現できます。'],
+        ['検証結果', 'digitalSourceType = trainedAlgorithmicMedia が存在し、C2PA 署名は暗号学的に有効です。署名証明書がこのエンジンの信頼リストにないため、結果は trusted ではなく valid として報告されます。'],
+        ['証拠レベル', '本ツールが報告する中で最も強い区分です。推測ではなく検証できる、署名付きの来歴の主張です。'],
+      ],
+      signalRows: [
+        ['C2PA manifest', 'claim、assertion、action、claim generator を読み出し、そのファイルが自らの成り立ちについて何を主張しているかを確認できます。'],
+        ['署名の状態', 'manifest が暗号学的に検証できるか、そしてアセットのハッシュに対して改ざんエラーが出ていないかです。'],
+        ['信頼の状態', '署名証明書が現在のリストの信頼されたルートにたどり着くかどうかです。valid と trusted を混同しないよう、分けて報告します。'],
+        ['XMP / EXIF', 'Firefly や Adobe アプリケーションは CreatorTool、Software、Credit も残すことがあります。補強にはなりますが署名がなく編集可能です。'],
+      ],
+      insights: [
+        {
+          heading: 'valid・trusted・expired は3つの異なる答え',
+          body: 'Content Credentials の失敗の仕方は一通りではなく、それを単一の合否バッジにまとめると、本当に必要な情報が失われます。このサイトの同梱サンプルは、それぞれ異なる結果を示しています。',
+          list: [
+            'valid だが untrusted —— Firefly のサンプル。署名は数学的に正しいが、使用中の信頼リストにその証明書がない。',
+            '証明書の期限切れ —— 同梱の OpenAI サンプル。trainedAlgorithmicMedia の主張は存在するが検証が失敗し、その主張は依拠できない。',
+            '改ざん —— アセットが manifest に記録されたハッシュと一致しない。これは信頼の問題ではなく、本物の完全性の失敗。',
+            '不在 —— manifest がまったくない。これは沈黙であって、どちらの結論でもない。',
+          ],
+        },
+        {
+          heading: 'Firefly ファイルから資格情報が消える理由',
+          body: 'Content Credentials はファイルの内部に存在するため、ファイルを書き換えるものはすべてそれを取り除きます。C2PA を保持しないアプリケーションでの書き出し、再エンコードするプラットフォームへのアップロード、スクリーンショット、形式変換は、いずれも manifest を落とします。実務上の帰結は非対称です。有効な資格情報が見つかれば多くのことが分かりますが、見つからないことはほとんど何も語りません。もともと持っていなかったファイルと、途中で失ったファイルを区別できないからです。',
+        },
+      ],
+      steps: {
+        heading: 'Firefly ファイルを検証する手順',
+        items: [
+          ['オリジナルの書き出しから始める', 'Firefly や Adobe から出力されたままのファイルを使い、SNS のコピーやスクリーンショット、形式変換は避けます。'],
+          ['C2PA バリデータを開く', 'ファイルをローカルで読み込み、manifest をブラウザ内で解析します。何もアップロードされません。'],
+          ['まず署名の状態を読む', 'manifest が検証でき、アセットのハッシュに対して改ざんエラーが出ていないことを確認します。'],
+          ['次に信頼の状態を読む', '署名証明書が信頼されたルートにたどり着くかを確認します。valid だが untrusted は通常の結果であり、失敗ではありません。'],
+          ['manifest の主張内容を確認する', 'digitalSourceType、claim generator、記録された action を見ます。資格情報は生成ではなく編集を記述している場合もあります。'],
+        ],
+      },
+      limits: [
+        '再エンコード、スクリーンショット、形式変換、C2PA を保持しないエディタは、ファイルから Content Credentials を取り除きます。',
+        '信頼の状態は使用中の証明書リストに依存するため、valid だが untrusted という結果は不審ではなく想定内です。',
+        'manifest は AI 生成ではなく編集アクションを記録していることがあります。宣言内容は読む必要があり、仮定してはいけません。',
+        '資格情報が見つからないことは Firefly 由来でないことを意味せず、このコピーに読める manifest がないというだけです。',
+      ],
+      ctaLead: 'manifest の詳細には C2PA バリデータを、EXIF/XMP や PNG パラメータもまとめて読むなら完全検出を使ってください。',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: 'C2PA バリデータを開く', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMP フィールドを確認する', localized: false },
+        { href: '/ja/blog/what-is-c2pa/', label: 'C2PA の仕組みを読む' },
+      ],
+      faq: [
+        ['Adobe Firefly は Content Credentials を付けますか？', 'Firefly は出力に C2PA Content Credentials を付与しているプラットフォームのひとつです。同梱の Firefly サンプルが、trainedAlgorithmicMedia を宣言する読み取り可能で暗号学的に有効な manifest を持っているのはそのためです。'],
+        ['有効な Firefly ファイルがなぜ untrusted と表示されるのですか？', 'valid と trusted が別々の問いに答えているからです。valid は署名が検証でき、アセットが改変されていないこと。trusted は署名証明書が使用中のリストのルートにたどり着くこと。同梱サンプルは valid かつ untrusted です。'],
+        ['Content Credentials は削除できますか？', 'はい、しかも多くは意図せず削除されます。再エンコード、スクリーンショット、形式変換、C2PA 非対応のエディタはいずれも manifest を落とすため、空の結果はファイルの出所についての証拠になりません。'],
+        ['ここでの Content Credentials の確認は無料ですか？', 'はい。ファイルは端末に留まります。manifest は WebAssembly にコンパイルされた Rust によってブラウザ内で解析され、アカウントも不要です。'],
+      ],
+      sources: {
+        heading: '出典と検証の記録',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 の公開サンプル記録', note: 'Firefly サンプルの出所、テスト日、観察されたシグナルと既知の制限です。', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: '同梱している Firefly JPEG の公開出典です。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA 技術仕様 2.2', note: 'manifest の構造、assertion、署名検証の要件です。', localized: false },
+          { href: '/ja/methodology/', label: 'AICheck365 の検査方法論', note: '署名状態、信頼状態、証拠レベルの定義を説明しています。' },
+        ],
+      },
+    },
     midjourney: {
       title: 'Midjourney画像の判定：XMPとIPTC、ファイル名',
       description: 'Midjourney画像に残る手がかりを確認。XMP・IPTCのツールフィールド、AIシステム文字列、ファイル名のパターンをブラウザ内で無料解析。アップロード不要です。',

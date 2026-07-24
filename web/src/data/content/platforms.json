@@ -379,5 +379,25 @@
       "/en/platforms/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "firefly-ja-priority",
+    "slug": "firefly",
+    "route": "/ja/platforms/firefly/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Adobe Firefly",
+    "title": "Adobe FireflyのContent Credentials：C2PA検証 | AICheck365",
+    "description": "Adobe FireflyのファイルをContent Credentialsで確認。C2PA manifest、署名と信頼の状態、digitalSourceTypeをブラウザ内で無料検証。実サンプルで検証済みです。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/firefly/",
+    "primaryKeyword": "Adobe Firefly Content Credentials",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/blog/what-is-c2pa/",
+      "/ja/methodology/"
+    ]
   }
 ]
