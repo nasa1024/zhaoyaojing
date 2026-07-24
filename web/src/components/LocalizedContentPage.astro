@@ -786,6 +786,67 @@ const priorityPlatformProfiles = {
         ],
       },
     },
+    runway: {
+      title: 'Runway Video Check: Container Metadata and Frames',
+      description: 'Check Runway video files for AI-origin signals: MP4/MOV container metadata, SEI markers, file-name patterns and sampled frame watermarks. Free, local to your browser.',
+      h1: 'Runway video check: what survives in the file',
+      meta: 'Target query: Runway AI video detection · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Runway output is video, and video carries its provenance in different places than a still image does. AICheck365 reads the MP4/MOV container first — ftyp, the box tree, udta/meta/ilst, encoder, tool and software fields — then looks for known tool strings in the bitstream, checks the download file name, and only samples frames when everything above comes back empty. The whole pass runs in your browser, which matters more for video than for images.',
+      directAnswer: {
+        heading: 'Short answer: container fields first, frames only as a fallback',
+        body: 'Start from the original MP4 or MOV and read the container tool and encoder fields, then any SEI marker in the video bitstream. The download file name can carry a platform pattern worth noting. None of these are signed the way a C2PA manifest is, so each is a clue to be corroborated against where the file actually came from — and all of them are removed by a single re-encode.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Runway sample', 'Not bundled yet. This page does not claim a reproduced Runway test until a licensed original can be published alongside the other samples.'],
+        ['Related bundled video', 'A Google Veo MP4 is included and exercises the same container, SEI and frame paths, though the credentials it carries are Google\'s rather than Runway\'s.'],
+        ['Evidence level', 'Unsigned container metadata and file-name patterns: readable and useful, but materially weaker than a verifiable C2PA manifest.'],
+      ],
+      signalRows: [
+        ['MP4/MOV container metadata', 'ftyp brand, box tree, udta/meta/ilst, encoder, tool, software and ©too entries are read where present, each reported with the box path it came from.'],
+        ['SEI markers', 'Known tool strings inside the video bitstream. They can survive a remux but usually disappear on re-encoding, making them a mid-to-weak clue.'],
+        ['File name', 'Download names sometimes carry a platform pattern or job identifier. Useful context, trivially renamed.'],
+        ['Sampled frame watermarks', 'When the container yields nothing, frames from several timestamps are checked against known visible marks and invisible patterns. Not a general AI classifier.'],
+      ],
+      insights: [
+        {
+          heading: 'Why an empty result is so common on shared clips',
+          body: 'Video is transcoded far more aggressively than images, so evidence attrition is fast. A social platform re-encode typically removes container tool fields and SEI markers in one pass, leaving a file that plays identically and carries nothing readable. An editor that re-exports the timeline does the same, and a screen recording keeps none of the original container at all. This is why a blank result on a Runway clip is genuinely uninformative rather than exculpatory — and why finding the first published copy is usually worth more than any amount of frame-by-frame inspection.',
+        },
+        {
+          heading: 'Where Runway sits relative to platforms that sign',
+          body: 'Some platforms attach C2PA Content Credentials to their output, which produces evidence that can be cryptographically verified and shown to be intact or broken. Descriptive container fields are a different category: readable, informative about which tool wrote the file, but editable by anyone with a metadata utility. When results from the two categories disagree, the signed layer wins — and when only the unsigned layer is present, the honest framing is that the file suggests an origin rather than proves one.',
+        },
+      ],
+      limits: [
+        'Container fields, SEI markers and file names are unsigned: they can be edited, removed or copied onto another file.',
+        'Transcoding by video platforms and messaging apps, re-exports and screen recordings remove them routinely.',
+        'No bundled Runway sample is published yet, so this page describes field coverage rather than a reproduced test result.',
+        'Frame analysis only matches currently known patterns and cannot replace source verification or professional forensics.',
+      ],
+      ctaLead: 'Start with the MP4/MOV metadata inspector, then open the full detector when you need the frame watermark fallback.',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'Inspect MP4/MOV metadata' },
+        { href: '/', label: 'Run the full detection with frame analysis' },
+        { href: '/blog/how-to-detect-ai-videos/', label: 'Read the video detection guide' },
+      ],
+      faq: [
+        ['How do I check whether a video came from Runway?', 'Load the original MP4 or MOV into the metadata inspector and read the container encoder and tool fields first. The check is free, runs in your browser without uploading the file, and reports each hit with the box path it came from.'],
+        ['Does Runway add C2PA Content Credentials?', 'Do not count on it. The dependable signals here are unsigned container metadata, SEI markers and the file name. If a signed manifest does appear, it was most likely added by a later step in the pipeline.'],
+        ['Why did the check find nothing on my clip?', 'Almost always because the file was re-encoded. Uploading to a video platform, re-exporting from an editor or screen-recording removes container fields and SEI markers while leaving the footage looking the same.'],
+        ['Are videos uploaded for checking?', 'No. Container parsing runs locally through Rust compiled to WebAssembly, and frame extraction, when it is needed, also runs on your machine.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Which video samples are bundled, their provenance, test dates and known limits.', localized: false },
+          { href: 'https://www.iso.org/standard/83102.html', label: 'ISO/IEC 14496-12 (ISO base media file format)', note: 'The standard behind the MP4/MOV box structure this parser walks.', localized: false },
+          { href: '/en/blog/how-to-detect-ai-videos/', label: 'AI video detection guide', note: 'The full container, bitstream and frame layering in one place.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How video evidence layers, confidence tiers and limits are defined.', localized: false },
+        ],
+      },
+    },
     kling: {
       title: 'Kling AI Video Check: MP4 Metadata and Frame Marks',
       description: 'Check Kling video files for AI-origin signals: MP4/MOV container metadata, AIGC labels, SEI markers and sampled frame watermarks. Free, in your browser, no upload.',
@@ -1213,6 +1274,73 @@ const priorityPlatformProfiles = {
     },
   },
   ja: {
+    midjourney: {
+      title: 'Midjourney画像の判定：XMPとIPTC、ファイル名',
+      description: 'Midjourney画像に残る手がかりを確認。XMP・IPTCのツールフィールド、AIシステム文字列、ファイル名のパターンをブラウザ内で無料解析。アップロード不要です。',
+      h1: 'Midjourney画像の判定：実際に残るのは説明的メタデータ',
+      meta: '対象キーワード：Midjourney 判定 · 更新日：2026-07-23 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Midjourneyの出力は、書き出しに署名を付けるプラットフォームとは別の見方が必要です。ここで残るのは暗号署名された資格情報ではなく、説明的なメタデータ——ツール名を示すXMPやIPTCのフィールド、AIシステムの文字列、そしてダウンロード時に付くファイル名です。AICheck365はこれらをブラウザ内で読み取り、どのフィールドから見つかったかを添えて報告します。その手がかりにどれだけ重みを置くかを、自分で判断できるようにするためです。',
+      directAnswer: {
+        heading: '結論：署名ではなく説明的メタデータを期待する',
+        body: 'オリジナルのダウンロードから、XMPとEXIFのツール文字列——Software、CreatorTool、Credit、DigitalSourceType、AIシステム関連のエントリ——とファイル名のパターンを確認してください。読み取れて有用ですが、いずれも署名されていないため、編集も、別ファイルへのコピーも、再エンコードでの消失も起こり得ます。ヒットは補助的な手がかりとして扱い、そのファイルが実際どこから来たのかと突き合わせてください。',
+      },
+      sampleHeading: 'サンプルの状況と証拠プロファイル',
+      sampleRows: [
+        ['Midjourneyサンプル', '現時点では同梱していません。他のサンプルと並べて公開できるライセンス済みのオリジナルを用意できるまで、このページはMidjourneyの直接テストを行ったとは主張しません。'],
+        ['パーサーが照合するもの', 'ツールパターンの照合器はメタデータの値とファイル名の中のmidjourney文字列を認識し、どのフィールドで一致したかを報告します。'],
+        ['証拠レベル', '署名のない説明的メタデータです。有効なC2PA manifestより弱く、信頼度の低い補助シグナルとして扱われます。'],
+      ],
+      signalRows: [
+        ['XMP / IPTC フィールド', 'オリジナルの書き出しが保たれていれば、CreatorTool、Software、Credit、DigitalSourceType、AIシステム関連のエントリが生成ツールを示すことがあります。'],
+        ['ファイル名', 'ダウンロード名にはアカウント名、プロンプトの断片、ジョブIDが含まれることがあります。文脈としては有用ですが、簡単に変更できます。'],
+        ['C2PA Content Credentials', 'ここでは期待できません。署名済みmanifestがある場合、多くはAdobe製品など後段の編集ツールが付与したものです。'],
+        ['画風', 'このツールが使うシグナルではありません。画風からの推測こそ、メタデータ証拠が置き換えようとしている判断の仕方です。'],
+      ],
+      insights: [
+        {
+          heading: 'なぜ「判定ツール」がパーセンテージを出せないのか',
+          body: 'Midjourney画像に確信度スコアを返すツールは、画素からの推論に頼っています。その推論は、圧縮・切り抜き・アップスケールを経たコピーでは急速に精度を失います。このツールが行うのは、もっと狭く、もっと検証しやすい作業です——ファイルにどの来歴フィールドが存在し、そこに何が書かれているかを報告します。何も見つからなければ「見つからなかった」と報告し、それを「AIの確率が低い」と言い換えることはしません。',
+        },
+        {
+          heading: 'メタデータが消えていたときにできること',
+          body: 'これらのフィールドは署名がなく簡単に取り除かれるため、一度でも出回ったファイルでは空の結果が普通です。再検査を繰り返すより、次の手順のほうが役に立ちます。',
+          list: [
+            '投稿や転送の前、プラットフォームからダウンロードした状態のファイルを提供してもらう。',
+            '最も解像度の高い公開バージョンを探す。SNSは再エンコードで解像度とメタデータを同時に落とします。',
+            'スクリーンショットかどうかを確認する。スクリーンショットにはキャプチャツール自身のメタデータだけが残り、元の情報は引き継がれません。',
+            '書き出しに署名を付けるプラットフォームと比較する。有効なmanifestがあれば、そちらで決着がつくことがあります。',
+          ],
+        },
+      ],
+      limits: [
+        'Midjourneyのシグナルは署名のないメタデータです。編集も削除も、無関係なファイルへのコピーも可能です。',
+        'SNS、メッセージアプリ、スクリーンショット、再書き出しはXMPとIPTCのフィールドを丸ごと削除します。',
+        'Midjourneyの同梱サンプルはまだ公開していないため、このページは再現テストの結果ではなくフィールドの対応範囲を説明しています。',
+        'シグナルなしという結果は、このコピーに読める証拠がないという意味であり、Midjourney由来でないことを示すものではありません。',
+      ],
+      ctaLead: '説明的なフィールドにはEXIF/XMPリーダーを、C2PAやPNGパラメータもまとめて確認したいときは完全検出を使ってください。',
+      ctas: [
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMPフィールドを確認する', localized: false },
+        { href: '/', label: '完全検出を実行する' },
+        { href: '/ja/blog/how-to-detect-ai-images/', label: 'AI画像の見分け方を読む' },
+      ],
+      faq: [
+        ['Midjourneyの判定は無料でできますか？', 'はい。AICheck365はアカウント登録もアップロードも不要で、ブラウザ内でMidjourneyのダウンロードを確認できます。作られたスコアではなく、実際に存在するXMP・IPTC・ファイル名の証拠を報告します。'],
+        ['MidjourneyはC2PA Content Credentialsを付けますか？', '前提にしないでください。ここで頼りになるのは説明的なメタデータフィールドとファイル名です。署名済みmanifestが現れる場合、多くは生成時ではなく後段の編集で付与されたものです。'],
+        ['SNSに投稿されたあとでも判定できますか？', 'ファイルだけでは難しいことが多いです。プラットフォームは再エンコードでXMPとIPTCを落とすため、読み取れるものが残りません。オリジナルのダウンロードのほうがはるかに情報量があります。'],
+        ['画像はアップロードされますか？', 'いいえ。解析はブラウザ内でローカルに実行され、画像が端末を離れることはありません。'],
+      ],
+      sources: {
+        heading: '出典と検証の記録',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365の公開サンプル記録', note: 'どのサンプルを同梱しているか、出所・テスト日・既知の制限を記録しています。', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'IPTC Digital Source Type 語彙', note: 'trainedAlgorithmicMediaなど統制語の定義です。', localized: false },
+          { href: '/ja/blog/how-to-detect-ai-images/', label: 'AI画像の見分け方', note: '署名済みの証拠と説明的メタデータの重み付けを解説しています。' },
+          { href: '/ja/methodology/', label: 'AICheck365の検査方法論', note: '署名のないメタデータをどう評価し報告するかを説明しています。' },
+        ],
+      },
+    },
     gemini: {
       title: 'Gemini画像の判定：C2PAとdigitalSourceTypeを確認',
       description: 'GeminiやGoogle AIの画像・動画をC2PA Content Credentialsで確認。digitalSourceType、claim generator、XMPフィールドをブラウザ内で無料解析。アップロード不要。',

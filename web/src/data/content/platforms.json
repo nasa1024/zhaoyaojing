@@ -259,5 +259,45 @@
       "/en/platforms/sora/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "runway-en-priority",
+    "slug": "runway",
+    "route": "/en/platforms/runway/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Runway",
+    "title": "Runway Video Check: Container Metadata and Frames | AICheck365",
+    "description": "Check Runway video files for AI-origin signals: MP4/MOV container metadata, SEI markers, file-name patterns and sampled frame watermarks. Free, local to your browser.",
+    "canonical": "https://www.aicheck365.com/en/platforms/runway/",
+    "primaryKeyword": "Runway AI video detection",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/platforms/kling/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-ja-priority",
+    "slug": "midjourney",
+    "route": "/ja/platforms/midjourney/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney画像の判定：XMPとIPTC、ファイル名 | AICheck365",
+    "description": "Midjourney画像に残る手がかりを確認。XMP・IPTCのツールフィールド、AIシステム文字列、ファイル名のパターンをブラウザ内で無料解析。アップロード不要です。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/midjourney/",
+    "primaryKeyword": "Midjourney 判定",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/ja/blog/how-to-detect-ai-images/",
+      "/ja/platforms/comfyui/",
+      "/ja/methodology/"
+    ]
   }
 ]
