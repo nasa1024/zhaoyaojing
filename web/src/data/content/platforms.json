@@ -139,5 +139,45 @@
       "/ja/platforms/stable-diffusion/",
       "/ja/methodology/"
     ]
+  },
+  {
+    "id": "midjourney-en-priority",
+    "slug": "midjourney",
+    "route": "/en/platforms/midjourney/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney Scanner: Check XMP, IPTC and File-Name Clues | AICheck365",
+    "description": "Scan Midjourney images for the provenance clues that survive: XMP and IPTC tool fields, AI system strings and file-name patterns. Runs free in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/midjourney/",
+    "primaryKeyword": "midjourney scanner",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/platforms/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "firefly-en-priority",
+    "slug": "firefly",
+    "route": "/en/platforms/firefly/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Adobe Firefly",
+    "title": "Adobe Firefly Content Credentials: Verify C2PA in Files | AICheck365",
+    "description": "Check Adobe Firefly files for Content Credentials: C2PA manifest, signature and trust state, digitalSourceType and XMP fields — verified against a real Firefly sample.",
+    "canonical": "https://www.aicheck365.com/en/platforms/firefly/",
+    "primaryKeyword": "adobe firefly content credentials",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/what-is-c2pa/",
+      "/en/methodology/"
+    ]
   }
 ]

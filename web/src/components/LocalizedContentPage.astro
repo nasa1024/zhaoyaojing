@@ -709,6 +709,141 @@ const priorityPlatformProfiles = {
         ],
       },
     },
+    midjourney: {
+      title: 'Midjourney Scanner: Check XMP, IPTC and File-Name Clues',
+      description: 'Scan Midjourney images for the provenance clues that survive: XMP and IPTC tool fields, AI system strings and file-name patterns. Runs free in your browser, no upload.',
+      h1: 'Midjourney scanner: which clues actually survive in the file',
+      meta: 'Target query: midjourney scanner · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Midjourney output is worth scanning differently from platforms that sign their exports. Rather than a cryptographic credential, what usually remains is descriptive metadata: XMP and IPTC fields naming the tool, an AI system string, and the distinctive file name assigned at download. AICheck365 reads those fields locally in your browser and reports each hit with the exact field it came from, so you can judge how much weight it deserves.',
+      directAnswer: {
+        heading: 'Short answer: expect descriptive metadata, not a signature',
+        body: 'Scan the original download for tool strings in XMP and EXIF fields — Software, CreatorTool, Credit, DigitalSourceType and AI-system entries — plus the file-name pattern. These are readable and useful, but none of them are signed, so all can be edited, copied onto another file, or lost in re-encoding. Treat a hit as a supporting clue and corroborate it with where the file actually came from.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Midjourney sample', 'Not bundled yet. This page does not claim a direct Midjourney test until a licensed original sample can be published alongside the others.'],
+        ['What the parser matches', 'The tool-pattern matcher recognises a midjourney string in metadata field values and in file names, and reports which field produced the match.'],
+        ['Evidence level', 'Unsigned descriptive metadata. Weaker than a valid C2PA manifest, and treated as a lower-confidence supporting signal in the report.'],
+      ],
+      signalRows: [
+        ['XMP / IPTC fields', 'CreatorTool, Software, Credit, DigitalSourceType and AI-system entries can name the generating tool when the original export is intact.'],
+        ['File name', 'Download names often carry the account name, a slug of the prompt, and a job identifier. Useful context, but trivially renamed.'],
+        ['C2PA Content Credentials', 'Not something to count on here. If a signed manifest is present it is usually because a later editor, such as an Adobe application, added it.'],
+        ['Visual style', 'Not a signal this tool uses. Style-based guessing is exactly the kind of judgement metadata evidence is meant to replace.'],
+      ],
+      insights: [
+        {
+          heading: 'Why a "scanner" cannot give you a percentage',
+          body: 'Tools that return a confidence score for Midjourney imagery are inferring from pixels, and that inference degrades badly on compressed, cropped or upscaled copies. This scanner deliberately does something narrower and more checkable: it reports which provenance fields exist in the file and what they say. If the answer is nothing, that is reported as nothing found rather than dressed up as a low probability of AI.',
+        },
+        {
+          heading: 'What to do when the metadata is gone',
+          body: 'Because these fields are unsigned and easily stripped, an empty result is common for anything that has travelled. A few practical follow-ups usually help more than re-running the scan:',
+          list: [
+            'Ask for the file as downloaded from the platform, before it was posted or forwarded.',
+            'Look for the highest-resolution published copy — social platforms re-encode down, and metadata goes with it.',
+            'Check whether the file is a screenshot: those retain the screenshot tool\'s own metadata and nothing of the original.',
+            'Compare against platforms that do sign their exports, where a valid manifest can settle the question.',
+          ],
+        },
+      ],
+      limits: [
+        'Midjourney signals are unsigned metadata: they can be edited, removed, or copied onto an unrelated file.',
+        'Social platforms, messaging apps, screenshots and re-exports routinely strip XMP and IPTC fields entirely.',
+        'No bundled Midjourney sample is published yet, so this page describes field coverage rather than a reproduced test result.',
+        'No signals found means this copy carries no readable evidence — it does not indicate the image is not from Midjourney.',
+      ],
+      ctaLead: 'Use the EXIF/XMP reader for the descriptive fields; run the full detector when you also want C2PA and PNG parameters checked.',
+      ctas: [
+        { href: '/en/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields', localized: false },
+        { href: '/', label: 'Run the full detector' },
+        { href: '/en/blog/how-to-detect-ai-images/', label: 'Read the image detection guide', localized: false },
+      ],
+      faq: [
+        ['Is there a free Midjourney scanner?', 'Yes. AICheck365 checks Midjourney downloads free of charge in your browser, with no account and no upload. It reports the XMP, IPTC and file-name evidence actually present rather than a synthetic confidence score.'],
+        ['Does Midjourney add C2PA Content Credentials?', 'Do not assume so. The dependable signals here are descriptive metadata fields and the file name. When a signed manifest does appear, it has usually been added by a later editing step rather than at generation.'],
+        ['Can a Midjourney image be identified after posting to social media?', 'Often not from the file alone. Platforms re-encode uploads and drop XMP and IPTC data, which leaves the scan with nothing readable to report. The original download is far more informative.'],
+        ['Are files uploaded for scanning?', 'No. Parsing runs locally in your browser, so the image never leaves your device.'],
+      ],
+    },
+    firefly: {
+      title: 'Adobe Firefly Content Credentials: Verify C2PA in Files',
+      description: 'Check Adobe Firefly files for Content Credentials: C2PA manifest, signature and trust state, digitalSourceType and XMP fields — verified against a real Firefly sample.',
+      h1: 'Adobe Firefly Content Credentials: what the file actually proves',
+      meta: 'Target query: adobe firefly content credentials · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Adobe Firefly is one of the platforms that attaches Content Credentials — the C2PA implementation — to its output, which makes its files unusually checkable. Instead of guessing from the image, you can read a signed manifest that states how the asset was made. AICheck365 parses that manifest in your browser and, importantly, reports the signature state and the trust state separately, because those two answer different questions.',
+      directAnswer: {
+        heading: 'Short answer: read the manifest, and read valid and trusted apart',
+        body: 'A Firefly file with intact credentials carries a C2PA manifest declaring digitalSourceType = trainedAlgorithmicMedia. Confirm the signature validates cryptographically, then check whether the signing certificate is in the trust list you are working against. A file can be genuinely valid while still reading as untrusted, which is a statement about the certificate chain, not about tampering.',
+      },
+      sampleHeading: 'Bundled sample and verified result',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'A public sample from the Content Authenticity Initiative example assets, bundled on this site and reproducible from the sample list.'],
+        ['Verified result', 'digitalSourceType = trainedAlgorithmicMedia is present and the C2PA signature is cryptographically valid. The signing certificate is not in this engine\'s trust list, so the outcome is reported as valid rather than trusted.'],
+        ['Evidence level', 'The strongest category this tool reports: a signed provenance claim that can be checked rather than inferred.'],
+      ],
+      signalRows: [
+        ['C2PA manifest', 'Claims, assertions, actions and the claim generator are read out so you can see what the file asserts about its own creation.'],
+        ['Signature state', 'Whether the manifest validates cryptographically and whether any tampering error is raised against the asset hash.'],
+        ['Trust state', 'Whether the signing certificate resolves to a trusted root in the current list. Reported separately so valid is never confused with trusted.'],
+        ['XMP / EXIF', 'Firefly and Adobe applications may also leave CreatorTool, Software or Credit fields. Useful corroboration, but unsigned and editable.'],
+      ],
+      insights: [
+        {
+          heading: 'Valid, trusted and expired are three different answers',
+          body: 'Content Credentials fail in more than one way, and collapsing them into a single pass-or-fail badge loses the information you actually need. The bundled samples on this site demonstrate the distinct outcomes:',
+          list: [
+            'Valid but untrusted — the Firefly sample: the signature checks out mathematically, but its certificate is not in the trust list being used.',
+            'Expired certificate — the bundled OpenAI sample: a trainedAlgorithmicMedia claim exists, but validation fails, so the claim cannot be relied on.',
+            'Tampered — the asset no longer matches the hash recorded in the manifest, which is a genuine integrity failure rather than a trust question.',
+            'Absent — no manifest at all, which is silence, not a verdict either way.',
+          ],
+        },
+        {
+          heading: 'Why credentials disappear from Firefly files',
+          body: 'Content Credentials live inside the file, so anything that rewrites the file can remove them. Exporting through an application that does not preserve C2PA, uploading to a platform that re-encodes, taking a screenshot, or converting between formats will typically drop the manifest. The practical consequence is asymmetric: finding valid credentials tells you a great deal, while finding none tells you almost nothing, because you cannot distinguish an asset that never had them from one that lost them in transit.',
+        },
+      ],
+      steps: {
+        heading: 'Verifying a Firefly file step by step',
+        items: [
+          ['Start from the original export', 'Use the file as it came out of Firefly or Adobe, not a social-media copy, a screenshot or a format conversion.'],
+          ['Open the C2PA validator', 'Load the file locally and let the manifest be parsed in your browser; nothing is uploaded.'],
+          ['Read the signature state first', 'Confirm the manifest validates and no tampering error is raised against the asset hash.'],
+          ['Then read the trust state', 'Check whether the signing certificate resolves to a trusted root. Valid-but-untrusted is a normal outcome, not a failure.'],
+          ['Check what the manifest claims', 'Look for digitalSourceType, the claim generator and recorded actions — a credential can describe an edit rather than a generation.'],
+        ],
+      },
+      limits: [
+        'Re-encoding, screenshots, format conversion and non-preserving editors remove Content Credentials from the file.',
+        'Trust state depends on the certificate list in use, so valid-but-untrusted results are expected rather than suspicious.',
+        'A manifest can record editing actions instead of AI generation: what it declares has to be read, not assumed.',
+        'No credentials found does not mean the file is not from Firefly, only that this copy carries no readable manifest.',
+      ],
+      ctaLead: 'Use the C2PA validator for manifest detail; run the full detector when you also want EXIF/XMP and PNG parameters read.',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: 'Open the C2PA validator', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields', localized: false },
+        { href: '/en/blog/what-is-c2pa/', label: 'How C2PA works', localized: false },
+      ],
+      faq: [
+        ['Does Adobe Firefly add Content Credentials?', 'Firefly is one of the platforms that attaches C2PA Content Credentials to its output, which is why the bundled Firefly sample here carries a readable, cryptographically valid manifest declaring trainedAlgorithmicMedia.'],
+        ['Why does a valid Firefly file show as untrusted?', 'Because valid and trusted answer different questions. Valid means the signature checks out and the asset has not been altered; trusted means the signing certificate resolves to a root in the list being used. The bundled sample is valid and untrusted at the same time.'],
+        ['Can Content Credentials be removed?', 'Yes, easily and often unintentionally. Re-encoding, screenshots, format conversion and editors that do not preserve C2PA all drop the manifest, which is why an empty result is not evidence about the file\'s origin.'],
+        ['Is checking Content Credentials free here?', 'Yes, and the file stays on your device. The manifest is parsed in your browser through Rust compiled to WebAssembly, with no account required.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Provenance of the Firefly sample, test date, observed signals and known limits.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Public source of the bundled Firefly JPEG.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Manifest structure, assertions and signature verification requirements.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How signature state, trust state and evidence tiers are defined.', localized: false },
+        ],
+      },
+    },
     gemini: {
       title: 'Gemini AI Scanner & C2PA Checker: Content Credentials',
       description: 'Scan original Gemini and Google AI files for C2PA Content Credentials, PNG caBX/JUMBF, digitalSourceType, claim generator fields, and MP4/MOV metadata.',
