@@ -399,5 +399,25 @@
       "/ja/blog/what-is-c2pa/",
       "/ja/methodology/"
     ]
+  },
+  {
+    "id": "firefly-ko-priority",
+    "slug": "firefly",
+    "route": "/ko/platforms/firefly/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "Adobe Firefly",
+    "title": "Adobe Firefly Content Credentials: C2PA 검증 | AICheck365",
+    "description": "Adobe Firefly 파일의 Content Credentials를 확인합니다. C2PA manifest, 서명과 신뢰 상태, digitalSourceType을 브라우저에서 무료로 검증합니다. 실제 샘플로 검증됨.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/firefly/",
+    "primaryKeyword": "Adobe Firefly Content Credentials",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/blog/what-is-c2pa/",
+      "/ko/methodology/"
+    ]
   }
 ]
