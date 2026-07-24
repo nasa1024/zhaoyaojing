@@ -477,5 +477,45 @@
       "/es/blog/how-to-detect-ai-images/",
       "/es/methodology/"
     ]
+  },
+  {
+    "id": "ai-image-metadata-guide-zh-tw-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/zh-TW/blog/ai-image-metadata-guide/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI 圖片 Metadata 怎麼看？EXIF、XMP、C2PA 拆解 | AICheck365",
+    "description": "AI 平台把來源資訊寫在哪裡、怎麼讀出來：EXIF/XMP 欄位、C2PA 簽章、PNG 文字區塊與 MP4 容器逐層拆解，在瀏覽器本機免費查看，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI 圖片 metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/zh-TW/blog/what-is-c2pa/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-images-fr-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/fr/blog/how-to-detect-ai-images/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "Comment savoir si une image est générée par IA ? | AICheck365",
+    "description": "Vérifiez si une image est générée par IA à partir du fichier d'origine : Content Credentials C2PA, champs EXIF/XMP et paramètres PNG. Gratuit, dans votre navigateur.",
+    "canonical": "https://www.aicheck365.com/fr/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "comment savoir si une image est générée par IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/fr/blog/how-to-detect-ai-videos/",
+      "/fr/methodology/"
+    ]
   }
 ]
