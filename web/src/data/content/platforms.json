@@ -199,5 +199,25 @@
       "/en/blog/ai-image-metadata-guide/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "gemini-ja-priority",
+    "slug": "gemini",
+    "route": "/ja/platforms/gemini/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Gemini",
+    "title": "Gemini画像の判定：C2PAとdigitalSourceTypeを確認 | AICheck365",
+    "description": "GeminiやGoogle AIの画像・動画をC2PA Content Credentialsで確認。digitalSourceType、claim generator、XMPフィールドをブラウザ内で無料解析。アップロード不要。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/gemini/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/blog/what-is-c2pa/",
+      "/ja/methodology/"
+    ]
   }
 ]

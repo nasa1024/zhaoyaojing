@@ -397,5 +397,25 @@
       "/en/platforms/gemini/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-ko-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/ko/blog/how-to-detect-ai-videos/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "AI 영상 판독기: MP4 메타데이터·C2PA·워터마크 확인 | AICheck365",
+    "description": "AI 생성 영상인지 확인하는 방법. 원본 MP4/MOV의 C2PA, 컨테이너 메타데이터, SEI marker, 프레임 워터마크를 브라우저에서 무료로 확인합니다. 업로드 없음.",
+    "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "AI 영상 판독기",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/ko/blog/how-to-detect-ai-images/",
+      "/ko/methodology/"
+    ]
   }
 ]
