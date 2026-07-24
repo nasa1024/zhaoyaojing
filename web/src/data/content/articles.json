@@ -577,5 +577,45 @@
       "/pt-BR/blog/how-to-detect-ai-images/",
       "/pt-BR/methodology/"
     ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-pt-br-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/pt-BR/blog/how-to-detect-ai-videos/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "Como saber se um vídeo foi gerado por IA | AICheck365",
+    "description": "Verifique um vídeo pelo arquivo original: C2PA, metadados do contêiner MP4/MOV, marcadores SEI e marcas d'água em quadros. Gratuito e sem enviar o arquivo.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "como saber se um vídeo é IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-ja-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/ja/blog/ai-image-metadata-guide/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI画像のメタデータ解説：EXIF・XMP・C2PA・PNG | AICheck365",
+    "description": "AIプラットフォームが来歴情報をどこに書き、どう読むか。EXIF/XMPフィールド、C2PA manifest、PNGテキストチャンク、MP4コンテナを層ごとに解説。ブラウザ内で無料。",
+    "canonical": "https://www.aicheck365.com/ja/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI画像 メタデータ",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/ja/blog/what-is-c2pa/",
+      "/ja/methodology/"
+    ]
   }
 ]

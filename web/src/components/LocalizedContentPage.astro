@@ -1990,6 +1990,89 @@ const priorityArticleProfiles = {
     },
   },
   ja: {
+    'blog/ai-image-metadata-guide': {
+      title: 'AI画像のメタデータ解説：EXIF・XMP・C2PA・PNG',
+      description: 'AIプラットフォームが来歴情報をどこに書き、どう読むか。EXIF/XMPフィールド、C2PA manifest、PNGテキストチャンク、MP4コンテナを層ごとに解説。ブラウザ内で無料。',
+      h1: 'AI画像のメタデータ：証拠は実際どこに書かれているか',
+      meta: '対象キーワード：AI画像 メタデータ · 更新日：2026-07-23 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'メタデータはひとつの場所ではなく複数の層に分かれており、どの層かを見分けられるかで、その発見にどれだけの重みを置けるかが決まります。1枚の画像や1本の動画が、署名済みのC2PA manifest、説明的なEXIF・XMPフィールド、生成パラメータを保持するPNGテキストチャンク、そしてMP4/MOVのコンテナ情報を同時に持っていることもあります。記録される内容も、改ざんの容易さも、共有の過程で消えるまでの早さも、層ごとに違います。ここではパーサーが実際に読む順序で説明します。',
+      directAnswer: {
+        heading: '結論：署名された来歴を先に、説明的なフィールドは後で',
+        body: 'まずC2PA manifestを読んでください。暗号学的に完全性を検証できる唯一の層だからです。次にEXIFとXMP——プラットフォーム名やAIラベルがよく現れますが、誰でも書き換えられます。PNGテキストチャンクはStable Diffusion系がプロンプトとワークフローを保存する場所で、動画ではコンテナのメタデータが同じ役割を担います。署名より下の層はすべて、証明ではなく手がかりです。',
+      },
+      sampleHeading: '各層に対応する実サンプル',
+      sampleRows: [
+        ['Adobe Firefly JPEG', '署名層：有効なC2PA manifestがdigitalSourceType = trainedAlgorithmicMediaを宣言しています。証明書が信頼リストにないため、trustedではなくvalidとして報告されます。'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'PNGテキスト層：promptとworkflowチャンクがノードグラフと生成パラメータを保持しており、いずれも署名されていません。'],
+        ['Google Veo MP4', 'コンテナ層：資格情報とツールフィールドが、画像のマーカーセグメントではなくISO base mediaのbox構造に格納されています。'],
+      ],
+      signalRows: [
+        ['EXIF', 'カメラ時代の規格です。Software、Artist、UserCommentにツール名やAIGCのJSONラベルが残ることがあり、カメラ関連フィールドがまとめて欠けていること自体も弱い手がかりになります。'],
+        ['XMP', 'AdobeのXMLメタデータです。CreatorTool、Credit、DigitalSourceTypeは、オリジナルの書き出しが残っていれば生成ツールを示す可能性が最も高いフィールドです。'],
+        ['C2PA', '署名層。JUMBFとして直列化され、形式ごとに埋め込まれます——JPEGはAPP11セグメント、PNGは専用チャンク、MP4はbox。'],
+        ['PNGテキストチャンク', 'tEXt、iTXt、zTXtは任意のキー・値の文字列を受け入れます。プロンプト、seed、sampler、完全なworkflow JSONがEXIFではなくここに入るのはそのためです。'],
+        ['MP4 / MOVコンテナ', 'ftyp brand、box tree、udta/meta/ilst、encoder、tool、softwareの各エントリに加え、AIGC文字列とビットストリーム内のSEI markerです。'],
+      ],
+      insights: [
+        {
+          heading: 'なぜ生成パラメータはEXIFの外にあるのか',
+          body: 'EXIFはカメラのために設計された規格で、露出、絞り、ISO、レンズといった固定タグの集合です。複数行のプロンプトや直列化されたノードグラフは、その形に収まりません。そこでStable Diffusionのエコシステムは、任意のキー・値文字列を受け入れるPNGテキストチャンクに書き込むようになりました。この分野で最も多い誤解がここにあります——「ComfyUI EXIF」や「PNG info」で探されている情報は、ほぼすべてカメラタグではなくテキストチャンクです。実務上の影響は明確で、EXIFしか解析しないツールは、読める証拠が詰まったファイルに対して「空」と表示してしまいます。',
+        },
+        {
+          heading: '各層が消えるまでの早さは違う',
+          body: '層ごとに脆弱さが異なります。順序を知っておくと、「何も出ない」という結果を正しく解釈できます。',
+          list: [
+            'チャットアプリ：PNGテキストチャンクが最初に消え、XMPの大部分のフィールドとEXIFのGPSデータも失われます。',
+            'SNSのトランスコード：EXIF、C2PA manifest、XMP CreatorTool、すべての生成パラメータが一度に消えるのが典型です。',
+            'スクリーンショットと画面録画：オリジナルは何も残らず、キャプチャツール自身のメタデータだけが入ります。',
+            '再書き出し・別名保存：来歴フィールドが失われ、新しいソフトウェアが無関係なEXIFを上書きすることもあります。',
+          ],
+        },
+        {
+          heading: 'ファイルを渡さずにメタデータを読む',
+          body: 'メタデータの確認は、すでに手元にあるバイト列に対する読み取り専用の操作です。技術的にアップロードが必要な理由はありません。AICheck365はWebAssemblyにコンパイルされたRustで、EXIF、XMP、C2PA、PNGチャンク、MP4 boxをローカルに解析します。業務資料や個人の写真が自分の端末に留まるということであり、同時に、結果がサーバーへの往復なしに表示され、大きな動画の処理限界がアップロード上限ではなく手元のハードウェアで決まるということでもあります。',
+        },
+      ],
+      steps: {
+        heading: 'ファイルを層ごとに読む手順',
+        items: [
+          ['オリジナルから作業する', 'ツールが書き出した、あるいはプラットフォームからダウンロードした時点のファイルを使います。以降のコピーは層を失っていきます。'],
+          ['まず署名層を確認する', 'C2PA manifestの有無を調べ、署名状態、信頼状態、宣言されたdigitalSourceTypeを先に読みます。'],
+          ['EXIFとXMPを読む', 'Software、CreatorTool、Credit、DigitalSourceType、UserCommentにツール名やAIラベルがないか確認します。これらは署名されていません。'],
+          ['PNGテキストチャンクを開く', 'PNGならtEXt/iTXt/zTXtを読み、prompt、seed、sampler、CFG、モデル、workflow JSONを確認します。'],
+          ['動画はコンテナをたどる', 'ftyp、box tree、udta/meta/ilstのencoderとtoolフィールドを読み、続いてビットストリームのSEI markerを探します。'],
+        ],
+      },
+      limits: [
+        '署名済みのC2PA manifest以外はすべて、編集も削除も、無関係なファイルへのコピーも可能です。',
+        '共有、トランスコード、スクリーンショット、再書き出しは、通常PNGテキストから順に各層を削っていきます。',
+        'メタデータがないことは人間による制作の証拠ではなく、このコピーに読めるものが残っていないという意味にすぎません。',
+        'フィールド名はツールやバージョンによって異なるため、すべての値を統一されたラベルに正規化できるわけではありません。',
+      ],
+      ctaLead: '全層をまとめて読むなら完全検出を、見たい層が決まっているなら該当ツールを直接開いてください。',
+      ctas: [
+        { href: '/', label: '全層をまとめて読む' },
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMPリーダーを開く', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNGパラメータを抽出する', localized: false },
+      ],
+      faq: [
+        ['AIツールのメタデータはどこに書かれますか？', 'ツールと形式によります。署名された来歴はC2PA manifest、説明的なツール名はEXIFとXMP、生成パラメータとワークフローはPNGテキストチャンク、動画レベルの情報はMP4またはMOVコンテナに書かれます。'],
+        ['EXIFにAI情報が見つからないのはなぜですか？', '生成パラメータの多くはそこに保存されないからです。EXIFはカメラ向けのタグを扱い、プロンプト、seed、workflowはPNGテキストチャンクに書かれるため、別途解析する必要があります。'],
+        ['AIのメタデータは偽装できますか？', '有効なC2PA署名を除くすべての層が、編集も別ファイルへのコピーも可能です。署名状態と信頼状態を説明的なフィールドと分けて報告しているのは、まさにこのためです。'],
+        ['オンラインでメタデータを読むのは安全ですか？', 'ここではファイルが端末を離れません。解析はブラウザ内で実行されるため、アップロードは発生せず、何も保存されません。'],
+      ],
+      sources: {
+        heading: '出典と検証の記録',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365の公開サンプル記録', note: 'サンプルの出所、テスト日、観察されたシグナルと既知の制限。', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG 第3版', note: 'PNGチャンクとテキストチャンク形式の標準リファレンス。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA 技術仕様 2.2', note: 'manifestの構造と、形式ごとの資格情報の埋め込み方。', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'IPTC Digital Source Type 語彙', note: 'trainedAlgorithmicMediaなど統制語の定義。', localized: false },
+          { href: '/ja/methodology/', label: 'AICheck365の検査方法論', note: '各層の重み付けと報告方法。' },
+        ],
+      },
+    },
     'blog/how-to-detect-gemini-generated-images': {
       title: 'Gemini生成画像の見分け方：C2PAとSynthIDの違い',
       description: 'Gemini・Google AIの画像がAI生成かを確認する手順。C2PA manifest、digitalSourceType、claim generator、XMPをブラウザ内で無料解析。SynthIDとの違いも解説。',
@@ -2748,6 +2831,87 @@ const priorityArticleProfiles = {
     },
   },
   'pt-BR': {
+    'blog/how-to-detect-ai-videos': {
+      title: 'Como saber se um vídeo foi gerado por IA',
+      description: 'Verifique um vídeo pelo arquivo original: C2PA, metadados do contêiner MP4/MOV, marcadores SEI e marcas d\'água em quadros. Gratuito e sem enviar o arquivo.',
+      h1: 'Como saber se um vídeo foi gerado por IA',
+      meta: 'Consulta alvo: como saber se um vídeo é IA · Atualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Os modelos de vídeo melhoraram a ponto de assistir com atenção deixar de ser um teste confiável. O caminho defensável é guardar o MP4 ou MOV original e lê-lo em camadas: primeiro as Content Credentials C2PA/JUMBF, depois os campos do contêiner — ftyp, a árvore de caixas, udta/meta/ilst, encoder, tool, software —, em seguida os marcadores SEI no fluxo de vídeo e, só se nada aparecer, quadros amostrados comparados a padrões de marca d\'água conhecidos.',
+      directAnswer: {
+        heading: 'Resumo: desça três camadas — contêiner, fluxo e quadros',
+        body: 'Um manifesto C2PA válido declarando trainedAlgorithmicMedia, ou um claim generator generativo, é a evidência mais explicável. Campos de ferramenta do MP4, etiquetas AIGC e marcadores SEI são sinais de apoio que sobrevivem a alguns processamentos, mas não a uma recodificação. A análise de quadros é o recurso final quando os metadados sumiram. Nenhum acerto em nenhuma camada ainda não prova que uma pessoa filmou o vídeo.',
+      },
+      sampleHeading: 'Amostras reais de vídeo e resultados observados',
+      sampleRows: [
+        ['MP4 original do Google Veo', 'Uma amostra carregável neste site. Traz manifesto C2PA válido do Google, digitalSourceType = trainedAlgorithmicMedia e campo de ferramenta MP4 igual a Google. O certificado não está na lista de confiança, então o resultado aparece como válido.'],
+        ['SynthID descrito dentro do C2PA', 'O manifesto registra uma marca d\'água invisível SynthID. Isso é uma declaração de proveniência dentro da credencial — não é sinal de que o AICheck365 verificou SynthID a partir dos pixels.'],
+        ['Processamento no navegador', 'C2PA e contêiner MP4 são varridos primeiro via Rust/WASM. O ffmpeg.wasm só é carregado sob demanda, quando a análise de quadros é realmente necessária.'],
+      ],
+      signalRows: [
+        ['C2PA / JUMBF', 'Estado da assinatura, digitalSourceType, claim generator e ações generativas são verificados separadamente. Uma assinatura válida declarando origem de IA é a evidência mais fácil de verificar.'],
+        ['Metadados do contêiner MP4/MOV', 'ftyp brand, árvore de caixas, udta/meta/ilst, encoder, tool, software, ©too, strings AIGC e nomes de plataforma são lidos quando presentes.'],
+        ['Marcadores SEI', 'Strings de ferramentas conhecidas dentro do fluxo de vídeo. Podem sobreviver a um remux, mas costumam desaparecer na recodificação — pista de apoio média a fraca.'],
+        ['Marcas d\'água em quadros', 'Quando o contêiner não rende nada, quadros de vários instantes são comparados a marcas visíveis e padrões invisíveis conhecidos. Não é um classificador geral de IA.'],
+      ],
+      insights: [
+        {
+          heading: 'Por que assistir ao vídeo deixou de ser um teste',
+          body: 'Sora, Kling, Runway e Veo eliminaram em grande parte os artefatos que as pessoas aprenderam a procurar: mãos impossíveis, bordas piscando, placas ilegíveis. Ao mesmo tempo, material real muito comprimido borra o detalhe de um jeito que parece sintético. A percepção pertence agora à base da pilha de evidências; o que se sustenta é o que o próprio arquivo registra.',
+        },
+        {
+          heading: 'Ler os metadados de um vídeo online sem enviar o arquivo',
+          body: 'Vídeos são pesados e muitas vezes sensíveis, o que torna o upload uma troca ruim. O AICheck365 analisa o contêiner no seu navegador, então o arquivo nunca sai do seu dispositivo. Na prática são três passos:',
+          list: [
+            '1. Garanta o original — o arquivo como baixado da plataforma que o gerou ou recebido de quem o criou, e não um redownload de rede social ou uma gravação de tela.',
+            '2. Solte-o no inspetor de metadados MP4/MOV, ou no detector completo se também quiser a análise de quadros.',
+            '3. Leia o resultado camada por camada: estado do C2PA primeiro, depois os campos do contêiner com o caminho de caixa de cada achado, e por fim SEI e quadros se necessário.',
+          ],
+        },
+        {
+          heading: 'O que sobrevive ao compartilhamento e o que não',
+          body: 'Cada transcodificação é uma chance de a evidência desaparecer. YouTube, Instagram, Facebook e aplicativos de mensagens recodificam o que é enviado, o que costuma remover de uma vez o C2PA, os campos de ferramenta do contêiner e os marcadores SEI. Um editor que reexporta a linha do tempo faz o mesmo, e uma gravação de tela não preserva nada do contêiner original. É por isso que um resultado vazio é genuinamente pouco informativo, e por que localizar a primeira cópia publicada costuma valer mais do que examinar quadro a quadro.',
+        },
+      ],
+      steps: {
+        heading: 'Verificando um vídeo passo a passo',
+        items: [
+          ['Obtenha o vídeo original', 'Prefira o MP4/MOV baixado direto da plataforma geradora a uma cópia de rede social, uma gravação de tela ou uma edição reexportada.'],
+          ['Inspecione primeiro o contêiner MP4/MOV', 'Use o inspetor para ler caminhos de caixas, ferramenta de codificação, software, etiquetas AIGC, strings de plataforma e onde o C2PA está.'],
+          ['Leia o conteúdo e o estado do C2PA', 'Verifique se a assinatura é válida, se aparecem erros de adulteração e se o manifesto realmente declara geração por IA.'],
+          ['Recorra a SEI e quadros amostrados', 'Só quando o contêiner não render nada, rode a detecção completa para varrer marcadores SEI e amostrar quadros.'],
+          ['Registre o histórico de transcodificação', 'Anote a origem, a data de obtenção, se houve edição ou transcodificação e o resultado — para que "sem sinais" nunca seja lido como prova de filmagem humana.'],
+        ],
+      },
+      limits: [
+        'A transcodificação de YouTube, Facebook, Instagram e mensageiros, junto com reexportações e gravações de tela, pode remover C2PA, campos do contêiner e marcadores SEI.',
+        'Um manifesto mencionar uma marca d\'água invisível não é o mesmo que uma ferramenta de terceiros tê-la verificado nos quadros.',
+        'A análise de quadros só compara padrões já conhecidos e não substitui a verificação da fonte nem uma perícia profissional.',
+        'Extrair quadros de vídeos grandes custa tempo e memória; alguns navegadores ou codecs podem não concluir.',
+      ],
+      ctaLead: 'Comece pelo inspetor de metadados MP4/MOV e abra o detector completo quando precisar da análise de quadros.',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'Inspecionar metadados MP4/MOV', localized: false },
+        { href: '/tools/c2pa-validator/', label: 'Validar o manifesto C2PA', localized: false },
+        { href: '/', label: 'Rodar a detecção completa' },
+      ],
+      faq: [
+        ['Existe um detector de vídeos de IA gratuito?', 'Sim. O AICheck365 verifica vídeos de graça e sem cadastro. A análise do contêiner roda no seu navegador, então o arquivo não é enviado, e cada achado vem com o campo ou caminho de caixa de onde saiu.'],
+        ['Dá para verificar um vídeo sem enviá-lo?', 'É o comportamento padrão aqui. O contêiner MP4/MOV é lido localmente via Rust compilado para WebAssembly, e a extração de quadros, quando necessária, também ocorre na sua máquina.'],
+        ['Funciona com vídeo baixado de rede social?', 'Às vezes sobra o nome do arquivo ou um campo isolado, mas as plataformas costumam recodificar o que é enviado e apagar os metadados. Um resultado sem achados não descarta geração por IA.'],
+        ['Se o C2PA cita SynthID, a marca foi verificada?', 'Não. Esse texto é uma declaração registrada dentro do manifesto. O AICheck365 o reporta como tal e não o apresenta como verificação independente no nível dos pixels.'],
+        ['Por que a análise de quadros é mais lenta?', 'Porque ela decodifica quadros de vídeo reais no navegador, em vez de ler alguns bytes de cabeçalho. Só entra como último recurso, quando contêiner e fluxo não retornam nada.'],
+      ],
+      sources: {
+        heading: 'Fontes e registros de verificação',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de amostras do AICheck365', note: 'Origem do MP4 do Veo, datas de teste, sinais observados e limites conhecidos.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificação técnica C2PA 2.2', note: 'Inclui Content Credentials BMFF e requisitos de verificação de assinatura.', localized: false },
+          { href: 'https://www.iso.org/standard/83102.html', label: 'ISO/IEC 14496-12 (ISO base media file format)', note: 'O padrão por trás da estrutura de caixas MP4/MOV percorrida por este analisador.', localized: false },
+          { href: '/pt-BR/methodology/', label: 'Metodologia do AICheck365', note: 'Como as camadas de evidência, os níveis de confiança e os limites são definidos.' },
+        ],
+      },
+    },
     'blog/how-to-detect-gemini-generated-images': {
       title: 'Como saber se uma imagem foi gerada pelo Gemini',
       description: 'Verifique arquivos do Gemini e do Google AI pelas Content Credentials C2PA: digitalSourceType, claim generator e campos XMP, lidos no seu navegador e sem upload.',
