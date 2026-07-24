@@ -817,5 +817,45 @@
       "/fr/blog/what-is-c2pa/",
       "/fr/methodology/"
     ]
+  },
+  {
+    "id": "what-is-c2pa-pt-br-priority",
+    "slug": "what-is-c2pa",
+    "route": "/pt-BR/blog/what-is-c2pa/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "O que é C2PA? As Content Credentials explicadas | AICheck365",
+    "description": "C2PA é o padrão aberto por trás das Content Credentials: um registro assinado de como um arquivo foi feito. Como o manifesto funciona e como verificá-lo de graça.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/what-is-c2pa/",
+    "primaryKeyword": "o que é C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/platforms/gemini/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-pt-br-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/pt-BR/blog/ai-image-metadata-guide/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Metadados de imagens de IA: EXIF, XMP, C2PA e PNG | AICheck365",
+    "description": "Onde as plataformas de IA gravam dados de proveniência e como lê-los: campos EXIF/XMP, manifestos C2PA, textos PNG e metadados MP4. De graça, no seu navegador.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "metadados de imagens de IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/pt-BR/blog/what-is-c2pa/",
+      "/pt-BR/methodology/"
+    ]
   }
 ]

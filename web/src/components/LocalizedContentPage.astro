@@ -3479,6 +3479,170 @@ const priorityArticleProfiles = {
     },
   },
   'pt-BR': {
+    'blog/ai-image-metadata-guide': {
+      title: 'Metadados de imagens de IA: EXIF, XMP, C2PA e PNG',
+      description: 'Onde as plataformas de IA gravam dados de proveniência e como lê-los: campos EXIF/XMP, manifestos C2PA, textos PNG e metadados MP4. De graça, no seu navegador.',
+      h1: 'Metadados de imagens de IA: onde a evidência fica de fato',
+      meta: 'Consulta alvo: metadados de imagens de IA · Atualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Metadados não são um lugar só, mas várias camadas, e saber qual delas você está olhando decide quanto vale um achado. Uma imagem ou um vídeo pode carregar ao mesmo tempo um manifesto C2PA assinado, campos descritivos EXIF e XMP, blocos de texto PNG com os parâmetros de geração e entradas no nível do contêiner em MP4 ou MOV. Elas diferem no que registram, em quão facilmente se editam e na velocidade com que somem quando o arquivo é compartilhado. Este guia percorre cada camada na ordem em que o analisador as lê.',
+      directAnswer: {
+        heading: 'Resumo: proveniência assinada primeiro, campos descritivos depois',
+        body: 'Leia o manifesto C2PA antes de tudo, porque é a única camada cuja integridade pode ser checada criptograficamente. Depois veja EXIF e XMP, onde costumam aparecer nomes de plataforma e rótulos de IA que qualquer um pode reescrever. Os blocos de texto PNG são onde o ecossistema Stable Diffusion guarda prompts e workflows, e os metadados de contêiner fazem o papel equivalente em vídeo. Tudo abaixo da assinatura é pista, não prova.',
+      },
+      sampleHeading: 'Amostras por camada',
+      sampleRows: [
+        ['JPEG da Adobe Firefly', 'A camada assinada: um manifesto C2PA válido declarando digitalSourceType = trainedAlgorithmicMedia, reportado como válido e não confiável porque o certificado está fora da lista.'],
+        ['PNG ComfyUI / Stable Diffusion XL', 'A camada de texto PNG: blocos prompt e workflow com o grafo de nós e os parâmetros de geração, nenhum deles assinado.'],
+        ['MP4 do Google Veo', 'A camada de contêiner: credenciais e campos de ferramenta guardados na estrutura de caixas do ISO base media, e não em um marcador de imagem.'],
+      ],
+      signalRows: [
+        ['EXIF', 'Um padrão da era das câmeras. Software, Artist e UserComment às vezes trazem um nome de ferramenta ou um rótulo JSON de IA, e a ausência total de campos de câmera já é levemente informativa.'],
+        ['XMP', 'Os metadados XML da Adobe. CreatorTool, Credit e DigitalSourceType são os campos com maior chance de nomear o gerador quando a exportação original sobrevive.'],
+        ['C2PA', 'A camada assinada, serializada como JUMBF e embutida conforme o formato: segmento APP11 no JPEG, chunk próprio no PNG, caixa no MP4.'],
+        ['Blocos de texto PNG', 'tEXt, iTXt e zTXt aceitam strings chave/valor arbitrárias, e por isso prompts, seeds, samplers e o workflow JSON completo acabam aqui e não no EXIF.'],
+        ['Contêiner MP4 / MOV', 'ftyp brand, árvore de caixas, udta/meta/ilst, entradas de encoder, tool e software, além de strings AIGC e marcadores SEI no fluxo.'],
+      ],
+      insights: [
+        {
+          heading: 'Por que os parâmetros de geração ficam fora do EXIF',
+          body: 'O EXIF foi desenhado para câmeras: tags fixas de exposição, abertura, ISO e lente. Um prompt de várias linhas ou um grafo de nós serializado não cabem nesse formato, então o ecossistema Stable Diffusion passou a gravá-los em blocos de texto PNG, que aceitam strings chave/valor arbitrárias. Esse é o mal-entendido mais comum da área: quem procura "ComfyUI EXIF" ou "PNG info" está procurando blocos de texto, não tags de câmera. Na prática, uma ferramenta que só analisa EXIF vai reportar resultado vazio em um arquivo cheio de evidência legível.',
+        },
+        {
+          heading: 'Com que rapidez cada camada desaparece',
+          body: 'As camadas não são igualmente frágeis, e conhecer a ordem ajuda a interpretar um resultado vazio:',
+          list: [
+            'Aplicativos de mensagem: os blocos de texto PNG caem primeiro, junto com a maioria dos campos XMP e os dados de GPS do EXIF.',
+            'Transcodificação em redes sociais: EXIF, manifesto C2PA, XMP CreatorTool e todos os parâmetros de geração costumam sumir de uma vez.',
+            'Prints e gravações de tela: nada do original sobrevive; fica o metadado da própria ferramenta de captura.',
+            'Reexportar ou salvar como: os campos de proveniência são descartados, e o novo software pode gravar EXIF sem relação por cima.',
+          ],
+        },
+        {
+          heading: 'Ler metadados sem entregar o arquivo',
+          body: 'Inspecionar metadados é uma operação somente de leitura sobre bytes que você já tem, então não há razão técnica para enviar nada. O AICheck365 lê EXIF, XMP, C2PA, chunks PNG e caixas MP4 localmente via Rust compilado para WebAssembly, o que mantém documentos de trabalho e fotos pessoais na sua máquina. Também significa que os resultados aparecem sem ida e volta ao servidor, e que vídeos grandes são limitados pelo seu hardware e não por um teto de upload.',
+        },
+      ],
+      steps: {
+        heading: 'Lendo um arquivo camada por camada',
+        items: [
+          ['Trabalhe a partir do original', 'Use o arquivo como a ferramenta exportou ou como você baixou da plataforma, já que cada cópia posterior perde camadas.'],
+          ['Cheque a camada assinada primeiro', 'Procure um manifesto C2PA e leia estado da assinatura, estado de confiança e o digitalSourceType declarado antes de qualquer outra coisa.'],
+          ['Leia EXIF e XMP', 'Verifique Software, CreatorTool, Credit, DigitalSourceType e UserComment em busca de nomes de ferramenta ou rótulos de IA, lembrando que não são assinados.'],
+          ['Abra os blocos de texto PNG', 'Em arquivos PNG, leia tEXt/iTXt/zTXt para prompt, seed, sampler, CFG, modelo e qualquer workflow JSON.'],
+          ['Para vídeo, percorra o contêiner', 'Leia ftyp, a árvore de caixas e udta/meta/ilst atrás de campos de encoder e ferramenta, e depois procure marcadores SEI no fluxo.'],
+        ],
+      },
+      limits: [
+        'Tudo, exceto um manifesto C2PA assinado, pode ser editado, removido ou copiado para um arquivo sem relação.',
+        'Compartilhar, transcodificar, tirar prints e reexportar corroem essas camadas em ritmos diferentes, geralmente começando pelo texto PNG.',
+        'A ausência de metadados não é evidência de autoria humana: indica apenas que esta cópia não guarda nada legível.',
+        'Nomes de campo variam entre ferramentas e versões, então nem todo valor pode ser normalizado em um rótulo limpo.',
+      ],
+      ctaLead: 'Rode o detector completo para ler todas as camadas de uma vez, ou abra uma ferramenta específica quando já souber de qual camada precisa.',
+      ctas: [
+        { href: '/', label: 'Ler todas as camadas de uma vez' },
+        { href: '/tools/exif-xmp-reader/', label: 'Abrir o leitor EXIF/XMP', localized: false },
+        { href: '/tools/png-parameter-extractor/', label: 'Extrair parâmetros PNG', localized: false },
+      ],
+      faq: [
+        ['Onde as ferramentas de IA gravam seus metadados?', 'Depende da ferramenta e do formato. Proveniência assinada vai para um manifesto C2PA, nomes descritivos de ferramenta para EXIF e XMP, parâmetros de geração e workflows para blocos de texto PNG, e detalhes de vídeo para o contêiner MP4 ou MOV.'],
+        ['Por que não há informação de IA no EXIF?', 'Porque a maior parte dos parâmetros de geração não fica lá. O EXIF guarda tags voltadas a câmeras, enquanto prompts, seeds e workflows são gravados em blocos de texto PNG, que precisam ser lidos separadamente.'],
+        ['Metadados de IA podem ser falsificados?', 'Todas as camadas, menos uma assinatura C2PA válida, podem ser editadas ou copiadas entre arquivos. É exatamente por isso que estado de assinatura e de confiança são reportados à parte dos campos descritivos.'],
+        ['É seguro ler metadados online?', 'Aqui eles nunca saem do seu dispositivo: a leitura roda no navegador, sem upload e sem nada retido.'],
+      ],
+      sources: {
+        heading: 'Fontes e registros de verificação',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de amostras do AICheck365', note: 'Proveniência das amostras, datas de teste, sinais observados e limites conhecidos.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Referência padrão dos chunks PNG e dos formatos de bloco de texto.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificação técnica C2PA 2.2', note: 'Estrutura do manifesto e como as credenciais são embutidas por formato.', localized: false },
+          { href: '/pt-BR/methodology/', label: 'Metodologia do AICheck365', note: 'Como cada camada é ponderada e reportada.' },
+        ],
+      },
+    },
+    'blog/what-is-c2pa': {
+      title: 'O que é C2PA? As Content Credentials explicadas',
+      description: 'C2PA é o padrão aberto por trás das Content Credentials: um registro assinado de como um arquivo foi feito. Como o manifesto funciona e como verificá-lo de graça.',
+      h1: 'O que é C2PA?',
+      meta: 'Consulta alvo: o que é C2PA · Atualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'C2PA é um padrão técnico aberto, publicado pela Coalition for Content Provenance and Authenticity, para registrar como uma peça de mídia foi feita e anexar esse registro ao arquivo com uma assinatura criptográfica. Quando um produto da Adobe, da OpenAI ou do Google fala em Content Credentials, é disso que se trata. Vale enunciar o valor com precisão: C2PA não detecta IA — ele carrega uma declaração que pode ser verificada, ou demonstrada rompida.',
+      directAnswer: {
+        heading: 'Resumo: um registro de proveniência assinado que viaja dentro do arquivo',
+        body: 'Um manifesto C2PA agrupa afirmações sobre o arquivo — qual ferramenta o produziu, quais ações foram aplicadas e qual digitalSourceType descreve a natureza da origem — e assina esse conjunto junto com um hash do próprio arquivo. Quem lê pode então checar duas coisas separadas: se o arquivo ainda corresponde ao que foi assinado, e se confia no certificado que assinou. As duas perguntas têm respostas reais, e é isso que separa proveniência de suposição.',
+      },
+      sampleHeading: 'Amostras incluídas que mostram cada resultado',
+      sampleRows: [
+        ['JPEG da Adobe Firefly', 'Uma amostra da Content Authenticity Initiative com digitalSourceType = trainedAlgorithmicMedia. A assinatura é criptograficamente válida, mas o certificado está fora da lista de confiança, então o resultado sai como válido e não como confiável.'],
+        ['Imagem da OpenAI com certificado expirado', 'Outra amostra da CAI: a afirmação trainedAlgorithmicMedia existe, mas o certificado que assinou expirou, a validação falha e a afirmação não se sustenta.'],
+        ['MP4 do Google Veo', 'Mostra a mesma mecânica em contêiner de vídeo: credenciais generativas válidas do Google, transportadas por BMFF em vez de uma imagem estática.'],
+      ],
+      signalRows: [
+        ['Manifesto e claim', 'O contêiner que guarda as afirmações e a assinatura. Lê-lo mostra o que o arquivo alega sobre a própria história.'],
+        ['digitalSourceType', 'Um termo de vocabulário controlado que descreve a origem. trainedAlgorithmicMedia é o valor que indica IA generativa.'],
+        ['Claim generator', 'Identifica o software que produziu a afirmação, por exemplo um produto generativo da Adobe, da OpenAI ou do Google.'],
+        ['Estado de assinatura e de confiança', 'Se o manifesto valida contra o hash do arquivo e, separadamente, se o certificado encadeia até uma raiz confiável.'],
+      ],
+      insights: [
+        {
+          heading: 'Onde o registro fica dentro de cada tipo de arquivo',
+          body: 'Os dados C2PA são serializados como JUMBF, um contêiner de caixas definido pelo JPEG, e embutidos onde cada formato permite carregar um payload junto. É por isso que a mesma credencial sobrevive entre tipos de mídia sem mudar de forma:',
+          list: [
+            'JPEG: gravada em um segmento marcador APP11, que decodificadores comuns ignoram.',
+            'PNG: carregada em um chunk próprio, ao lado dos dados de imagem e não dentro deles.',
+            'MP4 e MOV: armazenada na estrutura de caixas do ISO base media file format, que é como funciona vídeo assinado.',
+            'Por ser embutida e não referenciada, a credencial viaja com o arquivo — e some assim que o arquivo é reescrito.',
+          ],
+        },
+        {
+          heading: 'Válido não é o mesmo que confiável',
+          body: 'Essa distinção causa mais confusão do que qualquer outra parte do padrão. Válido significa que a criptografia fecha: a assinatura verifica e o arquivo ainda gera o hash assinado, ou seja, nada foi alterado desde então. Confiável é outra pergunta, sobre o certificado: se ele encadeia até uma raiz da lista que o verificador está usando. Um arquivo perfeitamente legítimo pode aparecer como válido mas não confiável simplesmente porque o verificador não tem aquela raiz — exatamente o que a amostra da Firefly demonstra. Fundir as duas coisas em um único selo joga fora a informação de que você precisa.',
+        },
+        {
+          heading: 'O que o C2PA não diz',
+          body: 'O padrão registra afirmações feitas por quem assina; ele não inspeciona pixels. Um manifesto pode informar que uma marca d\'água invisível foi aplicada, mas ler essa frase não equivale a verificar a marca. Do mesmo modo, credenciais descrevem histórico de edição com a mesma naturalidade que geração, então um manifesto válido não é automaticamente um achado de IA: é preciso ler o que ele declara. E como qualquer recodificação remove o registro, a ausência de C2PA quase não informa nada — não dá para distinguir um arquivo que nunca teve credenciais de outro que as perdeu no caminho.',
+        },
+      ],
+      steps: {
+        heading: 'Verificando um manifesto C2PA por conta própria',
+        items: [
+          ['Comece pelo arquivo original', 'Use o download como saiu da plataforma. Um print ou uma cópia reenviada quase certamente já perdeu o manifesto.'],
+          ['Abra o validador C2PA', 'O arquivo é lido no seu navegador, então nada é enviado para verificá-lo.'],
+          ['Cheque primeiro se a assinatura valida', 'Confirme que o manifesto verifica e que não aparece erro de adulteração contra o hash do arquivo.'],
+          ['Depois leia o estado de confiança à parte', 'Veja se o certificado encadeia até uma raiz confiável, e trate "válido mas não confiável" como uma afirmação sobre a cadeia, não sobre a integridade.'],
+          ['Leia o que o manifesto realmente afirma', 'Confira digitalSourceType, o claim generator e as ações registradas antes de concluir qualquer coisa sobre geração por IA.'],
+        ],
+      },
+      limits: [
+        'Recodificação, prints, conversão de formato e editores que não preservam C2PA removem o manifesto do arquivo.',
+        'O estado de confiança depende da lista de certificados em uso, então "válido mas não confiável" é rotina e não sinal de suspeita.',
+        'Um manifesto pode registrar edição em vez de geração: é preciso ler o que ele declara, não supor.',
+        'A ausência de credenciais não diz nada sobre a origem, porque um arquivo limpo e outro nunca assinado são indistinguíveis.',
+      ],
+      ctaLead: 'Use o validador C2PA para o detalhe do manifesto, ou o detector completo para ler credenciais junto com EXIF, XMP e parâmetros PNG.',
+      ctas: [
+        { href: '/tools/c2pa-validator/', label: 'Validar um manifesto C2PA', localized: false },
+        { href: '/', label: 'Rodar o detector completo' },
+        { href: '/pt-BR/blog/how-to-detect-ai-images/', label: 'Como identificar imagens de IA' },
+      ],
+      faq: [
+        ['O que significa a sigla C2PA?', 'Coalition for Content Provenance and Authenticity, o órgão que publica a especificação. Content Credentials é o nome que os produtos usam para a mesma tecnologia.'],
+        ['Ter C2PA prova que a imagem é de IA?', 'Por si só, não. C2PA registra proveniência de qualquer mídia, inclusive fotografias de câmera. Indica geração por IA quando o manifesto declara isso, normalmente com digitalSourceType = trainedAlgorithmicMedia ou um claim generator generativo.'],
+        ['Por que um arquivo válido aparece como não confiável?', 'Porque são perguntas diferentes. Válido significa que a assinatura verifica e o arquivo não foi alterado; confiável significa que o certificado encadeia até uma raiz da lista em uso. Um arquivo legítimo pode ser as duas coisas ao mesmo tempo.'],
+        ['As credenciais C2PA podem ser removidas?', 'Sim, e normalmente sem intenção. Qualquer processo que reescreva o arquivo — recodificação em redes sociais, prints, conversão de formato, editores sem suporte a C2PA — descarta o manifesto.'],
+        ['Como verifico C2PA de graça?', 'Carregue o arquivo no validador C2PA deste site. Ele lê o manifesto no seu navegador via Rust compilado para WebAssembly, sem cadastro e sem upload.'],
+      ],
+      sources: {
+        heading: 'Fontes e registros de verificação',
+        items: [
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificação técnica C2PA 2.2', note: 'Especificação oficial de manifestos, assertions, assinatura e verificação.', localized: false },
+          { href: '/data/samples.json', label: 'Registros públicos de amostras do AICheck365', note: 'Proveniência, datas de teste e estados observados das amostras Firefly, OpenAI e Veo.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Fonte pública das amostras da Firefly e de certificado expirado.', localized: false },
+          { href: '/pt-BR/methodology/', label: 'Metodologia do AICheck365', note: 'Como estado de assinatura, de confiança e níveis de evidência são reportados.' },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-videos': {
       title: 'Como saber se um vídeo foi gerado por IA',
       description: 'Verifique um vídeo pelo arquivo original: C2PA, metadados do contêiner MP4/MOV, marcadores SEI e marcas d\'água em quadros. Gratuito e sem enviar o arquivo.',
