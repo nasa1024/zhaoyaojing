@@ -860,6 +860,89 @@ const priorityPlatformProfiles = {
       },
     },
   },
+  ja: {
+    comfyui: {
+      title: 'ComfyUIのメタデータ抽出：PNG workflowとEXIFの確認方法',
+      description: 'ComfyUIが生成したPNGからprompt・workflow JSON・モデル名・seed・sampler・CFGをブラウザ内で無料で抽出。アップロード不要で、EXIFとの違いも解説します。',
+      h1: 'ComfyUIのメタデータ抽出：情報はEXIFではなくPNGのworkflowにあります',
+      meta: '対象キーワード：ComfyUI メタデータ 抽出 / EXIF 確認 · 更新日：2026-07-23 · パーサー：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'ComfyUIの生成情報を「EXIFで確認したい」と考える方は多いのですが、実際に記録されている場所は少し違います。ComfyUIが書き出すpromptとworkflow JSONは、カメラのEXIFタグではなく、PNGファイル内のtEXt/iTXt/zTXtというテキストチャンクに格納されるのが一般的です。生成直後のオリジナルPNGであれば、ノードグラフ、チェックポイント名、seed、sampler、scheduler、steps、CFG、画像サイズまでブラウザ内で読み取れます。',
+      directAnswer: {
+        heading: '結論：ComfyUIの情報はEXIFではなくPNGテキストチャンクを見る',
+        body: 'まずオリジナルPNGのpromptチャンクとworkflowチャンクを確認してください。値が残っていれば、ワークフローのJSONと生成設定をそのまま読み取れます。ただしこれらは電子署名された証明ではなく、後から編集も追加もできるデータです。逆に、チャンクが見つからないことはComfyUIで作られていない証明にもなりません。',
+      },
+      sampleHeading: '実サンプルと確認済みの結果',
+      sampleRows: [
+        ['検証に使ったサンプル', 'ComfyUI公式のexamplesリポジトリにあるStable Diffusion XLのオリジナルPNGを使用しています。公開サンプル一覧からそのまま読み込んで検証できます。'],
+        ['実際の検出結果', 'promptとworkflowのPNGテキストチャンク、未署名のworkflow JSON全体、ノードグラフと生成パラメータが読み取れます。'],
+        ['証拠レベル', 'ワークフローは出所を説明する有力な手がかりですが、暗号署名がないため信頼度の低い補助証拠として扱われます。'],
+      ],
+      signalRows: [
+        ['promptチャンク', 'ノードのclass_type、入力値、モデル、生成パラメータがJSONとして直列化されていることがあります。'],
+        ['workflowチャンク', 'ComfyUIのノードと接続構造そのものです。オリジナルに残っていれば、ComfyUIへ読み込み直せる場合が多くあります。'],
+        ['モデルとサンプリング設定', 'チェックポイント／モデルのファイル名、sampler、scheduler、steps、CFG、seed、width、heightを、値がある範囲で整理して表示します。'],
+        ['生のPNGテキスト', 'tEXt/iTXt/zTXtの元の値を保持したまま検索・コピー・JSON書き出しができます。プロンプトなど、共有前に確認したい内容が含まれることがあります。'],
+      ],
+      insights: [
+        {
+          heading: 'ComfyUIのメタデータを抽出する3ステップ',
+          body: '解析はすべてブラウザ内で完結し、ファイルがサーバーに送信されることはありません。無料・登録不要で、次の手順で確認できます。',
+          list: [
+            '1. ComfyUIから直接保存したオリジナルPNGを用意します（スクリーンショットや再保存したコピーは対象外です）。',
+            '2. PNGパラメータ／ワークフロー抽出ツールを開き、画像を読み込みます。処理はこのブラウザ内で終わります。',
+            '3. prompt・workflowチャンクからノード数、モデル名、seed、sampler、CFG、画像サイズを確認し、必要ならJSONとして書き出します。',
+          ],
+        },
+        {
+          heading: 'なぜ「EXIF」ではなくPNGテキストチャンクなのか',
+          body: 'EXIFはもともとデジタルカメラのための規格で、撮影日時、絞り、ISO感度、レンズ情報などを記録する仕組みです。ComfyUIが残したいのはノードグラフや長いプロンプトといった自由形式のテキストであり、EXIFの型に収まりません。そのためPNG規格が定めるテキストチャンクに、キーと値の組として書き込まれます。「ComfyUI EXIF」で探している情報の実体は、ほぼこのPNGテキストチャンクだと考えて差し支えありません。なお同じ仕組みはAUTOMATIC1111などStable Diffusion系のUIでも使われており、いわゆるPNG infoもこの領域を読んでいます。',
+        },
+        {
+          heading: 'SNSやチャットで送ると情報は消えますか？',
+          body: 'はい、消える可能性が高くなります。X（Twitter）、Instagram、LINE、Discordなどの多くのサービスや画像最適化ツールは、PNGを再エンコードする際にtEXt/iTXt/zTXtチャンクを削除します。JPEGへ変換した場合やスクリーンショットを撮った場合も、workflow情報は失われます。値が空だったとしても「ComfyUIで作られていない」ことにはならないため、可能であれば配布元からオリジナルのPNGを入手して確認してください。',
+        },
+      ],
+      steps: {
+        heading: 'ComfyUIのPNGメタデータを確認する手順',
+        items: [
+          ['オリジナルPNGを確保する', 'スクリーンショットやメッセージアプリから再保存した画像ではなく、ComfyUIが直接書き出したPNGを使います。'],
+          ['PNGワークフロー抽出ツールを開く', 'ファイルはサーバーにアップロードされず、現在のブラウザ内で処理されます。'],
+          ['promptとworkflowの要約を確認する', 'ノード数、最初のclass_type、モデル名、seed、sampler、CFG、画像サイズが表示されるかを見ます。'],
+          ['必要に応じて生のJSONを確認する', '大きなワークフローは折りたたんで表示されます。共有前に、プロンプトやファイルパス、カスタムノードの情報が含まれていないか確認してください。'],
+          ['証拠の強さを区別する', 'ワークフローが残っていればComfyUI系での生成を裏づけますが、署名付きC2PAのように改ざんの有無まで検証できるわけではありません。'],
+        ],
+      },
+      limits: [
+        'PNGのworkflowとpromptは署名されていないため、編集も、別のファイルへのコピーも可能です。',
+        'メッセージアプリ、SNS、最適化ツール、スクリーンショットはPNGテキストチャンクを削除することがよくあります。',
+        'ワークフローが見つからないという結果だけで、人間が作った画像であるとは結論できません。',
+        'カスタムノードや拡張機能のすべてのフィールドを、常に読みやすい形へ正規化できるとは限りません。',
+      ],
+      ctaLead: 'ComfyUIのメタデータ抽出が目的なら、まずPNGパラメータ／ワークフロー抽出ツールを使い、実際のEXIF/XMPフィールドが必要な場合に補助リーダーを併用してください。',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNGワークフローを抽出する', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: 'EXIF/XMPフィールドも確認する', localized: false },
+        { href: '/platforms/stable-diffusion/', label: 'Stable Diffusionのシグナルと比較' },
+      ],
+      faq: [
+        ['ComfyUIのメタデータはどうやって抽出しますか？', 'オリジナルPNGをPNGパラメータ／ワークフロー抽出ツールに読み込むと、prompt・workflowチャンクからノード、モデル名、seed、sampler、CFGを確認でき、JSONとして書き出せます。ブラウザ内で完結するため無料で、ファイルのアップロードも不要です。'],
+        ['ComfyUIの情報は本当にEXIFに入っているのですか？', 'ほとんどの場合は入っていません。中心となる生成情報は、PNGのテキストチャンクにあるpromptとworkflow JSONに保存されます。カメラ由来のEXIFフィールドとは別の領域です。'],
+        ['元のワークフローを完全に復元できますか？', 'workflowチャンクが記録され、保持されていれば復元できる場合が多くあります。ただしカスタムノードや外部のモデルファイルは別途インストールが必要になることがあります。'],
+        ['画像はサーバーにアップロードされますか？', 'いいえ。解析はブラウザ内でローカルに実行されます。'],
+        ['なぜC2PAより信頼度が低いのですか？', 'ComfyUIのworkflowは通常、電子署名が付かず編集できてしまうためです。出所の手がかりではありますが、改ざん防止の証明ではありません。'],
+      ],
+      sources: {
+        heading: '出典と検証の記録',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI公式examplesリポジトリ', note: 'このページで説明したSDXL PNGサンプルの出典です。', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365の公開サンプル記録', note: 'サンプルの出所、テスト日、実際のシグナルと制限事項を記録しています。', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG 第3版仕様', note: 'PNGチャンクとテキストチャンク形式の標準リファレンスです。', localized: false },
+          { href: '/methodology/', label: 'AICheck365の検査方法論', note: '署名済みの証拠と編集可能なメタデータの違いを説明しています。' },
+        ],
+      },
+    },
+  },
 };
 
 const priorityArticleProfiles = {
@@ -1389,6 +1472,96 @@ const priorityArticleProfiles = {
         ['O que é melhor: metadados ou análise visual?', 'Metadados preservados costumam ser mais explicáveis; análise visual é apenas apoio.'],
         ['Meus arquivos são enviados?', 'Não. A análise roda localmente no navegador.'],
       ],
+    },
+  },
+  ko: {
+    'blog/how-to-detect-ai-images': {
+      title: 'AI 사진인지 확인하는 방법: C2PA·EXIF·PNG 메타데이터',
+      description: 'AI 생성 이미지 판별 방법을 단계별로 정리했습니다. 원본 파일의 C2PA 서명, EXIF/XMP, PNG 생성 파라미터를 브라우저에서 무료로 확인하고, 증거의 강약과 한계까지 설명합니다.',
+      h1: 'AI 사진인지 확인하는 방법: 눈이 아니라 파일을 봅니다',
+      meta: '주요 검색어: AI 사진인지 확인하는 방법 · 업데이트: 2026-07-23 · 파서: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'AI로 만든 사진인지 확인할 때, 손가락 개수나 배경 글자만 보고 판단하면 자주 틀립니다. 더 설명 가능한 방법은 원본 파일 안에 남아 있는 출처 정보를 순서대로 읽는 것입니다. AICheck365는 C2PA Content Credentials, EXIF/XMP, PNG 텍스트 청크의 생성 파라미터와 workflow, 파일명을 브라우저 안에서 확인하고, 검증 가능한 서명과 수정 가능한 일반 메타데이터를 구분해서 보여줍니다.',
+      directAnswer: {
+        heading: '핵심: 하나의 퍼센트가 아니라 여러 겹의 증거로 판단합니다',
+        body: '가장 강한 증거는 C2PA 서명이 유효하고, manifest의 digitalSourceType이 trainedAlgorithmicMedia라고 명시한 경우입니다. EXIF/XMP의 생성 도구 필드와 PNG의 prompt·workflow는 이를 뒷받침하는 보조 증거이며, 파일명과 시각적 어색함은 약한 단서일 뿐입니다. 신호가 없다는 결과는 이 사본에 읽을 수 있는 증거가 남아 있지 않다는 뜻이지, 사람이 만들었다는 증명이 아닙니다.',
+      },
+      sampleHeading: '사이트에서 재현할 수 있는 실제 샘플',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'Content Authenticity Initiative가 공개한 샘플입니다. digitalSourceType = trainedAlgorithmicMedia를 읽을 수 있고 C2PA 서명이 암호학적으로 유효하지만, 서명 인증서가 현재 신뢰 목록에 없어 결과는 trusted가 아닌 valid로 표시됩니다.'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'ComfyUI 공식 examples에서 가져온 원본입니다. PNG 안에 prompt와 workflow 텍스트 청크, 서명되지 않은 생성 파라미터가 남아 있습니다.'],
+        ['출처 메타데이터가 없는 JPEG', '분석 결과는 “읽을 수 있는 증거 없음”입니다. 이 대조 샘플은 신호가 없을 때 일반 사진과 메타데이터가 지워진 AI 이미지를 구분할 수 없다는 점을 보여줍니다.'],
+      ],
+      signalRows: [
+        ['C2PA Content Credentials', 'manifest, 서명 상태, 신뢰 상태, digitalSourceType, claim generator, actions를 나눠서 확인합니다. 서명이 유효하고 AI 생성을 선언하면 가장 강한 증거입니다.'],
+        ['EXIF / XMP', 'Software, CreatorTool, Credit, DigitalSourceType, UserComment에 플랫폼 이름이나 AIGC 라벨이 남을 수 있습니다. 서명되지 않은 필드는 수정할 수 있습니다.'],
+        ['PNG 텍스트 / workflow', 'Stable Diffusion, AUTOMATIC1111, ComfyUI는 prompt, negative prompt, seed, sampler, CFG, 모델명, workflow JSON을 기록하기도 합니다.'],
+        ['파일명과 시각적 단서', '플랫폼 접두사나 어색한 손·글자는 참고는 되지만 쉽게 바뀌거나 오판을 부르므로 단독 근거로 쓰지 않습니다.'],
+      ],
+      insights: [
+        {
+          heading: '왜 눈으로만 보면 자주 틀릴까요?',
+          body: '육안 판별은 양방향으로 오류가 납니다. 최신 생성 모델은 초기의 티 나는 결함을 대부분 없앴기 때문에, 완전한 AI 이미지가 아무 이상 없어 보일 수 있습니다. 반대로 실제 카메라로 찍은 사진도 압축이나 흔들림을 거치면 손가락이 뭉개지거나 선이 휘어 보입니다. 흔히 “AI의 흔적”으로 알려진 다음 특징들은 이제 단독 근거가 되지 못합니다.',
+          list: [
+            '손가락·치아·귀걸이·머리카락: 최신 모델은 대체로 자연스럽게 그리고, 진짜 사진도 압축되면 뭉개집니다.',
+            '이미지 안의 글자: 철자나 자형 오류는 한때 확실한 단서였지만 텍스트 생성 품질이 빠르게 좋아졌습니다.',
+            '빛과 반사: 물리적으로 맞는지 눈으로 안정적으로 판단하기 어렵고, 정상 사진을 AI로 오해하기도 쉽습니다.',
+          ],
+        },
+        {
+          heading: '증거의 강약은 이렇게 정리합니다',
+          body: '단서들이 서로 어긋날 때는 “위조하기 얼마나 어려운가”를 기준으로 순서를 정하고, 가장 위조하기 어려운 층을 먼저 신뢰하세요.',
+          list: [
+            '1. AI 생성을 선언한 유효한 C2PA 서명 — 가장 강하고 검증 가능한 증거입니다.',
+            '2. 서명되지 않은 메타데이터(EXIF/XMP, PNG의 prompt·workflow) — 유용하지만 편집할 수 있습니다.',
+            '3. 파일명(플랫폼 접두사 등) — 약한 맥락이고 쉽게 바꿀 수 있습니다.',
+            '4. 시각적 직관 — 출발점일 뿐 결론이 될 수 없습니다.',
+          ],
+        },
+        {
+          heading: '카톡이나 SNS로 받은 사진도 확인할 수 있나요?',
+          body: '확인은 해볼 수 있지만 결과가 비어 있을 가능성이 큽니다. 카카오톡, 인스타그램, 트위터(X), 페이스북 같은 서비스는 이미지를 다시 압축하면서 C2PA, XMP, PNG 텍스트 청크를 제거하는 경우가 많고, 스크린샷을 찍으면 원본 메타데이터는 사실상 모두 사라집니다. 결과가 비었다고 해서 AI가 아니라는 뜻은 아니므로, 가능하면 만든 사람이나 최초 공개처에서 원본 파일을 다시 받아 확인하는 것이 가장 확실합니다.',
+        },
+      ],
+      steps: {
+        heading: 'AI 이미지 확인 5단계',
+        items: [
+          ['원본 파일을 확보합니다', '스크린샷이나 SNS에서 다시 저장한 사본이 아니라, 생성 도구나 최초 공개처에서 받은 파일을 사용합니다.'],
+          ['브라우저에서 분석합니다', '이미지를 AICheck365에 올리면 C2PA, EXIF/XMP, PNG 텍스트, 파일명 요약을 확인할 수 있습니다. 파일은 업로드되지 않습니다.'],
+          ['C2PA가 실제로 유효한지 봅니다', '“C2PA가 있다”만으로는 부족합니다. 서명이 유효한지, 변조 오류가 없는지, manifest가 AI 생성을 선언하는지 확인하세요.'],
+          ['보조 필드의 일관성을 봅니다', '도구, 모델, prompt, workflow가 서로 그리고 파일 출처와 어긋나지 않는지 확인합니다. 서명되지 않은 메타데이터는 위조할 수 있습니다.'],
+          ['출처와 한계를 기록합니다', '출처 URL, 날짜, 재저장 여부, 결과를 남깁니다. 시각적 어색함은 마지막 보조 근거로만 사용합니다.'],
+        ],
+      },
+      limits: [
+        '카카오톡, 인스타그램, 트위터(X), 이미지 최적화 도구, 스크린샷은 C2PA·XMP·PNG 텍스트를 제거하는 경우가 많습니다.',
+        '서명되지 않은 EXIF/XMP와 workflow JSON은 편집하거나 복사할 수 있으므로 단서로만 다뤄야 합니다.',
+        'C2PA가 있다고 해서 자동으로 AI라는 뜻은 아닙니다. manifest가 무엇을 선언하는지(digitalSourceType, actions)를 읽어야 합니다.',
+        '신호가 없다는 결과는 이 사본에 읽을 수 있는 증거가 없다는 의미이며, AI가 아니라는 증명이 아닙니다.',
+      ],
+      ctaLead: '먼저 전체 검출기로 증거를 모으고, C2PA나 PNG workflow가 나오면 전용 도구로 자세히 확인하세요.',
+      ctas: [
+        { href: '/', label: '브라우저에서 이미지 확인하기' },
+        { href: '/en/tools/c2pa-validator/', label: 'C2PA 상세 검증하기', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNG 파라미터·workflow 추출하기', localized: false },
+      ],
+      faq: [
+        ['AI 생성 이미지 판별 사이트는 무료인가요?', '네. AICheck365는 무료이고 회원가입도 필요 없습니다. C2PA, EXIF/XMP, PNG 생성 파라미터를 브라우저 안에서 읽으며 파일을 서버로 보내지 않습니다. 단순한 판정 라벨이 아니라 파일에 남은 신호를 근거와 함께 보여줍니다.'],
+        ['AI 사진인지 100% 확인할 수 있나요?', '아니요. 어떤 도구도 100%는 불가능합니다. AICheck365는 파일에 실제로 남아 있는 출처 신호를 근거와 함께 제시할 뿐이며, 신호가 없다고 해서 AI 가능성을 완전히 배제하지는 못합니다.'],
+        ['카톡이나 인스타에서 받은 사진도 판별되나요?', '단서가 남아 있을 때도 있지만, 대부분의 SNS와 메신저는 이미지를 다시 압축하면서 메타데이터를 지웁니다. 결과가 비었다면 원본 파일을 다시 받아 확인하는 것이 가장 좋습니다.'],
+        ['신호가 없다고 나오면 사람이 만든 사진인가요?', '그렇게 결론 내릴 수 없습니다. 메타데이터가 처음부터 기록되지 않았거나, 전송·편집 과정에서 지워졌을 수 있습니다. 이 결과는 “이 사본에서 읽을 증거가 없다”는 뜻입니다.'],
+        ['AI 영상도 같은 방법으로 확인하나요?', '기본 원리는 같지만 확인하는 위치가 다릅니다. 영상은 MP4/MOV 컨테이너 메타데이터, SEI marker, 추출한 프레임의 워터마크를 함께 봅니다. 자세한 내용은 AI 영상 검출 가이드에서 다룹니다.'],
+      ],
+      sources: {
+        heading: '출처와 검증 기록',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 공개 샘플 기록', note: '샘플 출처, 테스트 날짜, 실제 신호와 알려진 한계를 기록합니다.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Firefly C2PA 샘플의 공개 출처입니다.', localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 공식 예제 저장소', note: 'workflow가 포함된 SDXL PNG의 출처입니다.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA 2.2 기술 사양', note: 'manifest, assertion, 서명 검증에 관한 공식 사양입니다.', localized: false },
+          { href: '/methodology/', label: 'AICheck365 검사 방법론', note: '증거의 강도와 신호가 없을 때의 해석 방법을 설명합니다.' },
+        ],
+      },
     },
   },
 };

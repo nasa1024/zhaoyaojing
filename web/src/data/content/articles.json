@@ -12,7 +12,12 @@
     "primaryKeyword": "AI 图片视频检测知识库",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/blog/how-to-detect-ai-videos/", "/blog/how-to-detect-ai-images/", "/blog/what-is-c2pa/", "/blog/ai-image-metadata-guide/"]
+    "internalLinks": [
+      "/blog/how-to-detect-ai-videos/",
+      "/blog/how-to-detect-ai-images/",
+      "/blog/what-is-c2pa/",
+      "/blog/ai-image-metadata-guide/"
+    ]
   },
   {
     "id": "ai-image-metadata-guide-zh",
@@ -27,7 +32,12 @@
     "primaryKeyword": "AI 媒体元数据",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/mp4-metadata-inspector/", "/platforms/stable-diffusion/"]
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/tools/mp4-metadata-inspector/",
+      "/platforms/stable-diffusion/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-zh",
@@ -42,7 +52,12 @@
     "primaryKeyword": "如何判断图片是否 AI 生成",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/c2pa-validator/", "/platforms/"]
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/tools/c2pa-validator/",
+      "/platforms/"
+    ]
   },
   {
     "id": "how-to-detect-ai-videos-zh",
@@ -57,7 +72,12 @@
     "primaryKeyword": "如何检测 AI 生成视频",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/platforms/sora/", "/platforms/kling/"]
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/platforms/sora/",
+      "/platforms/kling/"
+    ]
   },
   {
     "id": "gemini-generated-images-zh",
@@ -72,7 +92,12 @@
     "primaryKeyword": "检测 Gemini 生成图片",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/platforms/gemini/", "/platforms/imagen/", "/tools/c2pa-validator/", "/tools/exif-xmp-reader/"]
+    "internalLinks": [
+      "/platforms/gemini/",
+      "/platforms/imagen/",
+      "/tools/c2pa-validator/",
+      "/tools/exif-xmp-reader/"
+    ]
   },
   {
     "id": "what-is-c2pa-zh",
@@ -87,7 +112,12 @@
     "primaryKeyword": "C2PA 是什么",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/c2pa-validator/", "/platforms/dall-e/", "/platforms/firefly/", "/methodology/"]
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/platforms/dall-e/",
+      "/platforms/firefly/",
+      "/methodology/"
+    ]
   },
   {
     "id": "videoerkennung-de-priority",
@@ -102,7 +132,12 @@
     "primaryKeyword": "Videoerkennung AI",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/de/platforms/sora/", "/de/platforms/kling/"]
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/de/platforms/sora/",
+      "/de/platforms/kling/"
+    ]
   },
   {
     "id": "identificar-imagens-ia-pt-br-priority",
@@ -117,7 +152,12 @@
     "primaryKeyword": "como identificar imagens geradas por IA",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/c2pa-validator/", "/pt-BR/platforms/gemini/"]
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/tools/c2pa-validator/",
+      "/pt-BR/platforms/gemini/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-ja-priority",
@@ -132,7 +172,12 @@
     "primaryKeyword": "AI画像 見分け方",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/ja/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/ja/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-videos-ja-priority",
@@ -147,7 +192,12 @@
     "primaryKeyword": "AI生成動画 見分け方",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/ja/platforms/sora/", "/ja/methodology/"]
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/ja/platforms/sora/",
+      "/ja/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-zh-tw-priority",
@@ -162,7 +212,12 @@
     "primaryKeyword": "AI 圖片辨識",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/zh-TW/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/zh-TW/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-videos-zh-tw-priority",
@@ -177,7 +232,12 @@
     "primaryKeyword": "AI 影片檢測",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/zh-TW/platforms/sora/", "/zh-TW/methodology/"]
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/zh-TW/platforms/sora/",
+      "/zh-TW/methodology/"
+    ]
   },
   {
     "id": "what-is-c2pa-ja-priority",
@@ -192,7 +252,12 @@
     "primaryKeyword": "C2PAとは",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/ja/blog/how-to-detect-ai-images/", "/ja/platforms/gemini/", "/ja/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/ja/blog/how-to-detect-ai-images/",
+      "/ja/platforms/gemini/",
+      "/ja/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-es-priority",
@@ -207,6 +272,30 @@
     "primaryKeyword": "cómo saber si una imagen es IA",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/png-parameter-extractor/", "/es/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-images-ko-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/ko/blog/how-to-detect-ai-images/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "AI 사진인지 확인하는 방법: C2PA·EXIF·PNG 메타데이터 | AICheck365",
+    "description": "AI 생성 이미지 판별 방법을 단계별로 정리했습니다. 원본 파일의 C2PA 서명, EXIF/XMP, PNG 생성 파라미터를 브라우저에서 무료로 확인하고, 증거의 강약과 한계까지 설명합니다.",
+    "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "AI 사진인지 확인하는 방법",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/ko/blog/how-to-detect-ai-videos/",
+      "/ko/methodology/"
+    ]
   }
 ]

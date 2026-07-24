@@ -12,7 +12,13 @@
     "primaryKeyword": "AI 图片视频平台检测指南",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/platforms/sora/", "/platforms/gemini/", "/platforms/comfyui/", "/platforms/stable-diffusion/", "/tools/"]
+    "internalLinks": [
+      "/platforms/sora/",
+      "/platforms/gemini/",
+      "/platforms/comfyui/",
+      "/platforms/stable-diffusion/",
+      "/tools/"
+    ]
   },
   {
     "id": "sora-zh-priority",
@@ -27,7 +33,12 @@
     "primaryKeyword": "Sora AI 视频检测",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/research/ai-media-provenance-report-2026-q3/", "/platforms/dall-e/"]
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/research/ai-media-provenance-report-2026-q3/",
+      "/platforms/dall-e/"
+    ]
   },
   {
     "id": "sora-en-priority",
@@ -42,7 +53,12 @@
     "primaryKeyword": "Sora AI detector for existing files",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/en/blog/how-to-detect-ai-videos/", "/en/platforms/kling/"]
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/platforms/kling/"
+    ]
   },
   {
     "id": "gemini-en-priority",
@@ -57,7 +73,12 @@
     "primaryKeyword": "gemini scanner",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/platforms/imagen/", "/en/blog/how-to-detect-gemini-generated-images/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/imagen/",
+      "/en/blog/how-to-detect-gemini-generated-images/"
+    ]
   },
   {
     "id": "comfyui-en-priority",
@@ -72,7 +93,12 @@
     "primaryKeyword": "ComfyUI EXIF",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/en/platforms/stable-diffusion/", "/en/blog/ai-image-metadata-guide/"]
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/stable-diffusion/",
+      "/en/blog/ai-image-metadata-guide/"
+    ]
   },
   {
     "id": "comfyui-ko-priority",
@@ -87,6 +113,31 @@
     "primaryKeyword": "comfyui exif 확인",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/ko/platforms/stable-diffusion/", "/ko/methodology/"]
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/platforms/stable-diffusion/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-ja-priority",
+    "slug": "comfyui",
+    "route": "/ja/platforms/comfyui/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUIのメタデータ抽出：PNG workflowとEXIFの確認方法 | AICheck365",
+    "description": "ComfyUIが生成したPNGからprompt・workflow JSON・モデル名・seed・sampler・CFGをブラウザ内で無料で抽出。アップロード不要で、EXIFとの違いも解説します。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI メタデータ 抽出",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/platforms/stable-diffusion/",
+      "/ja/methodology/"
+    ]
   }
 ]
