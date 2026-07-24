@@ -1652,6 +1652,88 @@ const priorityArticleProfiles = {
     },
   },
   'zh-TW': {
+    'blog/what-is-c2pa': {
+      title: 'C2PA 是什麼？AI 內容憑證與來源驗證完整解析',
+      description: 'C2PA 是記錄內容來源的國際標準，也就是 Content Credentials。拆解 manifest 結構、簽章與信任狀態的差別，以及如何在瀏覽器免費驗證，不上傳檔案。',
+      h1: 'C2PA 是什麼？',
+      meta: '主要關鍵字：C2PA 是什麼 · 更新：2026-07-23 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'C2PA 是由 Coalition for Content Provenance and Authenticity 制定的開放技術標準，用來記錄一個檔案是怎麼被製作出來的，並以數位簽章把這份紀錄綁在檔案裡。你在 Adobe、OpenAI、Google 產品中看到的 Content Credentials，指的就是 C2PA。它的價值需要講精確：C2PA 不會偵測 AI，它承載的是一份可以被驗證、也可以被證明已遭破壞的宣告。',
+      directAnswer: {
+        heading: '直接答案：一份跟著檔案走的簽章來源紀錄',
+        body: 'C2PA manifest 把關於這個檔案的宣告集合起來——由什麼工具產生、套用了哪些動作、digitalSourceType 如何描述來源性質——再連同檔案本身的雜湊值一起簽章。因此讀取端可以分別確認兩件事：檔案是否仍然符合當初被簽章的內容，以及簽章憑證是否在自己信任的清單內。這兩個問題都有明確答案，這正是來源憑證和主觀猜測的差別。',
+      },
+      sampleHeading: '網站內建、可重現的樣本',
+      sampleRows: [
+        ['Adobe Firefly JPEG', '來自 Content Authenticity Initiative 的公開樣本，帶有 digitalSourceType = trainedAlgorithmicMedia。簽章在密碼學上有效，但憑證不在本引擎的信任清單中，因此結果顯示為 valid 而非 trusted。'],
+        ['憑證已過期的 OpenAI 圖片', '同樣來自 CAI 的樣本：trainedAlgorithmicMedia 宣告存在，但簽章憑證已過期，驗證因此失敗，這份宣告無法被採信。'],
+        ['Google Veo MP4', '展示同一套機制在影片容器中的運作——有效的 Google 生成式 AI 憑證，透過 BMFF 而非靜態圖片格式攜帶。'],
+      ],
+      signalRows: [
+        ['Manifest 與 claim', '存放宣告與簽章的容器。讀取它可以知道這個檔案對自己的來歷做了什麼聲明。'],
+        ['digitalSourceType', '受控詞彙中描述來源性質的欄位，trainedAlgorithmicMedia 是代表生成式 AI 的值。'],
+        ['Claim generator', '標示產生這份宣告的軟體，例如 Adobe、OpenAI 或 Google 生成式 AI 產品的字串。'],
+        ['簽章狀態與信任狀態', '前者是 manifest 能否對應檔案雜湊驗證通過，後者是憑證是否鏈結到受信任的根憑證，兩者分開呈現。'],
+      ],
+      insights: [
+        {
+          heading: '這份紀錄實際存在檔案的哪裡？',
+          body: 'C2PA 資料會序列化成 JUMBF（由 JPEG 定義的 box 容器），再依照各種格式允許夾帶內容的位置嵌入。這也是為什麼同一份憑證能跨媒體型態而結構不變：',
+          list: [
+            'JPEG：寫入 APP11 marker segment，一般解碼器會直接略過。',
+            'PNG：放在專屬的 chunk 裡，與影像資料並存而不干擾。',
+            'MP4 / MOV：存在 ISO base media file format 的 box 結構中，這是簽章影片的運作方式。',
+            '因為是嵌入而非外部參照，憑證會跟著檔案走——也會在檔案被重新寫入時一起消失。',
+          ],
+        },
+        {
+          heading: 'valid 不等於 trusted',
+          body: '這是整套標準中最容易被誤解的一點。valid 代表密碼學上通過：簽章驗證成功，而且檔案的雜湊值仍然吻合，表示簽章之後沒有被竄改。trusted 則是另一個問題，關於憑證是否鏈結到驗證方所使用清單中的根憑證。一個完全正常的檔案，可能只因為驗證方沒有收錄那個根憑證，就顯示為 valid 但 untrusted——網站內建的 Firefly 樣本正是這種情況。把兩者壓縮成單一個「通過／不通過」標籤，就會丟掉真正需要的資訊。',
+        },
+        {
+          heading: 'C2PA 沒有告訴你的事',
+          body: '這套標準記錄的是簽署者所做的宣告，它不會去獨立檢查畫素。manifest 可以聲明「已套用不可見浮水印」，但讀到這句話，跟驗證那個浮水印仍然存在，是兩件事。同樣地，內容憑證記錄編輯歷程和記錄生成一樣自然，所以有效的 manifest 不等於 AI 判定，你必須讀它究竟宣告了什麼。而且因為任何重新編碼都會清掉這份紀錄，「沒有 C2PA」幾乎不帶任何資訊——它無法區分從未簽章的檔案和在傳播中遺失憑證的檔案。',
+        },
+      ],
+      steps: {
+        heading: '自己驗證一份 C2PA manifest',
+        items: [
+          ['從原始檔開始', '使用平台下載當下的檔案。截圖或重新上傳過的版本，幾乎可以確定已經沒有 manifest。'],
+          ['開啟 C2PA 驗證工具', '檔案在瀏覽器內解析，驗證過程不需要上傳。'],
+          ['先看簽章是否通過', '確認 manifest 驗證成功，且沒有針對檔案雜湊產生竄改錯誤。'],
+          ['再分開看信任狀態', '檢查憑證是否鏈結到受信任的根，並把 valid 但 untrusted 理解成憑證鏈的描述，而非完整性問題。'],
+          ['讀出 manifest 實際宣告了什麼', '在下任何 AI 相關結論之前，先看 digitalSourceType、claim generator 與記錄的 actions。'],
+        ],
+      },
+      limits: [
+        '重新編碼、截圖、格式轉換，以及不保留 C2PA 的編輯軟體，都會把 manifest 從檔案中移除。',
+        '信任狀態取決於當下使用的憑證清單，因此 valid 但 untrusted 是常態，而不是可疑訊號。',
+        'manifest 可能記錄的是編輯而非生成，宣告內容必須實際讀取，不能假設。',
+        '沒有憑證不代表任何來源結論，因為被清除的檔案和從未簽章的檔案看起來一模一樣。',
+      ],
+      ctaLead: '需要 manifest 細節時使用 C2PA 驗證工具；想同時看 EXIF、XMP 與 PNG 參數，就執行完整檢測。',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: '驗證 C2PA manifest', localized: false },
+        { href: '/', label: '執行完整檢測' },
+        { href: '/zh-TW/blog/how-to-detect-ai-images/', label: '如何判斷 AI 圖片' },
+      ],
+      faq: [
+        ['C2PA 這個縮寫代表什麼？', 'Coalition for Content Provenance and Authenticity，也就是制定這套規格的標準組織。Content Credentials 則是產品端對同一套技術使用的名稱。'],
+        ['有 C2PA 就代表是 AI 生成嗎？', '不是。C2PA 記錄的是各種媒體的來源，包括一般相機照片。只有當 manifest 明確宣告時才代表 AI 生成，通常是 digitalSourceType = trainedAlgorithmicMedia 或生成式的 claim generator。'],
+        ['為什麼有效的檔案卻顯示 untrusted？', '因為這是兩個不同的問題。valid 代表簽章通過且檔案未被更動；trusted 代表憑證鏈結到你所使用清單中的根憑證。真實檔案可以同時是 valid 和 untrusted。'],
+        ['C2PA 會被移除嗎？', '會，而且通常是無意的。任何會重寫檔案的流程——社群平台轉碼、截圖、格式轉換、不支援 C2PA 的編輯軟體——都會清掉 manifest。'],
+        ['要怎麼免費檢查 C2PA？', '把檔案載入這裡的 C2PA 驗證工具即可。它以編譯成 WebAssembly 的 Rust 在你的瀏覽器內解析 manifest，不需註冊也不會上傳。'],
+      ],
+      sources: {
+        heading: '資料來源與驗證紀錄',
+        items: [
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'manifest、assertion、簽章與驗證的官方規格。', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365 公開樣本紀錄', note: 'Firefly、OpenAI 與 Veo 樣本的來源、測試日期與觀察到的狀態。', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Firefly 與憑證過期樣本的公開來源。', localized: false },
+          { href: '/zh-TW/methodology/', label: 'AICheck365 檢測方法', note: '說明簽章狀態、信任狀態與證據分級的呈現方式。' },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-images': {
       title: '如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測',
       description: '免費 AI 圖片辨識與檢測：在瀏覽器本機讀取 C2PA 簽章、EXIF/XMP 與 PNG 生成參數，用 Firefly、ComfyUI 真實樣本說明證據強弱與限制，不上傳檔案。',

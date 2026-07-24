@@ -417,5 +417,25 @@
       "/ko/blog/how-to-detect-ai-images/",
       "/ko/methodology/"
     ]
+  },
+  {
+    "id": "what-is-c2pa-zh-tw-priority",
+    "slug": "what-is-c2pa",
+    "route": "/zh-TW/blog/what-is-c2pa/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "C2PA 是什麼？AI 內容憑證與來源驗證完整解析 | AICheck365",
+    "description": "C2PA 是記錄內容來源的國際標準，也就是 Content Credentials。拆解 manifest 結構、簽章與信任狀態的差別，以及如何在瀏覽器免費驗證，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/what-is-c2pa/",
+    "primaryKeyword": "C2PA 是什麼",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/zh-TW/blog/how-to-detect-ai-images/",
+      "/zh-TW/platforms/firefly/",
+      "/zh-TW/methodology/"
+    ]
   }
 ]
