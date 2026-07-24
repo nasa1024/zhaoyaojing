@@ -457,5 +457,25 @@
       "/de/blog/how-to-detect-ai-videos/",
       "/de/methodology/"
     ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-es-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/es/blog/how-to-detect-ai-videos/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "¿Cómo saber si un vídeo fue creado con IA? | AICheck365",
+    "description": "Comprueba si un vídeo es IA desde el archivo original: C2PA, metadatos del contenedor MP4/MOV, marcadores SEI y marcas de agua en fotogramas. Gratis y sin subirlo.",
+    "canonical": "https://www.aicheck365.com/es/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "cómo saber si un vídeo es IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/es/blog/how-to-detect-ai-images/",
+      "/es/methodology/"
+    ]
   }
 ]

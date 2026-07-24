@@ -2246,6 +2246,87 @@ const priorityArticleProfiles = {
     },
   },
   es: {
+    'blog/how-to-detect-ai-videos': {
+      title: '¿Cómo saber si un vídeo fue creado con IA?',
+      description: 'Comprueba si un vídeo es IA desde el archivo original: C2PA, metadatos del contenedor MP4/MOV, marcadores SEI y marcas de agua en fotogramas. Gratis y sin subirlo.',
+      h1: '¿Cómo saber si un vídeo fue creado con IA?',
+      meta: 'Consulta objetivo: cómo saber si un vídeo es IA · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Los modelos de vídeo han mejorado hasta el punto de que mirar con atención ya no es una prueba fiable. El camino defendible es conservar el MP4 o MOV original y leerlo por capas: primero las credenciales C2PA/JUMBF, después los campos del contenedor —ftyp, el árbol de cajas, udta/meta/ilst, encoder, tool, software—, luego los marcadores SEI del flujo de vídeo y, solo si nada de eso aparece, fotogramas muestreados en busca de marcas de agua conocidas.',
+      directAnswer: {
+        heading: 'En resumen: baja por tres capas — contenedor, flujo y fotogramas',
+        body: 'Un manifiesto C2PA válido que declare trainedAlgorithmicMedia, o un claim generator generativo, es la evidencia más sólida y explicable. Los campos de herramienta del MP4, las etiquetas AIGC y los marcadores SEI son señales de apoyo que sobreviven a algunos procesos pero no a una recodificación. El análisis de fotogramas es el recurso final cuando ya no hay metadatos. No encontrar nada en ninguna capa sigue sin demostrar que una persona grabó el vídeo.',
+      },
+      sampleHeading: 'Muestras reales y resultados observados',
+      sampleRows: [
+        ['MP4 original de Google Veo', 'Una muestra cargable en este sitio. Lleva un manifiesto C2PA válido de Google, digitalSourceType = trainedAlgorithmicMedia y un campo de herramienta MP4 con valor Google. El certificado no está en la lista de confianza, así que el resultado se informa como válido.'],
+        ['SynthID descrito dentro del C2PA', 'El manifiesto registra una marca de agua invisible SynthID. Eso es una declaración de procedencia dentro de la credencial, no una señal de que AICheck365 haya verificado SynthID a partir de los píxeles.'],
+        ['Cómo se procesa en el navegador', 'Primero se analizan el C2PA y el contenedor MP4 mediante Rust/WASM. ffmpeg.wasm se carga de forma diferida para extraer fotogramas solo cuando esa capa hace falta de verdad.'],
+      ],
+      signalRows: [
+        ['C2PA / JUMBF', 'Se comprueban por separado el estado de la firma, digitalSourceType, el claim generator y las acciones generativas. Una firma válida que declare origen IA es la evidencia más fácil de verificar.'],
+        ['Metadatos del contenedor MP4/MOV', 'Se leen ftyp, el árbol de cajas, udta/meta/ilst, encoder, tool, software, ©too, cadenas AIGC y nombres de plataforma cuando están presentes.'],
+        ['Marcadores SEI', 'Cadenas de herramientas conocidas dentro del flujo de vídeo. Pueden sobrevivir a un remux, pero suelen desaparecer al recodificar, así que son una pista de apoyo media o débil.'],
+        ['Marcas de agua en fotogramas', 'Cuando el contenedor no aporta nada, se extraen fotogramas de varios instantes y se contrastan con patrones conocidos. No es un clasificador general de IA.'],
+      ],
+      insights: [
+        {
+          heading: 'Por qué mirar el vídeo dejó de ser una prueba',
+          body: 'Sora, Kling, Runway y Veo han eliminado en gran medida los artefactos que la gente aprendió a buscar: manos imposibles, bordes parpadeantes, carteles ilegibles. Al mismo tiempo, el material real muy comprimido difumina el detalle de una forma que parece sintética. La percepción pertenece ahora a la parte baja de la pila de evidencias; lo que se sostiene es lo que el propio archivo registra.',
+        },
+        {
+          heading: 'Ver los metadatos de un vídeo online sin subir el archivo',
+          body: 'Los vídeos son pesados y a menudo sensibles, así que subirlos a un servidor es un mal intercambio. AICheck365 analiza el contenedor en tu navegador, de modo que el archivo nunca sale de tu equipo. En la práctica son tres pasos:',
+          list: [
+            '1. Consigue el original — el archivo tal como se descargó de la plataforma que lo generó o como lo envió su autor, no una redescarga de redes sociales ni una grabación de pantalla.',
+            '2. Suéltalo en el inspector de metadatos MP4/MOV, o en el detector completo si además quieres el análisis de fotogramas.',
+            '3. Lee el resultado capa por capa: primero el estado del C2PA, después los campos del contenedor con la ruta de caja de cada hallazgo, y por último SEI y fotogramas si hace falta.',
+          ],
+        },
+        {
+          heading: 'Qué sobrevive al compartir y qué no',
+          body: 'Cada recodificación es una oportunidad para que la evidencia desaparezca. YouTube, Instagram, Facebook y las apps de mensajería recodifican lo que se sube, y eso suele eliminar de golpe el C2PA, los campos de herramienta del contenedor y los marcadores SEI. Un programa de edición que reexporta la línea de tiempo hace lo mismo, y una grabación de pantalla no conserva nada del contenedor original. Por eso un resultado vacío es genuinamente poco informativo, y localizar la primera copia publicada suele valer más que examinar fotograma a fotograma.',
+        },
+      ],
+      steps: {
+        heading: 'Comprobar un vídeo paso a paso',
+        items: [
+          ['Consigue el vídeo original', 'Prioriza el MP4/MOV descargado directamente de la plataforma generadora frente a una copia de redes, una grabación de pantalla o una edición reexportada.'],
+          ['Inspecciona primero el contenedor MP4/MOV', 'Usa el inspector para leer rutas de cajas, herramienta de codificación, software, etiquetas AIGC, cadenas de plataforma y dónde se aloja el C2PA.'],
+          ['Lee el contenido y el estado del C2PA', 'Comprueba si la firma es válida, si aparecen errores de manipulación y si el manifiesto declara realmente generación por IA.'],
+          ['Recurre a SEI y a los fotogramas', 'Solo cuando el contenedor no aporte nada, ejecuta la detección completa para escanear marcadores SEI y muestrear fotogramas.'],
+          ['Anota el historial de transcodificación', 'Registra el origen, la fecha de obtención, si hubo edición o recodificación y el resultado, para que «sin señales» nunca se lea como prueba de grabación humana.'],
+        ],
+      },
+      limits: [
+        'La transcodificación de YouTube, Facebook, Instagram y las apps de mensajería, junto con reexportaciones y grabaciones de pantalla, elimina C2PA, campos del contenedor y marcadores SEI.',
+        'Que un manifiesto mencione una marca de agua invisible no equivale a que una herramienta externa la haya verificado en los fotogramas.',
+        'El análisis de fotogramas solo contrasta patrones ya conocidos y no sustituye la verificación de la fuente ni un peritaje profesional.',
+        'Extraer fotogramas de vídeos grandes consume tiempo y memoria; algunos navegadores o códecs pueden no completarlo.',
+      ],
+      ctaLead: 'Empieza con el inspector de metadatos MP4/MOV y abre el detector completo cuando necesites el análisis de fotogramas.',
+      ctas: [
+        { href: '/en/tools/mp4-metadata-inspector/', label: 'Inspeccionar metadatos MP4/MOV', localized: false },
+        { href: '/en/tools/c2pa-validator/', label: 'Validar el manifiesto C2PA', localized: false },
+        { href: '/', label: 'Ejecutar la detección completa' },
+      ],
+      faq: [
+        ['¿Existe un detector de vídeos IA gratis?', 'Sí. AICheck365 comprueba vídeos de forma gratuita y sin registro. El análisis del contenedor se ejecuta en tu navegador, así que el archivo no se sube, y cada hallazgo se informa con el campo o la ruta de caja de la que procede.'],
+        ['¿Se puede comprobar un vídeo sin subirlo?', 'Es el comportamiento por defecto aquí. El contenedor MP4/MOV se analiza localmente mediante Rust compilado a WebAssembly, y la extracción de fotogramas, cuando hace falta, también ocurre en tu equipo.'],
+        ['¿Sirve con un vídeo descargado de redes sociales?', 'A veces sobrevive el nombre del archivo o algún campo suelto, pero las plataformas suelen recodificar lo que se sube y borrar los metadatos. Un resultado sin hallazgos no descarta la generación por IA.'],
+        ['¿Que el C2PA mencione SynthID significa que se verificó la marca?', 'No. Ese texto es una declaración registrada dentro del manifiesto. AICheck365 lo informa como tal y no lo presenta como verificación independiente a nivel de píxel.'],
+        ['¿Por qué el análisis de fotogramas es más lento?', 'Porque decodifica fotogramas reales en tu navegador en lugar de leer unos pocos bytes de cabecera. Se ejecuta solo como último recurso, cuando el contenedor y el flujo no devuelven nada.'],
+      ],
+      sources: {
+        heading: 'Fuentes y registros de verificación',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de muestras de AICheck365', note: 'Origen del MP4 de Veo, fechas de prueba, señales observadas y límites conocidos.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificación técnica C2PA 2.2', note: 'Incluye credenciales BMFF y los requisitos de verificación de firma.', localized: false },
+          { href: 'https://www.iso.org/standard/83102.html', label: 'ISO/IEC 14496-12 (ISO base media file format)', note: 'El estándar tras la estructura de cajas MP4/MOV que recorre este analizador.', localized: false },
+          { href: '/es/methodology/', label: 'Metodología de AICheck365', note: 'Cómo se definen las capas de evidencia, los niveles de confianza y los límites.' },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-images': {
       title: '¿Cómo saber si una imagen fue creada con IA?',
       description: 'Detector de imágenes IA gratis: revisa en tu navegador el C2PA, los metadatos EXIF/XMP y los parámetros PNG, con muestras reales y límites honestos. Sin subir archivos.',
