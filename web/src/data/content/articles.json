@@ -557,5 +557,25 @@
       "/fr/blog/how-to-detect-ai-images/",
       "/fr/methodology/"
     ]
+  },
+  {
+    "id": "gemini-generated-images-pt-br-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/pt-BR/blog/how-to-detect-gemini-generated-images/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Como saber se uma imagem foi gerada pelo Gemini | AICheck365",
+    "description": "Verifique arquivos do Gemini e do Google AI pelas Content Credentials C2PA: digitalSourceType, claim generator e campos XMP, lidos no seu navegador e sem upload.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/tools/exif-xmp-reader/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/methodology/"
+    ]
   }
 ]

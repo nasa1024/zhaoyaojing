@@ -2748,6 +2748,84 @@ const priorityArticleProfiles = {
     },
   },
   'pt-BR': {
+    'blog/how-to-detect-gemini-generated-images': {
+      title: 'Como saber se uma imagem foi gerada pelo Gemini',
+      description: 'Verifique arquivos do Gemini e do Google AI pelas Content Credentials C2PA: digitalSourceType, claim generator e campos XMP, lidos no seu navegador e sem upload.',
+      h1: 'Como saber se uma imagem foi gerada pelo Gemini',
+      meta: 'Consulta alvo: Gemini C2PA · Atualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'O Google está entre as plataformas que anexam Content Credentials à saída generativa, o que torna arquivos do Gemini e do Imagen mais verificáveis do que a maioria — desde que você ainda tenha o download original. A evidência útil está no manifesto C2PA e nos campos XMP de apoio, não nos pixels. O AICheck365 lê tudo isso localmente no navegador e informa o estado da assinatura, o estado de confiança e o tipo de origem declarado separadamente, para que uma alegação nunca seja confundida com uma verificação.',
+      directAnswer: {
+        heading: 'Resumo: leia o manifesto e trate SynthID como uma declaração',
+        body: 'Procure um manifesto C2PA cujo digitalSourceType seja trainedAlgorithmicMedia ou cujo claim generator identifique um produto generativo do Google. Campos XMP e EXIF de apoio, junto com nomes de arquivo no estilo Gemini_Generated_Image, acrescentam contexto mas não têm assinatura. Se o manifesto mencionar SynthID, isso é algo registrado dentro da credencial — não é prova de que alguma ferramenta de terceiros verificou a marca d\'água a partir da própria imagem.',
+      },
+      sampleHeading: 'Situação das amostras e perfil de evidência',
+      sampleRows: [
+        ['Amostra de imagem do Gemini', 'Ainda não incluída. Esta página não afirma ter reproduzido um teste com PNG do Gemini enquanto não houver um original licenciado para publicar junto às demais amostras.'],
+        ['MP4 do Google Veo', 'Há uma amostra de vídeo generativo do Google incluída, com C2PA válido. Ela valida o caminho das credenciais do Google em contêiner de vídeo, não a cobertura de imagens do Gemini.'],
+        ['Campos que vale inspecionar', 'digitalSourceType = trainedAlgorithmicMedia, claim_generator_info, strings Google / Gemini / Imagen, o chunk de proveniência no PNG e os campos de ferramenta do MP4 na saída do Veo.'],
+      ],
+      signalRows: [
+        ['Content Credentials C2PA', 'Mais forte quando um manifesto válido declara trainedAlgorithmicMedia ou um claim generator generativo do Google. Assinatura e confiança são informadas à parte.'],
+        ['Chunk de proveniência PNG / JUMBF', 'Onde a credencial fica fisicamente em um PNG original. Visualizadores comuns ignoram esses bytes, por isso parecem não existir.'],
+        ['XMP / EXIF', 'Credit, CreatorTool, Software e strings de Google AI corroboram o manifesto, mas não têm assinatura e podem ser editados.'],
+        ['Nome do arquivo', 'Nomes como Gemini_Generated_Image servem de contexto e nada mais — renomear o arquivo os altera.'],
+      ],
+      insights: [
+        {
+          heading: 'Por que a credencial some quando você salva a imagem',
+          body: 'É uma experiência comum e confusa: uma imagem que trazia credenciais no download não mostra nada depois de ser compartilhada. A credencial é armazenada como bytes dentro do arquivo, e não referenciada externamente, então qualquer coisa que reescreva o arquivo a descarta. Tirar um print, encaminhar por aplicativo de mensagens, deixar uma rede social recodificar ou converter o formato remove o manifesto e mantém a imagem intacta. É por isso que um resultado vazio em uma imagem do Gemini informa muito pouco, e por que vale preservar o download original antes de repassá-lo.',
+        },
+        {
+          heading: 'SynthID e C2PA respondem a perguntas diferentes',
+          body: 'Os dois costumam ser descritos juntos, mas têm graus muito distintos de verificabilidade externa:',
+          list: [
+            'C2PA é um padrão aberto, então qualquer leitor em conformidade consegue checar a assinatura e ver o que o manifesto declara.',
+            'SynthID é uma marca d\'água proprietária embutida nos pixels; verificá-la exige a detecção do próprio Google, não uma especificação pública.',
+            'Um manifesto pode afirmar que SynthID foi aplicado — ler essa frase não é o mesmo que confirmar que a marca sobreviveu nesta cópia.',
+            'O AICheck365 informa esse texto como declaração registrada e não o apresenta como verificação independente no nível dos pixels.',
+          ],
+        },
+      ],
+      steps: {
+        heading: 'Verificando um arquivo do Gemini passo a passo',
+        items: [
+          ['Comece pelo download original', 'Use o arquivo como salvo do Gemini ou do produto Google AI, não um print nem uma cópia recompartilhada.'],
+          ['Leia o manifesto C2PA', 'Carregue o arquivo localmente e verifique se há manifesto e qual claim generator o produziu.'],
+          ['Separe assinatura de confiança', 'Confirme se a assinatura é válida e avalie o certificado à parte — válido mas não confiável é um resultado normal.'],
+          ['Confira o tipo de origem declarado', 'Procure digitalSourceType = trainedAlgorithmicMedia em vez de supor que a presença de credenciais significa IA.'],
+          ['Corrobore com XMP e nome do arquivo', 'Trate strings de Google AI e nomes Gemini_Generated_Image como contexto de apoio, nunca como o achado principal.'],
+        ],
+      },
+      limits: [
+        'Prints e cópias vindas de aplicativos de mensagens costumam remover por completo o manifesto C2PA e os dados XMP.',
+        'Uma marca d\'água em pixels no estilo SynthID não equivale a metadados C2PA legíveis por terceiros.',
+        'A presença de credenciais varia conforme o ponto de entrada do produto, o formato e o caminho de exportação.',
+        'Nenhum sinal encontrado significa apenas que esta cópia não carrega evidência legível — não é uma conclusão sobre a origem.',
+      ],
+      ctaLead: 'Use o validador C2PA quando precisar dos detalhes do manifesto; o leitor EXIF/XMP cobre os campos de apoio.',
+      ctas: [
+        { href: '/tools/c2pa-validator/', label: 'Validar o manifesto C2PA', localized: false },
+        { href: '/tools/exif-xmp-reader/', label: 'Inspecionar campos EXIF/XMP', localized: false },
+        { href: '/pt-BR/blog/how-to-detect-ai-images/', label: 'Ler o guia de imagens de IA' },
+      ],
+      faq: [
+        ['Toda imagem do Gemini tem C2PA?', 'Não. O Google está entre as plataformas que anexam credenciais à saída generativa, mas isso varia com o ponto de entrada do produto, o formato e o caminho de exportação — e qualquer processamento posterior pode removê-las. Verifique o download original.'],
+        ['Qual é o sinal mais forte do Gemini?', 'Um manifesto válido declarando digitalSourceType = trainedAlgorithmicMedia, ou um claim generator generativo do Google. É uma evidência sensivelmente mais forte que um nome de arquivo ou uma string XMP.'],
+        ['Se o C2PA cita SynthID, a marca foi verificada?', 'Não. Significa que o manifesto registra essa alegação. Verificar SynthID a partir dos pixels exige a detecção proprietária do Google, o que é uma operação diferente de ler uma credencial.'],
+        ['Dá para verificar por um print?', 'Praticamente não. Um print cria um arquivo novo a partir dos pixels e não herda nem as credenciais nem o XMP originais. Peça o arquivo original a quem o compartilhou.'],
+        ['Meu arquivo é enviado para algum servidor?', 'Não. O manifesto e os metadados são lidos localmente no navegador, então o arquivo não sai do seu dispositivo.'],
+      ],
+      sources: {
+        heading: 'Fontes e registros de verificação',
+        items: [
+          { href: '/data/samples.json', label: 'Registros públicos de amostras do AICheck365', note: 'Quais amostras do Google estão incluídas, sua origem, datas de teste e limites conhecidos.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificação técnica C2PA 2.2', note: 'Estrutura do manifesto, assertions e verificação de assinatura.', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'Vocabulário IPTC Digital Source Type', note: 'Definição de valores controlados como trainedAlgorithmicMedia.', localized: false },
+          { href: '/pt-BR/methodology/', label: 'Metodologia do AICheck365', note: 'Como alegações, assinaturas e níveis de evidência são reportados.' },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-images': {
       title: 'Como identificar imagens geradas por IA em 2026: metadados, C2PA e PNG',
       description: 'Guia prático em português do Brasil para identificar imagens geradas por IA em 2026 usando EXIF/XMP, C2PA, parâmetros PNG, amostras reais e limites claros.',
