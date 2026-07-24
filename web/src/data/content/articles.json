@@ -777,5 +777,45 @@
       "/ko/blog/what-is-c2pa/",
       "/ko/methodology/"
     ]
+  },
+  {
+    "id": "gemini-generated-images-es-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/es/blog/how-to-detect-gemini-generated-images/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "¿Cómo saber si una imagen la generó Gemini? | AICheck365",
+    "description": "Comprueba archivos de Gemini y Google AI por sus Content Credentials C2PA: digitalSourceType, claim generator y campos XMP, leídos en tu navegador y sin subirlos.",
+    "canonical": "https://www.aicheck365.com/es/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/es/blog/what-is-c2pa/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-fr-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/fr/blog/how-to-detect-gemini-generated-images/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Comment savoir si une image vient de Gemini ? | AICheck365",
+    "description": "Vérifiez les fichiers Gemini et Google AI par leurs Content Credentials C2PA : digitalSourceType, claim generator et champs XMP, lus dans votre navigateur, sans envoi.",
+    "canonical": "https://www.aicheck365.com/fr/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/fr/blog/what-is-c2pa/",
+      "/fr/methodology/"
+    ]
   }
 ]
