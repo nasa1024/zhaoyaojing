@@ -1037,10 +1037,10 @@ const priorityArticleProfiles = {
     },
     'blog/how-to-detect-ai-videos': {
       title: '如何判斷 AI 生成影片？MP4 Metadata、C2PA 與影格浮水印實測',
-      description: '從原始 MP4/MOV 依序檢查 C2PA、容器 metadata、SEI marker、檔名與抽樣影格浮水印，並用 Google Veo 真實樣本說明證據強弱。',
+      description: '免費 AI 影片檢測：在瀏覽器本機依序檢查 C2PA、MP4/MOV 容器 metadata、SEI marker 與影格浮水印，用 Google Veo 真實樣本說明證據強弱，不上傳檔案。',
       h1: '如何判斷 AI 生成影片？從原始 MP4/MOV 的內部證據開始',
-      meta: '主要關鍵字：AI 影片檢測 · 更新：2026-07-10 · Parser：aicheck 0.2.0',
-      updatedAt: '2026-07-10',
+      meta: '主要關鍵字：AI 影片檢測 · 更新：2026-07-23 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
       lead: 'AI 影片畫質已經不適合只靠「看起來怪不怪」判斷。較可靠的流程是先保留原始 MP4/MOV，依序讀取 C2PA/JUMBF、ftyp 與 box tree、udta/meta/ilst 的 encoder/tool/software、AIGC 標籤、SEI marker 與檔名；容器沒有線索時，才抽樣影格檢查可見或不可見浮水印。',
       directAnswer: {
         heading: '直接答案：依照「容器 → 位元流 → 影格」三層檢查',
@@ -1057,6 +1057,26 @@ const priorityArticleProfiles = {
         ['MP4/MOV 容器 metadata', '讀取 ftyp brand、box tree、udta/meta/ilst、encoder、tool、software、©too、AIGC 字串及平台名稱。'],
         ['SEI marker', '位於視訊位元流中的已知工具字串。remux 後可能保留，但重新編碼通常會消失，因此屬於中弱度補助線索。'],
         ['抽樣影格浮水印', '當容器層沒有命中時，擷取數個時間點的影格，檢查已知的可見角標與不可見模式；它不是通用 AI 分類器。'],
+      ],
+      insights: [
+        {
+          heading: '為什麼「看起來很真」已經不能當判斷依據？',
+          body: 'Sora、可靈、Runway、Veo 這一代的影片模型，已經修掉了早期最明顯的破綻：手指數量、閃爍的邊緣、扭曲的文字招牌。反過來說，真人拍攝的影片經過社群平台重壓縮之後，也常出現塗抹感與細節崩壞，看起來反而「很 AI」。所以肉眼觀察現在只能當成最弱的一層參考，真正可說明的依據，是檔案裡實際留下的內容憑證、容器欄位與已知工具標記。',
+        },
+        {
+          heading: '三層證據：容器、位元流、影格',
+          body: '影片和圖片不同，可以藏線索的位置更多。實務上按照「越難偽造的越先相信」來排序：',
+          list: [
+            '1. 容器層的 C2PA / JUMBF 內容憑證：有數位簽章，可驗證是否被竄改，是最強的一層。',
+            '2. 容器層的 MP4/MOV 欄位（encoder、tool、software、©too、AIGC 標籤）：好讀但沒有簽章，可被修改。',
+            '3. 位元流裡的 SEI marker：remux 後可能保留，重新編碼常會消失，屬於中弱度線索。',
+            '4. 抽樣影格的浮水印：只在前面幾層都沒有結果時才做，且只比對已知模式，不是通用 AI 判別器。',
+          ],
+        },
+        {
+          heading: '有沒有免費、不用上傳的 AI 影片判斷網站？',
+          body: 'AICheck365 就是在這個前提下做的：免費、免註冊，而且影片不會離開你的裝置。容器解析用 Rust/WASM 在瀏覽器裡跑，只有真的需要影格後備分析時，才會延遲載入 ffmpeg.wasm 並在本機擷取影格。實際操作只有三步：準備原始 MP4/MOV（不要用錄屏或社群平台下載的版本）、拖進檢測器、依照結果逐層閱讀命中的欄位與證據強弱。要注意的是，大型影片在本機擷取影格會比較花時間與記憶體，這是本機處理換來隱私的代價。',
+        },
       ],
       steps: {
         heading: 'AI 影片檢測的五個步驟',
@@ -1081,6 +1101,8 @@ const priorityArticleProfiles = {
         { href: '/', label: '執行包含影格分析的完整檢測' },
       ],
       faq: [
+        ['有沒有免費的 AI 影片判斷網站？', 'AICheck365 免費且免註冊，影片在你的瀏覽器裡分析，不會上傳到伺服器。它會列出實際命中的 C2PA 狀態、MP4/MOV 欄位與 SEI marker，而不是只給一個沒有依據的百分比。'],
+        ['AI 影片檢測可以 100% 準確嗎？', '不行，任何工具都做不到。這裡呈現的是這個檔案目前還留著哪些可讀的來源證據；證據被轉碼清掉時就讀不到，所以「沒有命中」不能當成「不是 AI」。'],
         ['只看畫面能判斷 AI 影片嗎？', '高品質生成影片很難靠肉眼穩定判斷。應先查原始檔的 C2PA、容器欄位與取得歷程，再把視覺異常當補充。'],
         ['社群平台下載的影片還能檢測嗎？', '有時仍會留下檔名或少量訊號，但平台通常會重新編碼並清除 metadata；沒有結果也不能排除 AI 生成。'],
         ['C2PA 寫著 SynthID 就等於已驗證浮水印嗎？', '不是。那是 manifest 內的宣告。AICheck365 不會把這段文字誤稱為已從像素獨立驗證 Google SynthID。'],

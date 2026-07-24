@@ -227,11 +227,11 @@
     "pageType": "article",
     "topic": "ai-video-detection",
     "title": "如何判斷 AI 生成影片？MP4 Metadata、C2PA 與影格浮水印實測 | AICheck365",
-    "description": "從原始 MP4/MOV 依序檢查 C2PA、容器 metadata、SEI marker、檔名與抽樣影格浮水印，並用 Google Veo 真實樣本說明證據強弱。",
+    "description": "免費 AI 影片檢測：在瀏覽器本機依序檢查 C2PA、MP4/MOV 容器 metadata、SEI marker 與影格浮水印，用 Google Veo 真實樣本說明證據強弱，不上傳檔案。",
     "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-videos/",
     "primaryKeyword": "AI 影片檢測",
     "draft": false,
-    "updatedAt": "2026-07-10",
+    "updatedAt": "2026-07-23",
     "internalLinks": [
       "/en/tools/mp4-metadata-inspector/",
       "/en/tools/c2pa-validator/",
