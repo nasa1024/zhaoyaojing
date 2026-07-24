@@ -179,5 +179,25 @@
       "/en/blog/what-is-c2pa/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "stable-diffusion-en-priority",
+    "slug": "stable-diffusion",
+    "route": "/en/platforms/stable-diffusion/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Stable Diffusion",
+    "title": "Stable Diffusion PNG Info: Read Prompts and Parameters | AICheck365",
+    "description": "Read Stable Diffusion PNG info in your browser: the parameters chunk from A1111, ComfyUI prompt and workflow JSON, and NovelAI metadata. Free, with no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/stable-diffusion/",
+    "primaryKeyword": "png info stable diffusion",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/platforms/comfyui/",
+      "/en/blog/ai-image-metadata-guide/",
+      "/en/methodology/"
+    ]
   }
 ]
