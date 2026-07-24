@@ -499,5 +499,25 @@
       "/fr/blog/how-to-detect-ai-images/",
       "/fr/methodology/"
     ]
+  },
+  {
+    "id": "comfyui-pt-br-priority",
+    "slug": "comfyui",
+    "route": "/pt-BR/platforms/comfyui/",
+    "locale": "pt-BR",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI: ler prompt e workflow do PNG | AICheck365",
+    "description": "Leia os metadados do ComfyUI no navegador: blocos de texto PNG com prompt e workflow JSON, modelo, seed, sampler e CFG. De graça e sem enviar o arquivo.",
+    "canonical": "https://www.aicheck365.com/pt-BR/platforms/comfyui/",
+    "primaryKeyword": "metadados ComfyUI",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/png-parameter-extractor/",
+      "/tools/exif-xmp-reader/",
+      "/pt-BR/blog/ai-image-metadata-guide/",
+      "/pt-BR/methodology/"
+    ]
   }
 ]
