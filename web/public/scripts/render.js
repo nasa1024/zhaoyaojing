@@ -1,4 +1,5 @@
 import { deriveEvidenceState } from './state.js';
+import { t as builtinT } from './i18n.js';
 
 function ga(name, params) {
   if (typeof window.gtag === 'function') window.gtag('event', name, params);
@@ -23,13 +24,16 @@ function esc(v) {
   return String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-// Translator is injected by detect.js after i18n loads (setTranslator(t)).
-// Falls back to built-in Chinese copy when not injected — production must inject.
+// detect.js injects its own translator via setTranslator(t) once i18n loads.
+// Until then we use i18n's own t directly: i18n resolves currentLang at import
+// time, so rendering a result before detect.js finishes bootstrapping still
+// gets the right language instead of falling back to the Chinese copy below.
 let _t = null;
 export function setTranslator(fn) { _t = fn; }
 function tt(key, fallback) {
   try {
-    const v = _t ? _t(key) : null;
+    const translate = _t || builtinT;
+    const v = translate ? translate(key) : null;
     return (v && v !== key) ? v : fallback;
   } catch {
     return fallback;
