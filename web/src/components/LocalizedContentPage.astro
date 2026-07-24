@@ -863,6 +863,82 @@ const priorityPlatformProfiles = {
     },
   },
   fr: {
+    comfyui: {
+      title: 'ComfyUI EXIF : extraire le JSON du workflow depuis un PNG',
+      description: 'Extrayez le prompt, le JSON du workflow, le graphe de nœuds, les noms de modèles, le seed, le sampler et le CFG des PNG ComfyUI. Gratuit dans le navigateur, sans envoi.',
+      h1: 'ComfyUI et EXIF : les données utiles sont dans les blocs de texte PNG',
+      meta: 'Requête cible : ComfyUI EXIF · Mis à jour : 2026-07-23 · Analyseur : aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: "On cherche souvent « ComfyUI EXIF », on ne trouve rien dans l'EXIF, et on en conclut que rien n'a été écrit. En réalité, ComfyUI enregistre les données de génération dans les blocs de texte du PNG, pas dans l'EXIF des appareils photo. À partir du PNG original, AICheck365 extrait localement, dans votre navigateur, le prompt et le JSON du workflow, le nombre de nœuds, les noms de modèles, le seed, le sampler, le CFG et les dimensions, ainsi que les blocs de texte bruts.",
+      directAnswer: {
+        heading: "L'essentiel : le nom de la clé indique quel frontal a écrit",
+        body: "Les clés prompt et workflow sont la convention ComfyUI et contiennent le graphe de nœuds sérialisé en JSON. Un bloc parameters signale plutôt une sortie de type AUTOMATIC1111, qui regroupe prompt, seed, sampler, CFG et modèle dans une seule chaîne. Rien de tout cela n'est signé : ces données expliquent bien l'origine, mais ne la prouvent pas, car elles restent modifiables et supprimables.",
+      },
+      sampleHeading: 'Échantillon intégré et sortie de l\'analyseur',
+      sampleRows: [
+        ['Échantillon intégré', 'Un PNG Stable Diffusion XL issu des exemples officiels ComfyUI, reproductible depuis la liste des échantillons.'],
+        ['Champs détectés', 'Des blocs de texte PNG nommés prompt et workflow, contenant le JSON complet et non signé du workflow, le graphe de nœuds et les paramètres de génération.'],
+        ['Niveau de preuve', "Métadonnées descriptives non signées : une explication solide de la fabrication de l'image, mais sans l'inviolabilité d'une signature C2PA."],
+      ],
+      signalRows: [
+        ['prompt', 'Les données du graphe de nœuds et les paramètres de génération de ComfyUI, sérialisés en JSON.'],
+        ['workflow', 'La structure du graphe, souvent rechargeable directement dans ComfyUI tant que le PNG original est intact.'],
+        ['Champs modèle et sampler', 'Noms de fichiers de checkpoint ou de modèle, sampler, scheduler, steps, CFG, seed, largeur et hauteur lorsqu\'ils sont présents.'],
+        ['Blocs de texte bruts', 'Les valeurs tEXt/iTXt/zTXt d\'origine sont conservées pour un examen approfondi et un export JSON.'],
+      ],
+      insights: [
+        {
+          heading: "Pourquoi ce n'est pas de l'EXIF",
+          body: "L'EXIF est une norme d'appareil photo, avec des balises fixes pour l'exposition, l'ouverture et l'objectif. Un prompt de plusieurs lignes ou un graphe de nœuds sérialisé n'y a tout simplement pas de place. La spécification PNG, elle, définit des blocs de texte qui acceptent des paires clé-valeur arbitraires : c'est là que l'écosystème s'est installé. D'où le malentendu le plus fréquent — un outil qui ne lit que l'EXIF ne rapporte rien sur un fichier pourtant rempli de preuves lisibles.",
+        },
+        {
+          heading: 'Ce qui efface le workflow, et ce qui le préserve',
+          body: 'Les blocs de texte sont fragiles de façon prévisible : ils survivent à la copie, rarement au réencodage. En pratique :',
+          list: [
+            "Convertir un PNG en JPEG les supprime entièrement : le JPEG n'a pas de conteneur équivalent.",
+            'Les réseaux sociaux et les messageries réencodent les envois, ce qui emporte les blocs de texte.',
+            "Une capture d'écran garde l'image et aucune métadonnée, puisqu'un nouveau fichier est créé à partir des pixels.",
+            "Copier ou déplacer le fichier, ou l'envoyer là où il est stocké tel quel, préserve tout.",
+          ],
+        },
+      ],
+      steps: {
+        heading: 'Extraire un workflow ComfyUI, étape par étape',
+        items: [
+          ['Partir du PNG original', "Prenez le fichier tel que le frontal l'a écrit, pas une capture d'écran, une conversion JPEG ou un retéléchargement depuis un réseau social."],
+          ["Ouvrir l'extracteur de paramètres PNG", "Le fichier est analysé dans votre navigateur : rien n'est envoyé pour le lire."],
+          ['Identifier le frontal', "Les clés prompt ou workflow désignent ComfyUI, une clé parameters une sortie de type AUTOMATIC1111."],
+          ['Lire les réglages de génération', 'Examinez le prompt, le prompt négatif, le seed, le sampler, le CFG, les steps, le modèle et la taille réellement présents.'],
+          ['Pondérer correctement', "Traitez le résultat comme une explication solide de l'origine, en gardant à l'esprit qu'il n'est pas signé et reste donc modifiable."],
+        ],
+      },
+      limits: [
+        "Les blocs de texte PNG ne sont pas signés : ils peuvent être modifiés, supprimés ou copiés sur une image sans rapport.",
+        "La conversion en JPEG, le réencodage par les réseaux sociaux et les captures d'écran les détruisent.",
+        'Des nœuds personnalisés et des extensions peuvent écrire des champs qui ne se normalisent pas toujours en libellés lisibles.',
+        "Ne trouver aucun workflow ne signifie pas que l'image n'a pas été générée, seulement que cette copie n'en porte aucun.",
+      ],
+      ctaLead: "Utilisez l'extracteur de paramètres PNG pour les prompts et les workflows, et la détection complète si vous voulez aussi vérifier le C2PA et l'EXIF/XMP.",
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'Extraire les métadonnées de workflow PNG', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: "Vérifier aussi l'EXIF/XMP", localized: false },
+        { href: '/', label: 'Lancer la détection locale complète' },
+      ],
+      faq: [
+        ["Les métadonnées ComfyUI sont-elles vraiment de l'EXIF ?", "Le plus souvent non. Les données importantes se trouvent dans des blocs de texte PNG comme prompt et workflow, et non dans les balises EXIF d'un appareil photo."],
+        ['Peut-on récupérer le workflow exact ?', "Souvent oui pour les exports PNG originaux, mais seulement si le bloc workflow a été écrit puis conservé."],
+        ['Pourquoi la confiance est-elle plus faible que pour le C2PA ?', "Parce que les métadonnées de workflow ComfyUI ne sont pas signées : elles peuvent être modifiées et copiées d'un fichier à l'autre."],
+        ['Mes fichiers sont-ils envoyés ?', "Non. L'analyse s'exécute localement dans votre navigateur : prompts et workflows restent sur votre appareil."],
+      ],
+      sources: {
+        heading: 'Sources et registres de vérification',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'Exemples officiels ComfyUI', note: 'Origine du PNG SDXL intégré contenant un workflow.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Référence normative des blocs PNG et des formats tEXt/iTXt/zTXt.', localized: false },
+          { href: '/methodology/', label: 'Méthodologie AICheck365', note: 'Comment les métadonnées non signées sont pondérées face à une provenance signée.' },
+        ],
+      },
+    },
     flux: {
       title: 'FLUX : lire les métadonnées PNG, XMP et workflow',
       description: "Lisez les preuves de génération d'une image FLUX : blocs de texte PNG avec prompt et workflow, champs XMP d'outil et filigranes de trames. Gratuit, sans envoi.",
@@ -926,6 +1002,82 @@ const priorityPlatformProfiles = {
     },
   },
   'zh-TW': {
+    comfyui: {
+      title: 'ComfyUI EXIF 怎麼看：從 PNG 取出工作流程 JSON',
+      description: '從原始 ComfyUI PNG 取出提示詞、工作流程 JSON、節點圖、模型名稱、seed、sampler 與 CFG。在瀏覽器內免費解析，檔案不會離開你的裝置。',
+      h1: '找 ComfyUI 的 EXIF？有用的資料其實在 PNG 文字區塊裡',
+      meta: '主要搜尋詞：ComfyUI EXIF · 更新：2026-07-23 · 解析器：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: '很多人會去搜尋「ComfyUI EXIF」，然後在 EXIF 裡什麼也沒找到，於是認定資料根本沒被寫進去。實際上 ComfyUI 通常把生成資訊寫在 PNG 的文字區塊，而不是相機用的 EXIF。把原始 PNG 交給 AICheck365，就能在你的瀏覽器裡取出提示詞與工作流程 JSON、節點數量、模型名稱、seed、sampler、CFG 與尺寸，以及原始文字區塊本身。',
+      directAnswer: {
+        heading: '重點：鍵名會告訴你是哪個前端寫的',
+        body: 'prompt 與 workflow 這兩個鍵是 ComfyUI 的慣例，內容是序列化後的節點圖 JSON；若看到 parameters，那通常是 AUTOMATIC1111 風格的輸出，會把提示詞、seed、sampler、CFG 與模型打包成一串文字。這些都沒有簽章，因此可以被修改或移除。它們能很好地說明圖是怎麼做出來的，但無法證明。',
+      },
+      sampleHeading: '內建樣本與解析結果',
+      sampleRows: [
+        ['內建樣本', '來自 ComfyUI 官方範例的 Stable Diffusion XL PNG，可在樣本清單中直接重現。'],
+        ['偵測到的欄位', '名為 prompt 與 workflow 的 PNG 文字區塊，內含完整但未簽章的工作流程 JSON、節點圖與生成參數。'],
+        ['證據等級', '未簽章的描述性中繼資料：對「這張圖怎麼來的」解釋力很強，但不像 C2PA 簽章那樣具備防竄改性。'],
+      ],
+      signalRows: [
+        ['prompt', 'ComfyUI 的節點圖資料與生成參數，以 JSON 序列化後存放。'],
+        ['workflow', '完整的流程結構；只要原始 PNG 沒被破壞，通常可以直接載回 ComfyUI 重現。'],
+        ['模型與 sampler 欄位', '存在時會讀出 checkpoint 或模型檔名、sampler、scheduler、steps、CFG、seed 與長寬。'],
+        ['原始文字區塊', '保留 tEXt/iTXt/zTXt 的原值，方便進一步檢視或匯出成 JSON。'],
+      ],
+      insights: [
+        {
+          heading: '為什麼不是 EXIF',
+          body: 'EXIF 是相機的標準，欄位是為快門、光圈、鏡頭這類資訊設計的，格式固定。一段多行的提示詞、或一整張序列化的節點圖，在 EXIF 裡根本沒有能放的位置。PNG 規格則定義了文字區塊，可以存放任意的鍵值字串，所以整個生態系自然就落在那裡。這也解釋了一個很常見的誤會：只會讀 EXIF 的工具，在一個其實塞滿可讀證據的檔案上，會回報「什麼都沒有」。',
+        },
+        {
+          heading: '什麼會把工作流程弄不見，什麼不會',
+          body: '文字區塊的脆弱之處很好預測：複製沒問題，重新編碼就危險。實務上：',
+          list: [
+            '把 PNG 轉成 JPEG 會整組丟失，因為 JPEG 沒有對應的容器可以放。',
+            '社群平台與通訊軟體會重新編碼上傳內容，文字區塊也一併消失。',
+            '截圖只留下畫面：那是從像素產生的新檔案，中繼資料一概不留。',
+            '單純複製、搬移檔案，或上傳到會原樣保存的空間，則能完整保留。',
+          ],
+        },
+      ],
+      steps: {
+        heading: '取出 ComfyUI 工作流程的步驟',
+        items: [
+          ['使用原始 PNG', '用前端寫出來的那個檔案，不要用截圖、轉檔後的 JPEG 或從社群平台重新下載的版本。'],
+          ['開啟 PNG 參數擷取工具', '解析在你的瀏覽器內完成，讀取過程不會上傳檔案。'],
+          ['確認是哪個前端', 'prompt 或 workflow 指向 ComfyUI，parameters 則指向 AUTOMATIC1111 風格的輸出。'],
+          ['讀取生成設定', '檢視實際存在的提示詞、負面提示詞、seed、sampler、CFG、steps、模型與尺寸。'],
+          ['正確評估份量', '把結果當成很強的來源說明，但要記得它沒有簽章，因此可被編輯。'],
+        ],
+      },
+      limits: [
+        'PNG 文字區塊未經簽章：可以被修改、移除，或複製到另一張不相干的圖上。',
+        '轉成 JPEG、經社群平台重新編碼、以及截圖，都會破壞這些區塊。',
+        '自訂節點與擴充功能可能寫入無法一律正規化成可讀標籤的欄位。',
+        '找不到工作流程，不代表這張圖不是 AI 生成的，只代表這份副本沒有留下。',
+      ],
+      ctaLead: '要取提示詞與工作流程就用 PNG 參數擷取工具；若還想一併檢查 C2PA 與 EXIF/XMP，請執行完整檢測。',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: '擷取 PNG 工作流程中繼資料', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: '一併檢查 EXIF/XMP', localized: false },
+        { href: '/', label: '執行完整本機檢測' },
+      ],
+      faq: [
+        ['ComfyUI 的中繼資料真的是 EXIF 嗎？', '通常不是。重要的資料多半放在名為 prompt 與 workflow 的 PNG 文字區塊裡，而不是相機用的 EXIF 標籤。'],
+        ['可以還原出完整的工作流程嗎？', '若是原始 PNG 匯出檔，通常可以，但前提是 workflow 區塊當初有被寫入且沒有在後續流程中被移除。'],
+        ['為什麼信心度比 C2PA 低？', '因為 ComfyUI 的工作流程中繼資料沒有簽章，可以被編輯，也可以被複製到別的檔案上。'],
+        ['檔案會被上傳嗎？', '不會。解析由編譯成 WebAssembly 的 Rust 在瀏覽器內執行，提示詞與工作流程都留在你的裝置上。'],
+      ],
+      sources: {
+        heading: '來源與驗證紀錄',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 官方範例', note: '內建 SDXL 工作流程 PNG 的公開出處。', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'PNG 區塊與 tEXt/iTXt/zTXt 格式的標準參考。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 檢測方法', note: '說明未簽章的中繼資料如何與已簽章的來源證據權衡。' },
+        ],
+      },
+    },
     midjourney: {
       title: 'Midjourney 圖片檢測：XMP、IPTC 與檔名線索',
       description: '檢查 Midjourney 圖片中真正留存的線索：XMP 與 IPTC 工具欄位、AI 系統字串與檔名樣式。在瀏覽器內免費檢測，檔案不會上傳。',
@@ -1055,6 +1207,82 @@ const priorityPlatformProfiles = {
     },
   },
   de: {
+    comfyui: {
+      title: 'ComfyUI EXIF: Workflow-JSON aus PNG-Dateien auslesen',
+      description: 'Original-PNGs aus ComfyUI auslesen: Prompt, Workflow-JSON, Node-Graph, Modellnamen, Seed, Sampler, CFG und Bildmaße. Kostenlos im Browser, ohne Upload.',
+      h1: 'ComfyUI und EXIF: Die brauchbaren Daten stecken in PNG-Textchunks',
+      meta: 'Zielsuchbegriff: ComfyUI EXIF · Aktualisiert: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Wer nach ComfyUI-EXIF sucht, findet im EXIF-Block meist nichts und schließt daraus, es sei nie etwas geschrieben worden. Tatsächlich legt ComfyUI die Generierungsdaten üblicherweise in PNG-Textchunks ab, nicht im Kamera-EXIF. Aus dem Original-PNG liest AICheck365 lokal im Browser Prompt und Workflow-JSON, Anzahl der Nodes, Modellnamen, Seed, Sampler, CFG und Bildmaße aus — samt der rohen Textchunks.',
+      directAnswer: {
+        heading: 'Kurz gesagt: Der Schlüsselname verrät das Frontend',
+        body: 'Die Schlüssel prompt und workflow sind die ComfyUI-Konvention und enthalten den serialisierten Node-Graph als JSON. Ein parameters-Chunk deutet dagegen auf AUTOMATIC1111-Ausgabe und packt Prompt, Seed, Sampler, CFG und Modell in einen einzigen String. Nichts davon ist signiert, also editierbar und entfernbar: Diese Daten erklären die Herkunft gut, beweisen sie aber nicht.',
+      },
+      sampleHeading: 'Mitgeliefertes Beispiel und Parser-Ausgabe',
+      sampleRows: [
+        ['Mitgeliefertes Beispiel', 'Ein Stable-Diffusion-XL-PNG aus den offiziellen ComfyUI-Beispielen, aus der Beispielliste reproduzierbar.'],
+        ['Erkannte Felder', 'PNG-Textchunks namens prompt und workflow mit vollständigem, unsigniertem Workflow-JSON, Node-Graph und Generierungsparametern.'],
+        ['Beweisstufe', 'Unsignierte beschreibende Metadaten: eine starke Erklärung der Entstehung, aber nicht manipulationssicher wie eine C2PA-Signatur.'],
+      ],
+      signalRows: [
+        ['prompt', 'Node-Graph-Daten und Generierungsparameter von ComfyUI, als JSON serialisiert.'],
+        ['workflow', 'Die Graphstruktur, die sich bei intaktem Original-PNG oft direkt wieder in ComfyUI laden lässt.'],
+        ['Modell- und Sampler-Felder', 'Checkpoint- beziehungsweise Modelldateinamen, Sampler, Scheduler, Steps, CFG, Seed sowie Breite und Höhe, sofern vorhanden.'],
+        ['Rohe Textchunks', 'Die ursprünglichen tEXt-/iTXt-/zTXt-Werte bleiben für die genaue Prüfung und den JSON-Export erhalten.'],
+      ],
+      insights: [
+        {
+          heading: 'Warum das kein EXIF ist',
+          body: 'EXIF ist ein Kamerastandard mit festen Tags für Belichtung, Blende und Objektivdaten. Ein mehrzeiliger Prompt oder ein serialisierter Node-Graph hat darin schlicht keinen Platz. Die PNG-Spezifikation dagegen definiert Textchunks, die beliebige Schlüssel-Wert-Strings aufnehmen — dort hat sich das Ökosystem eingerichtet. Genau daraus entsteht das häufigste Missverständnis: Ein Werkzeug, das nur EXIF liest, meldet nichts für eine Datei, die voller lesbarer Belege steckt.',
+        },
+        {
+          heading: 'Was den Workflow entfernt — und was nicht',
+          body: 'Textchunks sind auf eine gut vorhersagbare Weise fragil: Kopieren überstehen sie, erneutes Kodieren selten. In der Praxis:',
+          list: [
+            'Die Umwandlung von PNG nach JPEG verwirft sie vollständig, da JPEG keinen entsprechenden Container kennt.',
+            'Soziale Netzwerke und Messenger kodieren Uploads neu und werfen die Textchunks dabei weg.',
+            'Screenshots behalten das Bild und keinerlei Metadaten, denn aus Pixeln entsteht eine neue Datei.',
+            'Kopieren, Verschieben oder das Hochladen an einen Ort, der die Datei unverändert speichert, erhält alles.',
+          ],
+        },
+      ],
+      steps: {
+        heading: 'ComfyUI-Workflow Schritt für Schritt auslesen',
+        items: [
+          ['Das Original-PNG verwenden', 'Nehmen Sie die Datei so, wie das Frontend sie geschrieben hat — keinen Screenshot, keine JPEG-Konvertierung, keinen Social-Media-Download.'],
+          ['Den PNG-Parameter-Extractor öffnen', 'Die Datei wird im Browser geparst, zum Auslesen wird nichts hochgeladen.'],
+          ['Das schreibende Frontend bestimmen', 'prompt oder workflow deuten auf ComfyUI, ein parameters-Schlüssel auf AUTOMATIC1111-Ausgabe.'],
+          ['Die Generierungseinstellungen lesen', 'Prüfen Sie Prompt, negativen Prompt, Seed, Sampler, CFG, Steps, Modell und Größe, die der Chunk tatsächlich enthält.'],
+          ['Richtig gewichten', 'Behandeln Sie das Ergebnis als starke Erklärung der Herkunft, aber denken Sie daran: unsigniert und damit editierbar.'],
+        ],
+      },
+      limits: [
+        'PNG-Textchunks sind unsigniert: editierbar, entfernbar und auf ein fremdes Bild kopierbar.',
+        'JPEG-Konvertierung, erneutes Kodieren auf sozialen Netzwerken und Screenshots zerstören sie.',
+        'Eigene Nodes und Erweiterungen schreiben mitunter Felder, die sich nicht immer in lesbare Labels normalisieren lassen.',
+        'Kein gefundener Workflow heißt nicht, dass das Bild nicht generiert wurde — nur, dass diese Kopie keinen trägt.',
+      ],
+      ctaLead: 'Für Prompts und Workflows den PNG-Parameter-Extractor nutzen; die vollständige Erkennung, wenn zusätzlich C2PA und EXIF/XMP geprüft werden sollen.',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNG-Workflow-Metadaten extrahieren', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: 'Auch EXIF/XMP prüfen', localized: false },
+        { href: '/', label: 'Vollständige lokale Erkennung starten' },
+      ],
+      faq: [
+        ['Sind ComfyUI-Metadaten wirklich EXIF?', 'Meist nicht. Die wichtigen Daten liegen üblicherweise in PNG-Textchunks wie prompt und workflow und nicht in EXIF-Tags einer Kamera.'],
+        ['Lässt sich der genaue Workflow wiederherstellen?', 'Bei originalen PNG-Exporten oft ja — aber nur, wenn der workflow-Chunk geschrieben und danach nicht entfernt wurde.'],
+        ['Warum ist die Konfidenz niedriger als bei C2PA?', 'Weil ComfyUI-Workflow-Metadaten unsigniert sind: Sie lassen sich bearbeiten und auf andere Dateien kopieren.'],
+        ['Werden meine Dateien hochgeladen?', 'Nein. Das Parsen läuft als WebAssembly im Browser, Prompts und Workflows bleiben auf Ihrem Gerät.'],
+      ],
+      sources: {
+        heading: 'Quellen und Prüfprotokolle',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'Offizielle ComfyUI-Beispiele', note: 'Herkunft des mitgelieferten SDXL-PNG mit Workflow.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Standardreferenz für PNG-Chunks und die Formate tEXt/iTXt/zTXt.', localized: false },
+          { href: '/methodology/', label: 'Methodik von AICheck365', note: 'Wie unsignierte Metadaten gegen signierte Herkunft gewichtet werden.' },
+        ],
+      },
+    },
     midjourney: {
       title: 'Midjourney-Bilder prüfen: XMP, IPTC und Dateinamen',
       description: 'Midjourney-Bilder auf verbliebene Herkunftsspuren prüfen: XMP- und IPTC-Werkzeugfelder, KI-System-Strings und Dateinamensmuster. Kostenlos im Browser, ohne Upload.',
@@ -1979,6 +2207,83 @@ const priorityPlatformProfiles = {
     },
   },
   ko: {
+    'stable-diffusion': {
+      title: 'Stable Diffusion PNG Info: 프롬프트와 파라미터 읽기',
+      description: 'Stable Diffusion PNG Info를 브라우저에서 읽습니다. A1111 parameters, ComfyUI prompt·workflow JSON, NovelAI 메타데이터를 무료로 확인하며 업로드하지 않습니다.',
+      h1: 'Stable Diffusion PNG Info: parameters 청크 읽는 법',
+      meta: '주요 검색어: PNG Info Stable Diffusion · 업데이트: 2026-07-23 · 파서: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Stable Diffusion 생태계는 이미지가 어떻게 만들어졌는지를 PNG 텍스트 청크에 기록합니다. WebUI의 PNG Info 탭이 보여주는 바로 그 데이터입니다. 프런트엔드마다 쓰는 키가 달라서, 어떤 파일에서는 정갈한 파라미터 문자열 하나가 나오고 다른 파일에서는 커다란 JSON 그래프가 나옵니다. AICheck365는 이 모두를 브라우저 안에서 읽고, 각 청크가 어느 프런트엔드에서 왔는지 표시하며, 원본 값도 복사와 내보내기를 위해 그대로 남겨 둡니다.',
+      directAnswer: {
+        heading: '핵심: 키 이름이 어느 프런트엔드인지 알려 줍니다',
+        body: 'parameters 청크는 AUTOMATIC1111 계열 출력이며 프롬프트, 네거티브 프롬프트, seed, sampler, CFG, steps, 모델이 한 문자열에 담깁니다. prompt와 workflow는 ComfyUI의 방식으로 노드 그래프가 JSON으로 들어 있습니다. NovelAI는 값 쪽에서 식별합니다. 어느 것도 서명되어 있지 않아 수정과 삭제가 가능합니다. 출처를 잘 설명해 주지만 증명해 주지는 않습니다.',
+      },
+      sampleHeading: '내장 샘플과 검증된 결과',
+      sampleRows: [
+        ['ComfyUI / Stable Diffusion XL PNG', 'ComfyUI 공식 예제에서 가져온 원본을 내장하고 있으며 샘플 목록에서 그대로 재현할 수 있습니다.'],
+        ['검증 결과', 'prompt와 workflow 텍스트 청크가 있으며, 서명 없는 전체 workflow JSON과 노드 그래프, 생성 파라미터를 담고 있습니다.'],
+        ['증거 등급', '서명 없는 서술적 메타데이터입니다. 제작 과정에 대한 설명으로는 강하지만, C2PA 서명처럼 변조를 감지해 주지는 않습니다.'],
+      ],
+      signalRows: [
+        ['parameters 청크', 'AUTOMATIC1111의 관례입니다. 프롬프트, 네거티브 프롬프트, steps, sampler, CFG, seed, 크기, 모델 해시를 한 값에 담습니다.'],
+        ['prompt / workflow 청크', 'ComfyUI의 관례입니다. 원본 PNG가 온전하면 ComfyUI로 그대로 다시 불러올 수 있는 경우가 많습니다.'],
+        ['NovelAI 메타데이터', '키 이름이 아니라 값의 내용으로 인식하며, A1111 출력과 섞지 않고 별도의 생성기로 보고합니다.'],
+        ['그 밖의 텍스트 키', 'Software, Comment, Description, Source, Author도 읽습니다. 프런트엔드나 내보내기 도구가 도구 이름을 남기기도 하기 때문입니다.'],
+      ],
+      insights: [
+        {
+          heading: '이것이 EXIF가 아닌 이유',
+          body: 'Stable Diffusion 메타데이터를 찾겠다며 EXIF를 열어 보고 비어 있으니 애초에 기록되지 않았다고 결론짓는 일이 가장 흔한 오해입니다. EXIF는 카메라 표준이라 노출과 렌즈 설정을 위한 고정된 태그로 이루어져 있고, 여러 줄짜리 프롬프트나 직렬화된 노드 그래프가 들어갈 자리가 없습니다. 반면 PNG 규격은 임의의 키와 값을 담을 수 있는 텍스트 청크를 정의하고 있어 생태계가 그쪽에 자리를 잡았습니다. EXIF만 파싱하는 도구는, 읽을 증거로 가득한 파일을 두고도 아무것도 없다고 보고하게 됩니다.',
+        },
+        {
+          heading: '파라미터를 지우는 것과 지키는 것',
+          body: '텍스트 청크가 깨지는 방식은 예측 가능합니다. 복사에는 견디지만 재인코딩에는 거의 견디지 못합니다. 실제로는 이렇습니다.',
+          list: [
+            'PNG를 JPEG로 변환하면 통째로 사라집니다. JPEG에는 이에 해당하는 저장 공간이 없습니다.',
+            'SNS와 메신저는 업로드를 재인코딩하며, 그 과정에서 텍스트 청크가 함께 버려집니다.',
+            '스크린샷은 그림만 남깁니다. 픽셀에서 새 파일을 만들기 때문에 메타데이터는 전혀 남지 않습니다.',
+            '파일을 복사하거나 옮기는 것, 원본 그대로 저장하는 곳에 올리는 것은 모두 보존됩니다.',
+          ],
+        },
+      ],
+      steps: {
+        heading: 'PNG Info를 읽는 순서',
+        items: [
+          ['원본 PNG를 사용합니다', '프런트엔드가 써낸 파일 그대로를 쓰고, 스크린샷이나 JPEG 변환본, SNS에서 다시 내려받은 사본은 피합니다.'],
+          ['PNG 파라미터 추출기를 엽니다', '브라우저 안에서 해석하므로 읽기 위해 파일이 전송되지 않습니다.'],
+          ['어느 프런트엔드인지 확인합니다', 'parameters 키는 A1111, prompt나 workflow는 ComfyUI, 값에 NovelAI가 있으면 해당 생성기입니다.'],
+          ['생성 설정을 읽습니다', '청크에 실제로 들어 있는 프롬프트, 네거티브 프롬프트, seed, sampler, CFG, steps, 모델, 크기를 확인합니다.'],
+          ['무게를 제대로 둡니다', '출처에 대한 강한 설명으로 다루되, 서명이 없어 수정 가능하다는 점을 기억하세요.'],
+        ],
+      },
+      limits: [
+        'PNG 텍스트 청크는 서명이 없습니다. 수정과 삭제가 가능하고 무관한 이미지에 복사해 붙일 수도 있습니다.',
+        'JPEG 변환, SNS의 재인코딩, 스크린샷은 모두 청크를 파괴합니다.',
+        '커스텀 노드와 확장 기능은 읽기 좋은 라벨로 항상 정규화되지는 않는 필드를 기록하기도 합니다.',
+        '파라미터를 찾지 못한 것이 그 이미지가 생성물이 아니라는 뜻은 아닙니다. 이 사본에 남아 있지 않다는 의미일 뿐입니다.',
+      ],
+      ctaLead: '프롬프트와 워크플로는 PNG 파라미터 추출기로, C2PA와 EXIF/XMP까지 함께 보려면 전체 검출을 사용하세요.',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNG 파라미터와 워크플로 추출', localized: false },
+        { href: '/platforms/comfyui/', label: 'ComfyUI 워크플로 신호와 비교' },
+        { href: '/', label: '전체 검출 실행' },
+      ],
+      faq: [
+        ['Stable Diffusion 이미지에서 PNG Info를 어떻게 읽나요?', '원본 PNG를 이 페이지의 파라미터 추출기에 불러오세요. tEXt/iTXt/zTXt 청크를 브라우저 안에서 읽으며, PNG Info 탭이 보여주는 것과 같은 데이터를 무료로, 업로드 없이 확인할 수 있습니다.'],
+        ['파라미터가 안 보이는 이유는 무엇인가요?', '대개 파일이 재인코딩되었기 때문입니다. JPEG 변환, SNS 업로드, 스크린샷은 겉모습은 그대로 두면서 텍스트 청크만 없앱니다.'],
+        ['NovelAI 메타데이터도 같은 방식으로 읽히나요?', '네. NovelAI 출력은 키 이름이 아니라 값의 내용으로 인식하며, A1111 파라미터와 합치지 않고 별도의 생성기로 보고합니다.'],
+        ['PNG 메타데이터가 AI 생성의 증거가 되나요?', '강한 설명이지만 증거는 아닙니다. 이 청크들에는 서명이 없어 수정하거나 파일 사이에 복사할 수 있습니다. 변조를 감지해 주는 유효한 C2PA manifest와는 다릅니다.'],
+        ['이미지가 업로드되나요?', '아니요. 해석은 브라우저 안에서 실행되므로 프롬프트와 워크플로가 기기를 벗어나지 않습니다.'],
+      ],
+      sources: {
+        heading: '출처와 검증 기록',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 공식 예제', note: '내장된 SDXL 워크플로 PNG의 출처입니다.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'PNG 청크와 tEXt/iTXt/zTXt 형식의 표준 참조입니다.', localized: false },
+          { href: '/methodology/', label: 'AICheck365 검사 방법론', note: '서명 없는 메타데이터를 서명된 출처와 어떻게 견주는지 설명합니다.' },
+        ],
+      },
+    },
     midjourney: {
       title: 'Midjourney 이미지 확인: XMP·IPTC와 파일명 단서',
       description: 'Midjourney 이미지에 남는 단서를 확인합니다. XMP·IPTC 도구 필드, AI 시스템 문자열, 파일명 패턴을 브라우저에서 무료로 검사하며 업로드하지 않습니다.',
@@ -2202,6 +2507,83 @@ const priorityPlatformProfiles = {
     },
   },
   ja: {
+    'stable-diffusion': {
+      title: 'Stable Diffusion の PNG Info：生成パラメータを読む',
+      description: 'Stable Diffusion の PNG Info をブラウザで読みます。A1111 の parameters、ComfyUI の prompt / workflow JSON、NovelAI のメタデータに対応。無料・アップロード不要。',
+      h1: 'Stable Diffusion の PNG Info：parameters チャンクの読み方',
+      meta: '主要検索語: PNG Info Stable Diffusion · 更新: 2026-07-23 · パーサー: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Stable Diffusion 系のツールは、画像がどう作られたかを PNG のテキストチャンクに記録します。WebUI の PNG Info タブが見せているのと同じデータです。フロントエンドごとに使うキーが違うため、あるファイルからは整った 1 行のパラメータ文字列が出て、別のファイルからは巨大な JSON グラフが出てきます。AICheck365 はそのいずれも読み、どのフロントエンド由来かを示したうえで、生の値もコピーや書き出しのために残します。',
+      directAnswer: {
+        heading: '結論：キー名を見れば、どのフロントエンドが書いたか分かります',
+        body: 'parameters チャンクは AUTOMATIC1111 系の出力で、プロンプト、ネガティブプロンプト、seed、sampler、CFG スケール、steps、モデルが 1 つの文字列にまとまっています。prompt と workflow は ComfyUI の慣例で、ノードグラフが JSON として入っています。NovelAI は値の側から判別します。いずれも署名がないため編集も削除も可能です。来歴の説明としては強力ですが、証明にはなりません。',
+      },
+      sampleHeading: '内蔵サンプルと検証結果',
+      sampleRows: [
+        ['ComfyUI / Stable Diffusion XL の PNG', 'ComfyUI 公式サンプル由来の原本を同梱しており、サンプル一覧からそのまま再現できます。'],
+        ['検証結果', 'prompt と workflow のテキストチャンクが存在し、署名のない完全なワークフロー JSON、ノードグラフ、生成パラメータを含んでいます。'],
+        ['証拠レベル', '署名のない記述的メタデータです。制作過程の説明としては強い一方、C2PA 署名のような改ざん検知性はありません。'],
+      ],
+      signalRows: [
+        ['parameters チャンク', 'AUTOMATIC1111 の慣例です。プロンプト、ネガティブプロンプト、steps、sampler、CFG、seed、サイズ、モデルハッシュを 1 つの値に詰め込みます。'],
+        ['prompt / workflow チャンク', 'ComfyUI の慣例です。原本の PNG が無傷なら、そのまま ComfyUI に読み戻せることも少なくありません。'],
+        ['NovelAI のメタデータ', 'キー名ではなく値の内容から判別し、A1111 の出力と混ぜずに独立した生成器として報告します。'],
+        ['その他のテキストキー', 'Software、Comment、Description、Source、Author も読みます。フロントエンドや書き出しツールがツール名を残すことがあるためです。'],
+      ],
+      insights: [
+        {
+          heading: 'なぜ EXIF ではないのか',
+          body: 'Stable Diffusion のメタデータを探して EXIF を見に行き、何も無いので「書き込まれていない」と結論づける——これが最もよくある誤解です。EXIF はカメラの規格で、露出やレンズ設定のための固定タグが並んでいます。複数行のプロンプトや直列化したノードグラフを収める場所はそこにありません。一方 PNG の仕様は任意のキーと値を持てるテキストチャンクを定義しており、エコシステムはそちらに落ち着きました。EXIF しか解析しないツールは、読める証拠で満ちたファイルに対して「何も無い」と報告してしまいます。',
+        },
+        {
+          heading: 'パラメータを消すもの、残すもの',
+          body: 'テキストチャンクの壊れ方は予測しやすいものです。コピーには耐えますが、再エンコードにはまず耐えません。実際には次のようになります。',
+          list: [
+            'PNG を JPEG に変換すると完全に失われます。JPEG には対応する入れ物がありません。',
+            'SNS やメッセージアプリはアップロードを再エンコードし、その過程でテキストチャンクを落とします。',
+            'スクリーンショットは絵だけを残します。ピクセルから新しいファイルを作るため、メタデータは一切残りません。',
+            'ファイルのコピーや移動、そのまま保存する場所へのアップロードなら、すべて保持されます。',
+          ],
+        },
+      ],
+      steps: {
+        heading: 'PNG Info を読む手順',
+        items: [
+          ['元の PNG を使う', 'フロントエンドが書き出したファイルそのものを使います。スクリーンショット、JPEG 変換、SNS からの再ダウンロードは避けてください。'],
+          ['PNG パラメータ抽出ツールを開く', 'ブラウザ内で解析されるため、読み取りのためにファイルが送信されることはありません。'],
+          ['どのフロントエンドか見分ける', 'parameters なら A1111、prompt や workflow なら ComfyUI、値に NovelAI とあればその生成器です。'],
+          ['生成設定を読む', 'チャンクに実際に含まれるプロンプト、ネガティブプロンプト、seed、sampler、CFG、steps、モデル、サイズを確認します。'],
+          ['重み付けを誤らない', '来歴の説明としては強い証拠ですが、署名がないため編集可能である点は忘れないでください。'],
+        ],
+      },
+      limits: [
+        'PNG のテキストチャンクには署名がありません。編集・削除できるほか、無関係な画像に貼り付けることもできます。',
+        'JPEG への変換、SNS での再エンコード、スクリーンショットはいずれもチャンクを破壊します。',
+        'カスタムノードや拡張機能は、常に読みやすいラベルへ正規化できるとは限らないフィールドを書き込むことがあります。',
+        'パラメータが見つからないことは、その画像が生成物でない証明にはなりません。このコピーに残っていないというだけです。',
+      ],
+      ctaLead: 'プロンプトとワークフローの抽出には PNG パラメータ抽出ツールを、C2PA や EXIF/XMP もまとめて見たいときはフル検出をお使いください。',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'PNG のパラメータとワークフローを抽出', localized: false },
+        { href: '/platforms/comfyui/', label: 'ComfyUI のワークフロー信号と比較' },
+        { href: '/', label: 'フル検出をブラウザで実行' },
+      ],
+      faq: [
+        ['Stable Diffusion の画像から PNG Info を読むには？', '元の PNG をこのページのパラメータ抽出ツールに読み込ませてください。tEXt/iTXt/zTXt チャンクをブラウザ内で解析します。PNG Info タブと同じデータを、無料かつアップロードなしで確認できます。'],
+        ['パラメータが表示されないのはなぜですか？', 'ほとんどの場合、ファイルが再エンコードされています。JPEG への変換、SNS への投稿、スクリーンショットは、見た目を変えないままテキストチャンクだけを取り除きます。'],
+        ['NovelAI のメタデータも同じように読めますか？', 'はい。NovelAI の出力はキー名ではなく値の内容から判別し、A1111 のパラメータと混同せず独立した生成器として報告します。'],
+        ['PNG のメタデータは AI 生成の証明になりますか？', '強い説明にはなりますが証明にはなりません。これらのチャンクには署名がなく、編集もファイル間のコピーも可能です。改ざん検知性のある有効な C2PA マニフェストとはそこが違います。'],
+        ['画像はアップロードされますか？', 'いいえ。解析はブラウザ内で実行されるため、プロンプトもワークフローも端末から出ません。'],
+      ],
+      sources: {
+        heading: '出典と検証記録',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'ComfyUI 公式サンプル', note: '同梱している SDXL ワークフロー付き PNG の出所です。', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'PNG チャンクと tEXt/iTXt/zTXt 形式の標準仕様です。', localized: false },
+          { href: '/methodology/', label: 'AICheck365 の検査方法論', note: '署名のないメタデータを署名済みの来歴とどう比較するかを説明しています。' },
+        ],
+      },
+    },
     sora: {
       title: 'Sora動画の来歴チェック：MP4メタデータとC2PA',
       description: 'Sora の MP4/MOV に残る来歴を調べます。C2PA/JUMBF、コンテナのボックス、SEI マーカー、フレーム透かしをブラウザ内で無料検査。アップロードは不要です。',

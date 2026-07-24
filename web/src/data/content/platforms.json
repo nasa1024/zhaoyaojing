@@ -619,5 +619,105 @@
       "/pt-BR/blog/how-to-detect-ai-images/",
       "/pt-BR/methodology/"
     ]
+  },
+  {
+    "id": "comfyui-zh-tw-priority",
+    "slug": "comfyui",
+    "route": "/zh-TW/platforms/comfyui/",
+    "locale": "zh-TW",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF 怎麼看：從 PNG 取出工作流程 JSON | AICheck365",
+    "description": "從原始 ComfyUI PNG 取出提示詞、工作流程 JSON、節點圖、模型名稱、seed、sampler 與 CFG。在瀏覽器內免費解析，檔案不會離開你的裝置。",
+    "canonical": "https://www.aicheck365.com/zh-TW/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-de-priority",
+    "slug": "comfyui",
+    "route": "/de/platforms/comfyui/",
+    "locale": "de",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF: Workflow-JSON aus PNG-Dateien auslesen | AICheck365",
+    "description": "Original-PNGs aus ComfyUI auslesen: Prompt, Workflow-JSON, Node-Graph, Modellnamen, Seed, Sampler, CFG und Bildmaße. Kostenlos im Browser, ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/de/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-fr-priority",
+    "slug": "comfyui",
+    "route": "/fr/platforms/comfyui/",
+    "locale": "fr",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF : extraire le JSON du workflow depuis un PNG | AICheck365",
+    "description": "Extrayez le prompt, le JSON du workflow, le graphe de nœuds, les noms de modèles, le seed, le sampler et le CFG des PNG ComfyUI. Gratuit dans le navigateur, sans envoi.",
+    "canonical": "https://www.aicheck365.com/fr/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/fr/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "stable-diffusion-ja-priority",
+    "slug": "stable-diffusion",
+    "route": "/ja/platforms/stable-diffusion/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Stable Diffusion",
+    "title": "Stable Diffusion の PNG Info：生成パラメータを読む | AICheck365",
+    "description": "Stable Diffusion の PNG Info をブラウザで読みます。A1111 の parameters、ComfyUI の prompt / workflow JSON、NovelAI のメタデータに対応。無料・アップロード不要。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/stable-diffusion/",
+    "primaryKeyword": "PNG Info Stable Diffusion",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/ja/platforms/comfyui/",
+      "/ja/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "stable-diffusion-ko-priority",
+    "slug": "stable-diffusion",
+    "route": "/ko/platforms/stable-diffusion/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "Stable Diffusion",
+    "title": "Stable Diffusion PNG Info: 프롬프트와 파라미터 읽기 | AICheck365",
+    "description": "Stable Diffusion PNG Info를 브라우저에서 읽습니다. A1111 parameters, ComfyUI prompt·workflow JSON, NovelAI 메타데이터를 무료로 확인하며 업로드하지 않습니다.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/stable-diffusion/",
+    "primaryKeyword": "PNG Info Stable Diffusion",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/ko/platforms/comfyui/",
+      "/ko/",
+      "/ko/methodology/"
+    ]
   }
 ]
