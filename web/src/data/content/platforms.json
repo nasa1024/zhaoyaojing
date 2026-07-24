@@ -419,5 +419,45 @@
       "/ko/blog/what-is-c2pa/",
       "/ko/methodology/"
     ]
+  },
+  {
+    "id": "imagen-zh-tw-priority",
+    "slug": "imagen",
+    "route": "/zh-TW/platforms/imagen/",
+    "locale": "zh-TW",
+    "pageType": "platform",
+    "platform": "Google Imagen",
+    "title": "Google Imagen 檢測：C2PA 內容憑證怎麼查 | AICheck365",
+    "description": "檢查 Google Imagen 檔案的內容憑證：C2PA manifest、digitalSourceType、Google claim generator 與 XMP 欄位，在瀏覽器本機讀取，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/platforms/imagen/",
+    "primaryKeyword": "Imagen C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/blog/what-is-c2pa/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "runway-de-priority",
+    "slug": "runway",
+    "route": "/de/platforms/runway/",
+    "locale": "de",
+    "pageType": "platform",
+    "platform": "Runway",
+    "title": "Runway-Videos prüfen: Container-Metadaten und Frames | AICheck365",
+    "description": "Runway-Videos auf KI-Herkunftssignale prüfen: MP4/MOV-Container-Metadaten, SEI-Marker, Dateinamen und Frame-Wasserzeichen. Kostenlos und lokal im Browser.",
+    "canonical": "https://www.aicheck365.com/de/platforms/runway/",
+    "primaryKeyword": "Runway Videoerkennung",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/de/blog/how-to-detect-ai-videos/",
+      "/de/platforms/sora/",
+      "/de/methodology/"
+    ]
   }
 ]

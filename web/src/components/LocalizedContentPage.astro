@@ -648,6 +648,132 @@ function platformMetaDescription(name) {
 }
 
 const priorityPlatformProfiles = {
+  'zh-TW': {
+    imagen: {
+      title: 'Google Imagen 檢測：C2PA 內容憑證怎麼查',
+      description: '檢查 Google Imagen 檔案的內容憑證：C2PA manifest、digitalSourceType、Google claim generator 與 XMP 欄位，在瀏覽器本機讀取，不上傳檔案。',
+      h1: 'Google Imagen 檢測：讀憑證，不是讀畫面',
+      meta: '主要關鍵字：Imagen C2PA · 更新：2026-07-23 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Imagen 的輸出走的是 Google 生成式產品線同一套來源機制，所以有用的證據是 C2PA manifest，而不是畫面上看得見的任何東西。AICheck365 會在瀏覽器本機解析這份 manifest，並把簽章狀態、信任狀態與宣告的來源類型分開回報——因為「有憑證」和「憑證能通過驗證」是兩個不同的結論。',
+      directAnswer: {
+        heading: '直接答案：先看 digitalSourceType，再看憑證',
+        body: '找出 manifest 是否宣告 digitalSourceType = trainedAlgorithmicMedia，或 claim generator 是否指向 Google 的生成式產品。接著單獨判斷憑證：valid 且 trusted 是最強的情況；valid 但 untrusted 很常見，而且完全不代表這個檔案有問題。XMP 中的 Google AI 字串可以佐證 manifest，但本身沒有簽章，可以被修改。',
+      },
+      sampleHeading: '樣本狀態與證據輪廓',
+      sampleRows: [
+        ['Imagen 圖片樣本', '目前尚未內建。在取得可公開授權的原始檔之前，本頁不會宣稱做過 Imagen 的重現測試。'],
+        ['Google Veo 的 MP4', '網站內建 Google 生成式 AI 的影片樣本，帶有有效的 Google C2PA。它驗證的是影片容器中的 Google 憑證路徑，而不是 Imagen 圖片的覆蓋範圍。'],
+        ['值得檢查的欄位', 'digitalSourceType = trainedAlgorithmicMedia、claim_generator_info、Google / Imagen 字串，以及原始 PNG 內的來源 chunk。'],
+      ],
+      signalRows: [
+        ['C2PA 內容憑證', '當有效 manifest 宣告 trainedAlgorithmicMedia 或 Google 生成式 claim generator 時最強。簽章與信任狀態分開回報。'],
+        ['PNG 來源 chunk / JUMBF', '憑證在原始 PNG 中實際存放的位置。一般看圖軟體會跳過這段位元組，所以資料看起來像不存在。'],
+        ['XMP / EXIF', 'Credit、CreatorTool、Software 與 Google AI 字串可以支持 manifest，但沒有簽章。'],
+        ['檔名', '平台風格的下載檔名只是脈絡，改名就沒了。'],
+      ],
+      insights: [
+        {
+          heading: '為什麼 Imagen 和 Gemini 查出來的東西很像？',
+          body: '兩者都在 Google 的生成式產品線裡，所以產出的 manifest 形狀通常一致：trainedAlgorithmicMedia 的來源類型，加上 Google 的 claim generator 字串。真正的差別在於檔案是從哪個產品入口出來的，以及因此有沒有附上憑證、用什麼格式附。這也是為什麼兩者的實務建議完全相同——回頭找原始下載檔，而不是從畫面推測，然後讀 claim generator 看究竟是哪個產品簽的。',
+        },
+        {
+          heading: '能通過驗證的憑證，比只是「存在」的憑證有價值得多',
+          body: '來源工具常被簡化成「有沒有 C2PA」，但這個問題太粗，無法據以行動。manifest 可能存在卻因憑證過期而驗證失敗；也可能驗證乾淨通過，只是憑證不在你當下使用的信任清單裡。已驗證、無法驗證、未受信任但完整——這三種狀態需要的後續處理完全不同，所以這裡分開呈現，而不是壓成一個徽章。',
+        },
+      ],
+      limits: [
+        '截圖、通訊軟體副本與社群平台的重新編碼，通常會把 C2PA manifest 與 XMP 資料整批移除。',
+        '有沒有附上憑證，會因產品入口、檔案格式與匯出路徑而不同。',
+        '目前尚未內建 Imagen 樣本，因此本頁說明的是欄位涵蓋範圍，而不是重現測試的結果。',
+        '沒有訊號只代表這份副本沒有可讀的證據，不是關於來源的結論。',
+      ],
+      ctaLead: '需要 manifest 細節時用 C2PA 驗證工具；輔助欄位則交給 EXIF/XMP 閱讀器。',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: '驗證 C2PA manifest', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: '檢查 EXIF/XMP 欄位', localized: false },
+        { href: '/zh-TW/blog/what-is-c2pa/', label: '了解 C2PA 的運作方式' },
+      ],
+      faq: [
+        ['Google Imagen 一定有 C2PA 嗎？', '不一定。Google 是會替生成內容附上內容憑證的平台之一，但會隨產品入口、檔案格式與匯出路徑而不同，之後的處理也可能移除。請以原始下載檔為準。'],
+        ['Imagen 最強的訊號是什麼？', '宣告 digitalSourceType = trainedAlgorithmicMedia 的有效 manifest，或 Google 的生成式 claim generator——明顯比 XMP 字串或檔名更強。'],
+        ['為什麼有效的檔案顯示 untrusted？', 'valid 代表簽章能驗證、檔案未被更動；trusted 代表憑證鏈結到你所用清單中的根憑證。真實檔案可以同時是這兩種狀態。'],
+        ['檔案會被上傳嗎？', '不會。manifest 與 metadata 都在你的瀏覽器本機解析。'],
+      ],
+      sources: {
+        heading: '資料來源與驗證紀錄',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 公開樣本紀錄', note: '內建了哪些 Google 樣本、來源、測試日期與已知限制。', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'manifest 結構、assertion 與簽章驗證。', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'IPTC Digital Source Type 詞彙', note: 'trainedAlgorithmicMedia 等受控值的定義。', localized: false },
+          { href: '/zh-TW/methodology/', label: 'AICheck365 檢測方法', note: '說明宣告、簽章與證據等級的呈現方式。' },
+        ],
+      },
+    },
+  },
+  de: {
+    runway: {
+      title: 'Runway-Videos prüfen: Container-Metadaten und Frames',
+      description: 'Runway-Videos auf KI-Herkunftssignale prüfen: MP4/MOV-Container-Metadaten, SEI-Marker, Dateinamen und Frame-Wasserzeichen. Kostenlos und lokal im Browser.',
+      h1: 'Runway-Videos prüfen: was in der Datei überlebt',
+      meta: 'Ziel-Keyword: Runway Videoerkennung · Aktualisiert: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Runway liefert Video, und Video trägt seine Herkunft an anderen Stellen als ein Standbild. AICheck365 liest zuerst den MP4/MOV-Container — ftyp, den Box-Baum, udta/meta/ilst sowie encoder-, tool- und software-Felder —, sucht danach im Bitstrom nach bekannten Werkzeug-Strings, prüft den Dateinamen und tastet erst dann Frames ab, wenn alles darüber leer bleibt. Der gesamte Durchlauf passiert in Ihrem Browser, was bei Video mehr wiegt als bei Bildern.',
+      directAnswer: {
+        heading: 'Kurz gesagt: erst Container-Felder, Frames nur als Rückfallebene',
+        body: 'Beginnen Sie mit dem Original-MP4 oder -MOV und lesen Sie die encoder- und tool-Felder des Containers, danach etwaige SEI-Marker im Bitstrom. Der Dateiname kann ein Plattformmuster tragen, das eine Notiz wert ist. Nichts davon ist signiert wie ein C2PA-Manifest, also ist jedes Signal ein Hinweis, der gegen die tatsächliche Herkunft der Datei geprüft werden will — und alle verschwinden bei einem einzigen Neucodieren.',
+      },
+      sampleHeading: 'Stand der Beispiele und Beweisprofil',
+      sampleRows: [
+        ['Runway-Beispiel', 'Noch nicht enthalten. Diese Seite behauptet keinen reproduzierten Runway-Test, solange kein lizenziertes Original mit den übrigen Beispielen veröffentlicht werden kann.'],
+        ['Verwandtes enthaltenes Video', 'Ein Google Veo MP4 ist enthalten und durchläuft dieselben Container-, SEI- und Frame-Pfade, trägt aber Googles Credentials statt Runways.'],
+        ['Beweisstufe', 'Unsignierte Container-Metadaten und Dateinamenmuster: lesbar und nützlich, aber deutlich schwächer als ein prüfbares C2PA-Manifest.'],
+      ],
+      signalRows: [
+        ['MP4/MOV-Container-Metadaten', 'ftyp brand, Box-Baum, udta/meta/ilst sowie encoder-, tool-, software- und ©too-Einträge werden gelesen, jeweils mit dem Box-Pfad des Fundes.'],
+        ['SEI-Marker', 'Bekannte Werkzeug-Strings im Videobitstrom. Sie können ein Remux überstehen, verschwinden beim Neucodieren aber meist.'],
+        ['Dateiname', 'Download-Namen tragen mitunter ein Plattformmuster oder eine Job-Kennung. Kontext, der sich durch Umbenennen erledigt.'],
+        ['Frame-Wasserzeichen', 'Bleibt der Container leer, werden Frames mehrerer Zeitpunkte gegen bekannte sichtbare Marken und unsichtbare Muster geprüft. Kein allgemeiner KI-Klassifikator.'],
+      ],
+      insights: [
+        {
+          heading: 'Warum ein leeres Ergebnis bei geteilten Clips so häufig ist',
+          body: 'Video wird weit aggressiver transcodiert als Bilder, entsprechend schnell schwinden die Belege. Ein Neucodieren durch eine soziale Plattform entfernt Container-Werkzeugfelder und SEI-Marker typischerweise in einem Durchgang und hinterlässt eine Datei, die identisch abspielt und nichts Lesbares mehr trägt. Ein Schnittprogramm, das die Timeline neu exportiert, tut dasselbe, und eine Bildschirmaufnahme behält vom ursprünglichen Container gar nichts. Deshalb ist ein leeres Ergebnis bei einem Runway-Clip nicht entlastend, sondern schlicht nicht informativ — und deshalb lohnt die Suche nach der ersten veröffentlichten Kopie mehr als jede Frame-für-Frame-Betrachtung.',
+        },
+        {
+          heading: 'Wo Runway gegenüber signierenden Plattformen steht',
+          body: 'Manche Plattformen legen ihrer Ausgabe C2PA Content Credentials bei; das erzeugt Belege, die sich kryptografisch prüfen und als intakt oder gebrochen nachweisen lassen. Beschreibende Container-Felder gehören einer anderen Kategorie an: lesbar, aufschlussreich darüber, welches Werkzeug die Datei geschrieben hat, aber von jedem mit einem Metadaten-Tool veränderbar. Widersprechen sich beide Kategorien, gewinnt die signierte Ebene — und liegt nur die unsignierte vor, lautet die ehrliche Formulierung, dass die Datei eine Herkunft nahelegt statt sie zu belegen.',
+        },
+      ],
+      limits: [
+        'Container-Felder, SEI-Marker und Dateinamen sind unsigniert: Sie lassen sich bearbeiten, entfernen oder auf eine andere Datei kopieren.',
+        'Transcoding durch Videoplattformen und Messenger sowie Re-Exporte und Bildschirmaufnahmen entfernen sie routinemäßig.',
+        'Es ist noch kein Runway-Beispiel veröffentlicht, daher beschreibt diese Seite die Feldabdeckung und kein reproduziertes Testergebnis.',
+        'Frame-Analyse gleicht nur derzeit bekannte Muster ab und ersetzt weder Quellenprüfung noch professionelle Forensik.',
+      ],
+      ctaLead: 'Beginnen Sie mit dem MP4/MOV-Metadaten-Inspector und öffnen Sie den vollständigen Detektor, wenn Sie die Frame-Rückfallebene brauchen.',
+      ctas: [
+        { href: '/tools/mp4-metadata-inspector/', label: 'MP4/MOV-Metadaten prüfen', localized: false },
+        { href: '/', label: 'Vollständige Erkennung mit Frame-Analyse' },
+        { href: '/de/blog/how-to-detect-ai-videos/', label: 'Videoerkennungs-Guide lesen' },
+      ],
+      faq: [
+        ['Wie prüfe ich, ob ein Video von Runway stammt?', 'Laden Sie das Original-MP4 oder -MOV in den Metadaten-Inspector und lesen Sie zuerst die encoder- und tool-Felder des Containers. Die Prüfung ist kostenlos, läuft im Browser ohne Upload und weist jeden Fund mit seinem Box-Pfad aus.'],
+        ['Fügt Runway C2PA Content Credentials hinzu?', 'Verlassen Sie sich nicht darauf. Verlässlich sind hier unsignierte Container-Metadaten, SEI-Marker und der Dateiname. Taucht doch ein signiertes Manifest auf, stammt es meist aus einem späteren Schritt der Verarbeitungskette.'],
+        ['Warum hat die Prüfung bei meinem Clip nichts gefunden?', 'Fast immer, weil die Datei neu codiert wurde. Ein Upload zu einer Videoplattform, ein Re-Export aus dem Schnittprogramm oder eine Bildschirmaufnahme entfernt Container-Felder und SEI-Marker, während das Material gleich aussieht.'],
+        ['Werden Videos zum Prüfen hochgeladen?', 'Nein. Das Container-Parsing läuft lokal über nach WebAssembly kompiliertes Rust, und die Frame-Extraktion findet ebenfalls auf Ihrem Rechner statt.'],
+      ],
+      sources: {
+        heading: 'Quellen und Prüfprotokolle',
+        items: [
+          { href: '/data/samples.json', label: 'Öffentliche Beispieldaten von AICheck365', note: 'Welche Videobeispiele enthalten sind, ihre Herkunft, Testdaten und bekannte Grenzen.', localized: false },
+          { href: 'https://www.iso.org/standard/83102.html', label: 'ISO/IEC 14496-12 (ISO base media file format)', note: 'Der Standard hinter der MP4/MOV-Box-Struktur, die dieser Parser durchläuft.', localized: false },
+          { href: '/de/blog/how-to-detect-ai-videos/', label: 'Videoerkennungs-Guide', note: 'Container-, Bitstrom- und Frame-Ebene an einer Stelle erklärt.' },
+          { href: '/de/methodology/', label: 'Methodik von AICheck365', note: 'Wie Video-Beweisebenen, Konfidenzstufen und Grenzen definiert sind.' },
+        ],
+      },
+    },
+  },
   en: {
     sora: {
       title: 'Sora AI Detector for Existing Files: MP4 Metadata and C2PA',
