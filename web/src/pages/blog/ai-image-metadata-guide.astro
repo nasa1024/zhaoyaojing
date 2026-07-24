@@ -1,6 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
 
+const faq = [
+  { q: "AI 生成的图片，元数据到底写在哪里？", a: "分好几个位置，性质完全不同：带数字签名的来源记录在 C2PA manifest 里；工具名、软件名这类描述性信息通常在 EXIF 和 XMP 字段；提示词、种子、采样器这些生成参数写在 PNG 文本块；视频则记录在 MP4/MOV 容器和码流的 SEI 标记中。" },
+  { q: "为什么在 EXIF 里找不到提示词和生成参数？", a: "因为这些信息本来就不写在 EXIF。EXIF 是相机时代的标准，字段是为光圈、快门、ISO 这类固定项设计的，装不下多行提示词或工作流 JSON。Stable Diffusion 生态把它们写进了 PNG 文本块（tEXt/iTXt/zTXt），只解析 EXIF 的工具自然会显示为空。" },
+  { q: "有 C2PA 就等于是 AI 生成的吗？", a: "不是。C2PA 记录的是来源信息，普通相机照片同样可以带 C2PA。要看 manifest 里具体声明了什么——digitalSourceType 是否为 trainedAlgorithmicMedia，或者 claim generator 是不是生成式 AI 产品。" },
+  { q: "为什么图片转发一圈之后就查不出东西了？", a: "每一次重新编码都会丢一层。聊天软件通常先丢 PNG 文本块和大部分 XMP；社交平台转码会连 EXIF、C2PA 一起清掉；截图和录屏则完全不保留原文件的任何元数据，只留下截图工具自己写入的信息。" },
+  { q: "查不到元数据，是不是就说明不是 AI 生成的？", a: "不能这么推断。查不到只说明当前这份文件里没有可读的证据，可能从来没写入过，也可能在传播过程中被清除了。要判断的话，尽量找到最初发布的原始文件重新检查。" },
+];
+
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -24,13 +32,22 @@ const jsonLd = [
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/ai-image-metadata-guide/" },
     "author": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com/about/" },
     "publisher": { "@type": "Organization", "name": "AICheck365", "url": "https://www.aicheck365.com" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(({ q, a }) => ({
+      "@type": "Question",
+      "name": q,
+      "acceptedAnswer": { "@type": "Answer", "text": a },
+    })),
   }
 ];
 ---
 
 <Base
-  title="AI 图片元数据里藏着什么？EXIF、XMP、C2PA 逐字节拆解 | AICheck365"
-  description="AI 平台往文件里写了什么、写在哪、怎么读：EXIF UserComment 的 AIGC JSON、XMP DigitalSourceType、PNG tEXt 生成参数、MP4 ilst 与 SEI marker，全部来自检测器实现。"
+  title="AI 图片元数据怎么看？EXIF、XMP、C2PA 完整拆解 | AICheck365"
+  description="AI 平台把来源信息写在哪里、怎么读出来：EXIF/XMP 字段、C2PA 签名、PNG 文本块和 MP4 容器逐层拆解，附 ExifTool 命令与浏览器内免费查看方式。"
   canonical="https://www.aicheck365.com/blog/ai-image-metadata-guide/"
   jsonLd={jsonLd}
 >
@@ -163,6 +180,16 @@ exiftool -xmp -b image.jpg</code></pre>
         <li><a href="https://cv.iptc.org/newscodes/digitalsourcetype/" rel="noopener" target="_blank">IPTC Digital Source Type vocabulary</a>：<code>trainedAlgorithmicMedia</code> 等受控值的定义。</li>
         <li><a href="https://exiftool.org/" rel="noopener" target="_blank">ExifTool</a> 与 <a href="/research/ai-media-provenance-report-2026-q3/">AICheck365 2026 Q3 实验汇总</a>：用于复查文中的字段和真实样本结果。</li>
       </ul>
+
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        {faq.map(({ q, a }) => (
+          <details class="faq-item">
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </div>
 
       <div class="cta-box">
         <p>把你手里的图片或视频拖进来，看看里面留了哪些来源信号</p>
