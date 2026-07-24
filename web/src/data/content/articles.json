@@ -657,5 +657,45 @@
       "/ko/platforms/comfyui/",
       "/ko/methodology/"
     ]
+  },
+  {
+    "id": "what-is-c2pa-es-priority",
+    "slug": "what-is-c2pa",
+    "route": "/es/blog/what-is-c2pa/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "¿Qué es C2PA? Las Content Credentials explicadas | AICheck365",
+    "description": "C2PA es el estándar abierto tras las Content Credentials: un registro firmado de cómo se creó un archivo. Cómo funciona el manifiesto y cómo verificarlo gratis.",
+    "canonical": "https://www.aicheck365.com/es/blog/what-is-c2pa/",
+    "primaryKeyword": "qué es C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/es/blog/how-to-detect-ai-images/",
+      "/es/platforms/comfyui/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-fr-priority",
+    "slug": "what-is-c2pa",
+    "route": "/fr/blog/what-is-c2pa/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "Qu'est-ce que le C2PA ? Les Content Credentials | AICheck365",
+    "description": "Le C2PA est le standard ouvert derrière les Content Credentials : un enregistrement signé de la fabrication d'un fichier. Manifeste, vérification et limites.",
+    "canonical": "https://www.aicheck365.com/fr/blog/what-is-c2pa/",
+    "primaryKeyword": "qu'est-ce que le C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/fr/blog/how-to-detect-ai-images/",
+      "/fr/platforms/flux/",
+      "/fr/methodology/"
+    ]
   }
 ]

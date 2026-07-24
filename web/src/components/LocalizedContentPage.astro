@@ -2348,6 +2348,88 @@ const priorityArticleProfiles = {
     },
   },
   fr: {
+    'blog/what-is-c2pa': {
+      title: "Qu'est-ce que le C2PA ? Les Content Credentials",
+      description: "Le C2PA est le standard ouvert derrière les Content Credentials : un enregistrement signé de la fabrication d'un fichier. Manifeste, vérification et limites.",
+      h1: "Qu'est-ce que le C2PA ?",
+      meta: "Requête cible : qu'est-ce que le C2PA · Mis à jour : 2026-07-23 · Parser : aicheck 0.2.0",
+      updatedAt: '2026-07-23',
+      lead: "Le C2PA est un standard technique ouvert, publié par la Coalition for Content Provenance and Authenticity, qui consigne la manière dont un média a été fabriqué et attache cet enregistrement au fichier au moyen d'une signature cryptographique. Lorsqu'un produit d'Adobe, d'OpenAI ou de Google parle de Content Credentials, il s'agit du C2PA sous un nom plus accessible. Son apport mérite d'être formulé précisément : il ne détecte pas l'IA, il transporte une déclaration que l'on peut vérifier — ou démontrer rompue.",
+      directAnswer: {
+        heading: "En résumé : un enregistrement de provenance signé qui voyage dans le fichier",
+        body: "Un manifeste C2PA regroupe des assertions sur un fichier — quel outil l'a produit, quelles actions lui ont été appliquées, et quel digitalSourceType décrit la nature de la source — puis signe cet ensemble avec une empreinte du fichier lui-même. Un lecteur peut donc vérifier deux choses distinctes : si le fichier correspond encore à ce qui a été signé, et s'il fait confiance au certificat signataire. Ces deux questions ont de vraies réponses, et c'est ce qui distingue la provenance de la supposition.",
+      },
+      sampleHeading: "Échantillons fournis illustrant chaque cas",
+      sampleRows: [
+        ["JPEG Adobe Firefly", "Un échantillon de la Content Authenticity Initiative portant digitalSourceType = trainedAlgorithmicMedia. La signature est cryptographiquement valide, mais son certificat sort de la liste de confiance : le résultat s'affiche en valid plutôt qu'en trusted."],
+        ["Image OpenAI au certificat expiré", "Un autre échantillon de la CAI : l'assertion trainedAlgorithmicMedia est présente, mais le certificat signataire a expiré, la vérification échoue et l'assertion ne peut être retenue."],
+        ["MP4 Google Veo", "Montre le même mécanisme dans un conteneur vidéo : des Content Credentials Google valides, transportées par BMFF plutôt que par une image fixe."],
+      ],
+      signalRows: [
+        ["Manifeste et claim", "Le conteneur qui rassemble les assertions et la signature. Le lire indique ce que le fichier affirme sur sa propre histoire."],
+        ["digitalSourceType", "Un terme de vocabulaire contrôlé décrivant la source. trainedAlgorithmicMedia est la valeur qui signale l'IA générative."],
+        ["Claim generator", "Identifie le logiciel ayant produit l'assertion, par exemple un produit génératif d'Adobe, d'OpenAI ou de Google."],
+        ["État de signature et de confiance", "Si le manifeste se vérifie contre l'empreinte du fichier et, séparément, si son certificat remonte à une racine de confiance."],
+      ],
+      insights: [
+        {
+          heading: "Où l'enregistrement est stocké selon le type de fichier",
+          body: "Les données C2PA sont sérialisées en JUMBF, un conteneur à boîtes défini par JPEG, puis intégrées là où chaque format autorise une charge utile embarquée. C'est pourquoi la même référence survit d'un type de média à l'autre sans changer de structure :",
+          list: [
+            "JPEG : écrite dans un segment marqueur APP11, que les décodeurs ordinaires ignorent.",
+            "PNG : portée par un chunk dédié, donc à côté des données d'image plutôt qu'à l'intérieur.",
+            "MP4 et MOV : stockée dans la structure de boîtes de l'ISO base media file format, c'est ainsi que fonctionne la vidéo signée.",
+            "Étant intégrée et non référencée, la référence voyage avec le fichier — et disparaît dès que celui-ci est réécrit.",
+          ],
+        },
+        {
+          heading: "Valide n'est pas synonyme de fiable",
+          body: "Cette distinction crée plus de confusion que tout le reste du standard. Valide signifie que la cryptographie est correcte : la signature se vérifie et le fichier produit toujours l'empreinte signée, donc rien n'a été modifié depuis. Fiable est une autre question, relative au certificat : remonte-t-il à une racine figurant dans la liste utilisée par le vérificateur ? Un fichier parfaitement authentique peut apparaître valide mais non fiable simplement parce que le vérificateur ne possède pas cette racine — c'est exactement ce que démontre l'échantillon Firefly fourni. Fondre les deux en un seul badge revient à jeter l'information dont on a besoin.",
+        },
+        {
+          heading: "Ce que le C2PA ne dit pas",
+          body: "Le standard consigne des déclarations faites par le signataire ; il n'inspecte pas les pixels. Un manifeste peut indiquer qu'un filigrane invisible a été appliqué, mais lire cette phrase ne revient pas à vérifier le filigrane. De même, les références documentent l'historique d'édition aussi volontiers que la génération : un manifeste valide n'est donc pas automatiquement un constat d'IA, il faut lire ce qu'il déclare. Et comme tout ré-encodage supprime l'enregistrement, l'absence de C2PA n'apporte presque rien : elle ne permet pas de distinguer un fichier qui n'en a jamais eu d'un fichier qui l'a perdu en chemin.",
+        },
+      ],
+      steps: {
+        heading: "Vérifier soi-même un manifeste C2PA",
+        items: [
+          ["Partez du fichier d'origine", "Utilisez le téléchargement tel qu'il a quitté la plateforme. Une capture d'écran ou une copie re-téléversée a presque certainement perdu le manifeste."],
+          ["Ouvrez le validateur C2PA", "Le fichier est analysé dans votre navigateur : rien n'est envoyé pour le vérifier."],
+          ["Vérifiez d'abord l'état de la signature", "Confirmez que le manifeste se vérifie et qu'aucune erreur d'altération n'est signalée contre l'empreinte du fichier."],
+          ["Lisez ensuite l'état de confiance séparément", "Regardez si le certificat remonte à une racine de confiance, et traitez « valide mais non fiable » comme une remarque sur la chaîne, non sur l'intégrité."],
+          ["Lisez ce que le manifeste affirme réellement", "Examinez digitalSourceType, le claim generator et les actions consignées avant de conclure à une génération par IA."],
+        ],
+      },
+      limits: [
+        "Ré-encodage, captures d'écran, conversion de format et éditeurs sans prise en charge du C2PA suppriment le manifeste du fichier.",
+        "L'état de confiance dépend de la liste de certificats employée : « valide mais non fiable » est courant et non suspect.",
+        "Un manifeste peut consigner une édition plutôt qu'une génération : il faut lire ce qu'il déclare, pas le supposer.",
+        "L'absence de références ne dit rien de l'origine, car un fichier nettoyé et un fichier jamais signé sont identiques.",
+      ],
+      ctaLead: "Utilisez le validateur C2PA pour le détail du manifeste, ou le détecteur complet pour lire les références avec l'EXIF, le XMP et les paramètres PNG.",
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: "Valider un manifeste C2PA", localized: false },
+        { href: '/', label: "Lancer le détecteur complet" },
+        { href: '/fr/blog/how-to-detect-ai-images/', label: "Savoir si une image est générée par IA" },
+      ],
+      faq: [
+        ["Que signifie le sigle C2PA ?", "Coalition for Content Provenance and Authenticity, l'organisme qui publie la spécification. Content Credentials est le nom employé par les produits pour la même technologie."],
+        ["Le C2PA prouve-t-il qu'une image est générée par IA ?", "Pas à lui seul. Le C2PA documente la provenance de tout média, y compris les photographies d'appareil. Il indique une génération par IA lorsque le manifeste le déclare, généralement via digitalSourceType = trainedAlgorithmicMedia ou un claim generator génératif."],
+        ["Pourquoi un fichier valide s'affiche-t-il comme non fiable ?", "Parce que ce sont deux questions différentes. Valide signifie que la signature se vérifie et que le fichier n'a pas été altéré ; fiable signifie que le certificat remonte à une racine de la liste utilisée. Un fichier authentique peut être les deux à la fois."],
+        ["Le C2PA peut-il être retiré d'un fichier ?", "Oui, et le plus souvent par accident. Tout traitement qui réécrit le fichier — ré-encodage par une plateforme sociale, capture d'écran, conversion de format, éditeur sans prise en charge — supprime le manifeste."],
+        ["Comment vérifier le C2PA gratuitement ?", "Chargez le fichier dans le validateur C2PA de ce site. Il analyse le manifeste dans votre navigateur via du Rust compilé en WebAssembly, sans compte et sans envoi."],
+      ],
+      sources: {
+        heading: "Sources et registres de vérification",
+        items: [
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: "Spécification technique C2PA 2.2", note: "Spécification officielle des manifestes, assertions, signature et vérification.", localized: false },
+          { href: '/data/samples.json', label: "Registres publics d'échantillons AICheck365", note: "Provenance, dates de test et états observés des échantillons Firefly, OpenAI et Veo.", localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: "Content Authenticity Initiative example assets", note: "Source publique des échantillons Firefly et à certificat expiré.", localized: false },
+          { href: '/fr/methodology/', label: "Méthodologie AICheck365", note: "Comment sont rapportés l'état de signature, l'état de confiance et les niveaux de preuve." },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-videos': {
       title: "Comment savoir si une vidéo est générée par IA ?",
       description: "Vérifiez une vidéo depuis le fichier d'origine : C2PA, métadonnées du conteneur MP4/MOV, marqueurs SEI et filigranes de trames. Gratuit, sans envoyer le fichier.",
@@ -2743,6 +2825,88 @@ const priorityArticleProfiles = {
     },
   },
   es: {
+    'blog/what-is-c2pa': {
+      title: '¿Qué es C2PA? Las Content Credentials explicadas',
+      description: 'C2PA es el estándar abierto tras las Content Credentials: un registro firmado de cómo se creó un archivo. Cómo funciona el manifiesto y cómo verificarlo gratis.',
+      h1: '¿Qué es C2PA?',
+      meta: 'Consulta objetivo: qué es C2PA · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'C2PA es un estándar técnico abierto, publicado por la Coalition for Content Provenance and Authenticity, para registrar cómo se creó una pieza audiovisual y adjuntar ese registro al archivo con una firma criptográfica. Cuando ves el nombre Content Credentials en un producto de Adobe, OpenAI o Google, eso es C2PA con una etiqueta más amable. Su valor conviene enunciarlo con precisión: no detecta IA, sino que transporta una declaración que puede verificarse o demostrarse rota.',
+      directAnswer: {
+        heading: 'En resumen: un registro de procedencia firmado que viaja dentro del archivo',
+        body: 'Un manifiesto C2PA agrupa afirmaciones sobre un archivo —qué herramienta lo produjo, qué acciones se aplicaron y qué digitalSourceType describe la naturaleza de la fuente— y firma ese conjunto junto con un hash del propio archivo. Quien lo lee puede comprobar por separado dos cosas: si el archivo sigue coincidiendo con lo que se firmó, y si el certificado firmante es de su confianza. Ambas preguntas tienen respuestas reales, y eso es lo que distingue la procedencia de la conjetura.',
+      },
+      sampleHeading: 'Muestras incluidas que ilustran cada resultado',
+      sampleRows: [
+        ['JPEG de Adobe Firefly', 'Una muestra de la Content Authenticity Initiative con digitalSourceType = trainedAlgorithmicMedia. La firma es criptográficamente válida, pero su certificado queda fuera de la lista de confianza, así que el resultado se lee como válido y no como de confianza.'],
+        ['Imagen de OpenAI con certificado caducado', 'Otra muestra de la CAI: la afirmación trainedAlgorithmicMedia está presente, pero el certificado firmante ha caducado, la validación falla y la afirmación no puede sostenerse.'],
+        ['MP4 de Google Veo', 'Muestra la misma maquinaria en un contenedor de vídeo: credenciales generativas de Google válidas, transportadas por BMFF en lugar de una imagen fija.'],
+      ],
+      signalRows: [
+        ['Manifiesto y claim', 'El contenedor que guarda las afirmaciones y la firma. Leerlo indica qué sostiene el archivo sobre su propia historia.'],
+        ['digitalSourceType', 'Un término de vocabulario controlado que describe la fuente. trainedAlgorithmicMedia es el valor que señala IA generativa.'],
+        ['Claim generator', 'Identifica el software que produjo la afirmación, por ejemplo un producto generativo de Adobe, OpenAI o Google.'],
+        ['Estado de firma y de confianza', 'Si el manifiesto valida contra el hash del archivo y, por separado, si su certificado enlaza con una raíz de confianza.'],
+      ],
+      insights: [
+        {
+          heading: 'Cómo se guarda el registro en cada tipo de archivo',
+          body: 'Los datos C2PA se serializan como JUMBF, un contenedor de cajas definido por JPEG, y se incrustan allí donde cada formato permite llevar una carga adicional. Por eso la misma credencial sobrevive entre tipos de medio sin cambiar de forma:',
+          list: [
+            'JPEG: se escribe en un segmento marcador APP11, que los decodificadores corrientes se saltan.',
+            'PNG: viaja en un chunk propio, junto a los datos de imagen y no dentro de ellos.',
+            'MP4 y MOV: se almacena en la estructura de cajas del ISO base media file format, que es como funciona el vídeo firmado.',
+            'Al ir incrustada y no referenciada, la credencial viaja con el archivo — y se pierde en cuanto el archivo se reescribe.',
+          ],
+        },
+        {
+          heading: 'Válido no es lo mismo que de confianza',
+          body: 'Esta distinción causa más confusión que ninguna otra parte del estándar. Válido significa que la criptografía cuadra: la firma se verifica y el archivo sigue produciendo el hash firmado, así que nada se ha alterado desde entonces. De confianza es otra pregunta, sobre el certificado: si enlaza con una raíz de la lista que usa quien verifica. Un archivo perfectamente legítimo puede leerse como válido pero no de confianza simplemente porque el verificador no incluye esa raíz, que es exactamente lo que demuestra la muestra de Firefly. Fundir ambas cosas en una sola insignia tira la información que de verdad hace falta.',
+        },
+        {
+          heading: 'Lo que C2PA no te dice',
+          body: 'El estándar registra afirmaciones hechas por quien firma; no inspecciona los píxeles. Un manifiesto puede indicar que se aplicó una marca de agua invisible, pero leer esa frase no equivale a verificar la marca. Del mismo modo, las credenciales describen el historial de edición con la misma naturalidad que la generación, así que un manifiesto válido no es automáticamente un hallazgo de IA: hay que leer qué declara. Y como cualquier recodificación elimina el registro, la ausencia de C2PA apenas aporta información: no permite distinguir un archivo que nunca tuvo credenciales de otro que las perdió por el camino.',
+        },
+      ],
+      steps: {
+        heading: 'Verificar un manifiesto C2PA por tu cuenta',
+        items: [
+          ['Parte del archivo original', 'Usa la descarga tal como salió de la plataforma. Una captura o una copia resubida casi con seguridad ha perdido el manifiesto.'],
+          ['Abre el validador C2PA', 'El archivo se analiza en tu navegador, así que no se sube nada para verificarlo.'],
+          ['Comprueba primero si la firma valida', 'Confirma que el manifiesto se verifica y que no aparece ningún error de manipulación contra el hash del archivo.'],
+          ['Después lee el estado de confianza por separado', 'Mira si el certificado enlaza con una raíz de confianza, y trata «válido pero no de confianza» como una afirmación sobre la cadena, no sobre la integridad.'],
+          ['Lee qué afirma realmente el manifiesto', 'Revisa digitalSourceType, el claim generator y las acciones registradas antes de concluir nada sobre generación por IA.'],
+        ],
+      },
+      limits: [
+        'Recodificar, capturar pantalla, convertir de formato y editar con programas que no preservan C2PA elimina el manifiesto del archivo.',
+        'El estado de confianza depende de la lista de certificados en uso, así que los resultados «válido pero no de confianza» son rutina y no una señal sospechosa.',
+        'Un manifiesto puede registrar edición en lugar de generación: hay que leer lo que declara, no darlo por supuesto.',
+        'La ausencia de credenciales no dice nada sobre el origen, porque un archivo limpiado y otro nunca firmado son indistinguibles.',
+      ],
+      ctaLead: 'Usa el validador C2PA para el detalle del manifiesto, o el detector completo para leer las credenciales junto a EXIF, XMP y parámetros PNG.',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: 'Validar un manifiesto C2PA', localized: false },
+        { href: '/', label: 'Ejecutar el detector completo' },
+        { href: '/es/blog/how-to-detect-ai-images/', label: 'Cómo saber si una imagen es IA' },
+      ],
+      faq: [
+        ['¿Qué significan las siglas C2PA?', 'Coalition for Content Provenance and Authenticity, el organismo que publica la especificación. Content Credentials es el nombre que los productos usan para la misma tecnología.'],
+        ['¿Tener C2PA demuestra que una imagen es IA?', 'Por sí solo no. C2PA registra procedencia de cualquier contenido, incluidas fotografías de cámara. Indica generación por IA cuando el manifiesto lo declara, normalmente con digitalSourceType = trainedAlgorithmicMedia o un claim generator generativo.'],
+        ['¿Por qué un archivo válido aparece como no de confianza?', 'Porque responden a preguntas distintas. Válido significa que la firma se verifica y el archivo no se ha alterado; de confianza significa que el certificado enlaza con una raíz de la lista en uso. Un archivo legítimo puede ser ambas cosas a la vez.'],
+        ['¿Se pueden eliminar las credenciales C2PA?', 'Sí, y normalmente sin querer. Cualquier proceso que reescriba el archivo —recodificación en redes sociales, capturas, conversión de formato, editores sin soporte C2PA— descarta el manifiesto.'],
+        ['¿Cómo compruebo C2PA gratis?', 'Carga el archivo en el validador C2PA de este sitio. Analiza el manifiesto en tu navegador mediante Rust compilado a WebAssembly, sin cuenta y sin subir nada.'],
+      ],
+      sources: {
+        heading: 'Fuentes y registros de verificación',
+        items: [
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'Especificación técnica C2PA 2.2', note: 'Especificación oficial de manifiestos, assertions, firma y verificación.', localized: false },
+          { href: '/data/samples.json', label: 'Registros públicos de muestras de AICheck365', note: 'Procedencia, fechas de prueba y estados observados de las muestras Firefly, OpenAI y Veo.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Fuente pública de las muestras de Firefly y de certificado caducado.', localized: false },
+          { href: '/es/methodology/', label: 'Metodología de AICheck365', note: 'Cómo se informan el estado de firma, el de confianza y los niveles de evidencia.' },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-videos': {
       title: '¿Cómo saber si un vídeo fue creado con IA?',
       description: 'Comprueba si un vídeo es IA desde el archivo original: C2PA, metadatos del contenedor MP4/MOV, marcadores SEI y marcas de agua en fotogramas. Gratis y sin subirlo.',
