@@ -617,5 +617,45 @@
       "/ja/blog/what-is-c2pa/",
       "/ja/methodology/"
     ]
+  },
+  {
+    "id": "what-is-c2pa-de-priority",
+    "slug": "what-is-c2pa",
+    "route": "/de/blog/what-is-c2pa/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "Was ist C2PA? Content Credentials erklärt | AICheck365",
+    "description": "C2PA ist der offene Standard hinter Content Credentials: ein signierter Nachweis, wie eine Datei entstanden ist. Aufbau, Inhalt und kostenlose Prüfung im Browser.",
+    "canonical": "https://www.aicheck365.com/de/blog/what-is-c2pa/",
+    "primaryKeyword": "Was ist C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/de/blog/how-to-detect-ai-images/",
+      "/de/platforms/firefly/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-ko-priority",
+    "slug": "what-is-c2pa",
+    "route": "/ko/blog/what-is-c2pa/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "C2PA란? 콘텐츠 자격 증명과 출처 검증 완전 정리 | AICheck365",
+    "description": "C2PA는 Content Credentials의 기반이 되는 개방형 표준으로, 파일이 어떻게 만들어졌는지 서명해 기록합니다. manifest 구조와 무료 검증 방법을 정리했습니다.",
+    "canonical": "https://www.aicheck365.com/ko/blog/what-is-c2pa/",
+    "primaryKeyword": "C2PA란",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/ko/blog/how-to-detect-ai-images/",
+      "/ko/platforms/comfyui/",
+      "/ko/methodology/"
+    ]
   }
 ]
