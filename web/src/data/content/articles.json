@@ -337,5 +337,45 @@
       "/en/platforms/sora/",
       "/en/methodology/"
     ]
+  },
+  {
+    "id": "what-is-c2pa-en-priority",
+    "slug": "what-is-c2pa",
+    "route": "/en/blog/what-is-c2pa/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "What Is C2PA? Content Credentials Explained | AICheck365",
+    "description": "C2PA is the open standard behind Content Credentials: a signed record of how a file was made. How the manifest works, what it records, and how to verify one for free.",
+    "canonical": "https://www.aicheck365.com/en/blog/what-is-c2pa/",
+    "primaryKeyword": "what is C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/platforms/firefly/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-en-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/en/blog/ai-image-metadata-guide/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI Image Metadata Explained: EXIF, XMP, C2PA and PNG | AICheck365",
+    "description": "Where AI platforms write provenance data and how to read it: EXIF and XMP fields, C2PA manifests, PNG text chunks, and MP4 container metadata. Free, in your browser.",
+    "canonical": "https://www.aicheck365.com/en/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI image metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/en/blog/what-is-c2pa/",
+      "/en/methodology/"
+    ]
   }
 ]

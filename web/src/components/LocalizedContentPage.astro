@@ -1170,6 +1170,171 @@ const priorityArticleProfiles = {
         ],
       },
     },
+    'blog/what-is-c2pa': {
+      title: 'What Is C2PA? Content Credentials Explained',
+      description: 'C2PA is the open standard behind Content Credentials: a signed record of how a file was made. How the manifest works, what it records, and how to verify one for free.',
+      h1: 'What is C2PA?',
+      meta: 'Target query: what is C2PA · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'C2PA is an open technical standard, published by the Coalition for Content Provenance and Authenticity, for recording how a piece of media was made and attaching that record to the file with a cryptographic signature. When you see the name Content Credentials in an Adobe, OpenAI or Google product, that is C2PA under a friendlier label. Its value is specific and worth stating precisely: it does not detect AI, it carries a claim that can be verified or shown to have been broken.',
+      directAnswer: {
+        heading: 'Short answer: a signed provenance record travelling inside the file',
+        body: 'A C2PA manifest bundles assertions about an asset — what tool produced it, which actions were applied, and a digitalSourceType describing the nature of the source — then signs the bundle together with a hash of the asset itself. A reader can therefore check two separate things: whether the file still matches what was signed, and whether the signing certificate is one they trust. Both questions have real answers, which is what distinguishes provenance from guesswork.',
+      },
+      sampleHeading: 'Bundled samples showing each outcome',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'A Content Authenticity Initiative sample carrying digitalSourceType = trainedAlgorithmicMedia. The signature is cryptographically valid, but its certificate is outside this engine\'s trust list, so the result reads valid rather than trusted.'],
+        ['OpenAI image with an expired certificate', 'Another CAI sample: the trainedAlgorithmicMedia claim is present, but the signing certificate has expired, so validation fails and the claim cannot be relied on.'],
+        ['Google Veo MP4', 'Shows the same machinery in a video container — valid Google generative-AI credentials carried through BMFF rather than a still image.'],
+      ],
+      signalRows: [
+        ['Manifest and claim', 'The container holding assertions plus the signature. Reading it tells you what the file asserts about its own history.'],
+        ['digitalSourceType', 'A controlled vocabulary term describing the source. trainedAlgorithmicMedia is the value that indicates generative AI.'],
+        ['Claim generator', 'Identifies the software that produced the claim, such as an Adobe, OpenAI or Google generative-AI product string.'],
+        ['Signature and trust state', 'Whether the manifest validates against the asset hash, and separately whether its certificate chains to a trusted root.'],
+      ],
+      insights: [
+        {
+          heading: 'How the record is stored inside different file types',
+          body: 'C2PA data is serialised as JUMBF, a box-based container defined by JPEG, and then embedded wherever a given format allows a payload to ride along. That is why the same credential survives across media types without changing shape:',
+          list: [
+            'JPEG: written into an APP11 marker segment, which ordinary decoders skip over.',
+            'PNG: carried in a dedicated chunk, so it sits alongside the image data rather than inside it.',
+            'MP4 and MOV: stored in the ISO base media file format box structure, which is how signed video works.',
+            'Because it is embedded rather than referenced, the credential travels with the file — and is lost whenever the file is rewritten.',
+          ],
+        },
+        {
+          heading: 'Valid is not the same as trusted',
+          body: 'This distinction causes more confusion than any other part of the standard. Valid means the cryptography checks out: the signature verifies and the asset still hashes to what was signed, so nothing has been altered since. Trusted is a separate question about the certificate — whether it chains back to a root in the list the verifier happens to be using. A perfectly genuine file can read valid but untrusted simply because the verifier does not carry that root, which is exactly what the bundled Firefly sample demonstrates. Collapsing these into one badge throws away the information you need.',
+        },
+        {
+          heading: 'What C2PA does not tell you',
+          body: 'The standard records claims made by a signer; it does not independently inspect pixels. A manifest can state that an invisible watermark was applied, but reading that sentence is not the same as verifying the watermark. Equally, credentials describe editing history as readily as generation, so a valid manifest is not automatically an AI finding — you have to read what it declares. And because any re-encode drops the record, the absence of C2PA carries almost no information: it cannot distinguish a file that never had credentials from one that lost them on the way.',
+        },
+      ],
+      steps: {
+        heading: 'Verifying a C2PA manifest yourself',
+        items: [
+          ['Start from the original file', 'Use the download as it left the platform. A screenshot or re-uploaded copy has almost certainly lost the manifest.'],
+          ['Open the C2PA validator', 'The file is parsed in your browser, so nothing is uploaded to verify it.'],
+          ['Check whether the signature validates', 'Confirm the manifest verifies and that no tampering error is raised against the asset hash.'],
+          ['Read the trust state separately', 'See whether the certificate resolves to a trusted root, and treat valid-but-untrusted as a statement about the chain, not about integrity.'],
+          ['Read what the manifest actually claims', 'Look at digitalSourceType, the claim generator and the recorded actions before concluding anything about AI generation.'],
+        ],
+      },
+      limits: [
+        'Re-encoding, screenshots, format conversion and non-preserving editors remove the manifest from the file.',
+        'Trust state depends on the certificate list in use, so valid-but-untrusted results are routine rather than suspicious.',
+        'A manifest may record editing rather than generation: what it declares must be read, not assumed.',
+        'Absent credentials tell you nothing about origin, because a stripped file and a never-signed file look identical.',
+      ],
+      ctaLead: 'Use the C2PA validator for manifest detail, or run the full detector to read credentials alongside EXIF, XMP and PNG parameters.',
+      ctas: [
+        { href: '/en/tools/c2pa-validator/', label: 'Validate a C2PA manifest', localized: false },
+        { href: '/', label: 'Run the full detector' },
+        { href: '/en/platforms/firefly/', label: 'See Firefly Content Credentials', localized: false },
+      ],
+      faq: [
+        ['What does C2PA stand for?', 'The Coalition for Content Provenance and Authenticity, the standards body that publishes the specification. Content Credentials is the consumer-facing name products use for the same technology.'],
+        ['Does C2PA prove an image is AI-generated?', 'Not by itself. C2PA records provenance for any media, including ordinary camera photographs. It indicates AI generation when the manifest declares it — typically digitalSourceType = trainedAlgorithmicMedia or a generative claim generator.'],
+        ['Why does a valid file show as untrusted?', 'Because those answer different questions. Valid means the signature verifies and the asset is unaltered; trusted means the certificate chains to a root in the list being used. A genuine file can be valid and untrusted at once.'],
+        ['Can C2PA be removed from a file?', 'Yes, and usually by accident. Any process that rewrites the file — social platform re-encoding, screenshots, format conversion, editors without C2PA support — drops the manifest.'],
+        ['How can I check C2PA for free?', 'Load the file into the C2PA validator here. It parses the manifest in your browser through Rust compiled to WebAssembly, with no account and no upload.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Official specification for manifests, assertions, signing and verification.', localized: false },
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Provenance, test dates and observed states for the Firefly, OpenAI and Veo samples.', localized: false },
+          { href: 'https://github.com/contentauth/example-assets', label: 'Content Authenticity Initiative example assets', note: 'Public source of the Firefly and expired-certificate samples.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How signature state, trust state and evidence tiers are reported.', localized: false },
+        ],
+      },
+    },
+    'blog/ai-image-metadata-guide': {
+      title: 'AI Image Metadata Explained: EXIF, XMP, C2PA and PNG',
+      description: 'Where AI platforms write provenance data and how to read it: EXIF and XMP fields, C2PA manifests, PNG text chunks, and MP4 container metadata. Free, in your browser.',
+      h1: 'AI image metadata: where the evidence is actually written',
+      meta: 'Target query: AI image metadata · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Metadata is not one place but several, and knowing which is which decides how much a finding is worth. An image or video can carry a signed C2PA manifest, descriptive EXIF and XMP fields, PNG text chunks holding generation parameters, and container-level entries in MP4 or MOV. They differ in what they record, how easily they are edited, and how quickly they vanish when a file is shared. This guide walks through each layer as the parser reads it.',
+      directAnswer: {
+        heading: 'Short answer: signed provenance first, descriptive fields second',
+        body: 'Read a C2PA manifest before anything else, because it is the only layer whose integrity can be checked cryptographically. Then read EXIF and XMP, where platform names and AI labels often appear but can be rewritten by anyone. PNG text chunks are where the Stable Diffusion ecosystem stores prompts and workflows. Container metadata does the equivalent job for video. Everything below the signature is a clue rather than a proof.',
+      },
+      sampleHeading: 'Samples behind each layer',
+      sampleRows: [
+        ['Adobe Firefly JPEG', 'The signed layer: a valid C2PA manifest declaring digitalSourceType = trainedAlgorithmicMedia, reported as valid rather than trusted because its certificate is outside the trust list.'],
+        ['ComfyUI / Stable Diffusion XL PNG', 'The PNG text layer: prompt and workflow chunks holding node graph and generation parameters, none of it signed.'],
+        ['Google Veo MP4', 'The container layer: credentials and tool fields carried inside the ISO base media box structure rather than an image marker.'],
+      ],
+      signalRows: [
+        ['EXIF', 'A camera-era standard. Software, Artist and UserComment sometimes carry a tool name or a JSON AI label, and a wholesale absence of camera fields is itself mildly informative.'],
+        ['XMP', 'Adobe\'s XML metadata. CreatorTool, Credit and DigitalSourceType are the fields most likely to name a generator when the original export survives.'],
+        ['C2PA', 'The signed layer, serialised as JUMBF and embedded per format: an APP11 segment in JPEG, a dedicated chunk in PNG, a box in MP4.'],
+        ['PNG text chunks', 'tEXt, iTXt and zTXt hold free-form key/value text, which is why prompts, seeds, samplers and full workflow JSON end up here rather than in EXIF.'],
+        ['MP4 / MOV container', 'ftyp brand, the box tree, udta/meta/ilst, encoder, tool and software entries, plus AIGC strings and SEI markers in the bitstream.'],
+      ],
+      insights: [
+        {
+          heading: 'Why generation parameters live outside EXIF',
+          body: 'EXIF was designed for cameras: fixed tags for exposure, aperture, ISO and lens. A prompt, a seed and a serialised node graph do not fit that shape, so the Stable Diffusion ecosystem writes them into PNG text chunks instead, which accept arbitrary key/value strings. This is the single most common misunderstanding in the area — searches for "ComfyUI EXIF" or "PNG info" are almost always looking for text chunks, not camera tags. The practical upshot is that you need a reader that inspects both regions, because a tool that only parses EXIF will report an empty result on a file that is full of readable evidence.',
+        },
+        {
+          heading: 'How quickly each layer disappears',
+          body: 'The layers are not equally fragile, and knowing the order helps you interpret an empty result:',
+          list: [
+            'Chat apps: PNG text chunks go first, along with most XMP fields and EXIF GPS data.',
+            'Social platform transcoding: EXIF, the C2PA manifest, XMP CreatorTool and every generation parameter are typically gone.',
+            'Screenshots and screen recordings: nothing of the original survives; you get the capture tool\'s own metadata instead.',
+            'Re-export or save-as: provenance fields are dropped, and new software may write unrelated EXIF over the top.',
+          ],
+        },
+        {
+          heading: 'Reading metadata without handing over the file',
+          body: 'Metadata inspection is a read-only operation on bytes you already have, so there is no technical reason to upload anything. AICheck365 parses EXIF, XMP, C2PA, PNG chunks and MP4 boxes locally through Rust compiled to WebAssembly, which keeps working documents and personal photographs on your own machine. It also means results appear without a round trip, and that large video files are bounded by your hardware rather than an upload limit.',
+        },
+      ],
+      steps: {
+        heading: 'Reading a file layer by layer',
+        items: [
+          ['Work from the original', 'Use the file as exported by the tool or downloaded from the platform, since every later copy loses layers.'],
+          ['Check the signed layer first', 'Look for a C2PA manifest and read its signature state, trust state and declared digitalSourceType before anything else.'],
+          ['Read EXIF and XMP', 'Check Software, CreatorTool, Credit, DigitalSourceType and UserComment for tool names or AI labels, remembering these are unsigned.'],
+          ['Open PNG text chunks', 'For PNG files, read tEXt/iTXt/zTXt for prompt, seed, sampler, CFG, model and any workflow JSON.'],
+          ['For video, walk the container', 'Read ftyp, the box tree and udta/meta/ilst for encoder and tool fields, then look for SEI markers in the bitstream.'],
+        ],
+      },
+      limits: [
+        'Everything except a signed C2PA manifest can be edited, removed or copied onto an unrelated file.',
+        'Sharing, transcoding, screenshots and re-exports strip these layers at different rates, usually starting with PNG text.',
+        'An absence of metadata is not evidence of human authorship — it only means this copy carries nothing readable.',
+        'Field names vary between tools and versions, so not every value can be normalised into a tidy label.',
+      ],
+      ctaLead: 'Run the full detector to read every layer at once, or open a specific tool when you already know which layer you need.',
+      ctas: [
+        { href: '/', label: 'Read every layer at once' },
+        { href: '/en/tools/exif-xmp-reader/', label: 'Open the EXIF/XMP reader', localized: false },
+        { href: '/en/tools/png-parameter-extractor/', label: 'Extract PNG parameters', localized: false },
+      ],
+      faq: [
+        ['Where do AI tools write their metadata?', 'It depends on the tool and the format. Signed provenance goes into a C2PA manifest, descriptive tool names into EXIF and XMP, generation parameters and workflows into PNG text chunks, and video-level details into the MP4 or MOV container.'],
+        ['Why is there no AI information in the EXIF?', 'Because most generation parameters are not stored there. EXIF holds camera-oriented tags, while prompts, seeds and workflows are written into PNG text chunks, which a reader has to inspect separately.'],
+        ['Can AI metadata be faked?', 'Every layer except a valid C2PA signature can be edited or copied between files. That is precisely why signature and trust state are reported separately from descriptive fields.'],
+        ['Is reading metadata online safe?', 'Here it never leaves your device: parsing runs in your browser, so no upload is involved and nothing is retained.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Sample provenance, test dates, observed signals and known limits.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Standard reference for PNG chunks and the text chunk formats.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Manifest structure and how credentials are embedded per format.', localized: false },
+          { href: 'https://www.iso.org/standard/83102.html', label: 'ISO/IEC 14496-12 (ISO base media file format)', note: 'The box structure behind MP4 and MOV container metadata.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How each layer is weighted and reported.', localized: false },
+        ],
+      },
+    },
     'blog/how-to-detect-ai-videos': {
       title: 'How to Check If a Video Is AI-Generated',
       description: 'Check whether a video is AI-generated from the original MP4/MOV: C2PA, container metadata, SEI markers, and sampled frame watermarks. Free and local to your browser.',
