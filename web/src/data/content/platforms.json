@@ -459,5 +459,45 @@
       "/de/platforms/sora/",
       "/de/methodology/"
     ]
+  },
+  {
+    "id": "comfyui-es-priority",
+    "slug": "comfyui",
+    "route": "/es/platforms/comfyui/",
+    "locale": "es",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI: leer prompt y workflow del PNG | AICheck365",
+    "description": "Lee los metadatos de ComfyUI en tu navegador: bloques de texto PNG con prompt y workflow JSON, modelo, seed, sampler y CFG. Gratis y sin subir el archivo.",
+    "canonical": "https://www.aicheck365.com/es/platforms/comfyui/",
+    "primaryKeyword": "metadatos ComfyUI",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/es/blog/ai-image-metadata-guide/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "flux-fr-priority",
+    "slug": "flux",
+    "route": "/fr/platforms/flux/",
+    "locale": "fr",
+    "pageType": "platform",
+    "platform": "Flux (BFL)",
+    "title": "FLUX : lire les métadonnées PNG, XMP et workflow | AICheck365",
+    "description": "Lisez les preuves de génération d'une image FLUX : blocs de texte PNG avec prompt et workflow, champs XMP d'outil et filigranes de trames. Gratuit, sans envoi.",
+    "canonical": "https://www.aicheck365.com/fr/platforms/flux/",
+    "primaryKeyword": "métadonnées FLUX",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/fr/blog/ai-image-metadata-guide/",
+      "/fr/blog/how-to-detect-ai-images/",
+      "/fr/methodology/"
+    ]
   }
 ]

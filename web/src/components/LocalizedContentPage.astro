@@ -648,6 +648,143 @@ function platformMetaDescription(name) {
 }
 
 const priorityPlatformProfiles = {
+  es: {
+    comfyui: {
+      title: 'ComfyUI: leer prompt y workflow del PNG',
+      description: 'Lee los metadatos de ComfyUI en tu navegador: bloques de texto PNG con prompt y workflow JSON, modelo, seed, sampler y CFG. Gratis y sin subir el archivo.',
+      h1: 'ComfyUI: los datos están en el texto PNG, no en el EXIF',
+      meta: 'Consulta objetivo: metadatos ComfyUI · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Mucha gente busca «ComfyUI EXIF», pero la información de generación que guarda ComfyUI no está en las etiquetas EXIF de cámara: vive en los bloques de texto tEXt/iTXt/zTXt del PNG, como prompt y workflow JSON. Con el PNG original tal como lo exportó la herramienta puedes leer el grafo de nodos, el nombre del checkpoint, seed, sampler, scheduler, steps, CFG y las dimensiones, todo dentro del navegador.',
+      directAnswer: {
+        heading: 'En resumen: la información de ComfyUI está en los text chunks del PNG',
+        body: 'Abre primero los chunks prompt o workflow del PNG original. Si conservan valor, podrás leer el JSON del workflow y los ajustes de generación. Ten en cuenta que estos datos no son una credencial firmada y se pueden modificar; y que su ausencia tampoco significa que la imagen no se hiciera con ComfyUI.',
+      },
+      sampleHeading: 'Muestra incluida y resultado verificado',
+      sampleRows: [
+        ['PNG de ComfyUI / Stable Diffusion XL', 'Un original del repositorio oficial de ejemplos de ComfyUI, incluido aquí y reproducible desde la lista de muestras.'],
+        ['Resultado verificado', 'Se detectan los chunks de texto prompt y workflow, el JSON completo sin firmar, el grafo de nodos y los parámetros de generación.'],
+        ['Nivel de evidencia', 'El workflow explica bien la procedencia, pero al carecer de firma criptográfica se marca como evidencia de apoyo con menor confianza.'],
+      ],
+      signalRows: [
+        ['Chunk prompt', 'Puede contener class_type de los nodos, sus entradas, el modelo y los parámetros de generación serializados como JSON.'],
+        ['Chunk workflow', 'Es el grafo de ComfyUI con sus nodos y conexiones. Si el original está intacto, a menudo se puede volver a cargar en ComfyUI.'],
+        ['Modelo y ajustes de muestreo', 'Nombre del checkpoint, sampler, scheduler, steps, CFG, seed, ancho y alto, dentro de lo que el archivo conserve.'],
+        ['Texto PNG en bruto', 'Se preservan los valores originales de tEXt/iTXt/zTXt para buscar, copiar o exportar como JSON. Pueden incluir prompts que conviene revisar antes de compartir.'],
+      ],
+      insights: [
+        {
+          heading: 'Por qué no es EXIF',
+          body: 'EXIF se diseñó para cámaras y tiene etiquetas fijas de exposición, apertura, ISO y objetivo. Un prompt de varias líneas o un grafo de nodos serializado no caben ahí, así que el ecosistema los escribe en los bloques de texto que define la especificación PNG, donde caben cadenas clave/valor arbitrarias. Por eso una herramienta que solo lea EXIF devolverá un resultado vacío sobre un archivo lleno de evidencia legible: está mirando en el sitio equivocado.',
+        },
+        {
+          heading: '¿Se pierde al enviarlo por WhatsApp o subirlo a redes?',
+          body: 'Sí, con frecuencia. WhatsApp, Instagram, Telegram y los optimizadores de imágenes recomprimen el PNG y suelen eliminar los chunks tEXt/iTXt/zTXt en el proceso. Convertir a JPEG o hacer una captura de pantalla también borra el workflow. Que el resultado salga vacío no significa que no se hiciera con ComfyUI, así que conviene pedir el PNG original a quien lo generó.',
+        },
+      ],
+      steps: {
+        heading: 'Cómo leer los metadatos de un PNG de ComfyUI',
+        items: [
+          ['Consigue el PNG original', 'Usa el archivo exportado directamente por ComfyUI, no una captura ni una copia recomprimida.'],
+          ['Abre el extractor de parámetros PNG', 'El archivo se procesa en tu navegador y no se sube a ningún servidor.'],
+          ['Revisa el resumen de prompt y workflow', 'Comprueba número de nodos, primer class_type, nombre del modelo, seed, sampler, CFG y dimensiones.'],
+          ['Consulta el JSON en bruto si hace falta', 'Los workflows grandes aparecen plegados. Antes de compartir, revisa si incluyen prompts, rutas de archivo o nodos personalizados.'],
+          ['Pondera la fuerza de la evidencia', 'La presencia del workflow respalda un origen del ecosistema ComfyUI, pero no verifica manipulación como sí hace una firma C2PA.'],
+        ],
+      },
+      limits: [
+        'El workflow y el prompt del PNG no están firmados: se pueden editar o copiar a otro archivo.',
+        'Mensajería, redes sociales, optimizadores y capturas de pantalla suelen eliminar los bloques de texto PNG.',
+        'No encontrar workflow no permite concluir que la imagen sea humana o no generada.',
+        'No todos los campos de nodos y extensiones personalizadas pueden normalizarse en etiquetas legibles.',
+      ],
+      ctaLead: 'Empieza por el extractor de parámetros y workflow PNG; usa el lector auxiliar cuando necesites los campos EXIF/XMP reales.',
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: 'Extraer workflow y parámetros PNG', localized: false },
+        { href: '/en/tools/exif-xmp-reader/', label: 'Comprobar también EXIF/XMP', localized: false },
+        { href: '/es/blog/ai-image-metadata-guide/', label: 'Guía de metadatos de imágenes IA' },
+      ],
+      faq: [
+        ['¿Cómo compruebo los metadatos de ComfyUI?', 'Carga el PNG original en el extractor de parámetros. Lee los chunks de texto —los mismos datos que muestra PNG Info— gratis, en tu navegador y sin subir el archivo.'],
+        ['¿Los metadatos de ComfyUI son realmente EXIF?', 'En la mayoría de casos no. La información de generación se guarda en los bloques de texto del PNG, como prompt y workflow JSON, un área distinta de los campos EXIF de cámara.'],
+        ['¿Se puede recuperar el workflow completo?', 'A menudo sí, si el chunk workflow se escribió y se conservó. Aun así, los nodos personalizados y los modelos externos pueden requerir instalación aparte.'],
+        ['¿Por qué tiene menos confianza que C2PA?', 'Porque el workflow de ComfyUI no suele estar firmado y puede modificarse. Es una pista de procedencia, no una prueba resistente a manipulación.'],
+        ['¿Se sube mi imagen?', 'No. El análisis se ejecuta localmente en tu navegador.'],
+      ],
+      sources: {
+        heading: 'Fuentes y registros de verificación',
+        items: [
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'Ejemplos oficiales de ComfyUI', note: 'Origen de la muestra SDXL descrita en esta página.', localized: false },
+          { href: '/data/samples.json', label: 'Registros públicos de muestras de AICheck365', note: 'Origen de las muestras, fechas de prueba, señales reales y límites.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Referencia estándar de los chunks PNG y los bloques de texto.', localized: false },
+          { href: '/es/methodology/', label: 'Metodología de AICheck365', note: 'Diferencia entre evidencia firmada y metadatos editables.' },
+        ],
+      },
+    },
+  },
+  fr: {
+    flux: {
+      title: 'FLUX : lire les métadonnées PNG, XMP et workflow',
+      description: "Lisez les preuves de génération d'une image FLUX : blocs de texte PNG avec prompt et workflow, champs XMP d'outil et filigranes de trames. Gratuit, sans envoi.",
+      h1: 'FLUX : la preuve se trouve dans le texte PNG',
+      meta: 'Requête cible : métadonnées FLUX · Mis à jour : 2026-07-23 · Parser : aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: "FLUX est le plus souvent exécuté à travers les mêmes interfaces que le reste de l'écosystème à poids ouverts, et c'est cela qui détermine où atterrissent ses preuves : des blocs de texte PNG contenant un prompt ou un workflow sérialisé, parfois des champs XMP d'outil, et — pour la vidéo — une vérification au niveau des trames en dernier recours. AICheck365 lit tout cela dans votre navigateur et indique à quelle convention d'interface chaque bloc correspond.",
+      directAnswer: {
+        heading: 'En résumé : lisez les blocs de texte PNG, pas l’EXIF',
+        body: "Ouvrez le PNG d'origine et lisez ses blocs tEXt/iTXt/zTXt. Une clé parameters suit la convention AUTOMATIC1111 ; des clés prompt et workflow indiquent ComfyUI et portent le graphe de nœuds en JSON, ce qui correspond à la plupart des pipelines FLUX. Des champs XMP peuvent aussi nommer un outil. Rien de tout cela n'est signé : cela explique bien la provenance sans la prouver.",
+      },
+      sampleHeading: "État des échantillons et profil de preuve",
+      sampleRows: [
+        ["Échantillon FLUX", "Pas encore fourni. Cette page n'affirme pas avoir reproduit un test FLUX tant qu'un original sous licence ne peut être publié avec les autres échantillons."],
+        ["Échantillon apparenté fourni", "Un PNG ComfyUI / Stable Diffusion XL est inclus et emprunte exactement les mêmes chemins de blocs prompt et workflow que les pipelines FLUX."],
+        ["Niveau de preuve", "Métadonnées descriptives non signées : une bonne explication de la fabrication de l'image, mais sans la résistance à l'altération d'une signature C2PA."],
+      ],
+      signalRows: [
+        ["Blocs de texte PNG", "tEXt, iTXt et zTXt portent le prompt, les réglages de génération ou un workflow JSON complet selon l'interface qui a écrit le fichier."],
+        ["Workflow JSON", "Quand un graphe de type ComfyUI est conservé, la structure des nœuds, les noms de modèles et les réglages d'échantillonnage sont lisibles et souvent réimportables."],
+        ["XMP / EXIF", "Les champs d'outil et de logiciel nomment parfois la pile de génération. Corroboration utile, non signée et modifiable."],
+        ["Filigranes de trames", "Pour la vidéo, des trames échantillonnées sont comparées à des motifs connus quand le conteneur ne donne rien. Ce n'est pas un classifieur IA généraliste."],
+      ],
+      insights: [
+        {
+          heading: "Pourquoi l'interface compte plus que le modèle",
+          body: "Quel modèle a produit une image et quelle application a écrit le fichier sont deux questions distinctes, et seule la seconde détermine ce qu'on peut relire. Des poids FLUX pilotés par ComfyUI laissent un bloc workflow ; les mêmes poids via une interface hébergée peuvent ne rien laisser du tout, car la convention d'écriture appartient à l'interface et non au modèle. Une image FLUX sans paramètres lisibles n'a donc rien d'anormal : le plus souvent, le pipeline ne les a simplement pas écrits.",
+        },
+        {
+          heading: "Ce qui détruit ces blocs",
+          body: "Les blocs de texte survivent à une copie mais rarement à un ré-encodage, et les cas d'échec sont prévisibles : convertir un PNG en JPEG les supprime purement et simplement, puisque le JPEG n'a pas de conteneur équivalent ; les réseaux sociaux et les messageries ré-encodent les envois et les perdent au passage ; une capture d'écran fabrique un nouveau fichier à partir des pixels, sans aucun texte d'origine. Copier ou déplacer le fichier, ou le déposer là où il est stocké tel quel, préserve tout.",
+        },
+      ],
+      limits: [
+        "Les blocs de texte PNG et les champs XMP ne sont pas signés : ils peuvent être modifiés, supprimés ou copiés sur une autre image.",
+        "La conversion en JPEG, le ré-encodage sur les réseaux sociaux et les captures d'écran les détruisent.",
+        "Aucun échantillon FLUX n'est encore publié, cette page décrit donc la couverture des champs et non un résultat reproduit.",
+        "Ne trouver aucun paramètre ne signifie pas que l'image n'a pas été générée, seulement que cette copie n'en conserve pas.",
+      ],
+      ctaLead: "Utilisez l'extracteur de paramètres PNG pour les prompts et workflows ; lancez le détecteur complet pour vérifier aussi le C2PA et l'EXIF/XMP.",
+      ctas: [
+        { href: '/en/tools/png-parameter-extractor/', label: "Extraire les paramètres et le workflow PNG", localized: false },
+        { href: '/', label: "Lancer le détecteur complet" },
+        { href: '/fr/blog/ai-image-metadata-guide/', label: "Guide des métadonnées d'images IA" },
+      ],
+      faq: [
+        ["Comment lire les paramètres de génération FLUX ?", "Chargez le PNG d'origine dans l'extracteur de paramètres. Il lit les blocs tEXt/iTXt/zTXt dans votre navigateur, gratuitement et sans envoyer le fichier, et indique la convention d'interface suivie."],
+        ["Pourquoi mon image FLUX n'a-t-elle aucune métadonnée ?", "Le plus souvent parce que l'interface n'en a jamais écrit, ou parce que le fichier a été ré-encodé. Les interfaces hébergées omettent fréquemment les blocs de génération, et une conversion en JPEG ou une publication sur les réseaux efface ce qui existait."],
+        ["Les métadonnées PNG prouvent-elles qu'une image est générée par IA ?", "C'est une explication solide, pas une preuve. Ces blocs ne portent aucune signature et peuvent être modifiés ou copiés d'un fichier à l'autre, contrairement à un manifeste C2PA valide."],
+        ["Mes images sont-elles envoyées ?", "Non. L'analyse s'exécute localement dans votre navigateur, vos prompts et workflows restent sur votre appareil."],
+      ],
+      sources: {
+        heading: "Sources et registres de vérification",
+        items: [
+          { href: '/data/samples.json', label: "Registres publics d'échantillons AICheck365", note: "Quels échantillons sont fournis, leur provenance, dates de test et limites connues.", localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: "W3C PNG Third Edition", note: "Référence standard des chunks PNG et des formats tEXt/iTXt/zTXt.", localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: "Exemples officiels ComfyUI", note: "Source du PNG SDXL qui emprunte les mêmes chemins de blocs.", localized: false },
+          { href: '/fr/methodology/', label: "Méthodologie AICheck365", note: "Comment les métadonnées non signées sont pondérées face à une provenance signée." },
+        ],
+      },
+    },
+  },
   'zh-TW': {
     imagen: {
       title: 'Google Imagen 檢測：C2PA 內容憑證怎麼查',
