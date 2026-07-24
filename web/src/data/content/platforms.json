@@ -299,5 +299,45 @@
       "/ja/platforms/comfyui/",
       "/ja/methodology/"
     ]
+  },
+  {
+    "id": "imagen-en-priority",
+    "slug": "imagen",
+    "route": "/en/platforms/imagen/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Google Imagen",
+    "title": "Google Imagen Check: C2PA Content Credentials | AICheck365",
+    "description": "Check Google Imagen files for Content Credentials: C2PA manifest, digitalSourceType, Google claim generator and XMP fields. Read locally in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/imagen/",
+    "primaryKeyword": "Imagen C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/gemini/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "flux-en-priority",
+    "slug": "flux",
+    "route": "/en/platforms/flux/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Flux (BFL)",
+    "title": "FLUX Metadata Check: PNG Text, XMP and Workflow | AICheck365",
+    "description": "Check FLUX images for generation evidence: PNG text chunks with prompt and workflow, XMP tool fields, and frame watermarks. Free in your browser, without uploading.",
+    "canonical": "https://www.aicheck365.com/en/platforms/flux/",
+    "primaryKeyword": "FLUX metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/platforms/comfyui/",
+      "/en/blog/ai-image-metadata-guide/",
+      "/en/methodology/"
+    ]
   }
 ]

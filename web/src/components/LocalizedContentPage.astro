@@ -786,6 +786,128 @@ const priorityPlatformProfiles = {
         ],
       },
     },
+    imagen: {
+      title: 'Google Imagen Check: C2PA Content Credentials',
+      description: 'Check Google Imagen files for Content Credentials: C2PA manifest, digitalSourceType, Google claim generator and XMP fields. Read locally in your browser, no upload.',
+      h1: 'Google Imagen check: reading the credential, not the pixels',
+      meta: 'Target query: Imagen C2PA · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'Imagen output travels through the same provenance machinery as the rest of Google\'s generative stack, so the useful evidence is a C2PA manifest rather than anything visible in the picture. AICheck365 parses that manifest in your browser and reports the signature state, the trust state and the declared source type separately — because a credential that exists is a different finding from one that verifies.',
+      directAnswer: {
+        heading: 'Short answer: check digitalSourceType, then check the certificate',
+        body: 'Look for a manifest declaring digitalSourceType = trainedAlgorithmicMedia or a Google generative claim generator. Then read the certificate independently: valid and trusted is the strong case, valid but untrusted is routine and says nothing bad about the file. XMP fields carrying Google AI strings corroborate the manifest but are unsigned and editable on their own.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled Imagen image sample', 'Not bundled yet. This page does not claim a reproduced Imagen test until a licensed original can be published alongside the other samples.'],
+        ['Google Veo MP4', 'A Google generative-AI video sample is bundled with valid Google C2PA. It validates the Google credential path in a video container rather than Imagen image coverage.'],
+        ['Fields worth inspecting', 'digitalSourceType = trainedAlgorithmicMedia, claim_generator_info, Google / Imagen strings, and the provenance chunk inside an original PNG.'],
+      ],
+      signalRows: [
+        ['C2PA Content Credentials', 'Strongest when a valid manifest declares trainedAlgorithmicMedia or a Google generative claim generator. Signature and trust state are reported apart.'],
+        ['PNG provenance chunk / JUMBF', 'Where the credential physically lives in an original PNG. Ordinary viewers skip those bytes, which is why the data appears to be missing.'],
+        ['XMP / EXIF', 'Credit, CreatorTool, Software and Google AI strings support the manifest but carry no signature.'],
+        ['File name', 'Platform-style download names are context only and change the moment the file is renamed.'],
+      ],
+      insights: [
+        {
+          heading: 'Why Imagen and Gemini findings look alike',
+          body: 'Both sit inside Google\'s generative stack, so both tend to produce manifests with the same shape: a trainedAlgorithmicMedia source type and a Google claim generator string. What differs is the product surface a file came through and, with it, whether credentials were attached at all and in which format. That is why the practical advice is identical for both — go back to the original download rather than inferring from the picture, and read the claim generator to see which product actually signed it.',
+        },
+        {
+          heading: 'A credential that verifies is worth more than one that merely exists',
+          body: 'Provenance tooling is often summarised as "does it have C2PA", but that question is too coarse to act on. A manifest can be present and still fail validation because its certificate expired, or verify cleanly while its certificate sits outside the trust list you happen to be using. Those three states — verified, unverifiable, untrusted-but-intact — call for different responses, so they are reported separately here instead of being collapsed into a single badge.',
+        },
+      ],
+      limits: [
+        'Screenshots, chat-app copies and social re-encodes usually remove the C2PA manifest and XMP data entirely.',
+        'Whether credentials are present varies with product entry point, file format and export path.',
+        'No bundled Imagen sample is published yet, so this page describes field coverage rather than a reproduced result.',
+        'No signal found means this copy carries no readable evidence — it is not a conclusion about origin.',
+      ],
+      ctaLead: 'Use the C2PA validator for manifest detail; the EXIF/XMP reader covers the supporting fields.',
+      ctas: [
+        { href: '/tools/c2pa-validator/', label: 'Validate the C2PA manifest' },
+        { href: '/tools/exif-xmp-reader/', label: 'Inspect EXIF/XMP fields' },
+        { href: '/platforms/gemini/', label: 'Compare with Gemini signals' },
+      ],
+      faq: [
+        ['Does Google Imagen add C2PA?', 'Google is among the platforms attaching Content Credentials to generative output, but presence depends on the product entry point, format and export path, and later processing can remove them. Check the original download.'],
+        ['What is the strongest Imagen signal?', 'A valid manifest declaring digitalSourceType = trainedAlgorithmicMedia, or a Google generative claim generator — materially stronger than an XMP string or a file name.'],
+        ['Why does a valid file read as untrusted?', 'Valid means the signature verifies and the file is unaltered; trusted means the certificate chains to a root in the list being used. A genuine file can be both at once.'],
+        ['Is my file uploaded?', 'No. The manifest and metadata are parsed locally in your browser.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Which Google samples are bundled, their provenance, test dates and known limits.', localized: false },
+          { href: 'https://spec.c2pa.org/specifications/specifications/2.2/index.html', label: 'C2PA Technical Specification 2.2', note: 'Manifest structure, assertions and signature verification.', localized: false },
+          { href: 'https://cv.iptc.org/newscodes/digitalsourcetype/', label: 'IPTC Digital Source Type vocabulary', note: 'Definitions of controlled values such as trainedAlgorithmicMedia.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How claims, signatures and evidence tiers are reported.', localized: false },
+        ],
+      },
+    },
+    flux: {
+      title: 'FLUX Metadata Check: PNG Text, XMP and Workflow',
+      description: 'Check FLUX images for generation evidence: PNG text chunks with prompt and workflow, XMP tool fields, and frame watermarks. Free in your browser, without uploading.',
+      h1: 'FLUX metadata check: the evidence sits in PNG text',
+      meta: 'Target query: FLUX metadata · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-07-23',
+      lead: 'FLUX is usually run through the same front-ends as the rest of the open-weights ecosystem, which decides where its evidence ends up: PNG text chunks holding a prompt or a serialised workflow, sometimes XMP tool fields, and — for video output — frame-level checks as a fallback. AICheck365 reads all of those in your browser and labels which front-end convention each chunk follows.',
+      directAnswer: {
+        heading: 'Short answer: read the PNG text chunks, not the EXIF',
+        body: 'Open the original PNG and read its tEXt/iTXt/zTXt chunks. A parameters key follows the AUTOMATIC1111 convention; prompt and workflow keys indicate ComfyUI and carry the node graph as JSON, which is how most FLUX pipelines are driven. XMP fields may name a tool as well. None of this is signed, so it explains provenance well without proving it.',
+      },
+      sampleHeading: 'Sample status and evidence profile',
+      sampleRows: [
+        ['Bundled FLUX sample', 'Not bundled yet. This page does not claim a reproduced FLUX test until a licensed original can be published alongside the other samples.'],
+        ['Related bundled image', 'A ComfyUI / Stable Diffusion XL PNG is included and exercises exactly the same prompt and workflow chunk paths that FLUX pipelines write to.'],
+        ['Evidence level', 'Unsigned descriptive metadata: a strong explanation of how the image was produced, but not tamper-evident the way a C2PA signature is.'],
+      ],
+      signalRows: [
+        ['PNG text chunks', 'tEXt, iTXt and zTXt carry the prompt, generation settings or a full workflow JSON depending on which front-end wrote the file.'],
+        ['Workflow JSON', 'When a ComfyUI-style graph is preserved, node structure, model names and sampling settings can be read and often re-imported.'],
+        ['XMP / EXIF', 'Tool and software fields sometimes name the generating stack. Useful corroboration, unsigned and editable.'],
+        ['Frame watermarks', 'For video output, sampled frames are compared against known patterns when the container yields nothing. Not a general AI classifier.'],
+      ],
+      insights: [
+        {
+          heading: 'Why the front-end matters more than the model',
+          body: 'Which model produced an image and which application wrote the file are separate questions, and only the second one determines what you can read back. FLUX weights driven through ComfyUI leave a workflow chunk; the same weights driven through a hosted interface may leave nothing at all, because the writing convention belongs to the front-end rather than the model. So a FLUX image with no readable parameters is unremarkable — it usually means the pipeline did not write them, not that something was hidden.',
+        },
+        {
+          heading: 'What destroys these chunks',
+          body: 'Text chunks survive copying but rarely re-encoding, and the failure modes are predictable: converting PNG to JPEG discards them outright since JPEG has no equivalent container, social platforms and messaging apps re-encode uploads and drop them along the way, and a screenshot produces a new file from pixels with none of the original text. Copying or moving the file, or uploading somewhere that stores it verbatim, preserves everything.',
+        },
+      ],
+      limits: [
+        'PNG text chunks and XMP fields are unsigned: they can be edited, removed or copied onto an unrelated image.',
+        'Converting to JPEG, re-encoding on social platforms and taking screenshots all destroy them.',
+        'No bundled FLUX sample is published yet, so this page describes field coverage rather than a reproduced result.',
+        'Finding no parameters does not mean the image was not generated — only that this copy carries none.',
+      ],
+      ctaLead: 'Use the PNG parameter extractor for prompts and workflows; run the full detector when you also want C2PA and EXIF/XMP checked.',
+      ctas: [
+        { href: '/tools/png-parameter-extractor/', label: 'Extract PNG parameters and workflow' },
+        { href: '/platforms/comfyui/', label: 'Compare ComfyUI workflow signals' },
+        { href: '/', label: 'Run the full detector' },
+      ],
+      faq: [
+        ['How do I read FLUX generation parameters?', 'Load the original PNG into the parameter extractor here. It reads the tEXt/iTXt/zTXt chunks in your browser, free and without uploading the file, and labels which front-end convention the chunk follows.'],
+        ['Why does my FLUX image have no metadata?', 'Most often because the front-end never wrote any, or because the file was re-encoded. Hosted interfaces frequently omit generation chunks entirely, and converting to JPEG or posting to social media removes whatever was there.'],
+        ['Is PNG metadata proof that an image is AI-generated?', 'It is a strong explanation but not proof. These chunks carry no signature, so they can be edited or copied between files — unlike a valid C2PA manifest, which is tamper-evident.'],
+        ['Are my images uploaded?', 'No. Parsing runs locally in your browser, so prompts and workflows stay on your device.'],
+      ],
+      sources: {
+        heading: 'Sources and verification records',
+        items: [
+          { href: '/data/samples.json', label: 'AICheck365 public sample records', note: 'Which samples are bundled, their provenance, test dates and known limits.', localized: false },
+          { href: 'https://www.w3.org/TR/png-3/', label: 'W3C PNG Third Edition', note: 'Standard reference for PNG chunks and the tEXt/iTXt/zTXt formats.', localized: false },
+          { href: 'https://github.com/comfyanonymous/ComfyUI_examples', label: 'Official ComfyUI examples', note: 'Source of the bundled SDXL PNG that exercises the same chunk paths.', localized: false },
+          { href: '/en/methodology/', label: 'AICheck365 methodology', note: 'How unsigned metadata is weighted against signed provenance.', localized: false },
+        ],
+      },
+    },
     runway: {
       title: 'Runway Video Check: Container Metadata and Frames',
       description: 'Check Runway video files for AI-origin signals: MP4/MOV container metadata, SEI markers, file-name patterns and sampled frame watermarks. Free, local to your browser.',
