@@ -121,7 +121,19 @@ function walkFiles(dir, predicate) {
   return files;
 }
 
-function normalizeMetaTitle(value) {
+const BRAND_DESCRIPTOR = {
+  'zh-CN': 'AI 图片视频检测',
+  'zh-TW': 'AI 圖片影片檢測',
+  en: 'AI Media Detector',
+  ja: 'AI画像・動画検出',
+  ko: 'AI 이미지·영상 검출',
+  de: 'KI-Medienerkennung',
+  fr: 'Détecteur de médias IA',
+  es: 'Detector de medios IA',
+  'pt-BR': 'Detector de mídia de IA',
+};
+
+function normalizeMetaTitle(value, lang) {
   let normalized = value;
   if (value.length > 70) {
     normalized = value
@@ -146,9 +158,24 @@ function normalizeMetaTitle(value) {
   if (normalized.length > 70) {
     normalized = `${normalized.slice(0, 67).replace(/\s+\S*$/, '')}...`;
   }
-  if (normalized.length < 30 && !normalized.includes('AICheck365 AI')) {
-    const expanded = normalized.replace(' | AICheck365', ' | AICheck365 AI Media Detector');
-    return expanded.length < 30 ? `${expanded} | AI Media` : expanded;
+  // Short titles get the brand descriptor appended so the SERP entry is not a
+  // bare label. The descriptor has to be localized: CJK titles are short by
+  // character count almost by definition, so a hardcoded English descriptor
+  // ended up on Japanese, Korean and Chinese pages.
+  const descriptor = BRAND_DESCRIPTOR[lang] ?? BRAND_DESCRIPTOR.en;
+  // A title that already names the brand does not need the brand suffix too:
+  // "Sobre o AICheck365 | AICheck365" reads as a duplication in the SERP.
+  if (normalized.endsWith(' | AICheck365') && normalized.slice(0, -13).includes('AICheck365')) {
+    normalized = `${normalized.slice(0, -13)} | ${descriptor}`;
+  }
+  if (normalized.length < 30 && !normalized.includes(descriptor)) {
+    const [head] = normalized.split(' | AICheck365');
+    // Titles that already name the brand only need the descriptor, otherwise
+    // the SERP entry reads "About AICheck365 | AICheck365 AI Media Detector".
+    const suffix = head.includes('AICheck365') ? descriptor : `AICheck365 ${descriptor}`;
+    return normalized.includes(' | AICheck365')
+      ? normalized.replace(' | AICheck365', ` | ${suffix}`)
+      : `${normalized} | ${suffix}`;
   }
   return normalized;
 }
@@ -471,7 +498,7 @@ for (const page of pages) {
     continue;
   }
 
-  const expectedTitle = normalizeMetaTitle(page.title);
+  const expectedTitle = normalizeMetaTitle(page.title, page.locale);
   const expectedDescription = normalizeMetaDescription(page.description);
   if (builtPage.title !== expectedTitle) fail(`${page.id}: title mismatch. expected "${expectedTitle}", got "${builtPage.title}"`);
   if (builtPage.description !== expectedDescription) fail(`${page.id}: description mismatch. expected "${expectedDescription}", got "${builtPage.description}"`);
