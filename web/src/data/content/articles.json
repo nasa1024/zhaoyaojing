@@ -12,7 +12,12 @@
     "primaryKeyword": "AI 图片视频检测知识库",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/blog/how-to-detect-ai-videos/", "/blog/how-to-detect-ai-images/", "/blog/what-is-c2pa/", "/blog/ai-image-metadata-guide/"]
+    "internalLinks": [
+      "/blog/how-to-detect-ai-videos/",
+      "/blog/how-to-detect-ai-images/",
+      "/blog/what-is-c2pa/",
+      "/blog/ai-image-metadata-guide/"
+    ]
   },
   {
     "id": "ai-image-metadata-guide-zh",
@@ -21,13 +26,18 @@
     "locale": "zh-CN",
     "pageType": "article",
     "topic": "metadata",
-    "title": "AI 图片元数据里藏着什么？EXIF、XMP、C2PA 逐字节拆解 | AICheck365",
-    "description": "AI 平台往文件里写了什么、写在哪、怎么读：EXIF UserComment 的 AIGC JSON、XMP DigitalSourceType、PNG tEXt 生成参数、MP4 ilst 与 SEI marker，全部来自检测器实现。",
+    "title": "AI 图片元数据怎么看？EXIF、XMP、C2PA 完整拆解 | AICheck365",
+    "description": "AI 平台把来源信息写在哪里、怎么读出来：EXIF/XMP 字段、C2PA 签名、PNG 文本块和 MP4 容器逐层拆解，附 ExifTool 命令与浏览器内免费查看方式。",
     "canonical": "https://www.aicheck365.com/blog/ai-image-metadata-guide/",
     "primaryKeyword": "AI 媒体元数据",
     "draft": false,
-    "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/mp4-metadata-inspector/", "/platforms/stable-diffusion/"]
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/tools/mp4-metadata-inspector/",
+      "/platforms/stable-diffusion/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-zh",
@@ -42,7 +52,12 @@
     "primaryKeyword": "如何判断图片是否 AI 生成",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/c2pa-validator/", "/platforms/"]
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/tools/c2pa-validator/",
+      "/platforms/"
+    ]
   },
   {
     "id": "how-to-detect-ai-videos-zh",
@@ -57,7 +72,12 @@
     "primaryKeyword": "如何检测 AI 生成视频",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/platforms/sora/", "/platforms/kling/"]
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/platforms/sora/",
+      "/platforms/kling/"
+    ]
   },
   {
     "id": "gemini-generated-images-zh",
@@ -72,7 +92,12 @@
     "primaryKeyword": "检测 Gemini 生成图片",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/platforms/gemini/", "/platforms/imagen/", "/tools/c2pa-validator/", "/tools/exif-xmp-reader/"]
+    "internalLinks": [
+      "/platforms/gemini/",
+      "/platforms/imagen/",
+      "/tools/c2pa-validator/",
+      "/tools/exif-xmp-reader/"
+    ]
   },
   {
     "id": "what-is-c2pa-zh",
@@ -87,7 +112,12 @@
     "primaryKeyword": "C2PA 是什么",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/c2pa-validator/", "/platforms/dall-e/", "/platforms/firefly/", "/methodology/"]
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/platforms/dall-e/",
+      "/platforms/firefly/",
+      "/methodology/"
+    ]
   },
   {
     "id": "videoerkennung-de-priority",
@@ -102,7 +132,12 @@
     "primaryKeyword": "Videoerkennung AI",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/de/platforms/sora/", "/de/platforms/kling/"]
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/de/platforms/sora/",
+      "/de/platforms/kling/"
+    ]
   },
   {
     "id": "identificar-imagens-ia-pt-br-priority",
@@ -111,13 +146,18 @@
     "locale": "pt-BR",
     "pageType": "article",
     "topic": "ai-image-detection",
-    "title": "Como identificar imagens geradas por IA em 2026: metadados, C2PA e PNG | AICheck365",
+    "title": "Como identificar imagens geradas por IA em 2026 | AICheck365",
     "description": "Guia prático em português do Brasil para identificar imagens geradas por IA em 2026 usando EXIF/XMP, C2PA, parâmetros PNG, amostras reais e limites claros.",
     "canonical": "https://www.aicheck365.com/pt-BR/blog/how-to-detect-ai-images/",
     "primaryKeyword": "como identificar imagens geradas por IA",
     "draft": false,
-    "updatedAt": "2026-06-21",
-    "internalLinks": ["/tools/exif-xmp-reader/", "/tools/png-parameter-extractor/", "/tools/c2pa-validator/", "/pt-BR/platforms/gemini/"]
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/tools/c2pa-validator/",
+      "/pt-BR/platforms/gemini/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-ja-priority",
@@ -132,7 +172,12 @@
     "primaryKeyword": "AI画像 見分け方",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/ja/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/ja/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-videos-ja-priority",
@@ -147,7 +192,12 @@
     "primaryKeyword": "AI生成動画 見分け方",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/ja/platforms/sora/", "/ja/methodology/"]
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/ja/platforms/sora/",
+      "/ja/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-zh-tw-priority",
@@ -162,7 +212,12 @@
     "primaryKeyword": "AI 圖片辨識",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/tools/png-parameter-extractor/", "/zh-TW/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/zh-TW/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-videos-zh-tw-priority",
@@ -172,12 +227,17 @@
     "pageType": "article",
     "topic": "ai-video-detection",
     "title": "如何判斷 AI 生成影片？MP4 Metadata、C2PA 與影格浮水印實測 | AICheck365",
-    "description": "從原始 MP4/MOV 依序檢查 C2PA、容器 metadata、SEI marker、檔名與抽樣影格浮水印，並用 Google Veo 真實樣本說明證據強弱。",
+    "description": "免費 AI 影片檢測：在瀏覽器本機依序檢查 C2PA、MP4/MOV 容器 metadata、SEI marker 與影格浮水印，用 Google Veo 真實樣本說明證據強弱，不上傳檔案。",
     "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-videos/",
     "primaryKeyword": "AI 影片檢測",
     "draft": false,
-    "updatedAt": "2026-07-10",
-    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/zh-TW/platforms/sora/", "/zh-TW/methodology/"]
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/zh-TW/platforms/sora/",
+      "/zh-TW/methodology/"
+    ]
   },
   {
     "id": "what-is-c2pa-ja-priority",
@@ -192,7 +252,12 @@
     "primaryKeyword": "C2PAとは",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/ja/blog/how-to-detect-ai-images/", "/ja/platforms/gemini/", "/ja/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/ja/blog/how-to-detect-ai-images/",
+      "/ja/platforms/gemini/",
+      "/ja/methodology/"
+    ]
   },
   {
     "id": "how-to-detect-ai-images-es-priority",
@@ -207,6 +272,650 @@
     "primaryKeyword": "cómo saber si una imagen es IA",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/png-parameter-extractor/", "/es/methodology/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-images-ko-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/ko/blog/how-to-detect-ai-images/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "AI 사진인지 확인하는 방법: C2PA·EXIF·PNG 메타데이터 | AICheck365",
+    "description": "AI 생성 이미지 판별 방법을 단계별로 정리했습니다. 원본 파일의 C2PA 서명, EXIF/XMP, PNG 생성 파라미터를 브라우저에서 무료로 확인하고, 증거의 강약과 한계까지 설명합니다.",
+    "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "AI 사진인지 확인하는 방법",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/ko/blog/how-to-detect-ai-videos/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-images-en-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/en/blog/how-to-detect-ai-images/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "How to Tell If an Image Is AI-Generated | AICheck365",
+    "description": "Check whether an image is AI-generated by reading what the file still carries: C2PA Content Credentials, EXIF/XMP, and PNG generation parameters. Free, in your browser.",
+    "canonical": "https://www.aicheck365.com/en/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "how to tell if an image is AI-generated",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-en-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/en/blog/how-to-detect-ai-videos/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "How to Check If a Video Is AI-Generated | AICheck365",
+    "description": "Check whether a video is AI-generated from the original MP4/MOV: C2PA, container metadata, SEI markers, and sampled frame watermarks. Free and local to your browser.",
+    "canonical": "https://www.aicheck365.com/en/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "how to check if a video is AI-generated",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/en/platforms/sora/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-en-priority",
+    "slug": "what-is-c2pa",
+    "route": "/en/blog/what-is-c2pa/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "What Is C2PA? Content Credentials Explained | AICheck365",
+    "description": "C2PA is the open standard behind Content Credentials: a signed record of how a file was made. How the manifest works, what it records, and how to verify one for free.",
+    "canonical": "https://www.aicheck365.com/en/blog/what-is-c2pa/",
+    "primaryKeyword": "what is C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/platforms/firefly/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-en-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/en/blog/ai-image-metadata-guide/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI Image Metadata Explained: EXIF, XMP, C2PA and PNG | AICheck365",
+    "description": "Where AI platforms write provenance data and how to read it: EXIF and XMP fields, C2PA manifests, PNG text chunks, and MP4 container metadata. Free, in your browser.",
+    "canonical": "https://www.aicheck365.com/en/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI image metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/en/blog/what-is-c2pa/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-en-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/en/blog/how-to-detect-gemini-generated-images/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "How to Check If a Gemini Image Is AI-Generated | AICheck365",
+    "description": "Check Gemini and Google AI files for C2PA Content Credentials, digitalSourceType, claim generator strings and XMP fields — read locally in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/gemini/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-ko-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/ko/blog/how-to-detect-ai-videos/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "AI 영상 판독기: MP4 메타데이터·C2PA·워터마크 확인 | AICheck365",
+    "description": "AI 생성 영상인지 확인하는 방법. 원본 MP4/MOV의 C2PA, 컨테이너 메타데이터, SEI marker, 프레임 워터마크를 브라우저에서 무료로 확인합니다. 업로드 없음.",
+    "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "AI 영상 판독기",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/ko/blog/how-to-detect-ai-images/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-zh-tw-priority",
+    "slug": "what-is-c2pa",
+    "route": "/zh-TW/blog/what-is-c2pa/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "C2PA 是什麼？AI 內容憑證與來源驗證完整解析 | AICheck365",
+    "description": "C2PA 是記錄內容來源的國際標準，也就是 Content Credentials。拆解 manifest 結構、簽章與信任狀態的差別，以及如何在瀏覽器免費驗證，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/what-is-c2pa/",
+    "primaryKeyword": "C2PA 是什麼",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/zh-TW/blog/how-to-detect-ai-images/",
+      "/zh-TW/platforms/firefly/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "ki-bilder-erkennen-de-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/de/blog/how-to-detect-ai-images/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "KI-Bilder erkennen: C2PA, EXIF und PNG-Daten prüfen | AICheck365",
+    "description": "KI-Bilder erkennen, ohne zu raten: Originaldatei auf C2PA Content Credentials, EXIF/XMP-Felder und PNG-Generierungsparameter prüfen — kostenlos im Browser, ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "KI-Bilder erkennen",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/tools/png-parameter-extractor/",
+      "/de/blog/how-to-detect-ai-videos/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-es-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/es/blog/how-to-detect-ai-videos/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "¿Cómo saber si un vídeo fue creado con IA? | AICheck365",
+    "description": "Comprueba si un vídeo es IA desde el archivo original: C2PA, metadatos del contenedor MP4/MOV, marcadores SEI y marcas de agua en fotogramas. Gratis y sin subirlo.",
+    "canonical": "https://www.aicheck365.com/es/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "cómo saber si un vídeo es IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/es/blog/how-to-detect-ai-images/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-zh-tw-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/zh-TW/blog/ai-image-metadata-guide/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI 圖片 Metadata 怎麼看？EXIF、XMP、C2PA 拆解 | AICheck365",
+    "description": "AI 平台把來源資訊寫在哪裡、怎麼讀出來：EXIF/XMP 欄位、C2PA 簽章、PNG 文字區塊與 MP4 容器逐層拆解，在瀏覽器本機免費查看，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI 圖片 metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/zh-TW/blog/what-is-c2pa/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-images-fr-priority",
+    "slug": "how-to-detect-ai-images",
+    "route": "/fr/blog/how-to-detect-ai-images/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "ai-image-detection",
+    "title": "Comment savoir si une image est générée par IA ? | AICheck365",
+    "description": "Vérifiez si une image est générée par IA à partir du fichier d'origine : Content Credentials C2PA, champs EXIF/XMP et paramètres PNG. Gratuit, dans votre navigateur.",
+    "canonical": "https://www.aicheck365.com/fr/blog/how-to-detect-ai-images/",
+    "primaryKeyword": "comment savoir si une image est générée par IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/png-parameter-extractor/",
+      "/fr/blog/how-to-detect-ai-videos/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-ja-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/ja/blog/how-to-detect-gemini-generated-images/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Gemini生成画像の見分け方：C2PAとSynthIDの違い | AICheck365",
+    "description": "Gemini・Google AIの画像がAI生成かを確認する手順。C2PA manifest、digitalSourceType、claim generator、XMPをブラウザ内で無料解析。SynthIDとの違いも解説。",
+    "canonical": "https://www.aicheck365.com/ja/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini 生成画像 見分け方",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/platforms/gemini/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-fr-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/fr/blog/how-to-detect-ai-videos/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "Comment savoir si une vidéo est générée par IA ? | AICheck365",
+    "description": "Vérifiez une vidéo depuis le fichier d'origine : C2PA, métadonnées du conteneur MP4/MOV, marqueurs SEI et filigranes de trames. Gratuit, sans envoyer le fichier.",
+    "canonical": "https://www.aicheck365.com/fr/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "comment savoir si une vidéo est générée par IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/fr/blog/how-to-detect-ai-images/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-pt-br-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/pt-BR/blog/how-to-detect-gemini-generated-images/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Como saber se uma imagem foi gerada pelo Gemini | AICheck365",
+    "description": "Verifique arquivos do Gemini e do Google AI pelas Content Credentials C2PA: digitalSourceType, claim generator e campos XMP, lidos no seu navegador e sem upload.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/tools/exif-xmp-reader/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "how-to-detect-ai-videos-pt-br-priority",
+    "slug": "how-to-detect-ai-videos",
+    "route": "/pt-BR/blog/how-to-detect-ai-videos/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "ai-video-detection",
+    "title": "Como saber se um vídeo foi gerado por IA | AICheck365",
+    "description": "Verifique um vídeo pelo arquivo original: C2PA, metadados do contêiner MP4/MOV, marcadores SEI e marcas d'água em quadros. Gratuito e sem enviar o arquivo.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/how-to-detect-ai-videos/",
+    "primaryKeyword": "como saber se um vídeo é IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-ja-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/ja/blog/ai-image-metadata-guide/",
+    "locale": "ja",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI画像のメタデータ解説：EXIF・XMP・C2PA・PNG | AICheck365",
+    "description": "AIプラットフォームが来歴情報をどこに書き、どう読むか。EXIF/XMPフィールド、C2PA manifest、PNGテキストチャンク、MP4コンテナを層ごとに解説。ブラウザ内で無料。",
+    "canonical": "https://www.aicheck365.com/ja/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI画像 メタデータ",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/ja/blog/what-is-c2pa/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-de-priority",
+    "slug": "what-is-c2pa",
+    "route": "/de/blog/what-is-c2pa/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "Was ist C2PA? Content Credentials erklärt | AICheck365",
+    "description": "C2PA ist der offene Standard hinter Content Credentials: ein signierter Nachweis, wie eine Datei entstanden ist. Aufbau, Inhalt und kostenlose Prüfung im Browser.",
+    "canonical": "https://www.aicheck365.com/de/blog/what-is-c2pa/",
+    "primaryKeyword": "Was ist C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/de/blog/how-to-detect-ai-images/",
+      "/de/platforms/firefly/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-ko-priority",
+    "slug": "what-is-c2pa",
+    "route": "/ko/blog/what-is-c2pa/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "C2PA란? 콘텐츠 자격 증명과 출처 검증 완전 정리 | AICheck365",
+    "description": "C2PA는 Content Credentials의 기반이 되는 개방형 표준으로, 파일이 어떻게 만들어졌는지 서명해 기록합니다. manifest 구조와 무료 검증 방법을 정리했습니다.",
+    "canonical": "https://www.aicheck365.com/ko/blog/what-is-c2pa/",
+    "primaryKeyword": "C2PA란",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/ko/blog/how-to-detect-ai-images/",
+      "/ko/platforms/comfyui/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-es-priority",
+    "slug": "what-is-c2pa",
+    "route": "/es/blog/what-is-c2pa/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "¿Qué es C2PA? Las Content Credentials explicadas | AICheck365",
+    "description": "C2PA es el estándar abierto tras las Content Credentials: un registro firmado de cómo se creó un archivo. Cómo funciona el manifiesto y cómo verificarlo gratis.",
+    "canonical": "https://www.aicheck365.com/es/blog/what-is-c2pa/",
+    "primaryKeyword": "qué es C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/es/blog/how-to-detect-ai-images/",
+      "/es/platforms/comfyui/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-fr-priority",
+    "slug": "what-is-c2pa",
+    "route": "/fr/blog/what-is-c2pa/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "Qu'est-ce que le C2PA ? Les Content Credentials | AICheck365",
+    "description": "Le C2PA est le standard ouvert derrière les Content Credentials : un enregistrement signé de la fabrication d'un fichier. Manifeste, vérification et limites.",
+    "canonical": "https://www.aicheck365.com/fr/blog/what-is-c2pa/",
+    "primaryKeyword": "qu'est-ce que le C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/fr/blog/how-to-detect-ai-images/",
+      "/fr/platforms/flux/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-es-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/es/blog/ai-image-metadata-guide/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Metadatos de imágenes IA: EXIF, XMP, C2PA y PNG | AICheck365",
+    "description": "Dónde escriben los datos de procedencia las plataformas de IA y cómo leerlos: campos EXIF/XMP, manifiestos C2PA, textos PNG y metadatos MP4. Gratis, en tu navegador.",
+    "canonical": "https://www.aicheck365.com/es/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "metadatos de imágenes IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/es/blog/what-is-c2pa/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-fr-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/fr/blog/ai-image-metadata-guide/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Métadonnées des images IA : EXIF, XMP, C2PA et PNG | AICheck365",
+    "description": "Où les plateformes d'IA inscrivent les données de provenance et comment les lire : champs EXIF/XMP, manifestes C2PA, textes PNG et métadonnées MP4. Gratuit, en local.",
+    "canonical": "https://www.aicheck365.com/fr/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "métadonnées images IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/fr/blog/what-is-c2pa/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-de-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/de/blog/ai-image-metadata-guide/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Metadaten von KI-Bildern: EXIF, XMP, C2PA und PNG | AICheck365",
+    "description": "Wo KI-Plattformen Herkunftsdaten hinterlegen und wie man sie liest: EXIF/XMP-Felder, C2PA-Manifeste, PNG-Textblöcke und MP4-Metadaten. Kostenlos, im Browser.",
+    "canonical": "https://www.aicheck365.com/de/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "Metadaten KI-Bilder",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/de/blog/what-is-c2pa/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-ko-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/ko/blog/ai-image-metadata-guide/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "AI 이미지 메타데이터: EXIF·XMP·C2PA·PNG 정리 | AICheck365",
+    "description": "AI 플랫폼이 출처 정보를 어디에 쓰고 어떻게 읽는지 정리했습니다. EXIF/XMP 필드, C2PA manifest, PNG 텍스트 청크, MP4 컨테이너를 층별로 설명합니다.",
+    "canonical": "https://www.aicheck365.com/ko/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "AI 이미지 메타데이터",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/tools/png-parameter-extractor/",
+      "/ko/blog/what-is-c2pa/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-es-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/es/blog/how-to-detect-gemini-generated-images/",
+    "locale": "es",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "¿Cómo saber si una imagen la generó Gemini? | AICheck365",
+    "description": "Comprueba archivos de Gemini y Google AI por sus Content Credentials C2PA: digitalSourceType, claim generator y campos XMP, leídos en tu navegador y sin subirlos.",
+    "canonical": "https://www.aicheck365.com/es/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/es/blog/what-is-c2pa/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-fr-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/fr/blog/how-to-detect-gemini-generated-images/",
+    "locale": "fr",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Comment savoir si une image vient de Gemini ? | AICheck365",
+    "description": "Vérifiez les fichiers Gemini et Google AI par leurs Content Credentials C2PA : digitalSourceType, claim generator et champs XMP, lus dans votre navigateur, sans envoi.",
+    "canonical": "https://www.aicheck365.com/fr/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/fr/blog/what-is-c2pa/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "what-is-c2pa-pt-br-priority",
+    "slug": "what-is-c2pa",
+    "route": "/pt-BR/blog/what-is-c2pa/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "c2pa",
+    "title": "O que é C2PA? As Content Credentials explicadas | AICheck365",
+    "description": "C2PA é o padrão aberto por trás das Content Credentials: um registro assinado de como um arquivo foi feito. Como o manifesto funciona e como verificá-lo de graça.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/what-is-c2pa/",
+    "primaryKeyword": "o que é C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/platforms/gemini/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "ai-image-metadata-guide-pt-br-priority",
+    "slug": "ai-image-metadata-guide",
+    "route": "/pt-BR/blog/ai-image-metadata-guide/",
+    "locale": "pt-BR",
+    "pageType": "article",
+    "topic": "metadata",
+    "title": "Metadados de imagens de IA: EXIF, XMP, C2PA e PNG | AICheck365",
+    "description": "Onde as plataformas de IA gravam dados de proveniência e como lê-los: campos EXIF/XMP, manifestos C2PA, textos PNG e metadados MP4. De graça, no seu navegador.",
+    "canonical": "https://www.aicheck365.com/pt-BR/blog/ai-image-metadata-guide/",
+    "primaryKeyword": "metadados de imagens de IA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/exif-xmp-reader/",
+      "/tools/png-parameter-extractor/",
+      "/pt-BR/blog/what-is-c2pa/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-zh-tw-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/zh-TW/blog/how-to-detect-gemini-generated-images/",
+    "locale": "zh-TW",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "如何判斷圖片是不是 Gemini 生成？C2PA 實測 | AICheck365",
+    "description": "用 C2PA Content Credentials 檢查 Gemini 與 Google AI 檔案：digitalSourceType、claim generator 與 XMP 欄位，在瀏覽器本機讀取，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/blog/what-is-c2pa/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-ko-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/ko/blog/how-to-detect-gemini-generated-images/",
+    "locale": "ko",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Gemini 생성 이미지 판별: C2PA와 SynthID 차이 | AICheck365",
+    "description": "Gemini와 Google AI 파일을 C2PA Content Credentials로 확인하는 방법. digitalSourceType, claim generator, XMP 필드를 브라우저에서 무료로 읽습니다. 업로드 없음.",
+    "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/blog/what-is-c2pa/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-generated-images-de-priority",
+    "slug": "how-to-detect-gemini-generated-images",
+    "route": "/de/blog/how-to-detect-gemini-generated-images/",
+    "locale": "de",
+    "pageType": "article",
+    "topic": "gemini",
+    "title": "Gemini-Bilder erkennen: C2PA und SynthID im Vergleich | AICheck365",
+    "description": "Gemini- und Google-AI-Dateien über C2PA Content Credentials prüfen: digitalSourceType, Claim Generator und XMP-Felder, gelesen im Browser und ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/blog/how-to-detect-gemini-generated-images/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/c2pa-validator/",
+      "/tools/exif-xmp-reader/",
+      "/de/blog/what-is-c2pa/",
+      "/de/methodology/"
+    ]
   }
 ]

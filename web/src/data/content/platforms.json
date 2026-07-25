@@ -12,7 +12,13 @@
     "primaryKeyword": "AI 图片视频平台检测指南",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/platforms/sora/", "/platforms/gemini/", "/platforms/comfyui/", "/platforms/stable-diffusion/", "/tools/"]
+    "internalLinks": [
+      "/platforms/sora/",
+      "/platforms/gemini/",
+      "/platforms/comfyui/",
+      "/platforms/stable-diffusion/",
+      "/tools/"
+    ]
   },
   {
     "id": "sora-zh-priority",
@@ -27,7 +33,12 @@
     "primaryKeyword": "Sora AI 视频检测",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/tools/mp4-metadata-inspector/", "/tools/c2pa-validator/", "/research/ai-media-provenance-report-2026-q3/", "/platforms/dall-e/"]
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/tools/c2pa-validator/",
+      "/research/ai-media-provenance-report-2026-q3/",
+      "/platforms/dall-e/"
+    ]
   },
   {
     "id": "sora-en-priority",
@@ -36,13 +47,18 @@
     "locale": "en",
     "pageType": "platform",
     "platform": "Sora",
-    "title": "Sora AI Detector for Existing Files: MP4 Metadata and C2PA | AICheck365",
+    "title": "Sora AI Detector: MP4 Metadata and C2PA Checks | AICheck365",
     "description": "Inspect existing and archived Sora MP4/MOV files for C2PA, container metadata, SEI markers, file-name clues, and frame watermarks after Sora Web/App ended.",
     "canonical": "https://www.aicheck365.com/en/platforms/sora/",
     "primaryKeyword": "Sora AI detector for existing files",
     "draft": false,
     "updatedAt": "2026-07-10",
-    "internalLinks": ["/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/en/blog/how-to-detect-ai-videos/", "/en/platforms/kling/"]
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/tools/c2pa-validator/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/platforms/kling/"
+    ]
   },
   {
     "id": "gemini-en-priority",
@@ -57,7 +73,12 @@
     "primaryKeyword": "gemini scanner",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/en/tools/c2pa-validator/", "/en/tools/exif-xmp-reader/", "/en/platforms/imagen/", "/en/blog/how-to-detect-gemini-generated-images/"]
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/imagen/",
+      "/en/blog/how-to-detect-gemini-generated-images/"
+    ]
   },
   {
     "id": "comfyui-en-priority",
@@ -66,13 +87,18 @@
     "locale": "en",
     "pageType": "platform",
     "platform": "ComfyUI",
-    "title": "ComfyUI EXIF and Metadata Viewer: Extract PNG Workflow JSON | AICheck365",
+    "title": "ComfyUI EXIF and Metadata Viewer: Extract Workflow JSON | AICheck365",
     "description": "Inspect original ComfyUI PNG files for prompt, workflow JSON, node graph data, Stable Diffusion parameters, model names, seed, sampler, CFG, and dimensions.",
     "canonical": "https://www.aicheck365.com/en/platforms/comfyui/",
     "primaryKeyword": "ComfyUI EXIF",
     "draft": false,
     "updatedAt": "2026-06-21",
-    "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/en/platforms/stable-diffusion/", "/en/blog/ai-image-metadata-guide/"]
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/stable-diffusion/",
+      "/en/blog/ai-image-metadata-guide/"
+    ]
   },
   {
     "id": "comfyui-ko-priority",
@@ -87,6 +113,611 @@
     "primaryKeyword": "comfyui exif 확인",
     "draft": false,
     "updatedAt": "2026-07-23",
-    "internalLinks": ["/en/tools/png-parameter-extractor/", "/en/tools/exif-xmp-reader/", "/ko/platforms/stable-diffusion/", "/ko/methodology/"]
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/platforms/stable-diffusion/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-ja-priority",
+    "slug": "comfyui",
+    "route": "/ja/platforms/comfyui/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUIのメタデータ抽出：PNG workflowとEXIFの確認方法 | AICheck365",
+    "description": "ComfyUIが生成したPNGからprompt・workflow JSON・モデル名・seed・sampler・CFGをブラウザ内で無料で抽出。アップロード不要で、EXIFとの違いも解説します。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI メタデータ 抽出",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/platforms/stable-diffusion/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-en-priority",
+    "slug": "midjourney",
+    "route": "/en/platforms/midjourney/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney Scanner: Check XMP, IPTC and File-Name Clues | AICheck365",
+    "description": "Scan Midjourney images for the provenance clues that survive: XMP and IPTC tool fields, AI system strings and file-name patterns. Runs free in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/midjourney/",
+    "primaryKeyword": "midjourney scanner",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/platforms/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "firefly-en-priority",
+    "slug": "firefly",
+    "route": "/en/platforms/firefly/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Adobe Firefly",
+    "title": "Adobe Firefly Content Credentials: Verify C2PA in Files | AICheck365",
+    "description": "Check Adobe Firefly files for Content Credentials: C2PA manifest, signature and trust state, digitalSourceType and XMP fields — verified against a real Firefly sample.",
+    "canonical": "https://www.aicheck365.com/en/platforms/firefly/",
+    "primaryKeyword": "adobe firefly content credentials",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/what-is-c2pa/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "stable-diffusion-en-priority",
+    "slug": "stable-diffusion",
+    "route": "/en/platforms/stable-diffusion/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Stable Diffusion",
+    "title": "Stable Diffusion PNG Info: Read Prompts and Parameters | AICheck365",
+    "description": "Read Stable Diffusion PNG info in your browser: the parameters chunk from A1111, ComfyUI prompt and workflow JSON, and NovelAI metadata. Free, with no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/stable-diffusion/",
+    "primaryKeyword": "png info stable diffusion",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/platforms/comfyui/",
+      "/en/blog/ai-image-metadata-guide/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "gemini-ja-priority",
+    "slug": "gemini",
+    "route": "/ja/platforms/gemini/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Gemini",
+    "title": "Gemini画像の判定：C2PAとdigitalSourceTypeを確認 | AICheck365",
+    "description": "GeminiやGoogle AIの画像・動画をC2PA Content Credentialsで確認。digitalSourceType、claim generator、XMPフィールドをブラウザ内で無料解析。アップロード不要。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/gemini/",
+    "primaryKeyword": "Gemini C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/blog/what-is-c2pa/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "dall-e-en-priority",
+    "slug": "dall-e",
+    "route": "/en/platforms/dall-e/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "DALL-E / GPT Image",
+    "title": "DALL-E C2PA Check: Read OpenAI Content Credentials | AICheck365",
+    "description": "Check DALL-E and GPT Image files for OpenAI Content Credentials: C2PA manifest, signature and certificate state, digitalSourceType and XMP. Free, in your browser.",
+    "canonical": "https://www.aicheck365.com/en/platforms/dall-e/",
+    "primaryKeyword": "DALL-E C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/what-is-c2pa/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "kling-en-priority",
+    "slug": "kling",
+    "route": "/en/platforms/kling/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Kling",
+    "title": "Kling AI Video Check: MP4 Metadata and Frame Marks | AICheck365",
+    "description": "Check Kling video files for AI-origin signals: MP4/MOV container metadata, AIGC labels, SEI markers and sampled frame watermarks. Free, in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/kling/",
+    "primaryKeyword": "Kling AI detector",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/platforms/sora/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "runway-en-priority",
+    "slug": "runway",
+    "route": "/en/platforms/runway/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Runway",
+    "title": "Runway Video Check: Container Metadata and Frames | AICheck365",
+    "description": "Check Runway video files for AI-origin signals: MP4/MOV container metadata, SEI markers, file-name patterns and sampled frame watermarks. Free, local to your browser.",
+    "canonical": "https://www.aicheck365.com/en/platforms/runway/",
+    "primaryKeyword": "Runway AI video detection",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/en/blog/how-to-detect-ai-videos/",
+      "/en/platforms/kling/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-ja-priority",
+    "slug": "midjourney",
+    "route": "/ja/platforms/midjourney/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney画像の判定：XMPとIPTC、ファイル名 | AICheck365",
+    "description": "Midjourney画像に残る手がかりを確認。XMP・IPTCのツールフィールド、AIシステム文字列、ファイル名のパターンをブラウザ内で無料解析。アップロード不要です。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/midjourney/",
+    "primaryKeyword": "Midjourney 判定",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/ja/blog/how-to-detect-ai-images/",
+      "/ja/platforms/comfyui/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "imagen-en-priority",
+    "slug": "imagen",
+    "route": "/en/platforms/imagen/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Google Imagen",
+    "title": "Google Imagen Check: C2PA Content Credentials | AICheck365",
+    "description": "Check Google Imagen files for Content Credentials: C2PA manifest, digitalSourceType, Google claim generator and XMP fields. Read locally in your browser, no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/imagen/",
+    "primaryKeyword": "Imagen C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/en/platforms/gemini/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "flux-en-priority",
+    "slug": "flux",
+    "route": "/en/platforms/flux/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Flux (BFL)",
+    "title": "FLUX Metadata Check: PNG Text, XMP and Workflow | AICheck365",
+    "description": "Check FLUX images for generation evidence: PNG text chunks with prompt and workflow, XMP tool fields, and frame watermarks. Free in your browser, without uploading.",
+    "canonical": "https://www.aicheck365.com/en/platforms/flux/",
+    "primaryKeyword": "FLUX metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/platforms/comfyui/",
+      "/en/blog/ai-image-metadata-guide/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "leonardo-en-priority",
+    "slug": "leonardo",
+    "route": "/en/platforms/leonardo/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Leonardo AI",
+    "title": "Leonardo AI Check: XMP, EXIF and Video Metadata | AICheck365",
+    "description": "Check Leonardo AI images and video for provenance clues: XMP and EXIF tool fields, model strings and container metadata. Free in your browser, with no upload.",
+    "canonical": "https://www.aicheck365.com/en/platforms/leonardo/",
+    "primaryKeyword": "Leonardo AI metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/ai-image-metadata-guide/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "ideogram-en-priority",
+    "slug": "ideogram",
+    "route": "/en/platforms/ideogram/",
+    "locale": "en",
+    "pageType": "platform",
+    "platform": "Ideogram",
+    "title": "Ideogram Check: XMP, EXIF and File-Name Clues | AICheck365",
+    "description": "Check Ideogram images for provenance clues: XMP and EXIF tool fields plus file-name patterns, read locally in your browser. Free, no upload and no account needed.",
+    "canonical": "https://www.aicheck365.com/en/platforms/ideogram/",
+    "primaryKeyword": "Ideogram metadata",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/exif-xmp-reader/",
+      "/en/blog/how-to-detect-ai-images/",
+      "/en/platforms/",
+      "/en/methodology/"
+    ]
+  },
+  {
+    "id": "firefly-ja-priority",
+    "slug": "firefly",
+    "route": "/ja/platforms/firefly/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Adobe Firefly",
+    "title": "Adobe FireflyのContent Credentials：C2PA検証 | AICheck365",
+    "description": "Adobe FireflyのファイルをContent Credentialsで確認。C2PA manifest、署名と信頼の状態、digitalSourceTypeをブラウザ内で無料検証。実サンプルで検証済みです。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/firefly/",
+    "primaryKeyword": "Adobe Firefly Content Credentials",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ja/blog/what-is-c2pa/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "firefly-ko-priority",
+    "slug": "firefly",
+    "route": "/ko/platforms/firefly/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "Adobe Firefly",
+    "title": "Adobe Firefly Content Credentials: C2PA 검증 | AICheck365",
+    "description": "Adobe Firefly 파일의 Content Credentials를 확인합니다. C2PA manifest, 서명과 신뢰 상태, digitalSourceType을 브라우저에서 무료로 검증합니다. 실제 샘플로 검증됨.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/firefly/",
+    "primaryKeyword": "Adobe Firefly Content Credentials",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/blog/what-is-c2pa/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "imagen-zh-tw-priority",
+    "slug": "imagen",
+    "route": "/zh-TW/platforms/imagen/",
+    "locale": "zh-TW",
+    "pageType": "platform",
+    "platform": "Google Imagen",
+    "title": "Google Imagen 檢測：C2PA 內容憑證怎麼查 | AICheck365",
+    "description": "檢查 Google Imagen 檔案的內容憑證：C2PA manifest、digitalSourceType、Google claim generator 與 XMP 欄位，在瀏覽器本機讀取，不上傳檔案。",
+    "canonical": "https://www.aicheck365.com/zh-TW/platforms/imagen/",
+    "primaryKeyword": "Imagen C2PA",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/c2pa-validator/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/blog/what-is-c2pa/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "runway-de-priority",
+    "slug": "runway",
+    "route": "/de/platforms/runway/",
+    "locale": "de",
+    "pageType": "platform",
+    "platform": "Runway",
+    "title": "Runway-Videos prüfen: Container-Metadaten und Frames | AICheck365",
+    "description": "Runway-Videos auf KI-Herkunftssignale prüfen: MP4/MOV-Container-Metadaten, SEI-Marker, Dateinamen und Frame-Wasserzeichen. Kostenlos und lokal im Browser.",
+    "canonical": "https://www.aicheck365.com/de/platforms/runway/",
+    "primaryKeyword": "Runway Videoerkennung",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/mp4-metadata-inspector/",
+      "/de/blog/how-to-detect-ai-videos/",
+      "/de/platforms/sora/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-es-priority",
+    "slug": "comfyui",
+    "route": "/es/platforms/comfyui/",
+    "locale": "es",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI: leer prompt y workflow del PNG | AICheck365",
+    "description": "Lee los metadatos de ComfyUI en tu navegador: bloques de texto PNG con prompt y workflow JSON, modelo, seed, sampler y CFG. Gratis y sin subir el archivo.",
+    "canonical": "https://www.aicheck365.com/es/platforms/comfyui/",
+    "primaryKeyword": "metadatos ComfyUI",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/es/blog/ai-image-metadata-guide/",
+      "/es/methodology/"
+    ]
+  },
+  {
+    "id": "flux-fr-priority",
+    "slug": "flux",
+    "route": "/fr/platforms/flux/",
+    "locale": "fr",
+    "pageType": "platform",
+    "platform": "Flux (BFL)",
+    "title": "FLUX : lire les métadonnées PNG, XMP et workflow | AICheck365",
+    "description": "Lisez les preuves de génération d'une image FLUX : blocs de texte PNG avec prompt et workflow, champs XMP d'outil et filigranes de trames. Gratuit, sans envoi.",
+    "canonical": "https://www.aicheck365.com/fr/platforms/flux/",
+    "primaryKeyword": "métadonnées FLUX",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/fr/blog/ai-image-metadata-guide/",
+      "/fr/blog/how-to-detect-ai-images/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-pt-br-priority",
+    "slug": "comfyui",
+    "route": "/pt-BR/platforms/comfyui/",
+    "locale": "pt-BR",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI: ler prompt e workflow do PNG | AICheck365",
+    "description": "Leia os metadados do ComfyUI no navegador: blocos de texto PNG com prompt e workflow JSON, modelo, seed, sampler e CFG. De graça e sem enviar o arquivo.",
+    "canonical": "https://www.aicheck365.com/pt-BR/platforms/comfyui/",
+    "primaryKeyword": "metadados ComfyUI",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/tools/png-parameter-extractor/",
+      "/tools/exif-xmp-reader/",
+      "/pt-BR/blog/ai-image-metadata-guide/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "sora-ja-priority",
+    "slug": "sora",
+    "route": "/ja/platforms/sora/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Sora",
+    "title": "Sora動画の来歴チェック：MP4メタデータとC2PA | AICheck365",
+    "description": "Sora の MP4/MOV に残る来歴を調べます。C2PA/JUMBF、コンテナのボックス、SEI マーカー、フレーム透かしをブラウザ内で無料検査。アップロードは不要です。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/sora/",
+    "primaryKeyword": "Sora 動画 判定",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/mp4-metadata-inspector/",
+      "/ja/",
+      "/ja/blog/how-to-detect-ai-videos/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-ko-priority",
+    "slug": "midjourney",
+    "route": "/ko/platforms/midjourney/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney 이미지 확인: XMP·IPTC와 파일명 단서 | AICheck365",
+    "description": "Midjourney 이미지에 남는 단서를 확인합니다. XMP·IPTC 도구 필드, AI 시스템 문자열, 파일명 패턴을 브라우저에서 무료로 검사하며 업로드하지 않습니다.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/midjourney/",
+    "primaryKeyword": "Midjourney 이미지 확인",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/ko/platforms/dall-e/",
+      "/en/tools/exif-xmp-reader/",
+      "/ko/blog/how-to-detect-ai-images/",
+      "/ko/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-de-priority",
+    "slug": "midjourney",
+    "route": "/de/platforms/midjourney/",
+    "locale": "de",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney-Bilder prüfen: XMP, IPTC und Dateinamen | AICheck365",
+    "description": "Midjourney-Bilder auf verbliebene Herkunftsspuren prüfen: XMP- und IPTC-Werkzeugfelder, KI-System-Strings und Dateinamensmuster. Kostenlos im Browser, ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/platforms/midjourney/",
+    "primaryKeyword": "Midjourney Bilder erkennen",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/de/platforms/runway/",
+      "/en/tools/exif-xmp-reader/",
+      "/de/blog/how-to-detect-ai-images/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-zh-tw-priority",
+    "slug": "midjourney",
+    "route": "/zh-TW/platforms/midjourney/",
+    "locale": "zh-TW",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Midjourney 圖片檢測：XMP、IPTC 與檔名線索 | AICheck365",
+    "description": "檢查 Midjourney 圖片中真正留存的線索：XMP 與 IPTC 工具欄位、AI 系統字串與檔名樣式。在瀏覽器內免費檢測，檔案不會上傳。",
+    "canonical": "https://www.aicheck365.com/zh-TW/platforms/midjourney/",
+    "primaryKeyword": "Midjourney 圖片檢測",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/zh-TW/platforms/imagen/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/blog/how-to-detect-ai-images/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "midjourney-pt-br-priority",
+    "slug": "midjourney",
+    "route": "/pt-BR/platforms/midjourney/",
+    "locale": "pt-BR",
+    "pageType": "platform",
+    "platform": "Midjourney",
+    "title": "Verificar imagens do Midjourney: XMP, IPTC e nome do arquivo | AICheck365",
+    "description": "Verifique quais pistas de procedência sobrevivem em imagens do Midjourney: campos XMP e IPTC, strings de sistema de IA e padrões de nome. Grátis no navegador, sem upload.",
+    "canonical": "https://www.aicheck365.com/pt-BR/platforms/midjourney/",
+    "primaryKeyword": "verificar imagem Midjourney",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/pt-BR/platforms/comfyui/",
+      "/en/tools/exif-xmp-reader/",
+      "/pt-BR/blog/how-to-detect-ai-images/",
+      "/pt-BR/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-zh-tw-priority",
+    "slug": "comfyui",
+    "route": "/zh-TW/platforms/comfyui/",
+    "locale": "zh-TW",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF 怎麼看：從 PNG 取出工作流程 JSON | AICheck365",
+    "description": "從原始 ComfyUI PNG 取出提示詞、工作流程 JSON、節點圖、模型名稱、seed、sampler 與 CFG。在瀏覽器內免費解析，檔案不會離開你的裝置。",
+    "canonical": "https://www.aicheck365.com/zh-TW/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/zh-TW/",
+      "/zh-TW/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-de-priority",
+    "slug": "comfyui",
+    "route": "/de/platforms/comfyui/",
+    "locale": "de",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF: Workflow-JSON aus PNG-Dateien auslesen | AICheck365",
+    "description": "Original-PNGs aus ComfyUI auslesen: Prompt, Workflow-JSON, Node-Graph, Modellnamen, Seed, Sampler, CFG und Bildmaße. Kostenlos im Browser, ohne Upload.",
+    "canonical": "https://www.aicheck365.com/de/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/de/",
+      "/de/methodology/"
+    ]
+  },
+  {
+    "id": "comfyui-fr-priority",
+    "slug": "comfyui",
+    "route": "/fr/platforms/comfyui/",
+    "locale": "fr",
+    "pageType": "platform",
+    "platform": "ComfyUI",
+    "title": "ComfyUI EXIF : extraire le JSON du workflow depuis un PNG | AICheck365",
+    "description": "Extrayez le prompt, le JSON du workflow, le graphe de nœuds, les noms de modèles, le seed, le sampler et le CFG des PNG ComfyUI. Gratuit dans le navigateur, sans envoi.",
+    "canonical": "https://www.aicheck365.com/fr/platforms/comfyui/",
+    "primaryKeyword": "ComfyUI EXIF",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/en/tools/exif-xmp-reader/",
+      "/fr/",
+      "/fr/methodology/"
+    ]
+  },
+  {
+    "id": "stable-diffusion-ja-priority",
+    "slug": "stable-diffusion",
+    "route": "/ja/platforms/stable-diffusion/",
+    "locale": "ja",
+    "pageType": "platform",
+    "platform": "Stable Diffusion",
+    "title": "Stable Diffusion の PNG Info：生成パラメータを読む | AICheck365",
+    "description": "Stable Diffusion の PNG Info をブラウザで読みます。A1111 の parameters、ComfyUI の prompt / workflow JSON、NovelAI のメタデータに対応。無料・アップロード不要。",
+    "canonical": "https://www.aicheck365.com/ja/platforms/stable-diffusion/",
+    "primaryKeyword": "PNG Info Stable Diffusion",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/ja/platforms/comfyui/",
+      "/ja/",
+      "/ja/methodology/"
+    ]
+  },
+  {
+    "id": "stable-diffusion-ko-priority",
+    "slug": "stable-diffusion",
+    "route": "/ko/platforms/stable-diffusion/",
+    "locale": "ko",
+    "pageType": "platform",
+    "platform": "Stable Diffusion",
+    "title": "Stable Diffusion PNG Info: 프롬프트와 파라미터 읽기 | AICheck365",
+    "description": "Stable Diffusion PNG Info를 브라우저에서 읽습니다. A1111 parameters, ComfyUI prompt·workflow JSON, NovelAI 메타데이터를 무료로 확인하며 업로드하지 않습니다.",
+    "canonical": "https://www.aicheck365.com/ko/platforms/stable-diffusion/",
+    "primaryKeyword": "PNG Info Stable Diffusion",
+    "draft": false,
+    "updatedAt": "2026-07-23",
+    "internalLinks": [
+      "/en/tools/png-parameter-extractor/",
+      "/ko/platforms/comfyui/",
+      "/ko/",
+      "/ko/methodology/"
+    ]
   }
 ]
