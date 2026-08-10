@@ -9,7 +9,9 @@
     "qa:seo": "node scripts/seo-qa.mjs",
     "preview": "astro preview",
     "test": "playwright test",
-    "test:worker": "node --test tests/worker.test.js"
+    "test:worker": "node --test tests/worker.test.js",
+    "test:market-report": "node --test tests/market-report.test.js",
+    "report:countries": "node scripts/build-country-performance-report.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.0.0",

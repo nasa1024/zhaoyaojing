@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import { MARKET_SEO_PROFILES } from '../data/market-seo-pages.js';
+
+interface Props { profileId: keyof typeof MARKET_SEO_PROFILES }
+const { profileId } = Astro.props;
+const profile = MARKET_SEO_PROFILES[profileId];
+if (!profile) throw new Error(`Unknown market SEO profile: ${profileId}`);
+const SITE_URL = 'https://www.aicheck365.com';
+const canonical = `${SITE_URL}${Astro.url.pathname}`;
+const prefix = `/${profile.lang}`;
+const homeLabel = profile.lang === 'de' ? 'Start' : 'Home';
+const parentLabel = profile.type === 'platform'
+  ? (profile.lang === 'de' ? 'Plattform-Guides' : 'Platform Guides')
+  : (profile.lang === 'de' ? 'Wissensbasis' : 'Knowledge Base');
+const parentHref = profile.type === 'platform' ? `${prefix}/platforms/` : `${prefix}/blog/`;
+const sections = profile.lang === 'de'
+  ? { evidence: 'Belege in der Originaldatei', signals: 'So werden die Signale gewichtet', steps: 'Prüfung in fünf Schritten', limits: 'Grenzen', faq: 'Häufige Fragen', related: 'Nächste Schritte' }
+  : { evidence: 'Evidence in the original file', signals: 'What the fields mean', steps: 'Five-step check', limits: 'Limits', faq: 'Frequently asked questions', related: 'Next checks' };
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: homeLabel, item: `${SITE_URL}${prefix}/` },
+      { '@type': 'ListItem', position: 2, name: parentLabel, item: `${SITE_URL}${parentHref}` },
+      { '@type': 'ListItem', position: 3, name: profile.h1, item: canonical },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: profile.h1,
+    name: profile.h1,
+    description: profile.description,
+    url: canonical,
+    mainEntityOfPage: canonical,
+    inLanguage: profile.lang,
+    datePublished: '2026-07-23',
+    dateModified: '2026-08-10',
+    author: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    citation: [`${SITE_URL}/data/samples.json`, `${SITE_URL}${prefix}/methodology/`],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: profile.h1,
+    description: profile.direct.body,
+    inLanguage: profile.lang,
+    totalTime: 'PT5M',
+    step: profile.steps.map((text, index) => ({
+      '@type': 'HowToStep', position: index + 1, name: text, text, url: `${canonical}#step-${index + 1}`,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: profile.faq.map(([question, answer]) => ({
+      '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+];
+---
+
+<Base title={profile.title} description={profile.description} canonical={canonical} jsonLd={jsonLd}>
+  <main class="page content-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href={`${prefix}/`}>{homeLabel}</a>
+      <span aria-hidden="true"> › </span>
+      <a href={parentHref}>{parentLabel}</a>
+      <span aria-hidden="true"> › </span>
+      <span>{profile.h1}</span>
+    </nav>
+
+    <article class="card content-article priority-seo-page" data-priority-page={profileId}>
+      <div class="eyebrow">{profile.eyebrow}</div>
+      <h1>{profile.h1}</h1>
+      <p class="article-meta">{profile.keyword} · Updated 2026-08-10 · parser: aicheck browser/WASM</p>
+      <p class="lead-text">{profile.lead}</p>
+
+      <section id="direct-answer" class="priority-direct-answer">
+        <h2>{profile.direct.heading}</h2>
+        <p>{profile.direct.body}</p>
+      </section>
+
+      <div class="cta-box">
+        <a href={profile.primaryCta[0]} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{profile.primaryCta[1]} →</a>
+        <p>{profile.lang === 'de' ? 'Die Datei wird lokal im Browser verarbeitet.' : 'The file is processed locally in your browser.'}</p>
+      </div>
+
+      <section>
+        <h2>{sections.evidence}</h2>
+        <table class="tool-glossary"><tbody>{profile.evidenceRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}</tbody></table>
+      </section>
+
+      <section>
+        <h2>{sections.signals}</h2>
+        <table class="tool-glossary"><tbody>{profile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}</tbody></table>
+      </section>
+
+      <section>
+        <h2>{sections.steps}</h2>
+        <ol class="content-list priority-steps">
+          {profile.steps.map((item, index) => <li id={`step-${index + 1}`}>{item}</li>)}
+        </ol>
+      </section>
+
+      <section>
+        <h2>{sections.limits}</h2>
+        <ul class="content-list">{profile.limits.map((item) => <li>{item}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2>{sections.faq}</h2>
+        <div class="faq-list">
+          {profile.faq.map(([question, answer]) => <details class="faq-item"><summary>{question}</summary><p>{answer}</p></details>)}
+        </div>
+      </section>
+
+      <section>
+        <h2>{sections.related}</h2>
+        <div class="related-links">{profile.related.map(([href, label]) => <a href={href}>{label} →</a>)}</div>
+      </section>
+    </article>
+  </main>
+</Base>
+
+<script type="module" src="/scripts/market-analytics.js"></script>

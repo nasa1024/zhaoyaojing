@@ -28,6 +28,9 @@ jobs:
       - name: Test canonical-host Worker
         working-directory: web
         run: npm run test:worker
+      - name: Test country performance report
+        working-directory: web
+        run: npm run test:market-report
       - name: Install Playwright Chromium
         working-directory: web
         run: npx playwright install --with-deps chromium

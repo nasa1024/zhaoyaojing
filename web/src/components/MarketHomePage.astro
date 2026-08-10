@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import Detector from './Detector.astro';
+import HeroVisual from './HeroVisual.astro';
+import EvidenceVanish from './EvidenceVanish.astro';
+import FiveLayer from './FiveLayer.astro';
+import PlatformFingerprint from './PlatformFingerprint.astro';
+import MethodologyBlock from './MethodologyBlock.astro';
+import SampleExperience from './SampleExperience.astro';
+import LatestExperiments from './LatestExperiments.astro';
+
+interface Props { lang: 'en' | 'de' }
+const { lang } = Astro.props;
+const SITE_URL = 'https://www.aicheck365.com';
+const prefix = `/${lang}`;
+const copy = {
+  en: {
+    title: 'Free AI Image & Video Detector: C2PA & Metadata | AICheck365',
+    description: 'Free AI image and video detector for original files. Check C2PA Content Credentials, EXIF/XMP, PNG parameters, MP4/MOV metadata, and watermark clues locally in your browser.',
+    eyebrow: 'Free AI image and video verification',
+    h1: 'Free AI Image & Video Detector — check C2PA, metadata and watermarks',
+    lead: 'Drop an original image or video. AICheck365 reads verifiable file evidence—Content Credentials, metadata, generation parameters, container fields, and surviving watermark clues—without uploading the file.',
+    privacy: 'Runs locally', privacyDesc: 'Your file stays on your device',
+    evidence: 'Evidence, not a mystery score', evidenceDesc: 'See the exact field and source for every match',
+    originals: 'Best with original files', originalsDesc: 'Screenshots and social downloads often lose provenance',
+    primary: 'Check a file now', secondary: 'See high-intent tools',
+    directTitle: 'What this detector can—and cannot—tell you',
+    direct: 'A valid C2PA manifest that declares trained algorithmic media is strong provenance evidence. EXIF/XMP software fields, PNG workflows, file names, and visual watermarks are supporting clues that can be edited or removed. An empty result means this copy has no readable evidence; it does not prove the media is human-made.',
+    clusterTitle: 'Popular checks in the United States and English search',
+    cluster: [
+      ['/en/platforms/stable-diffusion/', 'Stable Diffusion PNG info and parameters'],
+      ['/en/platforms/comfyui/', 'ComfyUI workflow and prompt metadata'],
+      ['/en/platforms/firefly/', 'Adobe Firefly Content Credentials'],
+      ['/en/platforms/gemini/', 'Gemini C2PA and SynthID clues'],
+      ['/en/tools/', 'Open all forensic tools'],
+    ],
+    notice: '<strong>Important:</strong> file evidence can be removed by screenshots, re-exports, editing apps, messaging services, and social-media transcoding. No signal found is not the same as “not AI-generated.”',
+  },
+  de: {
+    title: 'AIGC-Erkennung: KI-Bilder & Videos kostenlos prüfen | AICheck365',
+    description: 'Kostenlose AIGC-Erkennung für Originaldateien: C2PA Content Credentials, EXIF/XMP, PNG-Parameter, MP4/MOV-Metadaten und Wasserzeichen lokal im Browser prüfen.',
+    eyebrow: 'Kostenlose AIGC-Erkennung im Browser',
+    h1: 'AIGC-Erkennung: KI-Bilder und KI-Videos kostenlos prüfen',
+    lead: 'Legen Sie ein Originalbild oder -video ab. AICheck365 liest nachvollziehbare Dateibelege—Content Credentials, Metadaten, Generierungsparameter, Containerfelder und erhaltene Wasserzeichen—ohne die Datei hochzuladen.',
+    privacy: 'Lokal im Browser', privacyDesc: 'Die Datei bleibt auf Ihrem Gerät',
+    evidence: 'Nachweise statt Blackbox-Score', evidenceDesc: 'Jeder Treffer zeigt Feld, Quelle und Beweisstärke',
+    originals: 'Am besten mit Originalen', originalsDesc: 'Screenshots und Social-Downloads verlieren Herkunftsdaten',
+    primary: 'Datei jetzt prüfen', secondary: 'Spezialwerkzeuge öffnen',
+    directTitle: 'Was die AIGC-Erkennung aussagen kann',
+    direct: 'Ein gültiges C2PA-Manifest mit der Angabe trained algorithmic media ist ein starker Herkunftsnachweis. EXIF/XMP-Softwarefelder, PNG-Workflows, Dateinamen und Wasserzeichen sind ergänzende Hinweise, die verändert oder entfernt werden können. Ein leeres Ergebnis bedeutet nur, dass diese Kopie keine lesbaren Belege enthält.',
+    clusterTitle: 'Wichtige Prüfungen für den deutschen Markt',
+    cluster: [
+      ['/de/blog/how-to-detect-ai-images/', 'KI-Bilder erkennen: C2PA, EXIF und PNG'],
+      ['/de/blog/how-to-detect-ai-videos/', 'KI-Videoerkennung: MP4, C2PA und Wasserzeichen'],
+      ['/de/tools/c2pa-validator/', 'C2PA Content Credentials validieren'],
+      ['/de/tools/png-parameter-extractor/', 'ComfyUI- und Stable-Diffusion-PNG lesen'],
+      ['/de/tools/mp4-metadata-inspector/', 'MP4/MOV-Metadaten prüfen'],
+    ],
+    notice: '<strong>Wichtig:</strong> Screenshots, Re-Exports, Schnittprogramme, Messenger und Social-Media-Transcoding können Herkunftsdaten entfernen. „Kein Signal“ bedeutet nicht „nicht KI-generiert“.',
+  },
+}[lang];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'AICheck365',
+    url: `${SITE_URL}${prefix}/`,
+    description: copy.description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    browserRequirements: 'Modern browser with WebAssembly and JavaScript',
+    isAccessibleForFree: true,
+    inLanguage: lang,
+    dateModified: '2026-08-10',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    featureList: ['C2PA Content Credentials', 'EXIF and XMP metadata', 'PNG generation parameters', 'MP4/MOV metadata', 'Local browser processing'],
+  },
+];
+---
+
+<Base title={copy.title} description={copy.description} canonical={`${SITE_URL}/`} jsonLd={jsonLd}>
+  <main class="page">
+    <section class="hero card">
+      <div class="eyebrow">{copy.eyebrow}</div>
+      <div class="hero-layout">
+        <div>
+          <h1>{copy.h1}</h1>
+          <p class="lead">{copy.lead}</p>
+          <div class="hero-actions">
+            <p class="hero-privacy">{copy.privacyDesc}</p>
+            <div class="hero-cta">
+              <a href="#upload-zone" class="btn-primary">{copy.primary}</a>
+              <a href={`${prefix}/tools/`} class="btn-secondary">{copy.secondary}</a>
+            </div>
+          </div>
+        </div>
+        <HeroVisual />
+      </div>
+      <ul class="trust-list">
+        <li><strong>{copy.privacy}</strong><span>{copy.privacyDesc}</span></li>
+        <li><strong>{copy.evidence}</strong><span>{copy.evidenceDesc}</span></li>
+        <li><strong>{copy.originals}</strong><span>{copy.originalsDesc}</span></li>
+      </ul>
+      <div class="notice warning" set:html={copy.notice} />
+    </section>
+
+    <Detector />
+
+    <section class="card content-section priority-seo-page">
+      <h2>{copy.directTitle}</h2>
+      <p>{copy.direct}</p>
+      <h2>{copy.clusterTitle}</h2>
+      <div class="related-links">
+        {copy.cluster.map(([href, label]) => <a href={href}>{label} →</a>)}
+      </div>
+    </section>
+
+    <EvidenceVanish />
+    <FiveLayer />
+    <PlatformFingerprint prefix={prefix} />
+    <MethodologyBlock />
+    <SampleExperience />
+    <LatestExperiments />
+  </main>
+</Base>
+
+<script type="module" src="/scripts/market-analytics.js"></script>

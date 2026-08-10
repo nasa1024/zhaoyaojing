@@ -1,0 +1,132 @@
+---
+import ToolBase from '../../layouts/ToolBase.astro';
+import { TOOL_LANGS, TOOL_LOCALES, TOOL_SLUGS, TOOL_TECH } from '../../data/localized-tools.js';
+
+const SITE_URL = 'https://www.aicheck365.com';
+const segment = Astro.url.pathname.split('/').filter(Boolean)[0];
+const lang = TOOL_LANGS.includes(Astro.params.lang ?? segment) ? (Astro.params.lang ?? segment) : 'zh-CN';
+const slug = Astro.params.tool ?? Astro.url.pathname.split('/').filter(Boolean).at(-1);
+if (!slug || !TOOL_SLUGS.includes(slug)) throw new Error(`Unsupported tool route: ${slug}`);
+const locale = TOOL_LOCALES[lang] ?? TOOL_LOCALES.en;
+const copy = locale.tools[slug];
+const prefix = lang === 'zh-CN' ? '' : `/${lang}`;
+const homeHref = prefix ? `${prefix}/` : '/';
+const toolsHref = `${prefix}/tools/`;
+const currentPath = `${toolsHref}${slug}/`;
+const canonical = `${SITE_URL}${currentPath}`;
+const tech = TOOL_TECH[slug];
+
+function relatedHref(target) {
+  if (target.startsWith('http')) return target;
+  if (target.startsWith('/')) return target === '/' ? homeHref : `${prefix}${target}`;
+  return `${toolsHref}${target}/`;
+}
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: copy.h1,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    description: copy.description,
+    url: canonical,
+    isAccessibleForFree: true,
+    inLanguage: lang,
+    dateModified: '2026-08-10',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: locale.nav.home, item: `${SITE_URL}${homeHref}` },
+      { '@type': 'ListItem', position: 2, name: locale.nav.tools, item: `${SITE_URL}${toolsHref}` },
+      { '@type': 'ListItem', position: 3, name: copy.h1, item: canonical },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: copy.faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+];
+---
+
+<ToolBase title={copy.title} description={copy.description} canonical={canonical} lang={lang} jsonLd={jsonLd} toolType={slug}>
+  <main class="page content-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href={homeHref}>{locale.nav.home}</a>
+      <span aria-hidden="true"> › </span>
+      <a href={toolsHref}>{locale.nav.tools}</a>
+      <span aria-hidden="true"> › </span>
+      <span>{copy.h1}</span>
+    </nav>
+
+    <article class="card content-article priority-seo-page">
+      <h1>{copy.h1}</h1>
+      <p class="article-meta">2026-08-10 · local browser parser · {slug}</p>
+      <p class="lead-text">{copy.lead}</p>
+
+      <section id="tool-inspector" data-tool={slug} class="card tool-card">
+        <h2>{copy.uploadTitle}</h2>
+        <div class="tool-upload">
+          <label class="tool-drop-zone" id="tool-drop-zone" for="tool-file-input">
+            <input id="tool-file-input" type="file" accept={tech.accept} />
+            <span class="upload-icon" aria-hidden="true">↥</span>
+            <span>{copy.uploadZone}</span>
+            <small class="muted">{copy.formats}</small>
+          </label>
+          <p id="tool-status" class="status muted" role="status" aria-live="polite"></p>
+          <div class="tool-toolbar">
+            <input id="tool-filter" type="text" placeholder={locale.ui.filterPlaceholder} aria-label={locale.ui.filterPlaceholder} />
+            <button id="tool-copy" class="ghost" type="button">{locale.ui.copy}</button>
+            <button id="tool-export" class="ghost" type="button">{locale.ui.exportJson}</button>
+          </div>
+          <div id="tool-output" class="tool-output hidden"></div>
+        </div>
+        <noscript><p class="notice warning">{locale.section.noScript}</p></noscript>
+      </section>
+      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(locale.ui)} />
+
+      <section>
+        <h2>{locale.section.howTo}</h2>
+        <ol class="content-list">{copy.usage.map((item) => <li>{item}</li>)}</ol>
+      </section>
+
+      <section>
+        <h2>{locale.section.fields}</h2>
+        <table class="tool-glossary">
+          <tbody>{copy.fields.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}</tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>{locale.section.limits}</h2>
+        <ul class="content-list">{copy.limits.map((item) => <li>{item}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2>{locale.section.faq}</h2>
+        <div class="faq-list">
+          {copy.faq.map(([question, answer]) => (
+            <details class="faq-item"><summary>{question}</summary><p>{answer}</p></details>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2>{locale.section.related}</h2>
+        <div class="related-links">
+          {copy.related.map(([target, label]) => <a href={relatedHref(target)}>{label} →</a>)}
+        </div>
+      </section>
+    </article>
+  </main>
+</ToolBase>
+
+<script>import '../../scripts/tool-inspector.js';</script>

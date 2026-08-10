@@ -1,13 +1,10 @@
 ---
-import MetadataToolPage from '../../../components/tools/MetadataToolPage.astro';
+import UnifiedToolPage from '../../../components/tools/UnifiedToolPage.astro';
 
 export function getStaticPaths() {
-  return [
-    'exif-xmp-reader',
-    'png-parameter-extractor',
-    'mp4-metadata-inspector',
-  ].map((tool) => ({ params: { lang: 'en', tool } }));
+  const langs = ['zh-TW', 'en', 'ja', 'ko', 'de'];
+  const tools = ['exif-xmp-reader', 'png-parameter-extractor', 'mp4-metadata-inspector'];
+  return langs.flatMap((lang) => tools.map((tool) => ({ params: { lang, tool } })));
 }
 ---
-
-<MetadataToolPage />
+<UnifiedToolPage />
