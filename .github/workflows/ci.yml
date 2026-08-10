@@ -70,10 +70,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lfs-
 
-      - name: Git LFS Pull
+      - name: Fetch and checkout Git LFS fixtures
         run: |
-          git config lfs.fetchexclude ""
-          git lfs pull
+          git config --local --unset-all lfs.fetchexclude || true
+          git lfs fetch --include="*" --exclude="" origin
+          git lfs checkout
 
       - name: Validate LFS fixtures
         run: |
@@ -118,10 +119,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lfs-
 
-      - name: Git LFS Pull
+      - name: Fetch and checkout Git LFS fixtures
         run: |
-          git config lfs.fetchexclude ""
-          git lfs pull
+          git config --local --unset-all lfs.fetchexclude || true
+          git lfs fetch --include="*" --exclude="" origin
+          git lfs checkout
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Install ffmpeg
