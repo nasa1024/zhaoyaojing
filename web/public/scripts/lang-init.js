@@ -1,6 +1,22 @@
+import '/scripts/market-analytics.js';
 import { applyI18n, setLang } from '/scripts/i18n.js';
 
 applyI18n();
+
+// Keep the existing global navigation behavior for languages that still use
+// the English tools fallback, while sending in-content English tool CTAs to a
+// localized tool when that locale is available.
+(function localizeContentToolLinks() {
+  const lang = document.documentElement.lang || 'en';
+  const localizedToolLangs = new Set(['zh-TW', 'ja', 'ko', 'de']);
+  if (!localizedToolLangs.has(lang)) return;
+  document.querySelectorAll('main a[href="/en/tools/"], main a[href^="/en/tools/"]').forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    link.setAttribute('href', `/${lang}${href.slice('/en'.length)}`);
+    link.removeAttribute('data-no-localize');
+  });
+})();
 
 document.getElementById('lang-switch')?.addEventListener('change', (e) => {
   const lang = e.target.value;

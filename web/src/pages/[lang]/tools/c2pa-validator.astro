@@ -1,9 +1,8 @@
 ---
-import C2paValidatorPage from '../../../components/tools/C2paValidatorPage.astro';
+import UnifiedToolPage from '../../../components/tools/UnifiedToolPage.astro';
 
 export function getStaticPaths() {
-  return [{ params: { lang: 'en' } }];
+  return ['zh-TW', 'en', 'ja', 'ko', 'de'].map((lang) => ({ params: { lang } }));
 }
 ---
-
-<C2paValidatorPage />
+<UnifiedToolPage />

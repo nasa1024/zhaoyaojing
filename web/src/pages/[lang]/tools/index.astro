@@ -1,9 +1,8 @@
 ---
-import ToolHubPage from '../../../components/tools/ToolHubPage.astro';
+import UnifiedToolHubPage from '../../../components/tools/UnifiedToolHubPage.astro';
 
 export function getStaticPaths() {
-  return [{ params: { lang: 'en' } }];
+  return ['zh-TW', 'en', 'ja', 'ko', 'de'].map((lang) => ({ params: { lang } }));
 }
 ---
-
-<ToolHubPage />
+<UnifiedToolHubPage />

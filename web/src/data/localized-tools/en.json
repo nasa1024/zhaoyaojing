@@ -1,0 +1,244 @@
+{
+  "nav": {
+    "home": "Home",
+    "platforms": "Platform Guides",
+    "tools": "Tools",
+    "blog": "Knowledge Base",
+    "methodology": "Methodology"
+  },
+  "hub": {
+    "title": "Detection Tools | AICheck365",
+    "description": "AICheck365 tools: the AI Image & Video Detector on the homepage runs the one-click origin check, while the forensic tools below (C2PA Validator, C2PA Viewer, EXIF/XMP Reader, PNG Parameter Extractor, MP4 Metadata Inspector) inspect raw per-layer data locally in your browser.",
+    "h1": "Detection Tools",
+    "lead": "Choose the evidence layer you need. Every file is parsed locally in your browser and is never uploaded.",
+    "mainName": "AI Image & Video Detector (main tool)",
+    "mainDesc": "One-click checks for C2PA, EXIF, XMP, PNG text, MP4 metadata, file names, and sampled frame watermarks."
+  },
+  "section": {
+    "howTo": "How to use",
+    "fields": "What the tool shows",
+    "limits": "Scope and limits",
+    "faq": "FAQ",
+    "related": "Related tools and guides",
+    "noScript": "JavaScript is required to parse files locally; the explanatory content remains readable."
+  },
+  "ui": {
+    "loading": "Loading parser…",
+    "analyzing": "Analyzing…",
+    "done": "Done",
+    "error": "Error: ",
+    "noFile": "Please choose a file",
+    "empty": "Choose a file to begin",
+    "filterPlaceholder": "Search fields, values, or sources…",
+    "copy": "Copy safe summary",
+    "copied": "Copied ✓",
+    "copyFailed": "Copy failed",
+    "exportJson": "Export full JSON",
+    "warnings": "Warnings",
+    "signals": "AI-related signals",
+    "rawData": "Raw data",
+    "none": "No readable metadata found.",
+    "sensitiveExport": "The full export may include GPS, serial numbers, author contacts, prompts, workflow JSON, or other sensitive metadata. Continue?",
+    "state": "Signature state",
+    "validation": "Validation issues",
+    "manifest": "Manifest fields",
+    "assertions": "Assertions",
+    "ingredients": "Ingredient chain",
+    "signature": "Certificate / signature",
+    "rawJson": "Raw manifest JSON",
+    "statusSummary": "Status summary",
+    "manifestPresence": "Manifest",
+    "manifestFound": "Found",
+    "manifestMissing": "Not found",
+    "signatureValidity": "Signature validity",
+    "signatureValid": "Cryptographically valid",
+    "signatureInvalid": "Invalid or unverifiable",
+    "signatureNotFound": "No C2PA signature found",
+    "trustStatus": "Trust status",
+    "trustTrusted": "Signer trusted by this engine",
+    "trustUnlisted": "Signature valid, signer not trusted here",
+    "trustInvalid": "Trust could not be established",
+    "trustNone": "No signer to evaluate",
+    "problemSummary": "Problem summary",
+    "problemExpired": "Certificate expired",
+    "problemHashMismatch": "Content hash mismatch",
+    "problemUntrusted": "Signer is not in the trust list",
+    "problemParse": "Manifest parse error",
+    "problemSignature": "Signature validation issue",
+    "problemUnknown": "Validation issue",
+    "noManifestProblem": "No readable C2PA manifest",
+    "noValidationProblems": "No validation problem reported"
+  },
+  "tools": {
+    "c2pa-validator": {
+      "title": "C2PA Validator | AICheck365",
+      "description": "C2PA Validator: check whether a file carries a C2PA manifest and inspect signature state, claim generator, digital source type, assertions, ingredient chain, certificate info, and raw JSON. Analyzed locally, never uploaded.",
+      "h1": "C2PA Validator",
+      "lead": "Upload an original image or video to inspect Content Credentials, signature validity, digital source type, claim generator, assertions, ingredient chain, certificate details, and validation issues.",
+      "uploadTitle": "Upload a file to validate C2PA",
+      "uploadZone": "Click or drag an image/video here",
+      "formats": "JPEG / PNG / WebP / MP4 / MOV and more",
+      "usage": [
+        "Use the closest available copy to the platform export.",
+        "Read signature state first, then digitalSourceType, claim_generator, and validation issues.",
+        "Copy or export raw JSON when you need an audit trail."
+      ],
+      "fields": [
+        ["Signature and trust", "Separates trusted, valid, invalid, and unsigned states."],
+        ["Manifest", "Shows title, format, claim generator, digital source type, and assertions."],
+        ["Certificate and ingredients", "Displays issuer, signing time, algorithm, and upstream assets."]
+      ],
+      "limits": [
+        "No C2PA does not prove that a file is camera-made.",
+        "Exports, compression, screenshots, and transcoding can remove credentials.",
+        "A valid signature may still use a signer that is not in this engine’s trust list."
+      ],
+      "faq": [
+        ["Does no manifest mean the image is real?", "No. It only means this copy has no readable C2PA manifest."],
+        ["What is the difference between valid and trusted?", "Both may be cryptographically valid; trusted additionally means the signer is in the active trust list."],
+        ["Is the file uploaded?", "No. Verification runs locally with WebAssembly."]
+      ],
+      "related": [
+        ["c2pa-viewer", "Open the raw C2PA JSON"],
+        ["exif-xmp-reader", "Inspect EXIF/XMP"],
+        ["/", "Return to the main detector"]
+      ]
+    },
+    "c2pa-viewer": {
+      "title": "C2PA Viewer: Extract Raw Content Credentials JSON | AICheck365",
+      "description": "C2PA Viewer: inspect and extract raw C2PA manifests JSON locally in your browser. Copy or export raw Content Credentials without uploading files.",
+      "h1": "C2PA Viewer",
+      "lead": "A distraction-free JSON view for developers and reviewers. Extract the C2PA manifest and search claim_generator, assertions, ingredients, certificates, and validation status.",
+      "uploadTitle": "Upload a file to extract C2PA JSON",
+      "uploadZone": "Click or drag an image/video here",
+      "formats": "JPEG / PNG / WebP / MP4 / MOV and more",
+      "usage": [
+        "Choose the most original file available.",
+        "Search for claim_generator, digitalSourceType, assertions, or ingredients.",
+        "Copy or export the formatted JSON for debugging, auditing, or archiving."
+      ],
+      "fields": [
+        ["Raw manifest", "Displays the complete formatted JSON returned by the parser."],
+        ["Validation status", "Preserves signature issues and state information."],
+        ["Searchable view", "Filter by field name or value."]
+      ],
+      "limits": [
+        "This page does not interpret evidence strength for you.",
+        "No manifest does not prove a file is human-made.",
+        "Exported JSON can contain certificate and provenance details."
+      ],
+      "faq": [
+        ["How is it different from the validator?", "The viewer prioritizes raw JSON; the validator explains status and fields."],
+        ["Can I copy the result?", "Yes, copy or export formatted JSON."],
+        ["Is the file uploaded?", "No."]
+      ],
+      "related": [
+        ["c2pa-validator", "Validate signature and trust"],
+        ["exif-xmp-reader", "Inspect EXIF/XMP"],
+        ["/", "Return to the main detector"]
+      ]
+    },
+    "exif-xmp-reader": {
+      "title": "EXIF/XMP Reader: Inspect AI Image Metadata | AICheck365",
+      "description": "EXIF/XMP Reader: inspect image EXIF, XMP, IPTC, base properties, and AI-tool fields locally in your browser, with searchable fields, safe copy, and JSON export.",
+      "h1": "EXIF/XMP Reader",
+      "lead": "Read Software, CreatorTool, DigitalSourceType, AISystemUsed, timestamps, copyright, camera, and location fields, with AI-related and sensitive values clearly labeled.",
+      "uploadTitle": "Upload an image to read EXIF / XMP",
+      "uploadZone": "Click or drag an image here",
+      "formats": "JPEG / PNG / WebP / GIF / BMP / TIFF",
+      "usage": [
+        "Use an original image instead of a screenshot or social-media copy.",
+        "Search by software, platform, field name, or value.",
+        "Safe copy omits sensitive fields by default."
+      ],
+      "fields": [
+        ["AI tool fields", "Software, CreatorTool, DigitalSourceType, AISystemUsed, and similar values."],
+        ["Base and camera data", "Dimensions, encoding, timestamp, Make, Model, and related properties."],
+        ["Sensitive fields", "GPS, serial numbers, contacts, UserComment, and prompts are labeled."]
+      ],
+      "limits": [
+        "EXIF/XMP can be edited, copied, or stripped.",
+        "No metadata does not mean an image is not AI-generated.",
+        "Review GPS and author information before a full export."
+      ],
+      "faq": [
+        ["Why is EXIF missing?", "Screenshots, compression, forwarding, and re-exporting commonly remove metadata."],
+        ["Does a Software field prove the source?", "It is a clue, not a signature; combine it with C2PA and file provenance."],
+        ["Is the file uploaded?", "No."]
+      ],
+      "related": [
+        ["c2pa-validator", "Validate C2PA"],
+        ["png-parameter-extractor", "Extract PNG parameters"],
+        ["/platforms/gemini/", "Gemini platform guide"]
+      ]
+    },
+    "png-parameter-extractor": {
+      "title": "ComfyUI Metadata Viewer: PNG Parameter Extractor | AICheck365",
+      "description": "ComfyUI Metadata Viewer / PNG Parameter Extractor: read PNG tEXt, iTXt, zTXt, ComfyUI workflow, A1111 parameters, Stable Diffusion, and NovelAI metadata locally.",
+      "h1": "ComfyUI Metadata Viewer and PNG Parameter Extractor",
+      "lead": "Read ComfyUI prompt/workflow JSON, AUTOMATIC1111 parameters, Stable Diffusion settings, and NovelAI clues from PNG tEXt, iTXt, and zTXt chunks.",
+      "uploadTitle": "Upload a PNG to extract parameters",
+      "uploadZone": "Click or drag a PNG here",
+      "formats": "PNG tEXt / iTXt / zTXt",
+      "usage": [
+        "Prefer a PNG exported directly by the generation tool.",
+        "Check for prompt, workflow, or parameters chunks.",
+        "Only export the full JSON when you need to reproduce or audit a workflow."
+      ],
+      "fields": [
+        ["ComfyUI", "Prompt, workflow, nodes, model, seed, sampler, and scheduler."],
+        ["A1111 / Stable Diffusion", "Positive and negative prompts, steps, CFG, size, model/hash."],
+        ["Raw text chunks", "Preserves each PNG text chunk and its source."]
+      ],
+      "limits": [
+        "PNG parameters are unsigned and can be edited.",
+        "Compression and screenshots usually remove text chunks.",
+        "Prompts and workflows may contain sensitive information."
+      ],
+      "faq": [
+        ["Is ComfyUI metadata EXIF?", "Usually not. It is primarily stored in PNG text chunks and workflow JSON."],
+        ["Is zTXt supported?", "Yes, readable tEXt, iTXt, and zTXt chunks are supported."],
+        ["Does no parameters mean it is not Stable Diffusion?", "No. The data may have been stripped."]
+      ],
+      "related": [
+        ["exif-xmp-reader", "Inspect EXIF/XMP"],
+        ["/platforms/comfyui/", "ComfyUI platform guide"],
+        ["/platforms/stable-diffusion/", "Stable Diffusion guide"]
+      ]
+    },
+    "mp4-metadata-inspector": {
+      "title": "MP4/MOV Metadata Inspector: AI Video Container Fields | AICheck365",
+      "description": "MP4/MOV Metadata Inspector: inspect MP4, MOV, and M4V brands, box tree, udta/meta/ilst fields, AIGC labels, SEI markers, and C2PA/JUMBF text clues locally.",
+      "h1": "MP4/MOV Metadata Inspector",
+      "lead": "Start AI-video verification at the container layer: inspect ftyp brands, box tree, udta/meta/ilst, encoder fields, AIGC labels, platform strings, SEI markers, and C2PA/JUMBF clues.",
+      "uploadTitle": "Upload a video to inspect container metadata",
+      "uploadZone": "Click or drag an MP4 / MOV / M4V here",
+      "formats": "MP4 / MOV / M4V",
+      "usage": [
+        "Use the file downloaded directly from the generation platform.",
+        "Start with the summary and AI-related signals, then expand the box tree.",
+        "If the container is empty, use the main detector for sampled-frame analysis."
+      ],
+      "fields": [
+        ["ftyp", "major_brand, minor_version, and compatible_brands."],
+        ["udta/meta/ilst", "Encoder, software, tool, comment, and AIGC fields."],
+        ["Box tree / SEI", "Shows source paths, offsets, sizes, and recognized markers."]
+      ],
+      "limits": [
+        "Transcoding, editing, and social uploads often strip container fields.",
+        "No field does not prove that a video is human-made.",
+        "This page prioritizes the lightweight container pass and does not extract frames by default."
+      ],
+      "faq": [
+        ["How is this different from the homepage video detector?", "This page focuses on MP4/MOV containers; the main detector can also sample frames."],
+        ["Can it check Sora, Kling, or Runway?", "It reports matching container fields, SEI markers, or platform strings that survive in the file."],
+        ["Why not extract frames immediately?", "Container inspection is faster and uses much less memory."]
+      ],
+      "related": [
+        ["c2pa-validator", "Validate video C2PA"],
+        ["/platforms/sora/", "Sora guide"],
+        ["/blog/how-to-detect-ai-videos/", "AI video detection guide"]
+      ]
+    }
+  }
+}

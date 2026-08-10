@@ -1,0 +1,79 @@
+---
+import ToolBase from '../../layouts/ToolBase.astro';
+import { TOOL_LANGS, TOOL_LOCALES, TOOL_SLUGS } from '../../data/localized-tools.js';
+
+const SITE_URL = 'https://www.aicheck365.com';
+const segment = Astro.url.pathname.split('/').filter(Boolean)[0];
+const lang = TOOL_LANGS.includes(Astro.params.lang ?? segment) ? (Astro.params.lang ?? segment) : 'zh-CN';
+const locale = TOOL_LOCALES[lang] ?? TOOL_LOCALES.en;
+const prefix = lang === 'zh-CN' ? '' : `/${lang}`;
+const homeHref = prefix ? `${prefix}/` : '/';
+const toolsHref = `${prefix}/tools/`;
+const canonical = `${SITE_URL}${toolsHref}`;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: locale.hub.h1,
+    description: locale.hub.description,
+    url: canonical,
+    inLanguage: lang,
+    dateModified: '2026-08-10',
+    mainEntity: TOOL_SLUGS.map((slug) => ({
+      '@type': 'SoftwareApplication',
+      name: locale.tools[slug].h1,
+      url: `${SITE_URL}${toolsHref}${slug}/`,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web browser',
+      isAccessibleForFree: true,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: locale.nav.home, item: `${SITE_URL}${homeHref}` },
+      { '@type': 'ListItem', position: 2, name: locale.nav.tools, item: canonical },
+    ],
+  },
+];
+---
+
+<ToolBase title={locale.hub.title} description={locale.hub.description} canonical={canonical} lang={lang} jsonLd={jsonLd} toolType="hub">
+  <main class="page content-page">
+    <div class="content-hero card">
+      <h1>{locale.hub.h1}</h1>
+      <p class="lead-text">{locale.hub.lead}</p>
+      <div class="cta-box">
+        <h2>{locale.hub.mainName}</h2>
+        <p>{locale.hub.mainDesc}</p>
+        <a href={homeHref} class="primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">{locale.hub.mainName} →</a>
+      </div>
+    </div>
+
+    <div class="platform-grid">
+      {TOOL_SLUGS.map((slug) => {
+        const tool = locale.tools[slug];
+        return (
+          <a href={`${toolsHref}${slug}/`} class="platform-card card tool-hub-card">
+            <div class="platform-card-header"><h2>{tool.h1}</h2></div>
+            <p>{tool.lead}</p>
+            <span class="card-link">{locale.nav.tools} →</span>
+          </a>
+        );
+      })}
+    </div>
+
+    <section class="card content-section">
+      <h2>{locale.section.limits}</h2>
+      <ul class="content-list">
+        <li>{locale.hub.lead}</li>
+        <li>{locale.tools['c2pa-validator'].limits[0]}</li>
+        <li>{locale.tools['exif-xmp-reader'].limits[0]}</li>
+        <li>{locale.tools['mp4-metadata-inspector'].limits[0]}</li>
+      </ul>
+    </section>
+  </main>
+</ToolBase>
+
+<script type="module" src="/scripts/market-analytics.js"></script>

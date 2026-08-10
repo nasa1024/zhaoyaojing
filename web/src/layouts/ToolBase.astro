@@ -1,0 +1,237 @@
+---
+import { TOOL_LANGS, TOOL_LOCALES } from '../data/localized-tools.js';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  lang: string;
+  jsonLd?: object | object[];
+  toolType?: string;
+}
+
+const { title, description, canonical, lang, jsonLd, toolType = 'hub' } = Astro.props;
+const SITE_URL = 'https://www.aicheck365.com';
+const DEFAULT_LANG = 'zh-CN';
+const ALL_SITE_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const META_DESCRIPTION_MAX_LENGTH = 170;
+const META_DESCRIPTION_MIN_BOUNDARY = 50;
+const locale = TOOL_LOCALES[lang] ?? TOOL_LOCALES.en;
+const prefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
+const homeHref = prefix ? `${prefix}/` : '/';
+const toolsHref = `${prefix}/tools/`;
+const platformsHref = `${prefix}/platforms/`;
+const blogHref = `${prefix}/blog/`;
+const methodologyHref = `${prefix}/methodology/`;
+const OG_LOCALE = { 'zh-CN': 'zh_CN', 'zh-TW': 'zh_TW', en: 'en_US', ja: 'ja_JP', ko: 'ko_KR', de: 'de_DE' };
+const BRAND_DESCRIPTOR = {
+  'zh-CN': 'AI 图片视频检测',
+  'zh-TW': 'AI 圖片影片檢測',
+  en: 'AI Media Detector',
+  ja: 'AI画像・動画検出',
+  ko: 'AI 이미지·영상 검출',
+  de: 'KI-Medienerkennung',
+};
+
+function stripLocale(pathname: string) {
+  const parts = pathname.split('/').filter(Boolean);
+  if (parts.length && TOOL_LANGS.includes(parts[0])) parts.shift();
+  return parts.length ? `/${parts.join('/')}/` : '/';
+}
+
+function localizedPath(pathname: string, targetLang: string) {
+  const clean = stripLocale(pathname);
+  if (targetLang === DEFAULT_LANG) return clean;
+  return clean === '/' ? `/${targetLang}/` : `/${targetLang}${clean}`;
+}
+
+function normalizeMetaTitle(value: string, pageLang: string) {
+  let normalized = value;
+  if (normalized.length > 70) {
+    normalized = normalized
+      .replace(' | AICheck365 Blog', ' | AICheck365')
+      .replace('AICheck365 · AI Image/Video Detector | Free AI-Generated Media Detection', 'AICheck365 AI Media Detector | Local AI Image and Video Checks');
+  }
+  if (normalized.length > 70) {
+    normalized = `${normalized.slice(0, 67).replace(/\s+\S*$/, '')}...`;
+  }
+  const descriptor = BRAND_DESCRIPTOR[pageLang] ?? BRAND_DESCRIPTOR.en;
+  if (normalized.endsWith(' | AICheck365') && normalized.slice(0, -13).includes('AICheck365')) {
+    normalized = `${normalized.slice(0, -13)} | ${descriptor}`;
+  }
+  if (normalized.length < 30 && !normalized.includes(descriptor)) {
+    const [head] = normalized.split(' | AICheck365');
+    const suffix = head.includes('AICheck365') ? descriptor : `AICheck365 ${descriptor}`;
+    return normalized.includes(' | AICheck365')
+      ? normalized.replace(' | AICheck365', ` | ${suffix}`)
+      : `${normalized} | ${suffix}`;
+  }
+  return normalized;
+}
+
+function normalizeMetaDescription(value: string) {
+  const normalized = value.trim().replace(/\s+/g, ' ');
+  if (normalized.length <= META_DESCRIPTION_MAX_LENGTH) return normalized;
+  const candidate = normalized.slice(0, META_DESCRIPTION_MAX_LENGTH);
+  let sentenceEnd = -1;
+  for (const match of candidate.matchAll(/(?:[.!?](?=\s|$)|[。！？])/g)) sentenceEnd = (match.index ?? -1) + 1;
+  if (sentenceEnd >= META_DESCRIPTION_MIN_BOUNDARY) return candidate.slice(0, sentenceEnd).trim();
+  const wordEnd = candidate.lastIndexOf(' ', META_DESCRIPTION_MAX_LENGTH - 1);
+  if (wordEnd >= META_DESCRIPTION_MIN_BOUNDARY) return `${candidate.slice(0, wordEnd).replace(/[,;:，；：-]+$/u, '').trimEnd()}…`;
+  let clauseEnd = -1;
+  for (const match of candidate.matchAll(/[,;:，、；：]/gu)) clauseEnd = (match.index ?? -1) + 1;
+  if (clauseEnd >= META_DESCRIPTION_MIN_BOUNDARY) return `${candidate.slice(0, clauseEnd).replace(/[,;:，、；：]+$/u, '').trimEnd()}…`;
+  return normalized;
+}
+
+const canonicalPath = new URL(canonical).pathname;
+const seoTitle = normalizeMetaTitle(title, lang);
+const seoDescription = normalizeMetaDescription(description);
+const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{seoTitle}</title>
+    <meta name="description" content={seoDescription} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="application-name" content="AICheck365" />
+    <meta name="author" content="AICheck365" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#101727" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localizedPath(canonicalPath, 'en')}`} />
+    {TOOL_LANGS.map((targetLang) => (
+      <link
+        rel={targetLang === 'zh-CN' || targetLang === 'en' ? 'alternate' : 'alternate translation'}
+        hreflang={targetLang}
+        href={`${SITE_URL}${localizedPath(canonicalPath, targetLang)}`}
+      />
+    ))}
+    <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:image" content={`${SITE_URL}/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AICheck365 local AI media metadata tools" />
+    <meta property="og:site_name" content="AICheck365" />
+    <meta property="og:locale" content={OG_LOCALE[lang] ?? 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={seoTitle} />
+    <meta name="twitter:description" content={seoDescription} />
+    <meta name="twitter:image" content={`${SITE_URL}/og.png`} />
+    {allJsonLd.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(allJsonLd)} />}
+
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function gtag(){ dataLayer.push(arguments); };
+      (function initConsentDefault() {
+        var key = 'aicheck_consent_v1';
+        var stored = null;
+        try { stored = JSON.parse(localStorage.getItem(key) || 'null'); } catch {}
+        var lang = document.documentElement.lang || '';
+        var tz = '';
+        try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch {}
+        var europeTz = /^Europe\//.test(tz) || ['Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Azores'].includes(tz);
+        var consentRequired = lang === 'de' || europeTz;
+        var state = stored && stored.state ? stored.state : (consentRequired ? 'unset_required' : 'granted_all');
+        var granted = state === 'granted_all';
+        window.__AICHECK_CONSENT_REQUIRED__ = consentRequired;
+        window.__AICHECK_CONSENT_STATE__ = state;
+        window.gtag('consent', 'default', {
+          ad_storage: granted ? 'granted' : 'denied',
+          analytics_storage: granted ? 'granted' : 'denied',
+          ad_user_data: granted ? 'granted' : 'denied',
+          ad_personalization: granted ? 'granted' : 'denied',
+        });
+      })();
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-8RF8YQ5YB1', { anonymize_ip: true });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RF8YQ5YB1"></script>
+
+    <link rel="icon" type="image/svg+xml" href="/og.svg" />
+    <link rel="alternate icon" type="image/png" href="/og.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" />
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body data-page-type={toolType === 'hub' ? 'tool_hub' : 'tool'} data-tool-type={toolType} data-page-locale={lang}>
+    <header class="site-header">
+      <a href={homeHref} class="site-logo">AICheck365</a>
+      <nav class="site-nav" id="site-nav">
+        <a href={platformsHref} class="nav-link">{locale.nav.platforms}</a>
+        <a href={toolsHref} class="nav-link">{locale.nav.tools}</a>
+        <a href={blogHref} class="nav-link">{locale.nav.blog}</a>
+        <a href={methodologyHref} class="nav-link">{locale.nav.methodology}</a>
+      </nav>
+      <select id="lang-switch" class="lang-select" aria-label="Select language">
+        <option value="zh-CN" selected={lang === 'zh-CN'}>中文（简）</option>
+        <option value="zh-TW" selected={lang === 'zh-TW'}>中文（繁）</option>
+        <option value="en" selected={lang === 'en'}>English</option>
+        <option value="ja" selected={lang === 'ja'}>日本語</option>
+        <option value="ko" selected={lang === 'ko'}>한국어</option>
+        <option value="de" selected={lang === 'de'}>Deutsch</option>
+        <option value="fr">Français</option>
+        <option value="es">Español</option>
+        <option value="pt-BR">Português</option>
+      </select>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Toggle light/dark theme">◐</button>
+    </header>
+
+    <slot />
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href={homeHref}>{locale.nav.home}</a>
+          <a href={platformsHref}>{locale.nav.platforms}</a>
+          <a href={toolsHref}>{locale.nav.tools}</a>
+          <a href={methodologyHref}>{locale.nav.methodology}</a>
+        </div>
+        <p class="footer-note">© {new Date().getFullYear()} AICheck365 · Local browser analysis · No file upload</p>
+      </div>
+    </footer>
+
+    <script is:inline define:vars={{ toolLangs: TOOL_LANGS, allSiteLangs: ALL_SITE_LANGS }}>
+      (function () {
+        var select = document.getElementById('lang-switch');
+        if (select) select.addEventListener('change', function () {
+          var targetLang = select.value;
+          if (!allSiteLangs.includes(targetLang)) return;
+          if (!toolLangs.includes(targetLang)) {
+            location.assign(targetLang === 'zh-CN' ? '/' : '/' + targetLang + '/');
+            return;
+          }
+          var parts = location.pathname.split('/').filter(Boolean);
+          if (parts.length && toolLangs.includes(parts[0])) parts.shift();
+          var clean = parts.length ? '/' + parts.join('/') + '/' : '/';
+          var target = targetLang === 'zh-CN' ? clean : (clean === '/' ? '/' + targetLang + '/' : '/' + targetLang + clean);
+          location.assign(target);
+        });
+        var toggle = document.getElementById('theme-toggle');
+        if (toggle) toggle.addEventListener('click', function () {
+          var current = document.documentElement.dataset.theme || '';
+          var next = current === 'light' ? 'dark' : 'light';
+          document.documentElement.dataset.theme = next;
+          try { localStorage.setItem('aicheck_theme', next); } catch {}
+        });
+        try {
+          var stored = localStorage.getItem('aicheck_theme');
+          if (stored) document.documentElement.dataset.theme = stored;
+        } catch {}
+      })();
+    </script>
+    <script type="module" src="/scripts/market-analytics.js"></script>
+    <script type="module" src="/scripts/consent.js"></script>
+  </body>
+</html>
