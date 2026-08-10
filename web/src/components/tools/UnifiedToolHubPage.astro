@@ -55,7 +55,7 @@ const jsonLd = [
       {TOOL_SLUGS.map((slug) => {
         const tool = locale.tools[slug];
         return (
-          <a href={`${toolsHref}${slug}/`} class="platform-card card">
+          <a href={`${toolsHref}${slug}/`} class="platform-card card tool-hub-card">
             <div class="platform-card-header"><h2>{tool.h1}</h2></div>
             <p>{tool.lead}</p>
             <span class="card-link">{locale.nav.tools} →</span>

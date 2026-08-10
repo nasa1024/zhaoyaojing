@@ -10,7 +10,7 @@ const routes = [
   'tools/mp4-metadata-inspector',
 ];
 
-test('Japanese, Korean, Traditional Chinese and German tool routes are static, canonical and reciprocal', async ({ request }) => {
+test('Japanese, Korean, Traditional Chinese and German tool routes are static and canonical', async ({ request }) => {
   test.setTimeout(120000);
   for (const locale of locales) {
     for (const route of routes) {
@@ -35,5 +35,5 @@ test('localized ComfyUI tool exposes the real browser-local inspector', async ({
   await expect(page.locator('#tool-filter')).toBeVisible();
   await expect(page.locator('#tool-copy')).toBeVisible();
   await expect(page.locator('#tool-export')).toBeVisible();
-  await expect(page.locator('nav a[href="/ja/tools/"]')).toBeVisible();
+  await expect(page.locator('.site-nav a[href="/ja/tools/"]')).toBeVisible();
 });

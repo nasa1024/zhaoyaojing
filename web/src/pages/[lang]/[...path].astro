@@ -30,16 +30,7 @@ export function getStaticPaths() {
     'platforms/stable-diffusion',
     'platforms/runway',
   ];
-  const explicitRoutes = new Set([
-    'en:',
-    'de:',
-    'en:platforms/stable-diffusion',
-    'en:platforms/comfyui',
-    'en:platforms/firefly',
-    'en:platforms/gemini',
-    'de:blog/how-to-detect-ai-images',
-    'de:blog/how-to-detect-ai-videos',
-  ]);
+  const explicitRoutes = new Set(['en:', 'de:']);
 
   return supportedLangs.flatMap((lang) =>
     [undefined, ...paths]

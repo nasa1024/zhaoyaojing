@@ -13,6 +13,7 @@ interface Props {
 const { title, description, canonical, lang, jsonLd, toolType = 'hub' } = Astro.props;
 const SITE_URL = 'https://www.aicheck365.com';
 const DEFAULT_LANG = 'zh-CN';
+const ALL_SITE_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
 const META_DESCRIPTION_MAX_LENGTH = 170;
 const META_DESCRIPTION_MIN_BOUNDARY = 50;
 const locale = TOOL_LOCALES[lang] ?? TOOL_LOCALES.en;
@@ -105,7 +106,11 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localizedPath(canonicalPath, 'en')}`} />
     {TOOL_LANGS.map((targetLang) => (
-      <link rel="alternate" hreflang={targetLang} href={`${SITE_URL}${localizedPath(canonicalPath, targetLang)}`} />
+      <link
+        rel={targetLang === 'zh-CN' || targetLang === 'en' ? 'alternate' : 'alternate translation'}
+        hreflang={targetLang}
+        href={`${SITE_URL}${localizedPath(canonicalPath, targetLang)}`}
+      />
     ))}
     <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
     <meta property="og:type" content="website" />
@@ -169,13 +174,16 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
         <a href={blogHref} class="nav-link">{locale.nav.blog}</a>
         <a href={methodologyHref} class="nav-link">{locale.nav.methodology}</a>
       </nav>
-      <select id="tool-lang-switch" class="lang-select" aria-label="Select language">
+      <select id="lang-switch" class="lang-select" aria-label="Select language">
         <option value="zh-CN" selected={lang === 'zh-CN'}>中文（简）</option>
         <option value="zh-TW" selected={lang === 'zh-TW'}>中文（繁）</option>
         <option value="en" selected={lang === 'en'}>English</option>
         <option value="ja" selected={lang === 'ja'}>日本語</option>
         <option value="ko" selected={lang === 'ko'}>한국어</option>
         <option value="de" selected={lang === 'de'}>Deutsch</option>
+        <option value="fr">Français</option>
+        <option value="es">Español</option>
+        <option value="pt-BR">Português</option>
       </select>
       <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Toggle light/dark theme">◐</button>
     </header>
@@ -194,14 +202,20 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
       </div>
     </footer>
 
-    <script is:inline define:vars={{ toolLangs: TOOL_LANGS }}>
+    <script is:inline define:vars={{ toolLangs: TOOL_LANGS, allSiteLangs: ALL_SITE_LANGS }}>
       (function () {
-        var select = document.getElementById('tool-lang-switch');
+        var select = document.getElementById('lang-switch');
         if (select) select.addEventListener('change', function () {
+          var targetLang = select.value;
+          if (!allSiteLangs.includes(targetLang)) return;
+          if (!toolLangs.includes(targetLang)) {
+            location.assign(targetLang === 'zh-CN' ? '/' : '/' + targetLang + '/');
+            return;
+          }
           var parts = location.pathname.split('/').filter(Boolean);
           if (parts.length && toolLangs.includes(parts[0])) parts.shift();
           var clean = parts.length ? '/' + parts.join('/') + '/' : '/';
-          var target = select.value === 'zh-CN' ? clean : (clean === '/' ? '/' + select.value + '/' : '/' + select.value + clean);
+          var target = targetLang === 'zh-CN' ? clean : (clean === '/' ? '/' + targetLang + '/' : '/' + targetLang + clean);
           location.assign(target);
         });
         var toggle = document.getElementById('theme-toggle');

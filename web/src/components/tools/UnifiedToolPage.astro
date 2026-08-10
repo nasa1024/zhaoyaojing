@@ -15,6 +15,16 @@ const toolsHref = `${prefix}/tools/`;
 const currentPath = `${toolsHref}${slug}/`;
 const canonical = `${SITE_URL}${currentPath}`;
 const tech = TOOL_TECH[slug];
+const fieldsHeading = lang === 'zh-CN' ? '字段含义' : lang === 'en' ? 'Field meanings' : locale.section.fields;
+const noManifestMessage = {
+  'zh-CN': '此文件中未发现 C2PA Manifest。',
+  'zh-TW': '此檔案中未發現 C2PA Manifest。',
+  en: 'No C2PA manifest found in this file.',
+  ja: 'このファイルに C2PA Manifest は見つかりませんでした。',
+  ko: '이 파일에서 C2PA Manifest를 찾지 못했습니다.',
+  de: 'In dieser Datei wurde kein C2PA-Manifest gefunden.',
+}[lang] ?? 'No C2PA manifest found in this file.';
+const toolUi = slug.startsWith('c2pa-') ? { ...locale.ui, none: noManifestMessage } : locale.ui;
 
 function relatedHref(target) {
   if (target.startsWith('http')) return target;
@@ -91,7 +101,7 @@ const jsonLd = [
         </div>
         <noscript><p class="notice warning">{locale.section.noScript}</p></noscript>
       </section>
-      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(locale.ui)} />
+      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(toolUi)} />
 
       <section>
         <h2>{locale.section.howTo}</h2>
@@ -99,7 +109,7 @@ const jsonLd = [
       </section>
 
       <section>
-        <h2>{locale.section.fields}</h2>
+        <h2>{fieldsHeading}</h2>
         <table class="tool-glossary">
           <tbody>{copy.fields.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}</tbody>
         </table>
@@ -112,11 +122,11 @@ const jsonLd = [
 
       <section>
         <h2>{locale.section.faq}</h2>
-        <div class="faq-list">
+        <dl class="faq-list">
           {copy.faq.map(([question, answer]) => (
-            <details class="faq-item"><summary>{question}</summary><p>{answer}</p></details>
+            <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
           ))}
-        </div>
+        </dl>
       </section>
 
       <section>
