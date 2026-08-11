@@ -30,7 +30,7 @@ export function getStaticPaths() {
     'platforms/stable-diffusion',
     'platforms/runway',
   ];
-  const explicitRoutes = new Set(['en:', 'de:']);
+  const explicitRoutes = new Set(['en:', 'de:', 'en:blog', 'zh-TW:blog']);
 
   return supportedLangs.flatMap((lang) =>
     [undefined, ...paths]
