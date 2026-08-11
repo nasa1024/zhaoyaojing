@@ -1,0 +1,437 @@
+---
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  lang: 'en' | 'zh-TW';
+}
+
+const { lang } = Astro.props;
+const SITE_URL = 'https://www.aicheck365.com';
+const slug = 'claude-watermark-explained';
+const publishedAt = '2026-08-11';
+
+const articles = {
+  en: {
+    title: 'Claude Watermark: Benefits, Limits and Alternatives | AICheck365',
+    description: 'Anthropic now marks Claude-generated text. Learn what the watermark can and cannot prove, and how it compares with SynthID, C2PA, visible labels, and AI detectors.',
+    canonical: `${SITE_URL}/en/blog/${slug}/`,
+    blogHref: '/en/blog/',
+    homeLabel: 'Home',
+    blogLabel: 'Knowledge Base',
+    badge: 'Claude content provenance',
+    h1: 'Claude’s AI watermark: useful transparency, not proof of authorship',
+    meta: 'Published August 11, 2026 · Technical review, not an official Claude detector',
+    lead: 'Anthropic has started adding machine-readable marks to Claude-generated text. That is a meaningful shift: instead of asking a classifier to guess whether prose “sounds like AI,” a verifier can look for a signal deliberately inserted by the provider. But a detected mark still needs careful interpretation. It may show that Claude generated or processed text; it does not prove who wrote every sentence, whether the claims are true, or whether the use of AI was improper.',
+    directHeading: 'The practical answer',
+    directBody: 'Claude’s new mark is a better provenance signal than style-based AI detection, but it is not yet an open, independently verifiable standard. As of August 11, 2026, Anthropic has described the behavior and says it plans to provide third-party detection tools, but it has not published the algorithm, keys, calibrated error rates, or a public verifier. Treat a positive result as evidence of Claude processing—not a verdict on authorship or misconduct—and treat “not detected” as inconclusive.',
+    announcementHeading: 'What Anthropic announced',
+    announcementIntro: 'Anthropic’s support note describes an imperceptible, machine-readable mark embedded in Claude output. The rollout is tied to the EU AI Act transparency requirements that began applying on August 2, 2026.',
+    announcementItems: [
+      'Claude models released on or after August 2, 2026 include marking from launch; Anthropic says it is working to extend support to older models.',
+      'The mark is designed to travel with copied and pasted text and may survive some light editing.',
+      'Heavy rewriting, paraphrasing, translation, or mixing the output with other text can make the mark undetectable.',
+      'A detected mark can also result from Claude proofreading, translating, or editing human-written material, so it does not necessarily mean Claude authored the entire document.',
+      'Anthropic says it plans to make detection tools available to third parties; no public, independently testable Claude verifier was available at this article’s publication time.',
+    ],
+    proofHeading: 'What a detected mark can—and cannot—prove',
+    proofRows: [
+      ['Can support', 'The text was generated or processed by a Claude system that applied the mark.'],
+      ['Cannot prove', 'Claude wrote every sentence from scratch. A proofreading or translation pass may also leave a mark.'],
+      ['Cannot prove', 'The person presenting the text acted dishonestly or violated a policy. That depends on the rules and context.'],
+      ['Cannot prove', 'The content is accurate, original, lawful, or safe. Provenance is not fact-checking.'],
+      ['A missing mark means', 'Only that the verifier did not find a readable mark. The text may predate the rollout, come from an unsupported channel, be too short, or have been substantially edited.'],
+    ],
+    comparisonHeading: 'How Claude’s approach compares with existing marking methods',
+    comparisonIntro: 'The market does not have one universal “AI watermark.” Different systems mark different layers and answer different questions.',
+    comparisonColumns: ['Method', 'How it works', 'Best quality', 'Main limitation'],
+    comparisonRows: [
+      ['Claude machine-readable text mark', 'Anthropic inserts an undisclosed signal into generated text and uses a provider-specific detector.', 'First-party attribution to Claude generation or processing; designed to survive copy/paste and some editing.', 'Closed mechanism and verifier; heavy edits may erase it; a positive result does not establish full authorship.'],
+      ['Google SynthID Text', 'Adjusts token probabilities during generation, producing a statistical pattern that a matching detector scores.', 'Imperceptible generation-time signal; Google has published research and a reference implementation.', 'Detection depends on the watermark configuration and works better on longer, varied text; production keys are not public.'],
+      ['Open statistical token watermarks (KGW, Unigram, related research)', 'Biases a model toward pseudorandom token sets, then measures whether the resulting token pattern is statistically unlikely by chance.', 'Auditable research baselines with explicit thresholds, keys, tokenizers, and attack testing.', 'Not a universal detector: the verifier must know the scheme, tokenizer, key, and settings; paraphrasing and translation reduce evidence.'],
+      ['C2PA / Content Credentials', 'Attaches a cryptographically signed provenance manifest describing creation and edits to a digital asset.', 'Open, interoperable, tamper-evident provenance with trust lists and inspectable assertions.', 'Credentials can be stripped; absence is not evidence of human origin. Adoption is stronger for images, video, and documents than plain copied text.'],
+      ['Visible labels and platform disclosures', 'Displays “AI-generated” or similar text in the interface or beside published content.', 'Immediate and understandable to people, including those without a verifier.', 'The label usually does not travel when content is copied, cropped, exported, or reposted.'],
+      ['Ordinary file metadata (EXIF, XMP, PDF/DOCX properties)', 'Stores generator or software names in editable metadata fields.', 'Cheap, useful context when the original file is available.', 'Unsigned, easy to change, and commonly removed by export, screenshots, social platforms, or metadata cleaners.'],
+      ['Classifier-based AI detectors', 'Estimates whether text resembles machine output using statistical or learned patterns; no mark is inserted at generation time.', 'Can examine unmarked text without provider cooperation.', 'Probability estimate rather than provenance; vulnerable to false positives, model drift, short text, editing, and domain differences.'],
+    ],
+    evaluationHeading: 'Our assessment: a responsible direction, with important conditions',
+    verdict: 'The decision is positive in principle. A first-party provenance signal is more honest and technically meaningful than pretending that writing style alone can identify a model. The risk begins when schools, publishers, employers, or platforms turn a limited signal into an automatic accusation.',
+    positiveHeading: 'Why the move is valuable',
+    positives: [
+      'It moves the industry from stylistic guessing toward intentional provenance.',
+      'It places part of the transparency burden on the model provider instead of only on users and downstream platforms.',
+      'It can make audits and disclosure workflows more consistent across web, API, and cloud access channels.',
+      'It encourages other providers to expose verifiable signals instead of marketing opaque “AI detection” scores.',
+    ],
+    concernHeading: 'What Anthropic should publish next',
+    concerns: [
+      'A public detector interface, versioning policy, and clear support matrix for model, language, output length, and access channel.',
+      'Measured false-positive and false-negative rates at different text lengths and after common edits, translations, and mixed-authorship workflows.',
+      'A precise distinction between generated, rewritten, translated, proofread, and lightly edited content.',
+      'Independent testing or an interoperable verification path so Anthropic is not the only authority able to interpret its own mark.',
+      'A privacy statement confirming that the mark does not encode the user, prompt, account, organization, or other identifying data.',
+      'Appeal and human-review guidance for high-stakes use in education, employment, publishing, moderation, and legal disputes.',
+    ],
+    detectorHeading: 'What a trustworthy Claude watermark checker should report',
+    detectorIntro: 'A responsible checker should not return a single “AI / human” label. It should separate detection status from interpretation.',
+    detectorRows: [
+      ['Verified mark', 'The official or independently validated verifier found a supported Claude mark. Report the verifier version, supported scope, and limitations.'],
+      ['Not detected', 'No supported mark was found. Do not translate this into “human-written.”'],
+      ['Inconclusive', 'The text is too short, heavily edited, mixed, translated, malformed, or otherwise outside the detector’s validated range.'],
+      ['Unsupported', 'No official verifier or compatible marking specification is available for this model, date, language, or channel.'],
+    ],
+    siteHeading: 'What this means for AICheck365',
+    siteBody: 'AICheck365 will not claim Claude attribution from hidden Unicode characters, writing style, or a generic text classifier. The defensible implementation path is to add an experimental text-inspection page now, clearly label it as limited, and connect a Claude-specific result only after Anthropic releases an official verifier or enough technical detail for independent validation. Until then, the site’s strongest verified capabilities remain file-level provenance such as C2PA, EXIF/XMP, PNG workflow data, and MP4/MOV metadata.',
+    ctaLead: 'Read the open provenance standard and inspect the file-level evidence AICheck365 can already verify.',
+    ctas: [
+      ['/en/blog/what-is-c2pa/', 'What C2PA can verify'],
+      ['/en/tools/c2pa-validator/', 'Open the C2PA validator'],
+      ['/en/blog/ai-image-metadata-guide/', 'Read the AI metadata guide'],
+      ['/en/methodology/', 'See our evidence methodology'],
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      ['Does Claude add a watermark to text now?', 'Anthropic says Claude models released on or after August 2, 2026 add a machine-readable mark to generated content, with support for older models being expanded. The exact algorithm has not been publicly documented.'],
+      ['Can AICheck365 detect the Claude watermark today?', 'Not with verified attribution. A future experimental checker could scan hidden Unicode or document metadata, but those signals still could not prove Claude origin. A Claude-specific result should wait for an official verifier or independently reproducible specification.'],
+      ['Does a positive result prove Claude wrote the whole document?', 'No. Claude may have generated, translated, proofread, or revised only part of the text. A positive result is evidence of Claude processing, not a complete authorship history.'],
+      ['Does no watermark mean the text is human-written?', 'No. The mark may be absent because the text predates the rollout, was created through an unsupported path, is too short, or was rewritten, translated, or mixed with other text.'],
+      ['Is C2PA better than a text watermark?', 'They solve related but different problems. C2PA provides open, signed provenance for an asset and its edit history. A statistical text watermark can survive copying because it lives in token choices, but usually requires a provider-specific detector. The strongest ecosystem will combine open provenance, embedded marks, visible disclosure, and careful human interpretation.'],
+    ],
+    sourcesHeading: 'Sources and further reading',
+    sources: [
+      ['https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content', 'Anthropic: How Claude marks AI-generated content', 'The first-party description of Claude’s new machine-readable marking behavior.'],
+      ['https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act', 'European Commission: Article 50 transparency obligations', 'Application dates, marking duties, grace period, and enforcement overview.'],
+      ['https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content', 'EU Code of Practice on Transparency of AI-generated Content', 'Practical framework for marking, detection, and labelling under the AI Act.'],
+      ['https://deepmind.google/models/synthid/', 'Google DeepMind: SynthID', 'Current overview of watermarking for AI-generated image, audio, text, and video.'],
+      ['https://deepmind.google/blog/watermarking-ai-generated-text-and-video-with-synthid/', 'Google DeepMind: SynthID Text and video', 'How token-probability watermarking works and where it performs best.'],
+      ['https://spec.c2pa.org/specifications/', 'C2PA specifications', 'Open technical specifications for signed Content Credentials and provenance.'],
+      ['https://arxiv.org/abs/2301.10226', 'A Watermark for Large Language Models', 'The foundational statistical token-watermark paper and detection framework.'],
+      ['https://github.com/THU-BPM/MarkLLM', 'MarkLLM open-source toolkit', 'Implementations and evaluation tools for multiple LLM watermark families.'],
+    ],
+    back: 'Back to the knowledge base',
+  },
+  'zh-TW': {
+    title: 'Claude 浮水印：優點、限制與現有方案比較 | AICheck365',
+    description: 'Anthropic 開始為 Claude 生成文字加入機器可讀標記。本文說明它能證明什麼、不能證明什麼，並比較 SynthID、C2PA、可見標籤與 AI 文字偵測器。',
+    canonical: `${SITE_URL}/zh-TW/blog/${slug}/`,
+    blogHref: '/zh-TW/blog/',
+    homeLabel: '首頁',
+    blogLabel: '知識庫',
+    badge: 'Claude 內容來源標記',
+    h1: 'Claude 的 AI 浮水印：有助透明，但不能直接證明作者身分',
+    meta: '發布於 2026 年 8 月 11 日 · 本文是技術評析，不是 Claude 官方偵測器',
+    lead: 'Anthropic 已開始在 Claude 生成的文字中加入機器可讀標記。這是一個重要轉變：不再只讓分類器猜測文章「看起來像不像 AI」，而是由模型供應商在生成時主動留下可驗證信號。不過，偵測到標記仍需要謹慎解讀。它可能證明 Claude 曾生成或處理這段文字，卻不能證明每一句都由 Claude 從零撰寫，也不能證明內容正確，或使用 AI 的行為一定不當。',
+    directHeading: '先說結論',
+    directBody: 'Claude 的新標記比單純依賴文風的 AI 文字偵測更有意義，但目前仍不是公開、可由第三方獨立驗證的標準。截至 2026 年 8 月 11 日，Anthropic 已說明大致行為，並表示將向第三方提供偵測工具，但尚未公開演算法、金鑰、校準後的錯誤率或可直接使用的公開驗證器。因此，陽性結果應解讀為「Claude 曾處理此文字」的證據，而不是作者身分或違規行為的最終判決；未偵測到也只能算無法確認。',
+    announcementHeading: 'Anthropic 公布了什麼',
+    announcementIntro: 'Anthropic 的說明文件將它描述為嵌入 Claude 輸出的不可見、機器可讀標記。這次推出也與歐盟《AI 法案》自 2026 年 8 月 2 日開始適用的透明度義務有關。',
+    announcementItems: [
+      '2026 年 8 月 2 日或之後推出的 Claude 模型，從上線起即支援內容標記；Anthropic 表示正把能力擴展到較舊模型。',
+      '標記設計為可隨複製與貼上保留，並可能承受部分輕度編輯。',
+      '大量重寫、改述、翻譯，或與其他文字混合後，標記可能變得無法偵測。',
+      '如果 Claude 只負責校對、翻譯或改寫人類原稿，也可能留下標記，因此陽性結果不等於整份文件都由 Claude 撰寫。',
+      'Anthropic 表示會向第三方提供偵測工具；但在本文發布時，尚無公開、可獨立測試的 Claude 官方驗證器。',
+    ],
+    proofHeading: '偵測到標記能證明什麼，又不能證明什麼',
+    proofRows: [
+      ['可以支持', '這段文字曾由會加入標記的 Claude 系統生成或處理。'],
+      ['不能證明', 'Claude 從零寫下每一句；單純校對或翻譯也可能留下標記。'],
+      ['不能證明', '提交文字的人一定欺騙、作弊或違反規則；仍需依實際政策與情境判斷。'],
+      ['不能證明', '內容真實、原創、合法或安全。來源資訊不等於事實查核。'],
+      ['沒有偵測到代表', '只能表示驗證器找不到可讀標記。文字可能早於推出日期、來自未支援管道、篇幅過短，或已被大量改寫。'],
+    ],
+    comparisonHeading: 'Claude 與市場上現有標記方法有何不同',
+    comparisonIntro: '市場上並不存在一種通用的「AI 浮水印」。不同方法標記不同層級，也回答不同問題。',
+    comparisonColumns: ['方法', '運作方式', '最有價值之處', '主要限制'],
+    comparisonRows: [
+      ['Claude 機器可讀文字標記', 'Anthropic 在生成文字時加入未公開的信號，再由供應商專用偵測器判讀。', '可作為 Claude 生成或處理的第一方來源信號；設計為可承受複製貼上與部分編輯。', '機制與驗證器仍封閉；大量修改可能使標記消失；陽性結果不能直接證明完整作者身分。'],
+      ['Google SynthID Text', '生成時微調 token 的機率分布，形成可由相符偵測器評分的統計圖樣。', '不影響人類閱讀，且 Google 已公開研究與參考實作。', '偵測依賴特定浮水印設定；在較長、變化較多的文字上效果較好，正式產品金鑰並未公開。'],
+      ['開放研究型 token 浮水印（KGW、Unigram 等）', '讓模型偏向偽隨機 token 集合，再檢查實際 token 分布是否顯著偏離隨機情況。', '演算法、門檻、金鑰、tokenizer 與攻擊測試都能被研究者檢查。', '不是通用偵測器；必須知道方案、tokenizer、金鑰與設定，改述與翻譯也會削弱證據。'],
+      ['C2PA / Content Credentials', '在數位資產中附加加密簽章的來源 manifest，記錄建立與編輯流程。', '開放、可互通、可檢查，且能判斷來源聲明是否被竄改。', '內容憑證可能被移除；沒有憑證不能反推為人類作品。現階段在圖片、影片與文件中的採用比純文字複製更成熟。'],
+      ['可見標籤與平台揭露', '在介面或發布內容旁顯示「AI 生成」等文字或圖示。', '人們不需要專用工具就能立即理解。', '內容被複製、裁切、匯出或重新發布後，標籤通常不會跟著保留。'],
+      ['一般檔案 metadata（EXIF、XMP、PDF/DOCX 屬性）', '把生成工具或軟體名稱寫入可編輯的 metadata 欄位。', '成本低，拿到原始檔案時可提供有用脈絡。', '沒有簽章、容易修改，也常被重新匯出、截圖、社群平台或 metadata 清理工具移除。'],
+      ['機率型 AI 文字偵測器', '不在生成時寫入標記，而是用統計或機器學習模型估計文字是否像機器生成。', '不需要模型供應商合作，也能檢查沒有標記的文字。', '它是機率估計而不是來源證明，容易受誤判、模型更新、短文字、改寫與領域差異影響。'],
+    ],
+    evaluationHeading: '我們的評價：方向負責任，但必須設下使用條件',
+    verdict: '整體而言，這個行為值得肯定。由生成端提供第一方來源信號，比假裝只靠文風就能辨識模型更誠實，也更有技術意義。真正的風險，是學校、出版社、雇主或平台把有限信號直接變成自動定罪工具。',
+    positiveHeading: '為什麼這一步有價值',
+    positives: [
+      '讓市場從「猜文風」走向有意識地記錄內容來源。',
+      '把透明度責任的一部分放回模型供應商，而不是全部丟給使用者或下游平台。',
+      '有機會讓網頁、API 與雲端供應商管道採用一致的稽核與揭露流程。',
+      '促使其他模型供應商提供可驗證信號，而不是只販售不透明的「AI 機率分數」。',
+    ],
+    concernHeading: 'Anthropic 接下來應公開什麼',
+    concerns: [
+      '公開驗證器介面、版本管理方式，以及模型、語言、篇幅與存取管道的支援矩陣。',
+      '不同文字長度，以及經過改寫、翻譯、混合作者內容後的誤判率與漏判率。',
+      '清楚區分「生成、改寫、翻譯、校對與輕度編輯」，不要把所有情況都壓成同一個標籤。',
+      '允許獨立測試或提供可互通驗證路徑，避免只有 Anthropic 能解釋自己的標記。',
+      '明確說明浮水印不會寫入使用者、prompt、帳號、組織或其他可識別資訊。',
+      '在教育、就業、出版、內容審核與法律爭議等高風險情境中，提供申訴與人工覆核指引。',
+    ],
+    detectorHeading: '可信任的 Claude 浮水印檢查器應該怎麼回報',
+    detectorIntro: '負責任的工具不應只顯示「AI / 人類」二選一，而要把偵測狀態與解讀分開。',
+    detectorRows: [
+      ['已驗證標記', '官方或經獨立驗證的工具找到支援的 Claude 標記，並同時顯示驗證器版本、支援範圍與限制。'],
+      ['未偵測到', '沒有找到支援的標記，但不能把結果改寫成「人類撰寫」。'],
+      ['無法判定', '文字過短、修改過多、混合來源、經翻譯或格式異常，已超出偵測器的驗證範圍。'],
+      ['不支援', '該模型、日期、語言或存取管道尚無官方驗證器或相容規格。'],
+    ],
+    siteHeading: '這對 AICheck365 代表什麼',
+    siteBody: 'AICheck365 不會只因為偵測到隱藏 Unicode、特定文風或一般文字分類器分數，就宣稱內容來自 Claude。較可靠的做法，是先建立明確標示為實驗性的文字檢查頁；只有當 Anthropic 發布官方驗證器，或公開足以供第三方獨立驗證的技術規格後，才加入 Claude 專屬結論。在那之前，網站最強的可驗證能力仍是檔案層級來源證據，例如 C2PA、EXIF/XMP、PNG workflow 與 MP4/MOV metadata。',
+    ctaLead: '先了解開放來源標準，並使用 AICheck365 已能驗證的檔案層級證據。',
+    ctas: [
+      ['/zh-TW/blog/what-is-c2pa/', '了解 C2PA 能驗證什麼'],
+      ['/zh-TW/tools/c2pa-validator/', '開啟 C2PA 驗證器'],
+      ['/zh-TW/blog/ai-image-metadata-guide/', '閱讀 AI 圖片 Metadata 指南'],
+      ['/zh-TW/methodology/', '查看證據分級方法'],
+    ],
+    faqHeading: '常見問題',
+    faq: [
+      ['Claude 現在會在文字中加入浮水印嗎？', 'Anthropic 表示，2026 年 8 月 2 日或之後推出的 Claude 模型，會在生成內容中加入機器可讀標記，並正在擴展到較舊模型；但具體演算法尚未公開。'],
+      ['AICheck365 現在可以偵測 Claude 浮水印嗎？', '目前不能提供經驗證的 Claude 歸因。未來的實驗性檢查器可以掃描隱藏 Unicode 或文件 metadata，但這些信號仍無法證明內容來自 Claude。Claude 專屬結果應等待官方驗證器或可獨立重現的規格。'],
+      ['陽性結果能證明整份文件都是 Claude 寫的嗎？', '不能。Claude 可能只生成、翻譯、校對或修改部分內容。陽性結果比較適合解讀為 Claude 曾處理文字，而不是完整作者履歷。'],
+      ['沒有浮水印就代表人類撰寫嗎？', '不能這樣判斷。文字可能早於標記推出、來自未支援管道、篇幅過短，或已經被重寫、翻譯或與其他內容混合。'],
+      ['C2PA 比文字浮水印更好嗎？', '兩者解決相近但不同的問題。C2PA 為資產與編輯歷程提供開放、簽章式來源記錄；統計型文字浮水印因存在於 token 選擇中，可以隨複製保留，但通常需要供應商專用偵測器。更完整的生態應結合開放來源憑證、嵌入式標記、可見揭露與人工判讀。'],
+    ],
+    sourcesHeading: '資料來源與延伸閱讀',
+    sources: [
+      ['https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content', 'Anthropic：How Claude marks AI-generated content', 'Claude 新機器可讀標記的第一方說明。'],
+      ['https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act', '歐盟執委會：AI 法案第 50 條透明度義務', '適用日期、標記義務、寬限期與執法概覽。'],
+      ['https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content', '歐盟 AI 生成內容透明度實務守則', 'AI 內容標記、偵測與標示的實務框架。'],
+      ['https://deepmind.google/models/synthid/', 'Google DeepMind：SynthID', '目前針對 AI 圖片、音訊、文字與影片浮水印的官方概覽。'],
+      ['https://deepmind.google/blog/watermarking-ai-generated-text-and-video-with-synthid/', 'Google DeepMind：SynthID Text 與影片', '說明 token 機率浮水印如何運作，以及適合與不適合的情境。'],
+      ['https://spec.c2pa.org/specifications/', 'C2PA 技術規格', '簽章式 Content Credentials 與來源履歷的開放規格。'],
+      ['https://arxiv.org/abs/2301.10226', 'A Watermark for Large Language Models', '統計型 token 浮水印與偵測框架的代表性研究。'],
+      ['https://github.com/THU-BPM/MarkLLM', 'MarkLLM 開源工具箱', '整合多種 LLM 浮水印方法與評估流程。'],
+    ],
+    back: '返回知識庫',
+  },
+};
+
+const c = articles[lang];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: c.homeLabel, item: `${SITE_URL}/${lang}/` },
+      { '@type': 'ListItem', position: 2, name: c.blogLabel, item: `${SITE_URL}/${lang}/blog/` },
+      { '@type': 'ListItem', position: 3, name: c.h1, item: c.canonical },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: c.h1,
+    name: c.h1,
+    description: c.description,
+    url: c.canonical,
+    mainEntityOfPage: c.canonical,
+    inLanguage: lang,
+    datePublished: publishedAt,
+    dateModified: publishedAt,
+    isAccessibleForFree: true,
+    author: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    citation: c.sources.map(([href]) => href),
+    about: [
+      { '@type': 'Thing', name: 'Claude AI watermark' },
+      { '@type': 'Thing', name: 'AI-generated content transparency' },
+      { '@type': 'Thing', name: 'C2PA Content Credentials' },
+      { '@type': 'Thing', name: 'SynthID Text' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: c.faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={c.title}
+  description={c.description}
+  canonical={c.canonical}
+  lang={lang}
+  alternateLangs={['en', 'zh-TW']}
+  jsonLd={jsonLd}
+>
+  <main class="page content-page claude-mark-article">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href={`/${lang}/`}>{c.homeLabel}</a> › <a href={c.blogHref}>{c.blogLabel}</a> › Claude
+    </nav>
+
+    <article class="card content-article priority-seo-page" data-priority-page={`blog/${slug}`}>
+      <div class="article-kicker">{c.badge}</div>
+      <h1>{c.h1}</h1>
+      <p class="article-meta">{c.meta}</p>
+      <p class="lead-text">{c.lead}</p>
+
+      <section class="priority-direct-answer" id="direct-answer">
+        <h2>{c.directHeading}</h2>
+        <p>{c.directBody}</p>
+      </section>
+
+      <section id="announcement">
+        <h2>{c.announcementHeading}</h2>
+        <p>{c.announcementIntro}</p>
+        <ul class="content-list">
+          {c.announcementItems.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section id="proof">
+        <h2>{c.proofHeading}</h2>
+        <div class="table-scroll">
+          <table class="tool-glossary evidence-table">
+            <tbody>
+              {c.proofRows.map(([label, detail]) => <tr><th>{label}</th><td>{detail}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="comparison">
+        <h2>{c.comparisonHeading}</h2>
+        <p>{c.comparisonIntro}</p>
+        <div class="table-scroll">
+          <table class="tool-glossary comparison-table">
+            <thead>
+              <tr>{c.comparisonColumns.map((column) => <th>{column}</th>)}</tr>
+            </thead>
+            <tbody>
+              {c.comparisonRows.map((row) => (
+                <tr>{row.map((cell, index) => index === 0 ? <th>{cell}</th> : <td>{cell}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="evaluation">
+        <h2>{c.evaluationHeading}</h2>
+        <p class="evaluation-verdict">{c.verdict}</p>
+        <div class="evaluation-grid">
+          <div class="evaluation-card">
+            <h3>{c.positiveHeading}</h3>
+            <ul class="content-list">{c.positives.map((item) => <li>{item}</li>)}</ul>
+          </div>
+          <div class="evaluation-card">
+            <h3>{c.concernHeading}</h3>
+            <ul class="content-list">{c.concerns.map((item) => <li>{item}</li>)}</ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="detector-design">
+        <h2>{c.detectorHeading}</h2>
+        <p>{c.detectorIntro}</p>
+        <div class="table-scroll">
+          <table class="tool-glossary evidence-table">
+            <tbody>
+              {c.detectorRows.map(([label, detail]) => <tr><th>{label}</th><td>{detail}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="aicheck365-position">
+        <h2>{c.siteHeading}</h2>
+        <p>{c.siteBody}</p>
+        <div class="cta-box">
+          <p>{c.ctaLead}</p>
+          <div class="related-links">
+            {c.ctas.map(([href, label]) => <a href={href}>{label} →</a>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <h2>{c.faqHeading}</h2>
+        <div class="faq-list">
+          {c.faq.map(([question, answer]) => (
+            <details class="faq-item">
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section id="sources">
+        <h2>{c.sourcesHeading}</h2>
+        <ol class="content-list source-list">
+          {c.sources.map(([href, label, note]) => (
+            <li><a href={href} target="_blank" rel="noopener">{label}</a> — {note}</li>
+          ))}
+        </ol>
+      </section>
+
+      <p class="article-back"><a href={c.blogHref}>← {c.back}</a></p>
+    </article>
+  </main>
+
+  <script is:inline>
+    (() => {
+      const supportedArticleLangs = new Set(['en', 'zh-TW']);
+      const select = document.getElementById('lang-switch');
+      select?.addEventListener('change', (event) => {
+        const value = event.target?.value;
+        if (!value || supportedArticleLangs.has(value)) return;
+        event.stopImmediatePropagation();
+        window.location.assign(value === 'zh-CN' ? '/' : `/${value}/`);
+      }, true);
+    })();
+  </script>
+</Base>
+
+<style>
+  .claude-mark-article { max-width: 1120px; }
+  .article-kicker {
+    display: inline-flex;
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--text-muted);
+  }
+  .table-scroll { overflow-x: auto; margin: 1rem 0 1.5rem; }
+  .comparison-table { min-width: 900px; }
+  .comparison-table thead th { white-space: nowrap; }
+  .comparison-table tbody th { min-width: 190px; }
+  .evidence-table th { min-width: 170px; }
+  .evaluation-verdict {
+    padding: 18px 20px;
+    border-left: 4px solid var(--accent);
+    background: var(--surface-2);
+    border-radius: 0 12px 12px 0;
+    font-weight: 600;
+  }
+  .evaluation-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin: 1.25rem 0 1.75rem;
+  }
+  .evaluation-card {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-2);
+  }
+  .evaluation-card h3 { margin-top: 0; }
+  .article-back { margin-top: 2rem; }
+  .source-list a { overflow-wrap: anywhere; }
+  @media (max-width: 760px) {
+    .evaluation-grid { grid-template-columns: 1fr; }
+  }
+</style>
