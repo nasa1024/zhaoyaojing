@@ -52,17 +52,17 @@ test('English and Traditional Chinese blog indexes feature the Claude article pr
   await page.goto('/en/blog/');
   const englishFeatured = page.locator(`[data-featured-article][href="/en/blog/${SLUG}/"]`);
   await expect(page.locator('h1')).toContainText('Blog');
+  await expect(page.getByText('Featured article', { exact: true })).toBeVisible();
   await expect(englishFeatured).toHaveCount(1);
   await expect(englishFeatured.locator('h2')).toContainText('Claude Watermark');
-  await expect(englishFeatured).toContainText('Featured article');
   await expect(page.locator(`.blog-grid .blog-card[href="/en/blog/${SLUG}/"]`)).toHaveCount(0);
 
   await page.goto('/zh-TW/blog/');
   const traditionalFeatured = page.locator(`[data-featured-article][href="/zh-TW/blog/${SLUG}/"]`);
   await expect(page.locator('h1')).toContainText('部落格');
+  await expect(page.getByText('精選文章', { exact: true })).toBeVisible();
   await expect(traditionalFeatured).toHaveCount(1);
   await expect(traditionalFeatured.locator('h2')).toContainText('Claude 浮水印');
-  await expect(traditionalFeatured).toContainText('精選文章');
   await expect(page.locator(`.blog-grid .blog-card[href="/zh-TW/blog/${SLUG}/"]`)).toHaveCount(0);
 });
 
