@@ -3,6 +3,46 @@ import { applyI18n, setLang } from '/scripts/i18n.js';
 
 applyI18n();
 
+// Blog is a primary discovery surface, not an implementation-oriented
+// "knowledge base" label. Some detector modules re-apply the legacy i18n
+// dictionary after initialization, so observe these links and preserve the
+// public-facing Blog label after every translation pass.
+(function keepBlogNavigationLabel() {
+  const labels = {
+    'zh-CN': '博客',
+    'zh-TW': '部落格',
+    en: 'Blog',
+    ja: 'ブログ',
+    ko: '블로그',
+    de: 'Blog',
+    fr: 'Blog',
+    es: 'Blog',
+    'pt-BR': 'Blog',
+  };
+  const links = Array.from(document.querySelectorAll('[data-i18n="nav.blog"]'));
+  if (!links.length) return;
+
+  const applyLabel = () => {
+    const lang = document.documentElement.lang || 'en';
+    const label = labels[lang] || 'Blog';
+    links.forEach((link) => {
+      if (link.textContent !== label) link.textContent = label;
+    });
+  };
+
+  applyLabel();
+  document.addEventListener('langchange', applyLabel);
+
+  if (typeof MutationObserver === 'function') {
+    const observer = new MutationObserver(applyLabel);
+    links.forEach((link) => observer.observe(link, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    }));
+  }
+})();
+
 // Keep the existing global navigation behavior for languages that still use
 // the English tools fallback, while sending in-content English tool CTAs to a
 // localized tool when that locale is available.

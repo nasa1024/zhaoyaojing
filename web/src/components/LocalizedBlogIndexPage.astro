@@ -10,12 +10,15 @@ const SITE_URL = 'https://www.aicheck365.com';
 
 const data = {
   en: {
-    title: 'AI Detection and Provenance Knowledge Base | AICheck365',
-    description: 'Practical guides to AI content provenance, Claude watermarking, C2PA, image and video metadata, platform signals, and evidence limits.',
+    title: 'AI Detection and Provenance Blog | AICheck365',
+    description: 'Practical articles about AI content provenance, Claude watermarking, C2PA, image and video metadata, platform signals, and evidence limits.',
     canonical: `${SITE_URL}/en/blog/`,
-    h1: 'AI Detection and Provenance Knowledge Base',
-    lead: 'Evidence-first guides to AI content marking, C2PA, metadata, platform signals, and the limits of automated detection.',
-    read: 'Read the guide',
+    h1: 'AICheck365 Blog: AI Detection and Provenance',
+    lead: 'Evidence-first articles about AI content marking, C2PA, metadata, platform signals, and the limits of automated detection.',
+    featured: 'Featured article',
+    featuredRead: 'Read the full analysis',
+    more: 'More articles',
+    read: 'Read the article',
     updated: 'Updated',
     articles: [
       {
@@ -63,12 +66,15 @@ const data = {
     ],
   },
   'zh-TW': {
-    title: 'AI 內容檢測與來源驗證知識庫 | AICheck365',
-    description: '實用指南：Claude 浮水印、C2PA、AI 圖片與影片 metadata、平台來源線索、證據強度與自動偵測限制。',
+    title: 'AI 內容檢測與來源驗證部落格 | AICheck365',
+    description: '實用文章：Claude 浮水印、C2PA、AI 圖片與影片 metadata、平台來源線索、證據強度與自動偵測限制。',
     canonical: `${SITE_URL}/zh-TW/blog/`,
-    h1: 'AI 內容檢測與來源驗證知識庫',
+    h1: 'AICheck365 部落格：AI 內容檢測與來源驗證',
     lead: '以可驗證證據為核心，整理 AI 內容標記、C2PA、metadata、平台來源線索與自動偵測的限制。',
-    read: '閱讀全文',
+    featured: '精選文章',
+    featuredRead: '閱讀完整分析',
+    more: '更多文章',
+    read: '閱讀文章',
     updated: '更新',
     articles: [
       {
@@ -118,6 +124,7 @@ const data = {
 };
 
 const c = data[lang];
+const [featuredArticle, ...otherArticles] = c.articles;
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -141,24 +148,159 @@ const jsonLd = [
 ---
 
 <Base title={c.title} description={c.description} canonical={c.canonical} lang={lang} jsonLd={jsonLd}>
-  <main class="page content-page">
+  <main class="page content-page blog-index-page">
     <div class="content-hero card">
       <h1>{c.h1}</h1>
       <p class="lead-text">{c.lead}</p>
     </div>
 
-    <div class="blog-grid">
-      {c.articles.map((article) => (
-        <a href={article.href} class="blog-card card">
+    <section class="featured-article-section" aria-labelledby="featured-article-label">
+      <p class="featured-article-label" id="featured-article-label">{c.featured}</p>
+      <a
+        href={featuredArticle.href}
+        class="featured-article-card card"
+        data-featured-article
+        aria-label={`${c.featured}: ${featuredArticle.title}`}
+      >
+        <div class="featured-article-copy">
           <div class="tag-row">
-            {article.tags.map((tag) => <span class="tag-inline">{tag}</span>)}
+            {featuredArticle.tags.map((tag) => <span class="tag-inline">{tag}</span>)}
           </div>
-          <h2>{article.title}</h2>
-          <p class="muted">{article.description}</p>
-          <span class="blog-meta">{c.updated} {article.updatedAt}</span>
-          <span class="card-link">{c.read} →</span>
-        </a>
-      ))}
-    </div>
+          <h2>{featuredArticle.title}</h2>
+          <p>{featuredArticle.description}</p>
+          <div class="featured-article-meta">
+            <span>{c.updated} {featuredArticle.updatedAt}</span>
+            <strong>{c.featuredRead} →</strong>
+          </div>
+        </div>
+        <div class="featured-article-mark" aria-hidden="true">
+          <span>Claude</span>
+          <strong>AI</strong>
+          <small>watermark</small>
+        </div>
+      </a>
+    </section>
+
+    <section aria-labelledby="more-articles-heading">
+      <h2 class="blog-section-heading" id="more-articles-heading">{c.more}</h2>
+      <div class="blog-grid">
+        {otherArticles.map((article) => (
+          <a href={article.href} class="blog-card card">
+            <div class="tag-row">
+              {article.tags.map((tag) => <span class="tag-inline">{tag}</span>)}
+            </div>
+            <h3>{article.title}</h3>
+            <p class="muted">{article.description}</p>
+            <span class="blog-meta">{c.updated} {article.updatedAt}</span>
+            <span class="card-link">{c.read} →</span>
+          </a>
+        ))}
+      </div>
+    </section>
   </main>
 </Base>
+
+<style>
+  .featured-article-section {
+    margin: 28px 0 36px;
+  }
+
+  .featured-article-label,
+  .blog-section-heading {
+    margin: 0 0 12px;
+  }
+
+  .featured-article-label {
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .featured-article-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 28px;
+    align-items: stretch;
+    padding: 30px;
+    text-decoration: none;
+    border-width: 2px;
+  }
+
+  .featured-article-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .featured-article-copy h2 {
+    margin: 14px 0 12px;
+    font-size: clamp(1.55rem, 3vw, 2.25rem);
+  }
+
+  .featured-article-copy > p {
+    margin: 0;
+    max-width: 760px;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+
+  .featured-article-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 24px;
+    color: var(--text-muted);
+  }
+
+  .featured-article-meta strong {
+    color: var(--text);
+  }
+
+  .featured-article-mark {
+    display: flex;
+    min-height: 180px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-2);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .featured-article-mark span,
+  .featured-article-mark small {
+    color: var(--text-muted);
+    letter-spacing: .08em;
+  }
+
+  .featured-article-mark strong {
+    font-size: 4.4rem;
+    line-height: .95;
+  }
+
+  .blog-section-heading {
+    font-size: 1.35rem;
+  }
+
+  .blog-card h3 {
+    margin: 14px 0 10px;
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 720px) {
+    .featured-article-card {
+      grid-template-columns: 1fr;
+      padding: 22px;
+    }
+
+    .featured-article-mark {
+      min-height: 120px;
+    }
+
+    .featured-article-meta {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
