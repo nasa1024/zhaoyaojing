@@ -17,6 +17,15 @@ const ALL_SITE_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'p
 const META_DESCRIPTION_MAX_LENGTH = 170;
 const META_DESCRIPTION_MIN_BOUNDARY = 50;
 const locale = TOOL_LOCALES[lang] ?? TOOL_LOCALES.en;
+const BLOG_LABELS: Record<string, string> = {
+  'zh-CN': '博客',
+  'zh-TW': '部落格',
+  en: 'Blog',
+  ja: 'ブログ',
+  ko: '블로그',
+  de: 'Blog',
+};
+const blogLabel = BLOG_LABELS[lang] ?? 'Blog';
 const prefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
 const homeHref = prefix ? `${prefix}/` : '/';
 const toolsHref = `${prefix}/tools/`;
@@ -171,7 +180,7 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
       <nav class="site-nav" id="site-nav">
         <a href={platformsHref} class="nav-link">{locale.nav.platforms}</a>
         <a href={toolsHref} class="nav-link">{locale.nav.tools}</a>
-        <a href={blogHref} class="nav-link">{locale.nav.blog}</a>
+        <a href={blogHref} class="nav-link">{blogLabel}</a>
         <a href={methodologyHref} class="nav-link">{locale.nav.methodology}</a>
       </nav>
       <select id="lang-switch" class="lang-select" aria-label="Select language">
