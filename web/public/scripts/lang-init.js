@@ -3,6 +3,28 @@ import { applyI18n, setLang } from '/scripts/i18n.js';
 
 applyI18n();
 
+// Blog is a primary discovery surface, not an implementation-oriented
+// "knowledge base" label. Keep the rendered navigation concise and familiar
+// across desktop and mobile after the legacy i18n dictionary has been applied.
+(function applyBlogNavigationLabel() {
+  const lang = document.documentElement.lang || 'en';
+  const labels = {
+    'zh-CN': '博客',
+    'zh-TW': '部落格',
+    en: 'Blog',
+    ja: 'ブログ',
+    ko: '블로그',
+    de: 'Blog',
+    fr: 'Blog',
+    es: 'Blog',
+    'pt-BR': 'Blog',
+  };
+  const label = labels[lang] || 'Blog';
+  document.querySelectorAll('[data-i18n="nav.blog"]').forEach((link) => {
+    link.textContent = label;
+  });
+})();
+
 // Keep the existing global navigation behavior for languages that still use
 // the English tools fallback, while sending in-content English tool CTAs to a
 // localized tool when that locale is available.
