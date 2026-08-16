@@ -1,6 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
 
+const SITE_URL = 'https://www.aicheck365.com';
+const claudeFeature = {
+  title: 'Claude 文字水印 2026 更新：它如何工作、能证明什么？',
+  desc: 'Anthropic 更新了技术说明：Claude 的标记不是隐藏 Unicode，而是生成时形成的统计式选词模式。文章同时评论检测 API、标准编辑与源码例外、轻度修改后的存活率，以及为什么“没有水印”不能证明由人类撰写。',
+  date: '2026-08-16',
+  tags: ['Claude', '文字水印', '2026 更新'],
+  traditionalHref: '/zh-TW/blog/claude-watermark-explained/',
+  englishHref: '/en/blog/claude-watermark-explained/',
+};
+
 const articles = [
   {
     slug: 'how-to-detect-ai-videos',
@@ -19,7 +29,7 @@ const articles = [
   {
     slug: 'how-to-detect-ai-images',
     title: '如何判断一张图片是否 AI 生成？元数据、视觉特征与分类器实战',
-    desc: '按"先查文件、再看画面、最后交叉验证"的顺序排查，讲清每种方法的可信边界：有信号约等于实锤，没信号不等于清白。',
+    desc: '按“先查文件、再看画面、最后交叉验证”的顺序排查，讲清每种方法的可信边界：有信号约等于实锤，没信号不等于清白。',
     date: '2026-06',
     tags: ['检测方法', 'AI 图片'],
   },
@@ -41,39 +51,158 @@ const articles = [
 
 const jsonLd = [
   {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.aicheck365.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.aicheck365.com/blog/" },
-    ]
-  }
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog/` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'AICheck365 AI 图片、视频与内容来源博客',
+    description: 'AI 生成内容检测、Claude 文字水印、C2PA、图片与视频元数据及来源验证文章。',
+    url: `${SITE_URL}/blog/`,
+    inLanguage: 'zh-CN',
+    dateModified: '2026-08-16',
+    isAccessibleForFree: true,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: claudeFeature.title,
+          url: `${SITE_URL}${claudeFeature.traditionalHref}`,
+        },
+        ...articles.map((article, index) => ({
+          '@type': 'ListItem',
+          position: index + 2,
+          name: article.title,
+          url: `${SITE_URL}/blog/${article.slug}/`,
+        })),
+      ],
+    },
+  },
 ];
 ---
 
 <Base
-  title="AI 图片/视频检测知识库 | AICheck365 Blog"
-  description="AICheck365 知识库：记录 AI 图片和视频检测方法、Gemini C2PA 案例、MP4 元数据、Content Credentials 字段和常见平台线索。"
+  title="AI 内容检测与来源验证博客 | AICheck365"
+  description="AICheck365 博客：Claude 文字水印、AI 图片和视频检测、C2PA、MP4 元数据、Content Credentials 与平台来源线索的实测和评论。"
   canonical="https://www.aicheck365.com/blog/"
   jsonLd={jsonLd}
 >
-  <main class="page content-page">
+  <main class="page content-page blog-root-page">
     <div class="content-hero card">
-      <h1>AI 图片/视频检测知识库</h1>
-      <p class="lead-text">这里记录一些实际会用到的检测方法：看图片元数据、看视频容器、看 C2PA、看平台留下的字段，也说明这些方法的边界。</p>
+      <h1>AI 内容检测与来源验证博客</h1>
+      <p class="lead-text">这里记录实际可复核的检测方法、平台标记更新与技术评论：看文件元数据、看 C2PA、看统计水印，也说明每种方法能够证明什么、不能证明什么。</p>
     </div>
 
-    <div class="blog-grid">
-      {articles.map(a => (
-        <a href={`/blog/${a.slug}/`} class="blog-card card">
+    <section class="root-feature-section" aria-labelledby="claude-feature-heading">
+      <p class="root-feature-label">最新更新</p>
+      <div class="root-feature card" data-claude-feature>
+        <div class="root-feature-copy">
           <div class="tag-row">
-            {a.tags.map(t => <span class="tag-inline">{t}</span>)}
+            {claudeFeature.tags.map((tag) => <span class="tag-inline">{tag}</span>)}
           </div>
-          <h2>{a.title}</h2>
-          <p class="muted">{a.desc}</p>
-          <span class="blog-meta">{a.date} · AICheck365</span>
-        </a>
-      ))}
-    </div>
+          <h2 id="claude-feature-heading">{claudeFeature.title}</h2>
+          <p>{claudeFeature.desc}</p>
+          <span class="blog-meta">更新于 {claudeFeature.date} · AICheck365</span>
+          <div class="root-feature-actions">
+            <a href={claudeFeature.traditionalHref} class="btn-primary">阅读繁体中文版</a>
+            <a href={claudeFeature.englishHref} class="btn-secondary">Read in English</a>
+          </div>
+        </div>
+        <div class="root-feature-mark" aria-hidden="true">
+          <span>Claude</span>
+          <strong>AI</strong>
+          <small>watermark · 2026</small>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="more-blog-articles">
+      <h2 class="blog-section-heading" id="more-blog-articles">更多检测文章</h2>
+      <div class="blog-grid">
+        {articles.map((article) => (
+          <a href={`/blog/${article.slug}/`} class="blog-card card">
+            <div class="tag-row">
+              {article.tags.map((tag) => <span class="tag-inline">{tag}</span>)}
+            </div>
+            <h3>{article.title}</h3>
+            <p class="muted">{article.desc}</p>
+            <span class="blog-meta">{article.date} · AICheck365</span>
+          </a>
+        ))}
+      </div>
+    </section>
   </main>
 </Base>
+
+<style>
+  .root-feature-section { margin: 28px 0 38px; }
+  .root-feature-label {
+    margin: 0 0 12px;
+    color: var(--text-muted);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+  }
+  .root-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 210px;
+    gap: 28px;
+    align-items: stretch;
+    padding: 30px;
+    border-width: 2px;
+  }
+  .root-feature-copy h2 {
+    margin: 14px 0 12px;
+    font-size: clamp(1.55rem, 3vw, 2.25rem);
+  }
+  .root-feature-copy > p {
+    max-width: 780px;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+  .root-feature-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .root-feature-mark {
+    display: flex;
+    min-height: 190px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-2);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .root-feature-mark span,
+  .root-feature-mark small {
+    color: var(--text-muted);
+    letter-spacing: .08em;
+  }
+  .root-feature-mark strong {
+    font-size: 4.4rem;
+    line-height: .95;
+  }
+  .blog-section-heading { margin: 0 0 14px; }
+  .blog-card h3 {
+    margin: 14px 0 10px;
+    font-size: 1.2rem;
+  }
+  @media (max-width: 720px) {
+    .root-feature {
+      grid-template-columns: 1fr;
+      padding: 22px;
+    }
+    .root-feature-mark { min-height: 120px; }
+  }
+</style>
