@@ -15,18 +15,18 @@ const data = {
     canonical: `${SITE_URL}/en/blog/`,
     h1: 'AICheck365 Blog: AI Detection and Provenance',
     lead: 'Evidence-first articles about AI content marking, C2PA, metadata, platform signals, and the limits of automated detection.',
-    featured: 'Featured article',
-    featuredRead: 'Read the full analysis',
+    featured: 'Updated featured analysis',
+    featuredRead: 'Read the 2026 update',
     more: 'More articles',
     read: 'Read the article',
     updated: 'Updated',
     articles: [
       {
         href: '/en/blog/claude-watermark-explained/',
-        title: 'Claude Watermark: Benefits, Limits and Alternatives',
-        description: 'What Anthropic’s new machine-readable text mark can prove, what it cannot prove, and how it compares with SynthID, C2PA, visible labels, metadata, and AI detectors.',
-        updatedAt: '2026-08-11',
-        tags: ['Claude', 'Text watermark', 'Provenance'],
+        title: 'Claude Watermark Explained: How It Works, EU Exceptions and Detection Limits',
+        description: 'Updated after Anthropic’s revised explanation: learn why the mark is a statistical word-choice pattern—not hidden Unicode—what the planned detector API could prove, and how standard editing, code, short text, SynthID, and C2PA differ.',
+        updatedAt: '2026-08-16',
+        tags: ['Claude watermark detector', '2026 update', 'AI provenance'],
       },
       {
         href: '/en/blog/how-to-detect-ai-images/',
@@ -71,18 +71,18 @@ const data = {
     canonical: `${SITE_URL}/zh-TW/blog/`,
     h1: 'AICheck365 部落格：AI 內容檢測與來源驗證',
     lead: '以可驗證證據為核心，整理 AI 內容標記、C2PA、metadata、平台來源線索與自動偵測的限制。',
-    featured: '精選文章',
-    featuredRead: '閱讀完整分析',
+    featured: '最新更新分析',
+    featuredRead: '閱讀 2026 更新',
     more: '更多文章',
     read: '閱讀文章',
     updated: '更新',
     articles: [
       {
         href: '/zh-TW/blog/claude-watermark-explained/',
-        title: 'Claude 浮水印：優點、限制與現有方案比較',
-        description: '解析 Anthropic 新機器可讀文字標記能證明什麼、不能證明什麼，並比較 SynthID、C2PA、可見標籤、metadata 與 AI 文字偵測器。',
-        updatedAt: '2026-08-11',
-        tags: ['Claude', '文字浮水印', '來源驗證'],
+        title: 'Claude 浮水印 2026 更新：運作方式、歐盟例外與偵測限制',
+        description: '依 Anthropic 新版說明更新：解析它為何是統計式選詞圖樣而非隱藏 Unicode、未來偵測 API 能證明什麼，以及標準編輯、程式碼、短文字、SynthID 與 C2PA 的差異。',
+        updatedAt: '2026-08-16',
+        tags: ['Claude 浮水印偵測', '2026 更新', 'AI 來源驗證'],
       },
       {
         href: '/zh-TW/blog/how-to-detect-ai-images/',
@@ -134,6 +134,7 @@ const jsonLd = [
     url: c.canonical,
     inLanguage: lang,
     isAccessibleForFree: true,
+    dateModified: '2026-08-16',
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: c.articles.map((article, index) => ({
