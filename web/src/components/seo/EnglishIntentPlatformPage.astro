@@ -1,0 +1,372 @@
+---
+import Base from '../../layouts/Base.astro';
+
+interface Props {
+  slug: 'comfyui' | 'stable-diffusion' | 'firefly';
+}
+
+const { slug } = Astro.props;
+const SITE_URL = 'https://www.aicheck365.com';
+const updatedAt = '2026-08-27';
+
+const profiles = {
+  comfyui: {
+    title: 'ComfyUI EXIF and Metadata Viewer: Extract Workflow JSON | AICheck365',
+    description: 'Inspect original ComfyUI PNG files for prompt, workflow JSON, node graph data, Stable Diffusion parameters, model names, seed, sampler, CFG, and dimensions.',
+    h1: 'ComfyUI EXIF Explained: Where Prompt and Workflow Metadata Actually Live',
+    meta: 'Guide intent: understand ComfyUI metadata storage · Updated 2026-08-27 · Parser: aicheck 0.2.0',
+    lead: '“ComfyUI EXIF” is common search shorthand, but the useful generation data is usually stored in PNG text chunks, not camera EXIF. This guide explains where prompt and workflow JSON live, what each chunk means, what removes them, and how much evidentiary weight they deserve. Use the separate extractor when you are ready to upload a PNG and read the fields.',
+    directAnswer: {
+      heading: 'The answer: check prompt and workflow PNG chunks first',
+      body: 'An original ComfyUI PNG commonly carries prompt and workflow keys inside tEXt, iTXt, or zTXt chunks. The values can include the node graph, checkpoint or model name, seed, sampler, scheduler, steps, CFG, width, and height. These chunks are unsigned and editable, so they explain how a file was made but do not provide tamper-evident proof.',
+      cta: { href: '/en/tools/png-parameter-extractor/', label: 'Extract ComfyUI workflow metadata' },
+    },
+    ownershipRows: [
+      ['This platform guide', 'Learn where ComfyUI stores metadata, why it is not camera EXIF, what survives sharing, and how to interpret the evidence.'],
+      ['PNG Parameter Extractor', 'Upload an original PNG, search prompt/workflow fields, copy a safe summary, and export the raw JSON.'],
+    ],
+    sampleHeading: 'Real sample and verified parser output',
+    sampleRows: [
+      ['ComfyUI / Stable Diffusion XL PNG', 'An original PNG from the official ComfyUI examples is bundled in the public sample set.'],
+      ['Fields found', 'Readable prompt and workflow text chunks, full unsigned workflow JSON, node graph data, model references, and generation settings.'],
+      ['Evidence level', 'Strong descriptive provenance, but lower confidence than a valid C2PA signature because the chunks can be edited or copied.'],
+    ],
+    signalHeading: 'What each ComfyUI field tells you',
+    signalRows: [
+      ['prompt', 'Serialized node inputs and generation parameters. It often includes class_type values and model or sampler settings.'],
+      ['workflow', 'The graph layout, nodes, links, and UI structure that can often be loaded back into ComfyUI when the original export is intact.'],
+      ['Model and sampling fields', 'Checkpoint or model file names, seed, sampler, scheduler, steps, CFG, width, and height when preserved.'],
+      ['Raw PNG text', 'The original tEXt, iTXt, and zTXt values. They may contain prompts, file paths, or custom-node details that should be reviewed before sharing.'],
+    ],
+    insights: [
+      {
+        heading: 'Why an EXIF-only reader can miss everything',
+        body: 'EXIF is a camera-oriented tag system for fields such as exposure, ISO, aperture, and lens data. A multiline prompt or serialized node graph does not fit that model. PNG text chunks accept arbitrary key-value content, so ComfyUI uses them instead. A file can therefore contain a complete workflow while an EXIF-only tool reports nothing.',
+      },
+      {
+        heading: 'What preserves the workflow—and what removes it',
+        body: 'Copying or moving the original PNG usually preserves the chunks. Converting to JPEG, taking a screenshot, re-exporting through a non-preserving editor, or uploading to a service that re-encodes the image commonly removes them. An empty result means this copy carries no readable workflow; it does not prove the image was not made with ComfyUI.',
+      },
+    ],
+    steps: {
+      heading: 'How to inspect a ComfyUI PNG without losing evidence',
+      items: [
+        ['Keep the direct export', 'Use the PNG written by ComfyUI, not a screenshot, JPEG conversion, or social-media download.'],
+        ['Open the PNG Parameter Extractor', 'The file is parsed locally in the browser and is not uploaded.'],
+        ['Check prompt and workflow', 'Confirm which chunks exist before reading model, seed, sampler, CFG, and node details.'],
+        ['Review the raw JSON carefully', 'Large workflows can contain prompts, paths, and custom-node information that may be sensitive.'],
+        ['Interpret it as unsigned evidence', 'A preserved workflow is highly informative, but it can be edited and is not equivalent to a signed credential.'],
+      ],
+    },
+    limits: [
+      'Prompt and workflow chunks are unsigned and can be edited, removed, or copied to another image.',
+      'Screenshots, JPEG conversion, social-media re-encoding, and many optimizers remove PNG text chunks.',
+      'Custom nodes and extensions may write fields that cannot always be normalized into friendly labels.',
+      'No workflow found means only that this copy has no readable workflow data.',
+    ],
+    faq: [
+      ['Is ComfyUI metadata really EXIF?', 'Usually not. The important generation data is commonly stored in PNG text chunks named prompt and workflow, separate from camera EXIF tags.'],
+      ['Can I recover the exact ComfyUI workflow?', 'Often yes when the original PNG preserved the workflow chunk. Custom nodes and external models may still need to be installed separately.'],
+      ['Why is workflow metadata weaker than C2PA?', 'It is unsigned and editable. A valid C2PA manifest can detect tampering; a ComfyUI workflow mainly explains the production process.'],
+      ['Is the PNG uploaded?', 'No. Parsing runs locally in your browser.'],
+    ],
+    related: [
+      ['/en/tools/png-parameter-extractor/', 'Open the PNG Parameter Extractor'],
+      ['/en/platforms/stable-diffusion/', 'Understand Stable Diffusion PNG Info'],
+      ['/en/tools/exif-xmp-reader/', 'Inspect actual EXIF/XMP fields'],
+      ['/en/blog/ai-image-metadata-guide/', 'Read the AI image metadata guide'],
+    ],
+    sources: [
+      ['https://github.com/comfyanonymous/ComfyUI_examples', 'Official ComfyUI examples', 'Source of the bundled SDXL workflow PNG.'],
+      ['/data/samples.json', 'AICheck365 public sample records', 'Sample origin, test date, observed signals, and known limits.'],
+      ['https://www.w3.org/TR/png-3/', 'W3C PNG Third Edition', 'Standard reference for PNG chunks and text storage.'],
+      ['/en/methodology/', 'AICheck365 methodology', 'How unsigned metadata is weighted against signed provenance.'],
+    ],
+  },
+  'stable-diffusion': {
+    title: 'Stable Diffusion PNG Info: Read Prompts and Parameters | AICheck365',
+    description: 'Read Stable Diffusion PNG info in your browser: the parameters chunk from A1111, ComfyUI prompt and workflow JSON, and NovelAI metadata. Free, with no upload.',
+    h1: 'Stable Diffusion PNG Info Explained: A1111 Parameters vs ComfyUI Workflow',
+    meta: 'Guide intent: understand Stable Diffusion PNG Info · Updated 2026-08-27 · Parser: aicheck 0.2.0',
+    lead: 'Stable Diffusion “PNG Info” is not one universal metadata format. AUTOMATIC1111 commonly writes a parameters string, ComfyUI writes prompt and workflow JSON, and NovelAI uses its own recognizable values. This guide explains how to tell them apart, which settings each format preserves, and why the information can disappear. Use the extractor page when you want to upload a file and read the data.',
+    directAnswer: {
+      heading: 'The answer: identify the writer from the PNG key name',
+      body: 'A parameters key usually indicates an AUTOMATIC1111-style export containing prompt, negative prompt, steps, sampler, CFG, seed, size, model, and hash in one text value. prompt and workflow keys indicate ComfyUI and carry a serialized node graph. NovelAI is recognized from the stored values. None of these formats is signed.',
+      cta: { href: '/en/tools/png-parameter-extractor/', label: 'Read Stable Diffusion PNG parameters' },
+    },
+    ownershipRows: [
+      ['This platform guide', 'Understand the differences among A1111 parameters, ComfyUI workflow JSON, and NovelAI metadata.'],
+      ['PNG Parameter Extractor', 'Upload a PNG and directly search, copy, or export the parameters and raw text chunks.'],
+    ],
+    sampleHeading: 'Bundled sample and verified parser output',
+    sampleRows: [
+      ['ComfyUI / Stable Diffusion XL PNG', 'A reproducible original from the official ComfyUI examples is included in the public sample set.'],
+      ['Verified result', 'The parser finds prompt and workflow chunks with a full unsigned graph and generation settings.'],
+      ['Evidence level', 'Highly useful descriptive metadata, but not tamper-evident because PNG text chunks are unsigned.'],
+    ],
+    signalHeading: 'How Stable Diffusion front ends store PNG Info',
+    signalRows: [
+      ['parameters', 'AUTOMATIC1111 convention: prompt, negative prompt, steps, sampler, CFG, seed, dimensions, model, and model hash in one string.'],
+      ['prompt / workflow', 'ComfyUI convention: node graph and generation settings serialized as JSON, often reloadable in the original front end.'],
+      ['NovelAI values', 'Recognized from the content rather than only the key name and reported separately from A1111 output.'],
+      ['Other text keys', 'Software, Comment, Description, Source, and Author may identify a front end or export tool, but remain unsigned.'],
+    ],
+    insights: [
+      {
+        heading: 'Why Stable Diffusion metadata is often mistaken for EXIF',
+        body: 'People often use “EXIF” to mean any information stored inside an image. In practice, Stable Diffusion front ends favor PNG text chunks because they can hold long prompts and structured workflow data. An EXIF-only reader can therefore miss the parameters entirely even when PNG Info is intact.',
+      },
+      {
+        heading: 'Why parameters disappear after sharing',
+        body: 'PNG text survives ordinary file copying but rarely survives re-encoding. JPEG conversion, screenshots, messaging apps, social platforms, and image optimizers commonly discard the chunks. The image can look identical while the prompt and workflow evidence is gone.',
+      },
+    ],
+    steps: {
+      heading: 'How to read Stable Diffusion PNG Info correctly',
+      items: [
+        ['Start with the original PNG', 'Avoid screenshots, JPEG conversions, and files downloaded back from social platforms.'],
+        ['Open the PNG Parameter Extractor', 'Parsing happens locally in the browser with no file upload.'],
+        ['Identify the front-end convention', 'parameters points to A1111-style output; prompt or workflow points to ComfyUI.'],
+        ['Read only the fields actually present', 'Check prompt, negative prompt, seed, sampler, CFG, steps, model, hash, and size without assuming every exporter writes all of them.'],
+        ['Treat the result as descriptive evidence', 'It can explain the generation process but cannot detect edits the way a valid signature can.'],
+      ],
+    },
+    limits: [
+      'PNG text chunks are unsigned and can be edited, removed, or copied between files.',
+      'JPEG conversion, screenshots, social-media re-encoding, and many optimizers destroy the parameters.',
+      'Custom front ends and extensions may use fields the parser cannot fully normalize.',
+      'No parameters found does not mean the image was not generated with Stable Diffusion.',
+    ],
+    faq: [
+      ['How do I read Stable Diffusion PNG Info?', 'Upload the original PNG to the PNG Parameter Extractor. It reads tEXt, iTXt, and zTXt chunks locally and shows the same underlying data front-end PNG Info views use.'],
+      ['Why are my Stable Diffusion parameters missing?', 'The file was probably re-encoded, converted, optimized, or screenshotted. Those operations often preserve the pixels while removing the text chunks.'],
+      ['Does the extractor support both A1111 and ComfyUI?', 'Yes. It distinguishes the parameters convention from prompt/workflow JSON and reports the structures separately.'],
+      ['Does PNG Info prove an image is AI-generated?', 'It is strong descriptive evidence but not signed proof. The values can be changed or copied to another image.'],
+    ],
+    related: [
+      ['/en/tools/png-parameter-extractor/', 'Open the PNG Parameter Extractor'],
+      ['/en/platforms/comfyui/', 'Learn how ComfyUI stores workflow JSON'],
+      ['/en/tools/exif-xmp-reader/', 'Inspect EXIF/XMP instead'],
+      ['/en/blog/ai-image-metadata-guide/', 'Read the AI metadata guide'],
+    ],
+    sources: [
+      ['https://github.com/comfyanonymous/ComfyUI_examples', 'Official ComfyUI examples', 'Source of the bundled SDXL workflow PNG.'],
+      ['/data/samples.json', 'AICheck365 public sample records', 'Sample provenance, test date, observed signals, and limits.'],
+      ['https://www.w3.org/TR/png-3/', 'W3C PNG Third Edition', 'Standard reference for tEXt, iTXt, and zTXt chunks.'],
+      ['/en/methodology/', 'AICheck365 methodology', 'How unsigned metadata is interpreted.'],
+    ],
+  },
+  firefly: {
+    title: 'Adobe Firefly Content Credentials: Verify C2PA in Files | AICheck365',
+    description: 'Check Adobe Firefly files for Content Credentials: C2PA manifest, signature and trust state, digitalSourceType and XMP fields — verified against a real Firefly sample.',
+    h1: 'Adobe Firefly C2PA Checker: Verify Content Credentials in the Original File',
+    meta: 'Free · No sign-up · Local browser verification · Real Firefly sample tested · Updated 2026-08-27',
+    lead: 'Adobe Firefly files can carry signed C2PA Content Credentials, so the original export can provide stronger evidence than visual guessing. This page explains what Firefly credentials claim, how signature validity differs from certificate trust, what removes the manifest, and how the bundled sample behaves. Use the validator to inspect your own file locally.',
+    directAnswer: {
+      heading: 'The answer: validate the signature before trusting the claim',
+      body: 'An intact Firefly credential can declare digitalSourceType = trainedAlgorithmicMedia and identify the claim generator. First confirm that the manifest validates against the asset hash. Then inspect trust separately: a signature can be cryptographically valid while its certificate is not present in the active trust list.',
+      cta: { href: '/en/tools/c2pa-validator/', label: 'Check a Firefly file for C2PA' },
+    },
+    ownershipRows: [
+      ['This Firefly guide', 'Understand Content Credentials, valid versus trusted, the bundled sample, evidence strength, and common failure modes.'],
+      ['C2PA Validator', 'Upload an image or video and inspect the manifest, signature state, certificate, assertions, ingredients, and raw JSON.'],
+    ],
+    sampleHeading: 'Real Firefly sample and verified result',
+    sampleRows: [
+      ['Adobe Firefly JPEG', 'A public Content Authenticity Initiative example asset is bundled in the site sample set.'],
+      ['Verified result', 'The manifest declares trainedAlgorithmicMedia and the signature is cryptographically valid. The certificate is not in this engine’s trust list, so the result is valid rather than trusted.'],
+      ['Evidence level', 'Signed, checkable provenance—the strongest evidence category exposed by the site when validation succeeds.'],
+    ],
+    signalHeading: 'What to read in Firefly Content Credentials',
+    signalRows: [
+      ['Manifest and claim generator', 'What the file declares about creation or editing and which software produced the claim.'],
+      ['digitalSourceType', 'trainedAlgorithmicMedia indicates generative-AI creation when it appears inside a valid signed claim.'],
+      ['Signature validity', 'Whether the credential verifies cryptographically and whether the current file still matches the recorded asset hash.'],
+      ['Trust state', 'Whether the signer chains to a trusted root in the active list. It is intentionally reported separately from validity.'],
+    ],
+    insights: [
+      {
+        heading: 'Valid and trusted answer different questions',
+        body: 'Valid means the signature checks out and the file matches the signed claim. Trusted means the certificate chains to a root accepted by the trust list in use. The bundled Firefly sample demonstrates a normal valid-but-untrusted result; this is not the same as tampering or an invalid signature.',
+      },
+      {
+        heading: 'Why an empty result says very little',
+        body: 'Content Credentials are stored inside the file and can be removed by screenshots, format conversion, re-encoding, editors that do not preserve C2PA, and social platforms. Finding a valid credential is strong evidence. Finding none cannot distinguish a file that never had one from a file that lost it later.',
+      },
+    ],
+    steps: {
+      heading: 'How to verify a Firefly file',
+      items: [
+        ['Use the original export', 'Prefer the file saved directly from Firefly or Adobe before posting, editing, converting, or taking a screenshot.'],
+        ['Open the C2PA Validator', 'The manifest is parsed locally in the browser and the file is not uploaded.'],
+        ['Read signature validity first', 'Confirm the asset hash matches and no signature validation issue is reported.'],
+        ['Read trust separately', 'A valid-but-untrusted result can be normal when the signer is outside the active trust list.'],
+        ['Inspect the actual claim', 'Check digitalSourceType, claim generator, assertions, and actions instead of assuming every credential describes generation.'],
+      ],
+    },
+    limits: [
+      'Screenshots, format conversion, re-encoding, and non-preserving editors can remove Content Credentials.',
+      'Trust depends on the active certificate list, so valid-but-untrusted is not automatically suspicious.',
+      'A manifest may describe editing actions rather than generative creation; read the claim itself.',
+      'No manifest found does not prove the file did not come from Firefly.',
+    ],
+    faq: [
+      ['Does Adobe Firefly add Content Credentials?', 'Firefly is one of the platforms that can attach C2PA Content Credentials. Presence still depends on the export path and whether later processing preserved the manifest.'],
+      ['Why does a valid Firefly file show as untrusted?', 'Validity checks the cryptographic signature and asset integrity. Trust checks whether the certificate chains to a root in the active list. A file can legitimately be valid and untrusted at the same time.'],
+      ['Can Firefly Content Credentials be removed?', 'Yes. Screenshots, re-encoding, format conversion, social uploads, and editors without C2PA preservation commonly remove them.'],
+      ['Is the Firefly checker free?', 'Yes. It runs locally in your browser, requires no account, and does not upload the file.'],
+    ],
+    related: [
+      ['/en/tools/c2pa-validator/', 'Open the C2PA Validator'],
+      ['/en/tools/exif-xmp-reader/', 'Inspect supporting EXIF/XMP fields'],
+      ['/en/blog/what-is-c2pa/', 'Learn how C2PA works'],
+      ['/en/platforms/dall-e/', 'Compare OpenAI Content Credentials'],
+    ],
+    sources: [
+      ['/data/samples.json', 'AICheck365 public sample records', 'Firefly sample provenance, test date, observed signals, and known limits.'],
+      ['https://github.com/contentauth/example-assets', 'Content Authenticity Initiative example assets', 'Public source of the bundled Firefly JPEG.'],
+      ['https://spec.c2pa.org/specifications/specifications/2.2/index.html', 'C2PA Technical Specification 2.2', 'Manifest structure, assertions, and signature validation.'],
+      ['/en/methodology/', 'AICheck365 methodology', 'How validity, trust, and evidence tiers are reported.'],
+    ],
+  },
+};
+
+const profile = profiles[slug];
+if (!profile) throw new Error(`Unsupported intent platform page: ${slug}`);
+
+const canonicalPath = `/en/platforms/${slug}/`;
+const canonical = `${SITE_URL}${canonicalPath}`;
+const faqJsonLd = profile.faq.map(([question, answer]) => ({
+  '@type': 'Question',
+  name: question,
+  acceptedAnswer: { '@type': 'Answer', text: answer },
+}));
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: profile.h1,
+    description: profile.description,
+    url: canonical,
+    inLanguage: 'en',
+    dateModified: updatedAt,
+    author: { '@type': 'Organization', name: 'AICheck365' },
+    publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/en/` },
+      { '@type': 'ListItem', position: 2, name: 'Platform Guides', item: `${SITE_URL}/en/platforms/` },
+      { '@type': 'ListItem', position: 3, name: profile.h1, item: canonical },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqJsonLd,
+  },
+];
+---
+
+<Base title={profile.title} description={profile.description} canonical={canonical} lang="en" jsonLd={jsonLd}>
+  <main class="page content-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/en/">Home</a>
+      <span aria-hidden="true"> › </span>
+      <a href="/en/platforms/">Platform Guides</a>
+      <span aria-hidden="true"> › </span>
+      <span>{profile.h1}</span>
+    </nav>
+
+    <article
+      class="card content-article priority-seo-page"
+      data-priority-page={`platforms/${slug}`}
+      data-seo-intent={slug === 'firefly' ? 'verification-guide' : 'informational-guide'}
+    >
+      <h1>{profile.h1}</h1>
+      <p class="article-meta">{profile.meta}</p>
+      <p class="lead-text">{profile.lead}</p>
+
+      <section class="cta-box" aria-labelledby="direct-answer-heading">
+        <h2 id="direct-answer-heading">{profile.directAnswer.heading}</h2>
+        <p>{profile.directAnswer.body}</p>
+        <a class="primary" href={profile.directAnswer.cta.href} style="display:inline-block;text-decoration:none;padding:12px 24px;">
+          {profile.directAnswer.cta.label} →
+        </a>
+      </section>
+
+      <section>
+        <h2>Guide page or extraction tool?</h2>
+        <table class="tool-glossary">
+          <tbody>
+            {profile.ownershipRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>{profile.sampleHeading}</h2>
+        <table class="tool-glossary">
+          <tbody>
+            {profile.sampleRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>{profile.signalHeading}</h2>
+        <table class="tool-glossary">
+          <tbody>
+            {profile.signalRows.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+          </tbody>
+        </table>
+      </section>
+
+      {profile.insights.map((insight) => (
+        <section>
+          <h2>{insight.heading}</h2>
+          <p>{insight.body}</p>
+        </section>
+      ))}
+
+      <section>
+        <h2>{profile.steps.heading}</h2>
+        <ol class="content-list">
+          {profile.steps.items.map(([label, value]) => <li><strong>{label}:</strong> {value}</li>)}
+        </ol>
+      </section>
+
+      <section>
+        <h2>Limits</h2>
+        <ul class="content-list">{profile.limits.map((item) => <li>{item}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2>FAQ</h2>
+        <dl class="faq-list">
+          {profile.faq.map(([question, answer]) => (
+            <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
+          ))}
+        </dl>
+      </section>
+
+      <section>
+        <h2>Related tools and guides</h2>
+        <div class="related-links">
+          {profile.related.map(([href, label]) => <a href={href}>{label} →</a>)}
+        </div>
+      </section>
+
+      <section>
+        <h2>Sources and verification records</h2>
+        <ul class="content-list">
+          {profile.sources.map(([href, label, note]) => (
+            <li><a href={href}>{label}</a> — {note}</li>
+          ))}
+        </ul>
+      </section>
+    </article>
+  </main>
+</Base>

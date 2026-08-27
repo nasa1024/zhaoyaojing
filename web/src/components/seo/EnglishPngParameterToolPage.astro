@@ -1,0 +1,169 @@
+---
+import ToolBase from '../../layouts/ToolBase.astro';
+import { TOOL_LOCALES, TOOL_TECH } from '../../data/localized-tools.js';
+
+const SITE_URL = 'https://www.aicheck365.com';
+const slug = 'png-parameter-extractor';
+const lang = 'en';
+const locale = TOOL_LOCALES.en;
+const tech = TOOL_TECH[slug];
+const canonical = `${SITE_URL}/en/tools/${slug}/`;
+
+const copy = {
+  title: 'PNG Parameter Extractor: ComfyUI, A1111 & NovelAI | AICheck365',
+  description: 'Extract PNG parameters from ComfyUI, AUTOMATIC1111, Stable Diffusion and NovelAI. Read workflow JSON, prompts, seed, sampler, CFG and model data locally—no upload.',
+  h1: 'PNG Parameter Extractor for ComfyUI, A1111 and NovelAI',
+  lead: 'Upload an original PNG to extract its tEXt, iTXt, and zTXt chunks. The tool separates ComfyUI prompt/workflow JSON, AUTOMATIC1111 parameters, Stable Diffusion settings, NovelAI clues, model names, seed, sampler, scheduler, steps, CFG, dimensions, and raw text values.',
+  uploadTitle: 'Upload a PNG to extract workflow and generation parameters',
+  uploadZone: 'Click or drag an original PNG here',
+  formats: 'PNG tEXt / iTXt / zTXt · local browser parsing',
+  usage: [
+    'Use the PNG exported directly by the generation front end, not a screenshot, JPEG conversion, or social-media download.',
+    'Read the writer summary first: parameters usually means A1111; prompt or workflow usually means ComfyUI.',
+    'Search, copy a safe summary, or export the complete JSON only after reviewing prompts, paths, and workflow data for sensitive content.',
+  ],
+  fields: [
+    ['ComfyUI workflow', 'prompt, workflow, node graph, class_type values, checkpoint/model references, seed, sampler, scheduler, steps, CFG, width, and height.'],
+    ['AUTOMATIC1111 / A1111', 'Positive and negative prompts, steps, sampler, CFG, seed, size, model, model hash, and related settings from the parameters string.'],
+    ['NovelAI and raw PNG text', 'Recognized NovelAI values plus every readable tEXt, iTXt, and zTXt chunk preserved for inspection and JSON export.'],
+  ],
+  limits: [
+    'PNG parameters are unsigned and can be edited, removed, or copied to an unrelated image.',
+    'Screenshots, JPEG conversion, image optimization, messaging apps, and social-media re-encoding commonly remove the text chunks.',
+    'No parameters found means only that this copy has no readable generation chunks; it does not prove human creation.',
+  ],
+  faq: [
+    ['Is this the ComfyUI metadata viewer?', 'It is the upload-and-extract tool for ComfyUI workflow metadata as well as A1111, Stable Diffusion, and NovelAI PNG parameters. The separate ComfyUI guide explains where the data is stored and how to interpret it.'],
+    ['Is ComfyUI metadata stored in EXIF?', 'Usually not. ComfyUI commonly writes prompt and workflow JSON into PNG text chunks rather than camera EXIF tags.'],
+    ['Does it support compressed zTXt chunks?', 'Yes. The parser reads tEXt, iTXt, and readable zTXt chunks and reports their original source.'],
+    ['Is my PNG uploaded?', 'No. Parsing runs locally in your browser.'],
+  ],
+};
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: copy.h1,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    description: copy.description,
+    url: canonical,
+    isAccessibleForFree: true,
+    inLanguage: lang,
+    dateModified: '2026-08-27',
+    featureList: [
+      'ComfyUI prompt and workflow JSON extraction',
+      'AUTOMATIC1111 parameters parsing',
+      'Stable Diffusion and NovelAI metadata reading',
+      'PNG tEXt, iTXt and zTXt inspection',
+      'Local browser analysis with no upload',
+    ],
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/en/` },
+      { '@type': 'ListItem', position: 2, name: 'Tools', item: `${SITE_URL}/en/tools/` },
+      { '@type': 'ListItem', position: 3, name: copy.h1, item: canonical },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: copy.faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+];
+---
+
+<ToolBase title={copy.title} description={copy.description} canonical={canonical} lang={lang} jsonLd={jsonLd} toolType={slug}>
+  <main class="page content-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/en/">Home</a>
+      <span aria-hidden="true"> › </span>
+      <a href="/en/tools/">Tools</a>
+      <span aria-hidden="true"> › </span>
+      <span>{copy.h1}</span>
+    </nav>
+
+    <article class="card content-article priority-seo-page" data-seo-intent="transactional-tool" data-tool-owner="png-parameter-extractor">
+      <h1>{copy.h1}</h1>
+      <p class="article-meta">Tool intent: upload, extract, search, copy, and export · Updated 2026-08-27</p>
+      <p class="lead-text">{copy.lead}</p>
+
+      <section id="tool-inspector" data-tool={slug} class="card tool-card">
+        <h2>{copy.uploadTitle}</h2>
+        <div class="tool-upload">
+          <label class="tool-drop-zone" id="tool-drop-zone" for="tool-file-input">
+            <input id="tool-file-input" type="file" accept={tech.accept} />
+            <span class="upload-icon" aria-hidden="true">↥</span>
+            <span>{copy.uploadZone}</span>
+            <small class="muted">{copy.formats}</small>
+          </label>
+          <p id="tool-status" class="status muted" role="status" aria-live="polite"></p>
+          <div class="tool-toolbar">
+            <input id="tool-filter" type="text" placeholder={locale.ui.filterPlaceholder} aria-label={locale.ui.filterPlaceholder} />
+            <button id="tool-copy" class="ghost" type="button">{locale.ui.copy}</button>
+            <button id="tool-export" class="ghost" type="button">{locale.ui.exportJson}</button>
+          </div>
+          <div id="tool-output" class="tool-output hidden"></div>
+        </div>
+        <noscript><p class="notice warning">{locale.section.noScript}</p></noscript>
+      </section>
+      <script type="application/json" id="tool-i18n" set:html={JSON.stringify(locale.ui)} />
+
+      <section class="cta-box">
+        <h2>This is the extraction page</h2>
+        <p>Use this page when you have a PNG and need the actual fields. For an explanation of storage, evidence strength, and why metadata disappears, open the matching platform guide.</p>
+        <div class="related-links">
+          <a href="/en/platforms/comfyui/">Where ComfyUI stores prompt and workflow metadata →</a>
+          <a href="/en/platforms/stable-diffusion/">A1111 parameters vs ComfyUI workflow →</a>
+        </div>
+      </section>
+
+      <section>
+        <h2>{locale.section.howTo}</h2>
+        <ol class="content-list">{copy.usage.map((item) => <li>{item}</li>)}</ol>
+      </section>
+
+      <section>
+        <h2>What the extractor returns</h2>
+        <table class="tool-glossary">
+          <tbody>{copy.fields.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}</tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>{locale.section.limits}</h2>
+        <ul class="content-list">{copy.limits.map((item) => <li>{item}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2>{locale.section.faq}</h2>
+        <dl class="faq-list">
+          {copy.faq.map(([question, answer]) => (
+            <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
+          ))}
+        </dl>
+      </section>
+
+      <section>
+        <h2>{locale.section.related}</h2>
+        <div class="related-links">
+          <a href="/en/platforms/comfyui/">ComfyUI metadata storage guide →</a>
+          <a href="/en/platforms/stable-diffusion/">Stable Diffusion PNG Info guide →</a>
+          <a href="/en/tools/exif-xmp-reader/">Inspect actual EXIF/XMP fields →</a>
+          <a href="/en/blog/ai-image-metadata-guide/">AI image metadata guide →</a>
+        </div>
+      </section>
+    </article>
+  </main>
+</ToolBase>
+
+<script>import '../../scripts/tool-inspector.js';</script>

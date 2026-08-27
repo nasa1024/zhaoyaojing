@@ -24,7 +24,7 @@ test('English ComfyUI page owns the comfyui exif intent without pretending it is
   await expect(page.locator('h1')).toContainText('ComfyUI EXIF');
   await expect(page.locator('.lead-text')).toContainText('not camera EXIF');
   await expect(page.getByText('ComfyUI / Stable Diffusion XL PNG')).toBeVisible();
-  await expect(page.locator('a[href="/en/tools/png-parameter-extractor/"]')).toBeVisible();
+  await expect(page.locator('a[href="/en/tools/png-parameter-extractor/"]').first()).toBeVisible();
 });
 
 test('German video page targets videoerkennung and links to the German metadata tool', async ({ page }) => {
