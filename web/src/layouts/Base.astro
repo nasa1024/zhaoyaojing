@@ -28,7 +28,7 @@ const SITE_NAME = 'AICheck365';
 const SITE_DESCRIPTION = 'A browser-local AI image and video origin detector for C2PA, EXIF, XMP, PNG text chunks, MP4/MOV metadata, file-name clues, and video frame watermark signals.';
 const DEFAULT_LANG = 'zh-CN';
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
-const LOCALIZED_TOOL_LANGS = ['en'];
+const LOCALIZED_TOOL_LANGS = new Set(['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de']);
 const META_DESCRIPTION_MAX_LENGTH = 170;
 const META_DESCRIPTION_MIN_BOUNDARY = 50;
 const SEO_KEYWORDS = [
@@ -205,11 +205,7 @@ const canonicalHref = urlLang
 const navPrefix = pageLang !== DEFAULT_LANG ? `/${pageLang}` : '';
 const homeHref = navPrefix ? `${navPrefix}/` : '/';
 const platformsHref = `${navPrefix}/platforms/`;
-const toolsLang = LOCALIZED_TOOL_LANGS.includes(pageLang)
-  ? pageLang
-  : pageLang.startsWith('zh')
-    ? DEFAULT_LANG
-    : 'en';
+const toolsLang = LOCALIZED_TOOL_LANGS.has(pageLang) ? pageLang : 'en';
 const toolsHref = toolsLang === DEFAULT_LANG ? '/tools/' : `/${toolsLang}/tools/`;
 const toolsNoLocalize = toolsLang !== pageLang;
 const aboutHref = `${navPrefix}/about/`;
