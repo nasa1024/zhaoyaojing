@@ -141,12 +141,12 @@
     "locale": "en",
     "pageType": "tool",
     "toolType": "png-parameter-extractor",
-    "title": "ComfyUI Metadata Viewer: PNG Parameter Extractor | AICheck365",
-    "description": "ComfyUI Metadata Viewer / PNG Parameter Extractor: read PNG tEXt, iTXt, zTXt, ComfyUI workflow, A1111 parameters, Stable Diffusion, and NovelAI metadata locally.",
+    "title": "PNG Parameter Extractor: ComfyUI, A1111 & NovelAI | AICheck365",
+    "description": "Extract PNG parameters from ComfyUI, AUTOMATIC1111, Stable Diffusion and NovelAI. Read workflow JSON, prompts, seed, sampler, CFG and model data locally—no upload.",
     "canonical": "https://www.aicheck365.com/en/tools/png-parameter-extractor/",
-    "primaryKeyword": "ComfyUI metadata viewer",
+    "primaryKeyword": "PNG parameter extractor",
     "draft": false,
-    "updatedAt": "2026-06-21",
+    "updatedAt": "2026-08-27",
     "internalLinks": ["/en/platforms/comfyui/", "/en/platforms/stable-diffusion/", "/en/tools/exif-xmp-reader/", "/en/blog/ai-image-metadata-guide/"]
   },
   {
