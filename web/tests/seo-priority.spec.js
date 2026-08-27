@@ -27,13 +27,13 @@ test('English ComfyUI page owns the comfyui exif intent without pretending it is
   await expect(page.locator('a[href="/en/tools/png-parameter-extractor/"]')).toBeVisible();
 });
 
-test('German video page targets videoerkennung and keeps unavailable tool locales root-only', async ({ page }) => {
+test('German video page targets videoerkennung and links to the German metadata tool', async ({ page }) => {
   await page.goto('/de/blog/how-to-detect-ai-videos/');
   await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-priority-page', 'blog/how-to-detect-ai-videos');
   await expect(page.locator('h1')).toContainText('Videoerkennung');
   await expect(page.getByText('Google Veo MP4')).toBeVisible();
-  await expect(page.locator('a[href="/tools/mp4-metadata-inspector/"]')).toBeVisible();
-  await expect(page.locator('a[href="/de/tools/mp4-metadata-inspector/"]')).toHaveCount(0);
+  await expect(page.locator('a[href="/de/tools/mp4-metadata-inspector/"]')).toBeVisible();
+  await expect(page.locator('a[href="/tools/mp4-metadata-inspector/"]')).toHaveCount(0);
 });
 
 test('Brazilian Portuguese AI image page has local-language sample-backed content', async ({ page }) => {
