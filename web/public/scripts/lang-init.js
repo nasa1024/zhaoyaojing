@@ -43,17 +43,26 @@ applyI18n();
   }
 })();
 
-// Keep the existing global navigation behavior for languages that still use
-// the English tools fallback, while sending in-content English tool CTAs to a
-// localized tool when that locale is available.
-(function localizeContentToolLinks() {
+// Production HTML is rewritten at build time so crawlers receive localized
+// tool links without hydration. Keep this browser-side pass as a fallback for
+// `astro dev`, old cached HTML, and pages rendered outside the normal build.
+(function localizeToolLinksFallback() {
   const lang = document.documentElement.lang || 'en';
   const localizedToolLangs = new Set(['zh-TW', 'ja', 'ko', 'de']);
   if (!localizedToolLangs.has(lang)) return;
-  document.querySelectorAll('main a[href="/en/tools/"], main a[href^="/en/tools/"]').forEach((link) => {
+
+  const selectors = [
+    'a[href="/tools/"]',
+    'a[href^="/tools/"]',
+    'a[href="/en/tools/"]',
+    'a[href^="/en/tools/"]',
+  ].join(', ');
+
+  document.querySelectorAll(selectors).forEach((link) => {
     const href = link.getAttribute('href');
     if (!href) return;
-    link.setAttribute('href', `/${lang}${href.slice('/en'.length)}`);
+    const toolPath = href.startsWith('/en/tools/') ? href.slice('/en'.length) : href;
+    link.setAttribute('href', `/${lang}${toolPath}`);
     link.removeAttribute('data-no-localize');
   });
 })();
@@ -107,7 +116,7 @@ themeBtn?.addEventListener('click', () => {
   applyTheme(document.body.dataset.theme === 'light' ? 'dark' : 'light');
 });
 
-// ─── ad_viewable: fire once when a reserved ad slot scrolls into view ─────
+// ─── ad_viewable: fire once when a reserved ad slot scrolls into view ──────
 // Measures ad-slot viewability (spec §18). Works on the reserved containers
 // today; stays correct once live AdSense markup is uncommented. Sends only a
 // slot identifier — never file or result data.
