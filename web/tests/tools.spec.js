@@ -55,18 +55,20 @@ test('Tools nav link points to the localized English tools hub', async ({ page }
   await expect(link).toHaveText('Tools');
 });
 
-test('Tools nav falls back to English outside Chinese locales', async ({ page }) => {
-  for (const locale of ['ja', 'ko', 'de', 'fr', 'es', 'pt-BR']) {
+test('Tools nav uses localized hubs where available and falls back to English elsewhere', async ({ page }) => {
+  for (const locale of ['zh-TW', 'ja', 'ko', 'de']) {
+    await page.goto(`/${locale}/`);
+    const link = page.locator('.site-nav a[data-i18n="nav.tools"]');
+    await expect(link).toHaveAttribute('href', `/${locale}/tools/`);
+    await expect(link).not.toHaveAttribute('data-no-localize', 'true');
+  }
+
+  for (const locale of ['fr', 'es', 'pt-BR']) {
     await page.goto(`/${locale}/`);
     const link = page.locator('.site-nav a[data-i18n="nav.tools"]');
     await expect(link).toHaveAttribute('href', '/en/tools/');
     await expect(link).toHaveAttribute('data-no-localize', 'true');
   }
-
-  await page.goto('/zh-TW/');
-  const traditionalChineseLink = page.locator('.site-nav a[data-i18n="nav.tools"]');
-  await expect(traditionalChineseLink).toHaveAttribute('href', '/tools/');
-  await expect(traditionalChineseLink).toHaveAttribute('data-no-localize', 'true');
 });
 
 test('C2PA tool body copy is server-rendered (works with JS disabled)', async ({ browser }) => {
