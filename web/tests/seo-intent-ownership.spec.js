@@ -14,7 +14,7 @@ const guideCases = [
     intent: 'informational-guide',
     title: 'Stable Diffusion PNG Info',
     h1: 'Stable Diffusion PNG Info Explained',
-    marker: 'AUTOMATIC1111 / A1111',
+    marker: 'AUTOMATIC1111 convention',
     toolHref: '/en/tools/png-parameter-extractor/',
   },
   {
