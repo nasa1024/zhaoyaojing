@@ -285,6 +285,7 @@ function parseBuiltPage(filePath) {
   }
 
   const jsonLdPattern = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
+  const modifiedDates = [];
   for (const match of html.matchAll(jsonLdPattern)) {
     const attrs = parseAttributes(`<script${match[1]}>`);
     if (attrs.type?.toLowerCase() !== 'application/ld+json') continue;
@@ -294,7 +295,7 @@ function parseBuiltPage(filePath) {
       continue;
     }
     try {
-      JSON.parse(payload);
+      collectDateModified(JSON.parse(payload), modifiedDates);
     } catch (error) {
       fail(`${label}: JSON-LD is not valid JSON (${error.message})`);
     }
@@ -312,7 +313,17 @@ function parseBuiltPage(filePath) {
     noindex,
     alternateLinks,
     alternateByLang,
+    dateModified: modifiedDates.sort().at(-1) ?? null,
   };
+}
+
+function collectDateModified(node, dates) {
+  if (Array.isArray(node)) {
+    for (const item of node) collectDateModified(item, dates);
+  } else if (node && typeof node === 'object') {
+    if (typeof node.dateModified === 'string') dates.push(node.dateModified.slice(0, 10));
+    for (const value of Object.values(node)) collectDateModified(value, dates);
+  }
 }
 
 function localToday() {
@@ -463,6 +474,15 @@ for (const page of builtPages) {
     if (sitemapUrls.has(page.canonical)) fail(`${page.label}: noindex canonical must not appear in sitemap: ${page.canonical}`);
   } else if (!sitemapUrls.has(page.canonical)) {
     fail(`${page.label}: indexable canonical is missing from sitemap: ${page.canonical}`);
+  }
+}
+// Google compares sitemap lastmod with the page's own dates; keep both sourced
+// from the same update so neither signal looks stale or inflated.
+for (const page of builtPages) {
+  const lastmod = sitemapEntries.get(page.canonical);
+  if (!lastmod || !page.dateModified) continue;
+  if (lastmod.slice(0, 10) !== page.dateModified) {
+    fail(`${page.label}: sitemap lastmod ${lastmod.slice(0, 10)} does not match JSON-LD dateModified ${page.dateModified}`);
   }
 }
 for (const sitemapUrl of sitemapUrls) {

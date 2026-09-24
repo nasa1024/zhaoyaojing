@@ -303,6 +303,11 @@ function normalizeMetaDescription(value: string) {
 }
 const seoTitle = normalizeMetaTitle(title, pageLang);
 const seoDescription = normalizeMetaDescription(description);
+// Truncation silently drops the keywords at the end of the copy (the English
+// homepage lost its C2PA/EXIF/PNG/MP4 terms this way), so surface it at build.
+if (seoDescription !== description.trim().replace(/\s+/g, ' ')) {
+  console.warn(`[seo] meta description truncated on ${Astro.url.pathname}: "${seoDescription}"`);
+}
 const normalizedJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const siteJsonLd = [
   {
