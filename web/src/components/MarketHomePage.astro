@@ -13,10 +13,11 @@ interface Props { lang: 'en' | 'de' }
 const { lang } = Astro.props;
 const SITE_URL = 'https://www.aicheck365.com';
 const prefix = `/${lang}`;
+const dateModified = lang === 'en' ? '2026-09-24' : '2026-08-10';
 const copy = {
   en: {
     title: 'Free AI Image & Video Detector: C2PA & Metadata | AICheck365',
-    description: 'Free AI image and video detector for original files. Check C2PA Content Credentials, EXIF/XMP, PNG parameters, MP4/MOV metadata, and watermark clues locally in your browser.',
+    description: 'Free AI image and video detector for original files: check C2PA Content Credentials, EXIF/XMP, PNG, MP4 and MOV metadata locally in your browser, with no upload.',
     eyebrow: 'Free AI image and video verification',
     h1: 'Free AI Image & Video Detector — check C2PA, metadata and watermarks',
     lead: 'Drop an original image or video. AICheck365 reads verifiable file evidence—Content Credentials, metadata, generation parameters, container fields, and surviving watermark clues—without uploading the file.',
@@ -28,6 +29,7 @@ const copy = {
     direct: 'A valid C2PA manifest that declares trained algorithmic media is strong provenance evidence. EXIF/XMP software fields, PNG workflows, file names, and visual watermarks are supporting clues that can be edited or removed. An empty result means this copy has no readable evidence; it does not prove the media is human-made.',
     clusterTitle: 'Popular checks in the United States and English search',
     cluster: [
+      ['/en/ai-video-detector/', 'Free AI video detector for MP4/MOV files'],
       ['/en/platforms/stable-diffusion/', 'Stable Diffusion PNG info and parameters'],
       ['/en/platforms/comfyui/', 'ComfyUI workflow and prompt metadata'],
       ['/en/platforms/firefly/', 'Adobe Firefly Content Credentials'],
@@ -72,7 +74,7 @@ const jsonLd = [
     browserRequirements: 'Modern browser with WebAssembly and JavaScript',
     isAccessibleForFree: true,
     inLanguage: lang,
-    dateModified: '2026-08-10',
+    dateModified,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     featureList: ['C2PA Content Credentials', 'EXIF and XMP metadata', 'PNG generation parameters', 'MP4/MOV metadata', 'Local browser processing'],
   },

@@ -69,7 +69,7 @@ test('Firefly page exposes the verification promise and real-sample status above
 test('PNG Parameter Extractor owns the transactional upload intent', async ({ page }) => {
   await page.goto('/en/tools/png-parameter-extractor/');
 
-  await expect(page).toHaveTitle('PNG Parameter Extractor: ComfyUI, A1111 & NovelAI | AICheck365');
+  await expect(page).toHaveTitle('PNG Info Online: Parameter Extractor for ComfyUI & A1111 | AICheck365');
   await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-seo-intent', 'transactional-tool');
   await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-tool-owner', 'png-parameter-extractor');
   await expect(page.locator('h1')).toHaveText('PNG Parameter Extractor for ComfyUI, A1111 and NovelAI');
@@ -96,4 +96,22 @@ test('intent pages are present in the initial server-rendered HTML', async ({ re
     expect(html, pathname).toContain(intentMarkup);
     expect(html, pathname).toContain(h1);
   }
+});
+
+test('English AI video detector owns the transactional video intent with the real detector', async ({ page, request }) => {
+  await page.goto('/en/ai-video-detector/');
+
+  await expect(page).toHaveTitle('Free AI Video Detector: Check MP4 & MOV Files Online | AICheck365');
+  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('h1')).toContainText('Free AI Video Detector');
+  await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-tool-owner', 'ai-video-detector');
+  await expect(page.locator('#file-input')).toHaveAttribute('accept', /video\/mp4/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://www.aicheck365.com/en/ai-video-detector/');
+
+  for (const pathname of ['/en/', '/en/blog/how-to-detect-ai-videos/']) {
+    const html = await (await request.get(pathname)).text();
+    expect(html, pathname).toContain('href="/en/ai-video-detector/"');
+  }
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+  expect(sitemap).toContain('https://www.aicheck365.com/en/ai-video-detector/');
 });

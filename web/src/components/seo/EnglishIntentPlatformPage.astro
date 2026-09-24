@@ -7,15 +7,16 @@ interface Props {
 
 const { slug } = Astro.props;
 const SITE_URL = 'https://www.aicheck365.com';
-const updatedAt = '2026-08-27';
+const defaultUpdatedAt = '2026-08-27';
 
 const profiles = {
   comfyui: {
     title: 'ComfyUI EXIF and Metadata Viewer: Extract Workflow JSON | AICheck365',
-    description: 'Inspect original ComfyUI PNG files for prompt, workflow JSON, node graph data, Stable Diffusion parameters, model names, seed, sampler, CFG, and dimensions.',
+    description: 'ComfyUI metadata viewer for original PNGs: extract the prompt, full workflow JSON, model, seed, sampler and CFG locally in your browser. Free, no upload.',
     h1: 'ComfyUI EXIF Explained: Where Prompt and Workflow Metadata Actually Live',
-    meta: 'Guide intent: understand ComfyUI metadata storage · Updated 2026-08-27 · Parser: aicheck 0.2.0',
-    lead: '“ComfyUI EXIF” is common search shorthand, but the useful generation data is usually stored in PNG text chunks, not camera EXIF. This guide explains where prompt and workflow JSON live, what each chunk means, what removes them, and how much evidentiary weight they deserve. Use the separate extractor when you are ready to upload a PNG and read the fields.',
+    meta: 'Free · No upload · Real ComfyUI sample tested · Updated 2026-09-24 · Parser: aicheck 0.2.0',
+    updatedAt: '2026-09-24',
+    lead: '“ComfyUI EXIF” is common search shorthand, but the useful generation data is usually stored in PNG text chunks, not camera EXIF. This guide explains where prompt and workflow JSON live, what each chunk means, what removes them, and how much evidentiary weight they deserve. To view a file’s prompt and workflow JSON right away, open the free PNG Parameter Extractor—it reads the chunks in your browser without uploading the image.',
     directAnswer: {
       heading: 'The answer: check prompt and workflow PNG chunks first',
       body: 'An original ComfyUI PNG commonly carries prompt and workflow keys inside tEXt, iTXt, or zTXt chunks. The values can include the node graph, checkpoint or model name, seed, sampler, scheduler, steps, CFG, width, and height. These chunks are unsigned and editable, so they explain how a file was made but do not provide tamper-evident proof.',
@@ -65,9 +66,11 @@ const profiles = {
       'No workflow found means only that this copy has no readable workflow data.',
     ],
     faq: [
+      ['How do I view ComfyUI metadata from a PNG?', 'Open the original PNG in the PNG Parameter Extractor. It reads the prompt and workflow chunks locally and shows the prompt, workflow JSON, model, seed, sampler and CFG. Nothing is uploaded.'],
       ['Is ComfyUI metadata really EXIF?', 'Usually not. The important generation data is commonly stored in PNG text chunks named prompt and workflow, separate from camera EXIF tags.'],
       ['Can I recover the exact ComfyUI workflow?', 'Often yes when the original PNG preserved the workflow chunk. Custom nodes and external models may still need to be installed separately.'],
       ['Why is workflow metadata weaker than C2PA?', 'It is unsigned and editable. A valid C2PA manifest can detect tampering; a ComfyUI workflow mainly explains the production process.'],
+      ['How do I stop ComfyUI from saving metadata?', 'Start ComfyUI with the --disable-metadata launch flag and saved images will no longer include the prompt and workflow chunks. For a file you already exported, converting it to JPEG or re-saving it in an editor that drops PNG text chunks removes them; check the result in the extractor afterwards.'],
       ['Is the PNG uploaded?', 'No. Parsing runs locally in your browser.'],
     ],
     related: [
@@ -84,11 +87,12 @@ const profiles = {
     ],
   },
   'stable-diffusion': {
-    title: 'Stable Diffusion PNG Info: Read Prompts and Parameters | AICheck365',
-    description: 'Read Stable Diffusion PNG info in your browser: the parameters chunk from A1111, ComfyUI prompt and workflow JSON, and NovelAI metadata. Free, with no upload.',
+    title: 'Stable Diffusion PNG Info: Read Prompt, Seed & Parameters | AICheck365',
+    description: 'Read Stable Diffusion PNG Info in your browser: prompt, negative prompt, seed, sampler, CFG and model from A1111, ComfyUI and NovelAI files. Free, no upload.',
     h1: 'Stable Diffusion PNG Info Explained: A1111 Parameters vs ComfyUI Workflow',
-    meta: 'Guide intent: understand Stable Diffusion PNG Info · Updated 2026-08-27 · Parser: aicheck 0.2.0',
-    lead: 'Stable Diffusion “PNG Info” is not one universal metadata format. AUTOMATIC1111 commonly writes a parameters string, ComfyUI writes prompt and workflow JSON, and NovelAI uses its own recognizable values. This guide explains how to tell them apart, which settings each format preserves, and why the information can disappear. Use the extractor page when you want to upload a file and read the data.',
+    meta: 'Free · No upload · Real Stable Diffusion sample tested · Updated 2026-09-23 · Parser: aicheck 0.2.0',
+    updatedAt: '2026-09-23',
+    lead: 'Stable Diffusion “PNG Info” is not one universal metadata format. AUTOMATIC1111 commonly writes a parameters string, ComfyUI writes prompt and workflow JSON, and NovelAI uses its own recognizable values. This guide explains how to tell them apart, which settings each format preserves, and why the information can disappear. To read the prompt, seed and generation parameters from your own PNG, open the free PNG Parameter Extractor—parsing runs in your browser with no upload.',
     directAnswer: {
       heading: 'The answer: identify the writer from the PNG key name',
       body: 'A parameters key usually indicates an AUTOMATIC1111-style export containing prompt, negative prompt, steps, sampler, CFG, seed, size, model, and hash in one text value. prompt and workflow keys indicate ComfyUI and carry a serialized node graph. NovelAI is recognized from the stored values. None of these formats is signed.',
@@ -138,7 +142,7 @@ const profiles = {
       'No parameters found does not mean the image was not generated with Stable Diffusion.',
     ],
     faq: [
-      ['How do I read Stable Diffusion PNG Info?', 'Upload the original PNG to the PNG Parameter Extractor. It reads tEXt, iTXt, and zTXt chunks locally and shows the same underlying data front-end PNG Info views use.'],
+      ['How do I read Stable Diffusion PNG Info, including the prompt and seed?', 'Open the original PNG in the PNG Parameter Extractor. It reads tEXt, iTXt, and zTXt chunks locally and shows the prompt, negative prompt, seed, sampler, CFG, steps and model when present—the same data the PNG Info tab uses.'],
       ['Why are my Stable Diffusion parameters missing?', 'The file was probably re-encoded, converted, optimized, or screenshotted. Those operations often preserve the pixels while removing the text chunks.'],
       ['Does the extractor support both A1111 and ComfyUI?', 'Yes. It distinguishes the parameters convention from prompt/workflow JSON and reports the structures separately.'],
       ['Does PNG Info prove an image is AI-generated?', 'It is strong descriptive evidence but not signed proof. The values can be changed or copied to another image.'],
@@ -249,7 +253,7 @@ const jsonLd = [
     description: profile.description,
     url: canonical,
     inLanguage: 'en',
-    dateModified: updatedAt,
+    dateModified: profile.updatedAt ?? defaultUpdatedAt,
     author: { '@type': 'Organization', name: 'AICheck365' },
     publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
   },

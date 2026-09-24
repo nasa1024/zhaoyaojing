@@ -141,12 +141,12 @@
     "locale": "en",
     "pageType": "tool",
     "toolType": "png-parameter-extractor",
-    "title": "PNG Parameter Extractor: ComfyUI, A1111 & NovelAI | AICheck365",
+    "title": "PNG Info Online: Parameter Extractor for ComfyUI & A1111 | AICheck365",
     "description": "Extract PNG parameters from ComfyUI, AUTOMATIC1111, Stable Diffusion and NovelAI. Read workflow JSON, prompts, seed, sampler, CFG and model data locally—no upload.",
     "canonical": "https://www.aicheck365.com/en/tools/png-parameter-extractor/",
     "primaryKeyword": "PNG parameter extractor",
     "draft": false,
-    "updatedAt": "2026-08-27",
+    "updatedAt": "2026-09-24",
     "internalLinks": ["/en/platforms/comfyui/", "/en/platforms/stable-diffusion/", "/en/tools/exif-xmp-reader/", "/en/blog/ai-image-metadata-guide/"]
   },
   {
@@ -178,5 +178,20 @@
     "draft": false,
     "updatedAt": "2026-06-21",
     "internalLinks": ["/en/platforms/sora/", "/en/platforms/kling/", "/en/blog/how-to-detect-ai-videos/", "/en/methodology/"]
+  },
+  {
+    "id": "ai-video-detector-en",
+    "slug": "ai-video-detector",
+    "route": "/en/ai-video-detector/",
+    "locale": "en",
+    "pageType": "tool",
+    "toolType": "ai-video-detector",
+    "title": "Free AI Video Detector: Check MP4 & MOV Files Online | AICheck365",
+    "description": "Free AI video detector that runs in your browser: check MP4/MOV files for C2PA credentials, Sora, Veo, Kling and Runway metadata, and frame watermarks. No upload.",
+    "canonical": "https://www.aicheck365.com/en/ai-video-detector/",
+    "primaryKeyword": "ai video detector",
+    "draft": false,
+    "updatedAt": "2026-09-24",
+    "internalLinks": ["/en/blog/how-to-detect-ai-videos/", "/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/en/platforms/sora/", "/en/platforms/kling/", "/en/platforms/runway/"]
   }
 ]

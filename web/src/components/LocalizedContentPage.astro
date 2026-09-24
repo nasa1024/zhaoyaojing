@@ -3058,11 +3058,11 @@ const priorityArticleProfiles = {
       },
     },
     'blog/how-to-detect-gemini-generated-images': {
-      title: 'How to Check If a Gemini Image Is AI-Generated',
+      title: 'Gemini & Nano Banana Images: How to Check SynthID and C2PA',
       description: 'Check Gemini and Google AI files for C2PA Content Credentials, digitalSourceType, claim generator strings and XMP fields — read locally in your browser, no upload.',
-      h1: 'How to check if a Gemini image is AI-generated',
-      meta: 'Target query: gemini C2PA · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
-      updatedAt: '2026-07-23',
+      h1: 'How to check Gemini and Nano Banana images for SynthID and C2PA',
+      meta: 'Target query: gemini C2PA · Updated: 2026-09-24 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-09-24',
       lead: 'Google is among the platforms attaching Content Credentials to generative output, which makes Gemini and Imagen files more checkable than most — provided you still have the original download. The useful evidence sits in the C2PA manifest and supporting XMP fields, not in the pixels. AICheck365 reads those locally in your browser and reports the signature state, the trust state and the declared source type separately, so a claim is never mistaken for a verification.',
       directAnswer: {
         heading: 'Short answer: read the manifest, and treat SynthID as a claim',
@@ -3122,6 +3122,7 @@ const priorityArticleProfiles = {
         ['Do Gemini images include C2PA Content Credentials?', 'Google is among the platforms attaching credentials to generative output, but presence varies with the product entry point, format and export path — and any later processing can remove them. Check the original download rather than assuming either way.'],
         ['What is the strongest Gemini signal?', 'A valid manifest declaring digitalSourceType = trainedAlgorithmicMedia, or a Google generative-AI claim generator. That is materially stronger evidence than a file name or an XMP string.'],
         ['Does a C2PA mention of SynthID mean the watermark was verified?', 'No. It means the manifest records that claim. Verifying SynthID from the pixels requires Google\'s proprietary detection, which is a different operation from reading a credential.'],
+        ['Do Nano Banana images carry SynthID and C2PA?', 'Google states that images created or edited with Gemini image models, including Nano Banana, carry an invisible SynthID watermark, and it attaches C2PA Content Credentials to a growing share of its generative output. AICheck365 reads the C2PA manifest and any SynthID claim recorded inside it; it does not decode SynthID from the pixels, which needs Google\'s own detector.'],
         ['Is a Gemini_Generated_Image file name proof?', 'No. File names are trivially changed and equally trivially faked, so they belong in the supporting-context column alongside unsigned metadata.'],
         ['Is my file uploaded to check it?', 'No. The manifest and metadata are parsed locally in your browser, so the file never leaves your device.'],
       ],
@@ -3301,11 +3302,11 @@ const priorityArticleProfiles = {
       },
     },
     'blog/how-to-detect-ai-videos': {
-      title: 'How to Check If a Video Is AI-Generated',
+      title: 'How to Tell If a Video Is AI Generated: 2026 Checklist',
       description: 'Check whether a video is AI-generated from the original MP4/MOV: C2PA, container metadata, SEI markers, and sampled frame watermarks. Free and local to your browser.',
-      h1: 'How to check if a video is AI-generated',
-      meta: 'Target query: how to check if a video is AI-generated · Updated: 2026-07-23 · Parser: aicheck 0.2.0',
-      updatedAt: '2026-07-23',
+      h1: 'How to tell if a video is AI generated',
+      meta: 'Target query: how to tell if a video is AI generated · Updated: 2026-09-24 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-09-24',
       lead: 'Video models have improved to the point where watching closely is no longer a dependable test. The more defensible route is to keep the original MP4 or MOV and read it in layers: C2PA/JUMBF content credentials first, then the container fields — ftyp, the box tree, udta/meta/ilst, encoder, tool, software — then SEI markers in the bitstream, and only if none of that lands, sampled frames checked for known watermark patterns.',
       directAnswer: {
         heading: 'Short answer: work down three layers — container, bitstream, frames',
@@ -3360,6 +3361,7 @@ const priorityArticleProfiles = {
       ],
       ctaLead: 'Start with the lightweight MP4/MOV metadata inspector, then open the full local detector when you need the frame watermark fallback.',
       ctas: [
+        { href: '/en/ai-video-detector/', label: 'Open the free AI video detector', localized: false },
         { href: '/en/tools/mp4-metadata-inspector/', label: 'Inspect MP4/MOV metadata', localized: false },
         { href: '/en/tools/c2pa-validator/', label: 'Validate the C2PA manifest', localized: false },
         { href: '/', label: 'Run the full detection with frame analysis' },
