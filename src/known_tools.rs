@@ -87,8 +87,25 @@ pub fn match_ai_tool(text: &str) -> Option<&'static str> {
     let lower = text.to_lowercase();
     AI_TOOL_PATTERNS
         .iter()
-        .find(|&&pattern| lower.contains(pattern))
+        .find(|&&pattern| contains_word(&lower, pattern))
         .copied()
+}
+
+/// Substring match that refuses to start or end inside a Latin word, so short
+/// names such as "udio", "vidu" or "parti" do not fire on "audio",
+/// "individual" or "particle". Digits, punctuation, underscores and CJK text
+/// still count as boundaries, which keeps "wan2.6", "dall-e3" and
+/// "gemini_generated_image" matching.
+fn contains_word(haystack: &str, pattern: &str) -> bool {
+    let is_letter = |c: Option<char>| c.is_some_and(|c| c.is_ascii_alphabetic());
+    haystack.match_indices(pattern).any(|(start, matched)| {
+        let before = haystack[..start].chars().next_back();
+        let after = haystack[start + matched.len()..].chars().next();
+        let pattern_starts_with_letter = is_letter(pattern.chars().next());
+        let pattern_ends_with_letter = is_letter(pattern.chars().next_back());
+        !(pattern_starts_with_letter && is_letter(before))
+            && !(pattern_ends_with_letter && is_letter(after))
+    })
 }
 
 #[cfg(test)]
@@ -106,5 +123,15 @@ mod tests {
         assert_eq!(match_ai_tool("Made with Google AI"), Some("google ai"));
         assert_eq!(match_ai_tool("Wan 2.6"), Some("wan"));
         assert_eq!(match_ai_tool("Qwen VL Image"), Some("qwen"));
+        assert_eq!(match_ai_tool("wan2.6_t2v"), Some("wan"));
+        assert_eq!(match_ai_tool("Gemini_Generated_Image_x1"), Some("gemini"));
+        assert_eq!(match_ai_tool("即梦AI"), Some("即梦"));
+    }
+
+    #[test]
+    fn test_no_match_inside_ordinary_words() {
+        assert_eq!(match_ai_tool("SoundHandler audio track"), None);
+        assert_eq!(match_ai_tool("individual particle influx"), None);
+        assert_eq!(match_ai_tool("swan lake"), None);
     }
 }
