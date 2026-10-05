@@ -115,3 +115,18 @@ test('English AI video detector owns the transactional video intent with the rea
   const sitemap = await (await request.get('/sitemap-0.xml')).text();
   expect(sitemap).toContain('https://www.aicheck365.com/en/ai-video-detector/');
 });
+
+test('Japanese AI illustration checker embeds the detector and stays single-language', async ({ page, request }) => {
+  await page.goto('/ja/ai-illust-checker/');
+
+  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('h1')).toContainText('AIイラスト判定ツール');
+  await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-tool-owner', 'ai-illust-checker');
+  await expect(page.locator('#file-input')).toHaveAttribute('accept', /image\/png/);
+  await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
+
+  const home = await (await request.get('/ja/')).text();
+  expect(home).toContain('href="/ja/ai-illust-checker/"');
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+  expect(sitemap).toContain('https://www.aicheck365.com/ja/ai-illust-checker/');
+});

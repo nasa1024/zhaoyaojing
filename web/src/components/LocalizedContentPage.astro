@@ -5280,12 +5280,12 @@ const priorityArticleProfiles = {
       },
     },
     'blog/how-to-detect-ai-images': {
-      title: '¿Cómo saber si una imagen fue creada con IA?',
+      title: 'Cómo saber si una foto o imagen es IA (guía 2026)',
       description: 'Detector de imágenes IA gratis: revisa en tu navegador el C2PA, los metadatos EXIF/XMP y los parámetros PNG, con muestras reales y límites honestos. Sin subir archivos.',
-      h1: '¿Cómo saber si una imagen fue creada con IA?',
-      meta: 'Consulta objetivo: cómo saber si una imagen es IA · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
-      updatedAt: '2026-07-23',
-      lead: 'Para saber si una imagen fue creada con IA, no te fíes solo del ojo: empieza por el archivo original. AICheck365 busca señales legibles —C2PA/Content Credentials, EXIF/XMP, parámetros y workflow en los textos PNG, y el nombre del archivo— directamente en tu navegador, sin subir nada. Si la imagen es una captura de pantalla o una copia de redes sociales, muchas de esas señales pueden haber desaparecido.',
+      h1: '¿Cómo saber si una foto o imagen es IA?',
+      meta: 'Consulta objetivo: cómo saber si una foto es IA · Actualizado: 2026-10-06 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-10-06',
+      lead: 'Para saber si una foto o imagen fue creada con IA, no te fíes solo del ojo: empieza por el archivo original. AICheck365 busca señales legibles —C2PA/Content Credentials, EXIF/XMP, parámetros y workflow en los textos PNG, y el nombre del archivo— directamente en tu navegador, sin subir nada. Si la imagen es una captura de pantalla o una copia de redes sociales, muchas de esas señales pueden haber desaparecido.',
       directAnswer: {
         heading: 'En resumen: combina varias capas de evidencia, no un único porcentaje',
         body: 'La evidencia más fuerte es una firma C2PA válida cuyo manifiesto declare digitalSourceType = trainedAlgorithmicMedia. Los campos EXIF/XMP y los parámetros PNG (prompt, workflow) sirven de apoyo; el nombre del archivo y las rarezas visuales son pistas débiles. Que no aparezca ninguna señal no demuestra que la imagen sea humana: puede que los metadatos nunca se escribieran o que se hayan eliminado.',
@@ -5352,6 +5352,7 @@ const priorityArticleProfiles = {
       faq: [
         ['¿Existe un detector de imágenes IA gratis?', 'Sí. AICheck365 revisa el C2PA, los metadatos EXIF/XMP y los parámetros PNG de forma gratuita y en tu navegador, sin subir el archivo. Muestra las señales que quedan en el archivo, no una simple etiqueta.'],
         ['¿Se puede comprobar una imagen descargada de redes sociales?', 'A veces quedan pistas, pero las redes suelen recomprimir la imagen y borrar los metadatos. Si no aparece nada, pide el archivo original: es la mejor forma de recuperar señales legibles y volver a analizarlo.'],
+        ['¿Cómo saber si una foto es IA desde el celular?', 'Abre AICheck365 en el navegador del celular y elige la foto original desde la galería. El análisis se hace en el propio teléfono, sin subir la foto. Si la recibiste por WhatsApp o la guardaste de redes sociales, lo más probable es que ya no conserve los metadatos.'],
         ['¿Se puede identificar un logo hecho con IA?', 'Solo si el archivo conserva evidencia, como un C2PA firmado o parámetros PNG. Un logo suele exportarse y editarse varias veces, así que a menudo esas señales ya no están y el resultado es «sin evidencia».'],
         ['¿Qué significa que no se encuentren señales?', 'Que esta copia no conserva evidencia legible de origen. No prueba que la imagen sea humana ni que no sea IA: los metadatos pueden no haberse escrito nunca o haberse eliminado.'],
       ],

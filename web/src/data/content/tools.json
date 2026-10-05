@@ -193,5 +193,20 @@
     "draft": false,
     "updatedAt": "2026-09-24",
     "internalLinks": ["/en/blog/how-to-detect-ai-videos/", "/en/tools/mp4-metadata-inspector/", "/en/tools/c2pa-validator/", "/en/platforms/sora/", "/en/platforms/kling/", "/en/platforms/runway/"]
+  },
+  {
+    "id": "ai-illust-checker-ja",
+    "slug": "ai-illust-checker",
+    "route": "/ja/ai-illust-checker/",
+    "locale": "ja",
+    "pageType": "tool",
+    "toolType": "ai-illust-checker",
+    "title": "AIイラスト判定ツール（無料）：画像のAI生成をメタデータで確認 | AICheck365",
+    "description": "AIイラスト・AI画像の無料判定ツール。NovelAI、Stable Diffusion、ComfyUIのPNG情報やC2PA、XMPをブラウザ内で確認します。絵柄では判定せず、ファイルは送信されません。",
+    "canonical": "https://www.aicheck365.com/ja/ai-illust-checker/",
+    "primaryKeyword": "ai イラスト 判定",
+    "draft": false,
+    "updatedAt": "2026-10-06",
+    "internalLinks": ["/ja/tools/png-parameter-extractor/", "/ja/blog/how-to-detect-ai-images/", "/ja/platforms/stable-diffusion/", "/ja/platforms/comfyui/", "/ja/platforms/midjourney/", "/ja/platforms/firefly/", "/ja/platforms/gemini/"]
   }
 ]

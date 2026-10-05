@@ -1,0 +1,156 @@
+---
+import Base from '../../layouts/Base.astro';
+import Detector from '../../components/Detector.astro';
+
+// Japanese landing page for the AI-illustration query family (Semrush JP,
+// 2026-10: "ai イラスト 判定" 1.9K/mo KD 24, "ai 絵 判定" 720 KD 15,
+// "ai判定ツール" 1K KD 14). It embeds the local detector and is explicit that
+// the verdict comes from file evidence, not from guessing an art style.
+// Japanese-only, so hreflang is suppressed instead of pointing x-default at a
+// missing English sibling.
+const SITE_URL = 'https://www.aicheck365.com';
+const canonical = `${SITE_URL}/ja/ai-illust-checker/`;
+const updatedAt = '2026-10-06';
+
+const title = 'AIイラスト判定ツール（無料）：画像のAI生成をメタデータで確認 | AICheck365';
+const description = 'AIイラスト・AI画像の無料判定ツール。NovelAI、Stable Diffusion、ComfyUIのPNG情報やC2PA、XMPをブラウザ内で確認します。絵柄では判定せず、ファイルは送信されません。';
+
+const signals = [
+  ['PNGテキスト（生成パラメータ）', 'NovelAI、Stable Diffusion WebUI（A1111 / Forge）、ComfyUI が PNG に書き込む prompt・parameters・workflow。元ファイルなら生成ツールまで特定できる、最も手がかりの多い領域です。'],
+  ['C2PA（コンテンツクレデンシャル）', 'Adobe Firefly や ChatGPT（OpenAI）などが付与する署名付きの来歴情報。「AI生成」と記録された有効な署名は、もっとも強い根拠になります。'],
+  ['XMP / EXIF', 'Software、CreatorTool、AI生成を示す項目など。補助的な手がかりですが、編集で書き換えや削除ができます。'],
+  ['ファイル名', 'Gemini_Generated_Image のような名前。参考情報にとどまり、名前を変えれば消えます。'],
+];
+
+const tools = [
+  ['NovelAI', 'PNG テキストの Software・Comment などに NovelAI の記録が残ります。'],
+  ['Stable Diffusion', 'parameters チャンクに prompt、seed、sampler、モデル名が入ります。', '/ja/platforms/stable-diffusion/'],
+  ['ComfyUI', 'prompt / workflow チャンクにノード構成の JSON が入ります。', '/ja/platforms/comfyui/'],
+  ['Midjourney', 'XMP・IPTC やファイル名の手がかりを確認します。', '/ja/platforms/midjourney/'],
+  ['Adobe Firefly', 'C2PA の署名と digitalSourceType を確認します。', '/ja/platforms/firefly/'],
+  ['Gemini / Imagen', 'C2PA、XMP、ファイル名を確認します。', '/ja/platforms/gemini/'],
+];
+
+const steps = [
+  ['元のファイルを用意する', '生成ツールから直接保存した PNG / JPEG、または作者から受け取った元データを使います。X や Pixiv から保存し直した画像、スクリーンショットは手がかりが消えていることがほとんどです。'],
+  ['上の判定ツールにドロップする', '解析はブラウザ内で完了し、画像はサーバーに送信されません。'],
+  ['根拠を確認する', '一致した項目ごとに、どのフィールドに何が書かれていたかが表示されます。C2PA の署名 → PNG の生成パラメータ → XMP の順に重みが下がります。'],
+  ['何も出なかったときの読み方', '「このファイルに読み取れる痕跡がない」という意味で、手描きであることの証明にはなりません。'],
+];
+
+const faq = [
+  ['AIイラスト判定は無料ですか？', '無料で、登録も不要です。画像はお使いの端末内で解析するため、枚数やファイルサイズの上限もありません。'],
+  ['絵柄だけでAIイラストかどうか判定できますか？', 'このツールは絵柄から推測しません。ファイルに残った生成パラメータや署名、メタデータだけを根拠にします。絵柄で判定するツールは確率を出すだけで、手描きのイラストを「AI」と誤判定することもあります。'],
+  ['XやPixivから保存した画像でも判定できますか？', '多くの場合、投稿時の再圧縮や処理でメタデータが削除されているため、痕跡は見つかりません。確実に確認したい場合は、作者に元ファイルを提供してもらうのが最善です。'],
+  ['手描きのイラストがAIと判定されることはありますか？', 'AI生成ツールの記録がファイルに含まれていない限り、AI由来のシグナルとしては表示されません。ただし生成塗りつぶしなどAI機能を使った編集は、C2PA に記録される場合があります。'],
+  ['NovelAIやStable Diffusionのプロンプトも見られますか？', '元の PNG に生成パラメータが残っていれば、prompt や seed などの値を確認できます。詳しくは PNG パラメータ抽出ツールで全項目を表示できます。'],
+  ['画像はアップロードされますか？', 'いいえ。WebAssembly でブラウザ内解析するため、ファイルが端末の外に出ることはありません。'],
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'AICheck365 AIイラスト判定ツール',
+    url: canonical,
+    description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    browserRequirements: 'Modern browser with WebAssembly and JavaScript',
+    isAccessibleForFree: true,
+    inLanguage: 'ja',
+    dateModified: updatedAt,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'JPY' },
+    featureList: ['PNG生成パラメータ（NovelAI / Stable Diffusion / ComfyUI）', 'C2PAコンテンツクレデンシャル', 'XMP / EXIF', 'ブラウザ内ローカル処理'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: `${SITE_URL}/ja/` },
+      { '@type': 'ListItem', position: 2, name: 'AIイラスト判定', item: canonical },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} canonical={canonical} lang="ja" jsonLd={jsonLd} singleLang={true}>
+  <main class="page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/ja/">ホーム</a>
+      <span aria-hidden="true"> › </span>
+      <span>AIイラスト判定</span>
+    </nav>
+
+    <section class="hero card priority-seo-page" data-seo-intent="transactional-tool" data-tool-owner="ai-illust-checker">
+      <div class="eyebrow">無料 · 登録不要 · アップロードなし</div>
+      <h1>AIイラスト判定ツール：画像がAI生成かをファイルの痕跡で確認</h1>
+      <p class="lead">
+        イラストや画像のファイルをドロップすると、NovelAI・Stable Diffusion・ComfyUI の生成パラメータ、C2PA の署名、XMP などに
+        AI 生成の記録が残っていないかを確認します。絵柄から推測する判定ではなく、見つかった根拠をそのまま表示する AI 判定ツールです。
+      </p>
+      <div class="notice warning">
+        <strong>X や Pixiv から保存した画像では、ほとんどの場合メタデータが消えています。</strong>
+        正確に確認するには、生成ツールから直接保存した元ファイルを使ってください。何も見つからなくても「手描き」の証明にはなりません。
+      </div>
+    </section>
+
+    <Detector />
+
+    <article class="card content-article">
+      <h2>このAI判定ツールが確認すること</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {signals.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+        </tbody>
+      </table>
+
+      <h2>絵柄で判定するツールとの違い</h2>
+      <p>
+        画像の見た目から「AIらしさ」を推定するツールは確率を返すだけで、根拠を示せません。丁寧に描かれた手描きのイラストが
+        AI と判定されてしまう誤判定も起こります。AICheck365 はファイルに書き込まれた生成記録や署名だけを根拠にするため、
+        「なぜその結果になったか」を誰でも確認できます。その代わり、記録が削除された画像については、分からないことを正直に表示します。
+      </p>
+
+      <h2>AIイラストかどうかを確認する手順</h2>
+      <ol class="content-list">
+        {steps.map(([label, value]) => <li><strong>{label}：</strong>{value}</li>)}
+      </ol>
+
+      <h2>主な画像生成AIと残りやすい痕跡</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {tools.map(([label, value, href]) => (
+            <tr><th>{href ? <a href={href}>{label}</a> : label}</th><td>{value}</td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>よくある質問</h2>
+      <dl class="faq-list">
+        {faq.map(([question, answer]) => (
+          <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
+        ))}
+      </dl>
+
+      <h2>関連ツールとガイド</h2>
+      <div class="related-links">
+        <a href="/ja/tools/png-parameter-extractor/">PNG パラメータ抽出ツール →</a>
+        <a href="/ja/blog/how-to-detect-ai-images/">AI画像の見分け方ガイド →</a>
+        <a href="/ja/platforms/stable-diffusion/">Stable Diffusion の PNG 情報 →</a>
+        <a href="/ja/">AI画像・動画判定ツール →</a>
+      </div>
+    </article>
+  </main>
+</Base>
+
+<script type="module" src="/scripts/market-analytics.js"></script>
