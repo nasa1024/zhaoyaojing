@@ -206,7 +206,7 @@
     "canonical": "https://www.aicheck365.com/ja/ai-illust-checker/",
     "primaryKeyword": "ai イラスト 判定",
     "draft": false,
-    "updatedAt": "2026-10-06",
+    "updatedAt": "2026-10-05",
     "internalLinks": ["/ja/tools/png-parameter-extractor/", "/ja/blog/how-to-detect-ai-images/", "/ja/platforms/stable-diffusion/", "/ja/platforms/comfyui/", "/ja/platforms/midjourney/", "/ja/platforms/firefly/", "/ja/platforms/gemini/"]
   }
 ]
