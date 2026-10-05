@@ -206,12 +206,12 @@
     "locale": "zh-TW",
     "pageType": "article",
     "topic": "ai-image-detection",
-    "title": "如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測 | AICheck365",
+    "title": "AI 圖片辨識：如何判斷圖片是否由 AI 生成？C2PA 與 EXIF 實測 | AICheck365",
     "description": "免費 AI 圖片辨識與檢測：在瀏覽器本機讀取 C2PA 簽章、EXIF/XMP 與 PNG 生成參數，用 Firefly、ComfyUI 真實樣本說明證據強弱與限制，不上傳檔案。",
     "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-images/",
     "primaryKeyword": "AI 圖片辨識",
     "draft": false,
-    "updatedAt": "2026-07-23",
+    "updatedAt": "2026-10-06",
     "internalLinks": [
       "/en/tools/c2pa-validator/",
       "/en/tools/exif-xmp-reader/",
@@ -231,7 +231,7 @@
     "canonical": "https://www.aicheck365.com/zh-TW/blog/how-to-detect-ai-videos/",
     "primaryKeyword": "AI 影片檢測",
     "draft": false,
-    "updatedAt": "2026-07-23",
+    "updatedAt": "2026-10-06",
     "internalLinks": [
       "/en/tools/mp4-metadata-inspector/",
       "/en/tools/c2pa-validator/",
@@ -290,7 +290,7 @@
     "canonical": "https://www.aicheck365.com/ko/blog/how-to-detect-ai-images/",
     "primaryKeyword": "AI 사진인지 확인하는 방법",
     "draft": false,
-    "updatedAt": "2026-07-23",
+    "updatedAt": "2026-10-06",
     "internalLinks": [
       "/en/tools/c2pa-validator/",
       "/en/tools/png-parameter-extractor/",
@@ -470,7 +470,7 @@
     "canonical": "https://www.aicheck365.com/es/blog/how-to-detect-ai-videos/",
     "primaryKeyword": "cómo saber si un vídeo es IA",
     "draft": false,
-    "updatedAt": "2026-07-23",
+    "updatedAt": "2026-10-06",
     "internalLinks": [
       "/en/tools/mp4-metadata-inspector/",
       "/en/tools/c2pa-validator/",

@@ -3629,11 +3629,11 @@ const priorityArticleProfiles = {
       },
     },
     'blog/how-to-detect-ai-images': {
-      title: '如何判斷圖片是否由 AI 生成？C2PA、EXIF 與 PNG Metadata 實測',
+      title: 'AI 圖片辨識：如何判斷圖片是否由 AI 生成？C2PA 與 EXIF 實測',
       description: '免費 AI 圖片辨識與檢測：在瀏覽器本機讀取 C2PA 簽章、EXIF/XMP 與 PNG 生成參數，用 Firefly、ComfyUI 真實樣本說明證據強弱與限制，不上傳檔案。',
       h1: '如何判斷圖片是否由 AI 生成？先查原始檔裡的來源證據',
-      meta: '主要關鍵字：AI 圖片辨識・檢測 · 更新：2026-07-23 · Parser：aicheck 0.2.0',
-      updatedAt: '2026-07-23',
+      meta: '主要關鍵字：AI 圖片辨識・檢測 · 更新：2026-10-06 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-10-06',
       lead: '想辨識一張圖片是不是 AI 生成，只看手指、文字或光影怪不怪其實很容易誤判。比較能說明的做法是先保留原始檔，依序讀取 C2PA Content Credentials，再檢查 EXIF/XMP、PNG tEXt/iTXt/zTXt、ComfyUI 的 prompt/workflow 與檔名。AICheck365 會在你的瀏覽器本機解析這些訊號，把「可驗證的數位簽章」和「可以被修改的一般 metadata」分開呈現，全程不上傳檔案。',
       directAnswer: {
         heading: '直接答案：用多層來源證據判斷，不要只相信單一 AI 百分比',
@@ -3720,8 +3720,8 @@ const priorityArticleProfiles = {
       title: '如何判斷 AI 生成影片？MP4 Metadata、C2PA 與影格浮水印實測',
       description: '免費 AI 影片檢測：在瀏覽器本機依序檢查 C2PA、MP4/MOV 容器 metadata、SEI marker 與影格浮水印，用 Google Veo 真實樣本說明證據強弱，不上傳檔案。',
       h1: '如何判斷 AI 生成影片？從原始 MP4/MOV 的內部證據開始',
-      meta: '主要關鍵字：AI 影片檢測 · 更新：2026-07-23 · Parser：aicheck 0.2.0',
-      updatedAt: '2026-07-23',
+      meta: '主要關鍵字：AI 影片檢測 · 更新：2026-10-06 · Parser：aicheck 0.2.0',
+      updatedAt: '2026-10-06',
       lead: 'AI 影片畫質已經不適合只靠「看起來怪不怪」判斷。較可靠的流程是先保留原始 MP4/MOV，依序讀取 C2PA/JUMBF、ftyp 與 box tree、udta/meta/ilst 的 encoder/tool/software、AIGC 標籤、SEI marker 與檔名；容器沒有線索時，才抽樣影格檢查可見或不可見浮水印。',
       directAnswer: {
         heading: '直接答案：依照「容器 → 位元流 → 影格」三層檢查',
@@ -3783,6 +3783,7 @@ const priorityArticleProfiles = {
       ],
       faq: [
         ['有沒有免費的 AI 影片判斷網站？', 'AICheck365 免費且免註冊，影片在你的瀏覽器裡分析，不會上傳到伺服器。它會列出實際命中的 C2PA 狀態、MP4/MOV 欄位與 SEI marker，而不是只給一個沒有依據的百分比。'],
+        ['怎麼判斷影片是不是 AI 做的？', '先取得原始 MP4/MOV，依序檢查 C2PA 憑證是否宣告 AI 生成、容器欄位與 SEI 是否留有生成工具的紀錄，最後才看影格浮水印。只看畫面已經很難判斷，經過社群平台轉存的影片多半也已失去這些紀錄。'],
         ['AI 影片檢測可以 100% 準確嗎？', '不行，任何工具都做不到。這裡呈現的是這個檔案目前還留著哪些可讀的來源證據；證據被轉碼清掉時就讀不到，所以「沒有命中」不能當成「不是 AI」。'],
         ['只看畫面能判斷 AI 影片嗎？', '高品質生成影片很難靠肉眼穩定判斷。應先查原始檔的 C2PA、容器欄位與取得歷程，再把視覺異常當補充。'],
         ['社群平台下載的影片還能檢測嗎？', '有時仍會留下檔名或少量訊號，但平台通常會重新編碼並清除 metadata；沒有結果也不能排除 AI 生成。'],
@@ -5202,8 +5203,8 @@ const priorityArticleProfiles = {
       title: '¿Cómo saber si un vídeo fue creado con IA?',
       description: 'Comprueba si un vídeo es IA desde el archivo original: C2PA, metadatos del contenedor MP4/MOV, marcadores SEI y marcas de agua en fotogramas. Gratis y sin subirlo.',
       h1: '¿Cómo saber si un vídeo fue creado con IA?',
-      meta: 'Consulta objetivo: cómo saber si un vídeo es IA · Actualizado: 2026-07-23 · Parser: aicheck 0.2.0',
-      updatedAt: '2026-07-23',
+      meta: 'Consulta objetivo: cómo saber si un vídeo es IA · Actualizado: 2026-10-06 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-10-06',
       lead: 'Los modelos de vídeo han mejorado hasta el punto de que mirar con atención ya no es una prueba fiable. El camino defendible es conservar el MP4 o MOV original y leerlo por capas: primero las credenciales C2PA/JUMBF, después los campos del contenedor —ftyp, el árbol de cajas, udta/meta/ilst, encoder, tool, software—, luego los marcadores SEI del flujo de vídeo y, solo si nada de eso aparece, fotogramas muestreados en busca de marcas de agua conocidas.',
       directAnswer: {
         heading: 'En resumen: baja por tres capas — contenedor, flujo y fotogramas',
@@ -5265,6 +5266,7 @@ const priorityArticleProfiles = {
       faq: [
         ['¿Existe un detector de vídeos IA gratis?', 'Sí. AICheck365 comprueba vídeos de forma gratuita y sin registro. El análisis del contenedor se ejecuta en tu navegador, así que el archivo no se sube, y cada hallazgo se informa con el campo o la ruta de caja de la que procede.'],
         ['¿Se puede comprobar un vídeo sin subirlo?', 'Es el comportamiento por defecto aquí. El contenedor MP4/MOV se analiza localmente mediante Rust compilado a WebAssembly, y la extracción de fotogramas, cuando hace falta, también ocurre en tu equipo.'],
+        ['¿Cómo saber si un video de Instagram, YouTube o Facebook es IA?', 'Estas plataformas recomprimen los videos y suelen borrar el C2PA y los metadatos del contenedor, así que una copia descargada rara vez conserva pruebas. Busca el archivo original de quien lo publicó; si solo tienes la copia, el análisis de fotogramas puede encontrar una marca de agua visible, pero un resultado vacío no demuestra que sea real.'],
         ['¿Sirve con un vídeo descargado de redes sociales?', 'A veces sobrevive el nombre del archivo o algún campo suelto, pero las plataformas suelen recodificar lo que se sube y borrar los metadatos. Un resultado sin hallazgos no descarta la generación por IA.'],
         ['¿Que el C2PA mencione SynthID significa que se verificó la marca?', 'No. Ese texto es una declaración registrada dentro del manifiesto. AICheck365 lo informa como tal y no lo presenta como verificación independiente a nivel de píxel.'],
         ['¿Por qué el análisis de fotogramas es más lento?', 'Porque decodifica fotogramas reales en tu navegador en lugar de leer unos pocos bytes de cabecera. Se ejecuta solo como último recurso, cuando el contenedor y el flujo no devuelven nada.'],
@@ -5353,6 +5355,7 @@ const priorityArticleProfiles = {
         ['¿Existe un detector de imágenes IA gratis?', 'Sí. AICheck365 revisa el C2PA, los metadatos EXIF/XMP y los parámetros PNG de forma gratuita y en tu navegador, sin subir el archivo. Muestra las señales que quedan en el archivo, no una simple etiqueta.'],
         ['¿Se puede comprobar una imagen descargada de redes sociales?', 'A veces quedan pistas, pero las redes suelen recomprimir la imagen y borrar los metadatos. Si no aparece nada, pide el archivo original: es la mejor forma de recuperar señales legibles y volver a analizarlo.'],
         ['¿Cómo saber si una foto es IA desde el celular?', 'Abre AICheck365 en el navegador del celular y elige la foto original desde la galería. El análisis se hace en el propio teléfono, sin subir la foto. Si la recibiste por WhatsApp o la guardaste de redes sociales, lo más probable es que ya no conserve los metadatos.'],
+        ['¿Cómo saber si una foto es IA o real?', 'Revisa primero el archivo original: un C2PA firmado que declare generación por IA o parámetros de generación en el PNG indican IA. Si no hay ninguna señal, la foto puede ser real o haber perdido sus metadatos, así que conviene buscar la fuente original antes de concluir.'],
         ['¿Se puede identificar un logo hecho con IA?', 'Solo si el archivo conserva evidencia, como un C2PA firmado o parámetros PNG. Un logo suele exportarse y editarse varias veces, así que a menudo esas señales ya no están y el resultado es «sin evidencia».'],
         ['¿Qué significa que no se encuentren señales?', 'Que esta copia no conserva evidencia legible de origen. No prueba que la imagen sea humana ni que no sea IA: los metadatos pueden no haberse escrito nunca o haberse eliminado.'],
       ],
@@ -6056,8 +6059,8 @@ const priorityArticleProfiles = {
       title: 'AI 사진인지 확인하는 방법: C2PA·EXIF·PNG 메타데이터',
       description: 'AI 생성 이미지 판별 방법을 단계별로 정리했습니다. 원본 파일의 C2PA 서명, EXIF/XMP, PNG 생성 파라미터를 브라우저에서 무료로 확인하고, 증거의 강약과 한계까지 설명합니다.',
       h1: 'AI 사진인지 확인하는 방법: 눈이 아니라 파일을 봅니다',
-      meta: '주요 검색어: AI 사진인지 확인하는 방법 · 업데이트: 2026-07-23 · 파서: aicheck 0.2.0',
-      updatedAt: '2026-07-23',
+      meta: '주요 검색어: AI 사진인지 확인하는 방법 · 업데이트: 2026-10-06 · 파서: aicheck 0.2.0',
+      updatedAt: '2026-10-06',
       lead: 'AI로 만든 사진인지 확인할 때, 손가락 개수나 배경 글자만 보고 판단하면 자주 틀립니다. 더 설명 가능한 방법은 원본 파일 안에 남아 있는 출처 정보를 순서대로 읽는 것입니다. AICheck365는 C2PA Content Credentials, EXIF/XMP, PNG 텍스트 청크의 생성 파라미터와 workflow, 파일명을 브라우저 안에서 확인하고, 검증 가능한 서명과 수정 가능한 일반 메타데이터를 구분해서 보여줍니다.',
       directAnswer: {
         heading: '핵심: 하나의 퍼센트가 아니라 여러 겹의 증거로 판단합니다',
@@ -6127,6 +6130,7 @@ const priorityArticleProfiles = {
         ['AI 사진인지 100% 확인할 수 있나요?', '아니요. 어떤 도구도 100%는 불가능합니다. AICheck365는 파일에 실제로 남아 있는 출처 신호를 근거와 함께 제시할 뿐이며, 신호가 없다고 해서 AI 가능성을 완전히 배제하지는 못합니다.'],
         ['카톡이나 인스타에서 받은 사진도 판별되나요?', '단서가 남아 있을 때도 있지만, 대부분의 SNS와 메신저는 이미지를 다시 압축하면서 메타데이터를 지웁니다. 결과가 비었다면 원본 파일을 다시 받아 확인하는 것이 가장 좋습니다.'],
         ['신호가 없다고 나오면 사람이 만든 사진인가요?', '그렇게 결론 내릴 수 없습니다. 메타데이터가 처음부터 기록되지 않았거나, 전송·편집 과정에서 지워졌을 수 있습니다. 이 결과는 “이 사본에서 읽을 증거가 없다”는 뜻입니다.'],
+        ['AI 그림이나 일러스트도 판별되나요?', '네. NovelAI, Stable Diffusion, ComfyUI가 PNG에 남기는 생성 파라미터나 C2PA 서명이 원본 파일에 남아 있으면 확인됩니다. 그림체만 보고 추정하지는 않으므로, 커뮤니티나 SNS에서 다시 저장한 그림은 단서가 지워져 있는 경우가 많습니다.'],
         ['AI 영상도 같은 방법으로 확인하나요?', '기본 원리는 같지만 확인하는 위치가 다릅니다. 영상은 MP4/MOV 컨테이너 메타데이터, SEI marker, 추출한 프레임의 워터마크를 함께 봅니다. 자세한 내용은 AI 영상 검출 가이드에서 다룹니다.'],
       ],
       sources: {
