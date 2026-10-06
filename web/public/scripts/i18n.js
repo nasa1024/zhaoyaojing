@@ -1221,6 +1221,8 @@ function localizeInternalLinks() {
     const url = new URL(href, window.location.origin);
     const cleanPath = stripLangFromPathname(url.pathname);
     if (cleanPath.startsWith('/tools/') && !LOCALIZED_TOOL_LANGS.includes(urlLang)) return;
+    // Research pages are English-only; a /<lang>/research/ link would 404.
+    if (cleanPath.startsWith('/research/') || cleanPath === '/research') return;
     anchor.setAttribute('href', `${withLangInPathname(url.pathname, urlLang)}${url.search}${url.hash}`);
   });
 }

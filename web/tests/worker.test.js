@@ -41,3 +41,16 @@ test('does not redirect preview or workers.dev hostnames', () => {
 
   assert.equal(response, null);
 });
+
+test('redirects localized research URLs to the single English research page in one hop', () => {
+  const response = canonicalRedirect(new Request('http://aicheck365.com/zh-TW/research/firefly-jpeg-2026-06/'));
+
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get('location'), 'https://www.aicheck365.com/research/firefly-jpeg-2026-06/');
+  assert.equal(
+    canonicalRedirect(new Request('https://www.aicheck365.com/ko/research/')).headers.get('location'),
+    'https://www.aicheck365.com/research/',
+  );
+  assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/research/openai-png-2026-06/')), null);
+  assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/ja/researcher/')), null);
+});
