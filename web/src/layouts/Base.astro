@@ -1,4 +1,9 @@
 ---
+import sitemapDates from '../data/sitemap-lastmod.json';
+import toolPages from '../data/content/tools.json';
+import platformPages from '../data/content/platforms.json';
+import articlePages from '../data/content/articles.json';
+
 interface Props {
   title: string;
   description: string;
@@ -308,7 +313,40 @@ const seoDescription = normalizeMetaDescription(description);
 if (seoDescription !== description.trim().replace(/\s+/g, ' ')) {
   console.warn(`[seo] meta description truncated on ${Astro.url.pathname}: "${seoDescription}"`);
 }
-const normalizedJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+// Article dates come from the same sources as the sitemap lastmod (see
+// astro.config.mjs): exact path, then content registry, then the family date
+// shared by every locale. Generative engines weigh freshness, and several
+// hand-written Article blocks (the zh-CN platform guides) carry no dates.
+function articleDates(pathname: string) {
+  const exactDates: Record<string, string> = { ...sitemapDates.exact };
+  for (const page of [...toolPages, ...platformPages, ...articlePages]) {
+    const route = new URL(page.route, SITE_URL).pathname;
+    if (page.updatedAt && (!exactDates[route] || page.updatedAt > exactDates[route])) {
+      exactDates[route] = page.updatedAt;
+    }
+  }
+  const familyDate = (sitemapDates.allLocales as Record<string, string>)[stripLangPrefix(pathname)];
+  const modified = exactDates[pathname] ?? familyDate;
+  const published = familyDate && modified && familyDate <= modified ? familyDate : modified;
+  return { published, modified };
+}
+const ARTICLE_TYPES = new Set(['Article', 'TechArticle', 'BlogPosting', 'NewsArticle']);
+function enrichArticle(node: any) {
+  if (!node || typeof node !== 'object' || Array.isArray(node)) return node;
+  const types = [].concat(node['@type'] ?? []);
+  if (!types.some((type) => ARTICLE_TYPES.has(type))) return node;
+  const { published, modified } = articleDates(canonicalPath);
+  return {
+    ...node,
+    inLanguage: node.inLanguage ?? pageLang,
+    mainEntityOfPage: node.mainEntityOfPage ?? canonicalHref,
+    image: node.image ?? ogImage,
+    author: node.author ?? { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    ...(node.datePublished || !published ? {} : { datePublished: published }),
+    ...(node.dateModified || !modified ? {} : { dateModified: modified }),
+  };
+}
+const normalizedJsonLd = (jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []).map(enrichArticle);
 const siteJsonLd = [
   {
     '@context': 'https://schema.org',
@@ -316,7 +354,7 @@ const siteJsonLd = [
     name: SITE_NAME,
     url: SITE_URL,
     logo: `${SITE_URL}/og.png`,
-    sameAs: ['https://github.com/MatrixA/aicheck'],
+    sameAs: ['https://github.com/nasa1024/zhaoyaojing', 'https://github.com/MatrixA/aicheck'],
     description: SITE_DESCRIPTION,
     foundingDate: '2026',
     knowsAbout: [
