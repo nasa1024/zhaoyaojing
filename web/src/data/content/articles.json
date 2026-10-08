@@ -100,6 +100,46 @@
     ]
   },
   {
+    "id": "synthid-detector-zh",
+    "slug": "synthid-detector",
+    "route": "/blog/synthid-detector/",
+    "locale": "zh-CN",
+    "pageType": "article",
+    "topic": "synthid",
+    "title": "SynthID Detector 是什么？Google AI 水印检测怎么用 | AICheck365",
+    "description": "Google 于 2026 年 10 月 7 日向所有人开放 SynthID Detector。本文说明 synthid.com 能查什么、覆盖哪些 AI 公司、结果怎么看，以及它的局限。",
+    "canonical": "https://www.aicheck365.com/blog/synthid-detector/",
+    "primaryKeyword": "SynthID Detector",
+    "draft": false,
+    "updatedAt": "2026-10-08",
+    "internalLinks": [
+      "/",
+      "/blog/how-to-detect-gemini-generated-images/",
+      "/tools/c2pa-viewer/",
+      "/blog/how-to-detect-ai-videos/"
+    ]
+  },
+  {
+    "id": "synthid-detector-en",
+    "slug": "synthid-detector",
+    "route": "/en/blog/synthid-detector/",
+    "locale": "en",
+    "pageType": "article",
+    "topic": "synthid",
+    "title": "SynthID Detector: How Google’s AI Checker Works | AICheck365",
+    "description": "Google opened SynthID Detector to everyone on October 7, 2026. What synthid.com checks, which AI companies it covers, how to read results, and its limits.",
+    "canonical": "https://www.aicheck365.com/en/blog/synthid-detector/",
+    "primaryKeyword": "SynthID Detector",
+    "draft": false,
+    "updatedAt": "2026-10-08",
+    "internalLinks": [
+      "/en/",
+      "/en/blog/how-to-detect-gemini-generated-images/",
+      "/en/tools/c2pa-viewer/",
+      "/en/blog/how-to-detect-ai-videos/"
+    ]
+  },
+  {
     "id": "what-is-c2pa-zh",
     "slug": "what-is-c2pa",
     "route": "/blog/what-is-c2pa/",
@@ -390,12 +430,13 @@
     "canonical": "https://www.aicheck365.com/en/blog/how-to-detect-gemini-generated-images/",
     "primaryKeyword": "gemini C2PA",
     "draft": false,
-    "updatedAt": "2026-09-24",
+    "updatedAt": "2026-10-08",
     "internalLinks": [
       "/en/tools/c2pa-validator/",
       "/en/tools/exif-xmp-reader/",
       "/en/platforms/gemini/",
-      "/en/methodology/"
+      "/en/methodology/",
+      "/en/blog/synthid-detector/"
     ]
   },
   {

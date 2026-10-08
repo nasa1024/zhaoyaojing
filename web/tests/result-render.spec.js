@@ -69,3 +69,27 @@ test('editing-software signal appears under propagation clues', async ({ page })
   // but the signal-source element specifically must use sig-neutral
   expect(html).toContain('sig-neutral');
 });
+
+test('SynthID handoff appears for empty results and SynthID partners only', async ({ page }) => {
+  const empty = await render(page, { signals: [], provenance: { state: 'unsigned', manifest: null }, limitations: [], file_name: 'x.jpg' });
+  expect(empty).toContain('id="synthid-handoff"');
+  expect(empty).toContain('href="https://synthid.com/"');
+  expect(empty).toContain('href="/blog/synthid-detector/"');
+
+  const gemini = await render(page, {
+    signals: [{ source: 'C2PA', confidence: 'high', tool: 'gemini', description: 'x', details: [] }],
+    provenance: { state: 'unsigned', manifest: { claim_generator: 'Google C2PA Core Generator Library' } },
+    limitations: [],
+    file_name: 'x.png',
+  });
+  expect(gemini).toContain('id="synthid-handoff"');
+  expect(gemini).toContain('SynthID 合作方');
+
+  const midjourney = await render(page, {
+    signals: [{ source: 'XMP', confidence: 'medium', tool: 'midjourney', description: 'x', details: [] }],
+    provenance: { state: 'unsigned', manifest: null },
+    limitations: [],
+    file_name: 'x.png',
+  });
+  expect(midjourney).not.toContain('synthid-handoff');
+});

@@ -153,6 +153,11 @@ export function renderResult(container, report, { expert = false } = {}) {
   // 8. Next-steps decision tree
   sections.push(`<h3>${esc(tt('result.next', '下一步建议'))}</h3>${renderNextSteps(d.state)}`);
 
+  // 8b. SynthID Detector handoff: the pixel watermark survives the metadata
+  // stripping that empties state C, and it cross-checks SynthID partners.
+  const synthid = renderSynthidHandoff(report, d.state);
+  if (synthid) sections.push(synthid);
+
   // 9/10. Related platform profiles + knowledge articles
   sections.push(renderRelatedLinks(report));
 
@@ -168,6 +173,11 @@ export function renderResult(container, report, { expert = false } = {}) {
     card.addEventListener('toggle', () => {
       if (card.open) ga('evidence_card_expanded', { source: card.querySelector('.signal-source')?.textContent || '' });
     });
+  });
+
+  container.querySelector('#synthid-handoff')?.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (a) ga('synthid_handoff_clicked', { target: a.dataset.synthidTarget || '', state: d.state });
   });
 
   // platform_page_clicked / related_guide_clicked: delegated click tracking on
@@ -297,6 +307,39 @@ const PLATFORM_SLUGS = [
   ['kling', 'kling'],
   ['runway', 'runway'],
 ];
+
+// Generators that embed SynthID (synthid.com: Google, OpenAI, NVIDIA, Kakao).
+// Word-boundary match so e.g. "veo" does not fire inside another word.
+const SYNTHID_PARTNER_RE = /\b(google|gemini|imagen|veo|lyria|nano banana|openai|dall-?e|gpt[- ]?image|chatgpt|sora|nvidia|cosmos|kakao)\b/;
+const SYNTHID_MEDIA = new Set(['image', 'video', 'audio']);
+
+function renderSynthidHandoff(report, state) {
+  const mime = report.mime_type || '';
+  const media = report.media_type || mime.split('/')[0] || 'image';
+  if (!SYNTHID_MEDIA.has(media)) return '';
+  const m = (report.provenance && report.provenance.manifest) || {};
+  const hay = [
+    ...(report.signals || []).map((s) => `${s.tool || ''} ${s.description || ''}`),
+    m.claim_generator || '',
+  ].join(' ').toLowerCase();
+  const partner = SYNTHID_PARTNER_RE.test(hay);
+  if (!partner && state !== 'C') return '';
+  const body = partner
+    ? tt('result.synthid.partner', '这个文件的来源信号指向 SynthID 合作方（Google、OpenAI、NVIDIA、Kakao）。可以把同一个原文件上传到 Google 的 SynthID Detector，确认像素里的隐形水印是否还在。')
+    : tt('result.synthid.none', '元数据可能已被截图或压缩洗掉，但 SynthID 隐形水印织在像素里，通常还在。如果文件可能来自 Google、OpenAI、NVIDIA 或 Kakao，可以用 Google 的 SynthID Detector 再查一次。');
+  // The guide exists in zh-CN and English only; Chinese readers get zh-CN.
+  const p = langPrefix();
+  const guide = !p || p === '/zh-TW' ? '/blog/synthid-detector/' : '/en/blog/synthid-detector/';
+  return `<div class="synthid-handoff" id="synthid-handoff">
+    <h3>${esc(tt('result.synthid.title', '再查一层：SynthID 水印'))}</h3>
+    <p>${esc(body)}</p>
+    <p class="muted">${esc(tt('result.synthid.note', 'SynthID Detector 需要登录并把文件上传给 Google；本站不会代为上传。'))}</p>
+    <nav class="related-links-inline">
+      <a href="https://synthid.com/" target="_blank" rel="noopener" data-synthid-target="portal">${esc(tt('result.synthid.cta', '打开 SynthID Detector'))} ↗</a>
+      <a href="${guide}" data-no-localize data-synthid-target="guide">${esc(tt('result.synthid.guide', 'SynthID Detector 使用说明'))} →</a>
+    </nav>
+  </div>`;
+}
 
 function langPrefix() {
   try {

@@ -29,6 +29,13 @@ const data = {
         tags: ['Claude watermark detector', '2026 update', 'AI provenance'],
       },
       {
+        href: '/en/blog/synthid-detector/',
+        title: 'SynthID Detector Explained: What Google’s Watermark Checker Can and Cannot Tell You',
+        description: 'Google opened synthid.com to everyone on October 7, 2026. Supported formats, the companies it covers, how to read a result, and how it complements local metadata checks.',
+        updatedAt: '2026-10-08',
+        tags: ['SynthID Detector', 'Google', 'AI watermark'],
+      },
+      {
         href: '/en/blog/how-to-detect-ai-images/',
         title: 'How to Tell If an Image Is AI-Generated',
         description: 'Read C2PA Content Credentials, EXIF/XMP, and PNG generation parameters from the original file instead of relying on visual guesses.',
@@ -46,7 +53,7 @@ const data = {
         href: '/en/blog/how-to-detect-gemini-generated-images/',
         title: 'How to Check If a Gemini Image Is AI-Generated',
         description: 'Inspect Gemini and Google AI files for C2PA, digitalSourceType, claim generator strings, XMP fields, and the limits of SynthID attribution.',
-        updatedAt: '2026-07-23',
+        updatedAt: '2026-10-08',
         tags: ['Gemini', 'SynthID', 'C2PA'],
       },
       {
@@ -134,7 +141,8 @@ const jsonLd = [
     url: c.canonical,
     inLanguage: lang,
     isAccessibleForFree: true,
-    dateModified: '2026-08-16',
+    // Newest listed article date, so each locale's index tracks its own list.
+    dateModified: c.articles.map((article) => article.updatedAt).sort().at(-1),
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: c.articles.map((article, index) => ({

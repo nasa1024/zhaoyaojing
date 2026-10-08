@@ -26,7 +26,7 @@ const jsonLd = [
     "description": "拿到一张可疑图片后的完整排查流程：先查 EXIF/XMP/C2PA/PNG 文本块里的来源信号，再做视觉检查和分类器交叉验证，并解释每种方法的可信边界。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-ai-images/",
     "datePublished": "2026-05-24",
-    "dateModified": "2026-07-10",
+    "dateModified": "2026-10-08",
     "inLanguage": "zh-CN",
     "isAccessibleForFree": true,
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/how-to-detect-ai-images/" },
@@ -58,7 +58,7 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>如何判断一张图片是否 AI 生成？元数据、视觉特征与分类器实战</h1>
-      <p class="article-meta">2026年5月发布 · 2026年7月更新 · AI 图片检测 · 元数据分析</p>
+      <p class="article-meta">2026年5月发布 · 2026年10月更新 · AI 图片检测 · 元数据分析</p>
       <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">拿到一张可疑的图，多数人的第一反应是放大了盯着看——数手指、找破绽。其实更高效的第一步是查文件本身：生成工具往往在文件里留下了明明白白的来源记录，几秒钟就能确认，比肉眼判断可靠得多。这篇文章按照"先查文件、再看画面、最后交叉验证"的顺序，把每种方法的原理和可信边界都讲清楚。</p>
@@ -86,7 +86,7 @@ const jsonLd = [
 
       <h2>第三步：像素级分类器——概率参考</h2>
       <p>另一条技术路线是不看元数据、只看像素：训练一个判别模型，捕捉生成图在统计上的痕迹——典型的有上采样在频域留下的周期性伪影、真实相机传感器噪声（PRNU）的缺失、颜色分布的细微偏差。Hive、Illuminarty、AI or Not 等服务走的是这条路。</p>
-      <p>它的优点是对任何图都能给出一个概率，不依赖文件里留没留信号；缺点也很实在：对训练集之外的新模型滞后，对经过多轮压缩的图误判率明显上升，而且输出是概率而非证据——"87% AI"这种结论没法作为依据拿去对质。建议把它当作交叉验证的一票，不要当作唯一依据。另外注意 Google 的 SynthID 是单独一类：它是生成时注入的像素级隐形水印，只有 Google 自己的检测器能读，第三方工具读不了。</p>
+      <p>它的优点是对任何图都能给出一个概率，不依赖文件里留没留信号；缺点也很实在：对训练集之外的新模型滞后，对经过多轮压缩的图误判率明显上升，而且输出是概率而非证据——"87% AI"这种结论没法作为依据拿去对质。建议把它当作交叉验证的一票，不要当作唯一依据。另外注意 Google 的 SynthID 是单独一类：它是生成时注入的像素级隐形水印，第三方工具读不了，但 2026 年 10 月起任何人都能登录 Google 的 <a href="/blog/synthid-detector/">SynthID Detector</a> 上传查验，覆盖 Google、OpenAI、NVIDIA、Kakao 的生成内容。</p>
 
       <h2>第四步：来源核查</h2>
       <p>跳出文件本身，查图片的传播链路，有时比技术检测更快出结论：</p>

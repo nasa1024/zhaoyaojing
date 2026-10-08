@@ -41,6 +41,13 @@ const CRITICAL_KEYS = [
   'result.clues',
   'result.clues.none',
   'result.expert',
+  // SynthID Detector handoff
+  'result.synthid.title',
+  'result.synthid.partner',
+  'result.synthid.none',
+  'result.synthid.note',
+  'result.synthid.cta',
+  'result.synthid.guide',
   // Layers
   'layer.c2pa',
   'layer.png',

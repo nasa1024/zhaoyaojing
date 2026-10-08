@@ -1,0 +1,475 @@
+---
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  lang: 'en' | 'zh-CN';
+}
+
+const { lang } = Astro.props;
+const SITE_URL = 'https://www.aicheck365.com';
+const slug = 'synthid-detector';
+const publishedAt = '2026-10-08';
+const modifiedAt = '2026-10-08';
+
+const articles = {
+  en: {
+    title: 'SynthID Detector: How Google’s AI Checker Works | AICheck365',
+    description: 'Google opened SynthID Detector to everyone on October 7, 2026. What synthid.com checks, which AI companies it covers, how to read results, and its limits.',
+    canonical: `${SITE_URL}/en/blog/${slug}/`,
+    homeHref: '/en/',
+    homeLabel: 'Home',
+    blogHref: '/en/blog/',
+    blogLabel: 'Blog',
+    crumb: 'SynthID Detector',
+    badge: 'News explainer · October 2026',
+    h1: 'SynthID Detector explained: what Google’s watermark checker can and cannot tell you',
+    meta: 'Published October 8, 2026 · Based on Google’s announcement, the synthid.com FAQ and terms',
+    lead: 'On October 7, 2026 Google opened SynthID Detector to everyone. The portal at synthid.com checks an uploaded image, video or audio file for SynthID, the invisible watermark that Google and its partners OpenAI, NVIDIA and Kakao embed in AI-generated media, with Apple listed as coming soon. It is a strong check for that one signal and deliberately not a general AI detector. This page collects the facts, explains how to read a result, and shows where it fits next to metadata checks like the one AICheck365 runs in your browser.',
+    tocLabel: 'In this article',
+    toc: [
+      ['#direct-answer', 'What is SynthID Detector?'],
+      ['#key-facts', 'Key facts'],
+      ['#how-to-use', 'How to check a file'],
+      ['#results', 'How to read the result'],
+      ['#comparison', 'SynthID vs metadata vs AI classifiers'],
+      ['#workflow', 'Recommended workflow'],
+      ['#developers', 'API and integration status'],
+      ['#faq', 'FAQ'],
+    ],
+    directHeading: 'What is SynthID Detector?',
+    directBody: 'SynthID Detector is Google DeepMind’s verification portal for SynthID watermarks. You sign in, upload a file, and it reports “watermark detected” or “watermark not detected”; for video and audio it also marks which segments carry the watermark. A detection means the file was likely generated or edited by a SynthID-enabled model. A miss proves nothing about human authorship: the file may come from a model that does not use SynthID, or the watermark may have been degraded by heavy editing.',
+    factsHeading: 'Key facts as of October 2026',
+    facts: [
+      ['Operator', 'Google DeepMind. Announced by Pushmeet Kohli, VP of Science and Strategic Initiatives.'],
+      ['Public since', 'October 7, 2026, worldwide, interface in English only. An earlier version had been limited to journalists, researchers and other waitlisted testers since May 2025.'],
+      ['Address', 'synthid.com'],
+      ['Companies covered', 'Google, OpenAI, NVIDIA and Kakao. Apple is listed as “soon”. Media from tools that do not embed SynthID cannot be identified.'],
+      ['Images', 'JPG, JPEG, PNG, BMP, WEBP, AVIF, HEIC, HEIF, TIFF, TIF, GIF. Result: watermark present or not.'],
+      ['Video', 'MP4, MOV, WEBM. Result: which segments carry the watermark.'],
+      ['Audio', 'WAV, MP3, OGG, FLAC, AAC, M4A. Result: which segments carry the watermark.'],
+      ['Text', 'Not accepted by the portal, although SynthID also has a text watermark.'],
+      ['Account', 'Sign-in required; third-party sign-in such as Apple is supported. Daily usage quotas apply.'],
+      ['Privacy', 'Uploads are processed in real time and deleted once the result is returned. A digital signature of the file is kept for 24 hours to enforce quotas.'],
+      ['Scale', 'Google says SynthID has marked more than 180 billion images and videos and 240,000 years of audio, and that SynthID checks in Search, Chrome and the Gemini app handle over 1 million requests a day.'],
+    ],
+    useHeading: 'How to check a file with SynthID Detector',
+    useSteps: [
+      ['1. Find the best copy', 'Use the original download from the generator, not a screenshot, chat-app copy or re-encoded repost. Google asks for the highest-quality file you have because heavy compression and editing weaken detection.'],
+      ['2. Sign in at synthid.com', 'The detector needs an account so it can apply daily quotas. Accept the additional terms only if you are fine with them.'],
+      ['3. Upload one file', 'Pick an image, video or audio file in a supported format. Video and audio results are segment-based, so long files can show watermarked and clean parts side by side.'],
+      ['4. Record the result with context', 'Note the date, the file you tested and where it came from. A watermark result is one data point; Google itself recommends collecting several before deciding.'],
+    ],
+    resultsHeading: 'How to read a SynthID Detector result',
+    resultsIntro: 'The portal returns a binary answer. The wording below follows the synthid.com FAQ.',
+    resultRows: [
+      ['Watermark detected', 'A SynthID watermark is present. The content was likely generated or edited by a SynthID-enabled model from Google, OpenAI, NVIDIA or Kakao. It does not tell you which product, prompt or person made it, or whether only part of an image was edited.'],
+      ['Watermark not detected', 'No confident signal. The file was probably not made by a SynthID-enabled model, but AI generation is not ruled out: other generators such as Midjourney or Stable Diffusion do not use SynthID, older content predates partner adoption, and heavy modification can destroy the signal.'],
+      ['False positive', 'Google says that in very rare cases SynthID can trigger on content that was never watermarked. Treat a single positive as strong evidence, not as a verdict.'],
+    ],
+    comparisonHeading: 'SynthID vs metadata checks vs general AI detectors',
+    comparisonIntro: 'These methods answer different questions. None of them covers every file, which is why they work best together.',
+    comparisonColumns: ['Method', 'What it reads', 'Strength', 'Blind spot'],
+    comparisonRows: [
+      ['SynthID Detector (synthid.com)', 'Invisible watermark woven into pixels, video frames or audio frequencies', 'Survives filters, colour changes, lossy compression and metadata stripping', 'Only covers SynthID adopters; file must be uploaded to Google; no model or prompt details'],
+      ['C2PA and metadata (AICheck365)', 'Content Credentials, digitalSourceType, EXIF, XMP, PNG parameters, MP4 fields', 'Names the tool, can carry a signature, runs locally without uploading', 'Lost after screenshots, chat-app compression or re-export'],
+      ['General AI classifiers', 'Statistical artifacts in pixels or audio', 'Works when no signal was embedded', 'Probabilistic, weaker on new models and recompressed files, hard to use as proof'],
+      ['Google Cloud AI Content Detection API', 'Pixel-level artifacts, noise and spectral patterns (images only)', 'Programmatic, covers Google and third-party models', 'Private Preview by application; a classifier, not a SynthID watermark lookup'],
+    ],
+    workflowHeading: 'Recommended workflow: metadata first, watermark second',
+    workflowIntro: 'SynthID and file metadata fail in opposite situations. Metadata disappears when a file is screenshotted or recompressed, while the watermark is designed to survive exactly that. Metadata can name the tool and carry a signature; the watermark cannot. Use both:',
+    workflowSteps: [
+      'Run the original file through the AICheck365 detector. It reads C2PA, EXIF, XMP, PNG text chunks and MP4 metadata locally, so nothing leaves your browser.',
+      'If the scan finds a Google, OpenAI, NVIDIA or Kakao signal, upload the same file to SynthID Detector to confirm the watermark is still present in this copy.',
+      'If the scan finds nothing because the file was shared or screenshotted, SynthID Detector is the next best check for media that may have come from those companies.',
+      'If both come back empty, the file may still be AI-generated by a tool that writes neither metadata nor SynthID. Look for the earliest source and compare other copies.',
+    ],
+    developersHeading: 'API and integration status',
+    developersBody: [
+      'synthid.com has no public API. Its additional terms forbid submitting requests programmatically, scraping, or using the frontend as an automated API, and they forbid creating extra accounts to get around quotas. Any integration has to send people to the portal rather than call it behind the scenes.',
+      'For businesses, Google lists an AI Content Detection API on its Gemini Enterprise Agent Platform. According to its documentation it is in Private Preview, accepts JPEG, PNG and WebP images, and uses models that analyse pixel artifacts, noise and spectral anomalies, which makes it a classifier rather than a SynthID watermark check. Access requires an application.',
+      'SynthID Text, the text variant, has been open-sourced by Google, but the Detector portal does not accept text uploads.',
+    ],
+    siteHeading: 'Where AICheck365 fits',
+    siteBody: 'AICheck365 does not read SynthID. The watermark’s decoder is proprietary, and we do not upload files. What we read is the provenance data that travels in the file itself, including C2PA manifests that sometimes state SynthID was applied. That statement is a claim recorded by the generator, not proof the watermark survives in your copy. When our scan is empty or points to a SynthID partner, the result page now links to SynthID Detector as the next step.',
+    ctaLead: 'Check the file locally first, then decide whether a watermark check is worth an upload.',
+    ctas: [
+      ['/en/', 'Scan a file in your browser'],
+      ['/en/blog/how-to-detect-gemini-generated-images/', 'Gemini C2PA and SynthID guide'],
+      ['/en/tools/c2pa-viewer/', 'C2PA viewer'],
+      ['/en/blog/how-to-detect-ai-videos/', 'How to check AI videos'],
+    ],
+    faqHeading: 'Frequently asked questions',
+    faq: [
+      ['Is SynthID Detector free?', 'Google does not list a price. You need to sign in, and daily usage quotas apply.'],
+      ['Can SynthID Detector tell if an image is from ChatGPT?', 'Only if the image carries a SynthID watermark. OpenAI is listed as a SynthID adopter, so images from OpenAI products that embed it can be detected; images made before adoption, or by other tools, will show as not detected.'],
+      ['Can it detect Midjourney or Stable Diffusion images?', 'No. Those tools are not SynthID partners. Check the file’s metadata instead, for example PNG generation parameters or C2PA, with a metadata reader such as AICheck365.'],
+      ['Does “watermark not detected” mean a human made it?', 'No. It only means no confident SynthID signal was found. The file may be from a non-partner model, from before adoption, or heavily modified.'],
+      ['Does SynthID survive screenshots and compression?', 'It is designed to survive filters, colour changes and lossy compression, which usually strip metadata. Google warns that it is not infallible and that many combined transformations can remove it.'],
+      ['Does Google keep the files I upload?', 'According to the synthid.com privacy notice, files are deleted once the result is returned. A digital signature of the file is kept for 24 hours to enforce quotas and is then deleted.'],
+      ['Can SynthID Detector check text?', 'Not at the moment. The portal accepts images, video and audio. SynthID also has a text watermark, but text checking is not offered on synthid.com.'],
+      ['Is there a SynthID Detector API?', 'Not for the portal, and its terms forbid automating it. Google’s separate AI Content Detection API for businesses is in Private Preview and is an image classifier rather than a watermark lookup.'],
+    ],
+    sourcesHeading: 'Sources',
+    sources: [
+      ['https://blog.google/innovation-and-ai/models-and-research/google-deepmind/synth-id-ai-content/', 'Google: We’re making it easier to identify AI-generated content globally (Oct 7, 2026)', 'Public launch, partners, scale figures.'],
+      ['https://synthid.com/', 'SynthID Detector', 'Supported formats, FAQ, additional terms and privacy notice.'],
+      ['https://blog.google/innovation-and-ai/products/google-synthid-ai-content-detector/', 'Google: SynthID Detector early access (May 20, 2025)', 'Original announcement for early testers.'],
+      ['https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/ai-content-detection', 'Google Cloud: Detect AI-generated images', 'AI Content Detection API, Private Preview.'],
+      ['https://deepmind.google/models/synthid/', 'Google DeepMind: SynthID', 'Overview of watermarking for image, audio, text and video.'],
+    ],
+    back: 'Back to the blog',
+  },
+  'zh-CN': {
+    title: 'SynthID Detector 是什么？Google AI 水印检测怎么用 | AICheck365',
+    description: 'Google 于 2026 年 10 月 7 日向所有人开放 SynthID Detector。本文说明 synthid.com 能查什么、覆盖哪些 AI 公司、结果怎么看，以及它的局限。',
+    canonical: `${SITE_URL}/blog/${slug}/`,
+    homeHref: '/',
+    homeLabel: '首页',
+    blogHref: '/blog/',
+    blogLabel: '知识库',
+    crumb: 'SynthID Detector',
+    badge: '新闻解读 · 2026 年 10 月',
+    h1: 'SynthID Detector 详解：Google 的 AI 水印检测能证明什么，不能证明什么',
+    meta: '2026年10月8日发布 · 依据 Google 公告、synthid.com FAQ 与使用条款整理',
+    lead: '2026 年 10 月 7 日，Google 把 SynthID Detector 开放给所有人。用户在 synthid.com 上传图片、视频或音频，它会检查文件里有没有 SynthID：Google 及合作方 OpenAI、NVIDIA、Kakao 在 AI 生成内容里嵌入的隐形水印，Apple 标注为“即将加入”。它查这一种信号很可靠，但官方明说它不是通用 AI 检测器。本文整理已确认的事实、结果的读法，以及它和 AICheck365 这类本地元数据检测怎么配合。',
+    tocLabel: '本文目录',
+    toc: [
+      ['#direct-answer', 'SynthID Detector 是什么'],
+      ['#key-facts', '关键信息'],
+      ['#how-to-use', '怎么检测一个文件'],
+      ['#results', '结果怎么看'],
+      ['#comparison', 'SynthID、元数据与 AI 分类器对比'],
+      ['#workflow', '推荐流程'],
+      ['#developers', 'API 与接入现状'],
+      ['#faq', '常见问题'],
+    ],
+    directHeading: 'SynthID Detector 是什么？',
+    directBody: 'SynthID Detector 是 Google DeepMind 推出的 SynthID 水印验证入口。登录后上传文件，它给出“检测到水印”或“未检测到水印”；视频和音频还会标出带水印的片段。检测到，说明文件很可能由支持 SynthID 的模型生成或编辑过；没检测到，不能说明是人类创作：文件可能来自不用 SynthID 的模型，也可能因大幅编辑导致水印减弱。',
+    factsHeading: '关键信息（截至 2026 年 10 月）',
+    facts: [
+      ['运营方', 'Google DeepMind。由科学与战略项目副总裁 Pushmeet Kohli 发布。'],
+      ['公开时间', '2026 年 10 月 7 日全球开放，界面目前只有英文。此前自 2025 年 5 月起只对排队申请的记者、研究人员等早期测试者开放。'],
+      ['地址', 'synthid.com'],
+      ['覆盖的公司', 'Google、OpenAI、NVIDIA、Kakao；Apple 标注为“即将加入”。没有嵌入 SynthID 的工具生成的内容无法识别。'],
+      ['图片', 'JPG、JPEG、PNG、BMP、WEBP、AVIF、HEIC、HEIF、TIFF、TIF、GIF。结果为是否带水印。'],
+      ['视频', 'MP4、MOV、WEBM。结果标出带水印的片段。'],
+      ['音频', 'WAV、MP3、OGG、FLAC、AAC、M4A。结果标出带水印的片段。'],
+      ['文本', '检测入口不接受文本。SynthID 本身有文本水印，但这里查不了。'],
+      ['账号', '需要登录，支持 Apple 等第三方账号登录；有每日使用配额。'],
+      ['隐私', '上传文件实时处理，返回结果后立即删除；为执行配额，会保留文件的数字签名 24 小时。'],
+      ['规模', 'Google 称 SynthID 已标记超过 1800 亿张图片和视频、24 万年时长的音频；Search、Chrome 和 Gemini 应用里的 SynthID 验证每天处理超过 100 万次请求。'],
+    ],
+    useHeading: '怎么用 SynthID Detector 检测一个文件',
+    useSteps: [
+      ['1. 找到最原始的文件', '优先用生成平台直接下载的原文件，不要用截图、微信转发图或平台二次压缩的版本。Google 建议上传质量最高的文件，重度压缩和编辑会削弱检测效果。'],
+      ['2. 在 synthid.com 登录', '检测需要账号来执行每日配额。同意附加条款前先看一下内容。'],
+      ['3. 上传单个文件', '选择受支持格式的图片、视频或音频。视频和音频按片段给结果，长文件里可能同时有带水印和不带水印的部分。'],
+      ['4. 连同来源一起记录', '记下检测日期、测的是哪个文件、文件从哪来。水印结果只是一个证据点，Google 自己也建议多收集几方面证据再下结论。'],
+    ],
+    resultsHeading: 'SynthID Detector 的结果怎么看',
+    resultsIntro: '入口只给二元结果。下表的解释依据 synthid.com 的 FAQ。',
+    resultRows: [
+      ['检测到水印', '文件里有 SynthID 水印，内容很可能由 Google、OpenAI、NVIDIA 或 Kakao 支持 SynthID 的模型生成或编辑过。它不会告诉你具体是哪个产品、什么提示词、谁做的，也不区分整张生成还是局部编辑。'],
+      ['未检测到水印', '没有可信信号，文件大概率不是 SynthID 模型生成的，但不能排除 AI：Midjourney、Stable Diffusion 等工具不用 SynthID，合作方接入前生成的内容也没有水印，大幅修改还可能破坏信号。'],
+      ['误报', 'Google 说明在极少数情况下，SynthID 会对从未加水印的内容误报。单次阳性可以当作强证据，但不要当作定论。'],
+    ],
+    comparisonHeading: 'SynthID、元数据检测、通用 AI 检测器对比',
+    comparisonIntro: '这几种方法回答的是不同问题，没有一种能覆盖所有文件，所以最好组合使用。',
+    comparisonColumns: ['方法', '读取什么', '长处', '盲区'],
+    comparisonRows: [
+      ['SynthID Detector（synthid.com）', '织进像素、视频帧或音频频率里的隐形水印', '能扛滤镜、调色、有损压缩，元数据被剥掉也还在', '只覆盖 SynthID 合作方；文件要上传给 Google；不给出模型或提示词'],
+      ['C2PA 与元数据（AICheck365）', 'Content Credentials、digitalSourceType、EXIF、XMP、PNG 生成参数、MP4 字段', '能写明工具名，可带数字签名，在浏览器本地运行不上传', '截图、聊天软件压缩、重新导出后基本丢失'],
+      ['通用 AI 分类器', '像素或音频里的统计特征', '文件里没有任何嵌入信号时也能给判断', '只是概率，对新模型和多次压缩的文件不稳定，很难当证据用'],
+      ['Google Cloud AI Content Detection API', '像素伪影、噪声和频谱异常（仅图片）', '可编程调用，覆盖 Google 和第三方模型', '需申请的 Private Preview；是分类器，不是 SynthID 水印查询'],
+    ],
+    workflowHeading: '推荐流程：先查元数据，再查水印',
+    workflowIntro: 'SynthID 和文件元数据的失效场景正好相反。截图、重新压缩会让元数据消失，而水印正是为这些情况设计的；元数据能写明工具名、能带签名，水印做不到。所以两者一起用：',
+    workflowSteps: [
+      '先用 AICheck365 检测原文件。它在浏览器本地读取 C2PA、EXIF、XMP、PNG 文本块和 MP4 元数据，文件不会离开你的设备。',
+      '如果查到 Google、OpenAI、NVIDIA 或 Kakao 的信号，再把同一个文件传到 SynthID Detector，确认这份副本里水印还在。',
+      '如果因为文件被转发或截图而什么都没查到，而它可能来自上述公司，SynthID Detector 就是下一步最值得做的检查。',
+      '两边都没结果时，文件仍可能是既不写元数据、也不加 SynthID 的工具生成的。去找最早的发布来源，和其他副本对比。',
+    ],
+    developersHeading: 'API 与接入现状',
+    developersBody: [
+      'synthid.com 没有公开 API。它的附加条款禁止以编程方式提交请求、抓取数据或把前端当自动化 API 批量调用，也禁止注册多个账号绕过配额。所以任何接入都只能把用户引导到官方入口，不能在后台代调用。',
+      '面向企业，Google 在 Gemini Enterprise Agent Platform 上提供 AI Content Detection API。按官方文档，它目前是需要申请的 Private Preview，只接受 JPEG、PNG、WebP 图片，用模型分析像素伪影、噪声和频谱异常，属于分类器，不是 SynthID 水印检测。',
+      'SynthID 的文本水印方案 SynthID Text 已由 Google 开源，但 Detector 入口不支持上传文本。',
+    ],
+    siteHeading: 'AICheck365 在其中的位置',
+    siteBody: 'AICheck365 读不了 SynthID：它的解码器不公开，而我们也不上传文件。我们读的是跟着文件走的来源数据，包括有时会写明“已应用 SynthID”的 C2PA manifest。那句话是生成方记录的声明，不等于这份副本里水印还在。现在，当我们的检测没有发现信号、或发现的信号指向 SynthID 合作方时，结果页会给出跳转到 SynthID Detector 的下一步建议。',
+    ctaLead: '先在本地查文件，再决定值不值得上传做水印检测。',
+    ctas: [
+      ['/', '在浏览器里检测文件'],
+      ['/blog/how-to-detect-gemini-generated-images/', 'Gemini 的 C2PA 与 SynthID 检测'],
+      ['/tools/c2pa-viewer/', 'C2PA 查看器'],
+      ['/blog/how-to-detect-ai-videos/', '如何检测 AI 视频'],
+    ],
+    faqHeading: '常见问题',
+    faq: [
+      ['SynthID Detector 免费吗？', 'Google 没有标价。需要登录使用，并有每日使用配额。'],
+      ['SynthID Detector 能查出 ChatGPT 生成的图片吗？', '只有带 SynthID 水印的才能查出。OpenAI 已被列为 SynthID 采用方，其产品中嵌入了水印的图片可以检测到；接入之前生成的图片或其他工具做的图片，会显示未检测到。'],
+      ['能查 Midjourney 或 Stable Diffusion 的图吗？', '不能，它们不是 SynthID 合作方。这类文件应该查元数据，比如 PNG 生成参数或 C2PA，可以用 AICheck365 这类元数据读取工具。'],
+      ['“未检测到水印”就说明是人做的吗？', '不是。只说明没找到可信的 SynthID 信号。文件可能来自非合作方模型、接入前的内容，或被大幅修改过。'],
+      ['截图、压缩之后 SynthID 还在吗？', '它的设计目标是扛住滤镜、调色和有损压缩，而这些操作通常会洗掉元数据。但 Google 也提醒它并非万无一失，叠加多种变换可能让水印失效。'],
+      ['Google 会保存我上传的文件吗？', '按 synthid.com 的隐私说明，返回结果后文件立即删除；为执行配额会保留文件的数字签名 24 小时，之后删除。'],
+      ['SynthID Detector 能检测文本吗？', '目前不能。入口只接受图片、视频和音频。SynthID 也有文本水印方案，但 synthid.com 不提供文本检测。'],
+      ['SynthID Detector 有 API 吗？', '检测入口没有，条款也禁止自动化调用。Google 另有面向企业的 AI Content Detection API，目前是 Private Preview，属于图片分类器，不是水印查询。'],
+    ],
+    sourcesHeading: '参考来源',
+    sources: [
+      ['https://blog.google/innovation-and-ai/models-and-research/google-deepmind/synth-id-ai-content/', 'Google：We’re making it easier to identify AI-generated content globally（2026-10-07）', '全球开放、合作方、规模数据。'],
+      ['https://synthid.com/', 'SynthID Detector', '支持格式、FAQ、附加条款与隐私说明。'],
+      ['https://blog.google/innovation-and-ai/products/google-synthid-ai-content-detector/', 'Google：SynthID Detector 早期测试（2025-05-20）', '最初面向早期测试者的公告。'],
+      ['https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/ai-content-detection', 'Google Cloud：Detect AI-generated images', 'AI Content Detection API，Private Preview。'],
+      ['https://deepmind.google/models/synthid/', 'Google DeepMind：SynthID', '图片、音频、文本、视频水印概览。'],
+    ],
+    back: '返回知识库',
+  },
+};
+
+const c = articles[lang];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: c.homeLabel, item: `${SITE_URL}${c.homeHref}` },
+      { '@type': 'ListItem', position: 2, name: c.blogLabel, item: `${SITE_URL}${c.blogHref}` },
+      { '@type': 'ListItem', position: 3, name: c.crumb, item: c.canonical },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: c.h1,
+    name: c.h1,
+    description: c.description,
+    url: c.canonical,
+    mainEntityOfPage: c.canonical,
+    inLanguage: lang,
+    datePublished: publishedAt,
+    dateModified: modifiedAt,
+    isAccessibleForFree: true,
+    author: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    publisher: { '@type': 'Organization', name: 'AICheck365', url: SITE_URL },
+    citation: c.sources.map(([href]) => href),
+    keywords: lang === 'en'
+      ? ['SynthID Detector', 'SynthID', 'Google AI watermark detector', 'synthid.com', 'AI image watermark', 'C2PA']
+      : ['SynthID Detector', 'SynthID 检测', 'Google AI 水印检测', 'synthid.com', 'AI 图片水印', 'C2PA'],
+    about: [
+      { '@type': 'SoftwareApplication', name: 'SynthID Detector', url: 'https://synthid.com/', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web' },
+      { '@type': 'Thing', name: 'SynthID' },
+      { '@type': 'Thing', name: 'C2PA Content Credentials' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: c.faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+];
+---
+
+<Base
+  title={c.title}
+  description={c.description}
+  canonical={c.canonical}
+  lang={lang}
+  alternateLangs={['zh-CN', 'en']}
+  jsonLd={jsonLd}
+>
+  <main class="page content-page synthid-article">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href={c.homeHref}>{c.homeLabel}</a> › <a href={c.blogHref}>{c.blogLabel}</a> › {c.crumb}
+    </nav>
+
+    <article class="card content-article priority-seo-page" data-priority-page={`blog/${slug}`}>
+      <div class="article-kicker">{c.badge}</div>
+      <h1>{c.h1}</h1>
+      <p class="article-meta">{c.meta}</p>
+      <p class="lead-text">{c.lead}</p>
+
+      <nav class="article-toc" aria-label={c.tocLabel}>
+        <strong>{c.tocLabel}</strong>
+        <div class="article-toc-links">
+          {c.toc.map(([href, label]) => <a href={href}>{label}</a>)}
+        </div>
+      </nav>
+
+      <section class="priority-direct-answer" id="direct-answer">
+        <h2>{c.directHeading}</h2>
+        <p>{c.directBody}</p>
+      </section>
+
+      <section id="key-facts">
+        <h2>{c.factsHeading}</h2>
+        <div class="table-scroll">
+          <table class="tool-glossary evidence-table">
+            <tbody>
+              {c.facts.map(([label, detail]) => <tr><th>{label}</th><td>{detail}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="how-to-use">
+        <h2>{c.useHeading}</h2>
+        <div class="mechanism-grid">
+          {c.useSteps.map(([heading, detail]) => (
+            <div class="mechanism-card">
+              <h3>{heading}</h3>
+              <p>{detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="results">
+        <h2>{c.resultsHeading}</h2>
+        <p>{c.resultsIntro}</p>
+        <div class="table-scroll">
+          <table class="tool-glossary evidence-table">
+            <tbody>
+              {c.resultRows.map(([label, detail]) => <tr><th>{label}</th><td>{detail}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="comparison">
+        <h2>{c.comparisonHeading}</h2>
+        <p>{c.comparisonIntro}</p>
+        <div class="table-scroll">
+          <table class="tool-glossary comparison-table">
+            <thead>
+              <tr>{c.comparisonColumns.map((column) => <th>{column}</th>)}</tr>
+            </thead>
+            <tbody>
+              {c.comparisonRows.map((row) => (
+                <tr>{row.map((cell, index) => index === 0 ? <th>{cell}</th> : <td>{cell}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <h2>{c.workflowHeading}</h2>
+        <p>{c.workflowIntro}</p>
+        <ol class="content-list">
+          {c.workflowSteps.map((item) => <li>{item}</li>)}
+        </ol>
+      </section>
+
+      <section id="developers">
+        <h2>{c.developersHeading}</h2>
+        {c.developersBody.map((paragraph) => <p>{paragraph}</p>)}
+      </section>
+
+      <section id="aicheck365-position">
+        <h2>{c.siteHeading}</h2>
+        <p>{c.siteBody}</p>
+        <div class="cta-box">
+          <p>{c.ctaLead}</p>
+          <div class="related-links">
+            {c.ctas.map(([href, label]) => <a href={href}>{label} →</a>)}
+            <a href="https://synthid.com/" target="_blank" rel="noopener">SynthID Detector ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <h2>{c.faqHeading}</h2>
+        <div class="faq-list">
+          {c.faq.map(([question, answer]) => (
+            <details class="faq-item">
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section id="sources">
+        <h2>{c.sourcesHeading}</h2>
+        <ol class="content-list source-list">
+          {c.sources.map(([href, label, note]) => (
+            <li><a href={href} target="_blank" rel="noopener">{label}</a> — {note}</li>
+          ))}
+        </ol>
+      </section>
+
+      <p class="article-back"><a href={c.blogHref}>← {c.back}</a></p>
+    </article>
+  </main>
+
+  <script is:inline>
+    (() => {
+      const supportedArticleLangs = new Set(['en', 'zh-CN']);
+      const select = document.getElementById('lang-switch');
+      select?.addEventListener('change', (event) => {
+        const value = event.target?.value;
+        if (!value || supportedArticleLangs.has(value)) return;
+        event.stopImmediatePropagation();
+        window.location.assign(`/${value}/`);
+      }, true);
+    })();
+  </script>
+</Base>
+
+<style>
+  .synthid-article { max-width: 1120px; }
+  .article-kicker {
+    display: inline-flex;
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--text-muted);
+  }
+  .article-toc {
+    margin: 24px 0 32px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .article-toc-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 10px;
+  }
+  .article-toc-links a { font-size: .92rem; }
+  .mechanism-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 1.25rem 0;
+  }
+  .mechanism-card {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-2);
+  }
+  .mechanism-card h3 { margin: 0 0 8px; }
+  .mechanism-card p { margin: 0; }
+  .table-scroll { overflow-x: auto; margin: 1rem 0 1.5rem; }
+  .comparison-table { min-width: 860px; }
+  .comparison-table thead th { white-space: nowrap; }
+  .comparison-table tbody th { min-width: 190px; }
+  .evidence-table th { min-width: 150px; }
+  .article-back { margin-top: 2rem; }
+  .source-list a { overflow-wrap: anywhere; }
+  @media (max-width: 760px) {
+    .mechanism-grid { grid-template-columns: 1fr; }
+  }
+</style>

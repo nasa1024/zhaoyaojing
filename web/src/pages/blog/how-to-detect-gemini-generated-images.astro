@@ -5,7 +5,8 @@ const faq = [
   { q: "Gemini 图片一定包含 C2PA 吗？", a: "不一定。我们实测过的部分 Gemini / Google AI 原图带 C2PA Content Credentials，但不同产品入口（Gemini 应用、AI Studio、API）、不同格式和下载方式行为不一致。测试时尽量用刚从生成页面直接下载的原始文件。" },
   { q: "为什么原图能检测出来，转发后就检测不出来了？", a: "社交平台转码、截图、修图软件另存为都会丢弃 PNG 的 caBX chunk、JPEG 的 APP11 段以及 EXIF/XMP。检测工具只能读当前文件里还保留的字节，信号被剥离后任何工具都无能为力。" },
   { q: "digitalSourceType = trainedAlgorithmicMedia 是什么意思？", a: "这是 IPTC 受控词表里的数字来源类型，意思是'完全由训练算法生成'，即纯 AI 生成。它出现在 C2PA manifest 的 actions 断言里时，是目前最规范的 AI 来源声明，证据强度高。" },
-  { q: "SynthID 能用第三方工具检测吗？", a: "不能。SynthID 是 Google DeepMind 的像素级隐形水印，嵌入方式和解码器都不公开，目前只有 Google 自家的检测入口能读。第三方工具（包括本站）能查的是 C2PA、XMP 这类标准化元数据，以及对水印状统计异常的概率性分析。" },
+  { q: "SynthID 能用第三方工具检测吗？", a: "不能。SynthID 是 Google DeepMind 的像素级隐形水印，嵌入方式和解码器都不公开，只有 Google 自己的检测能读。2026 年 10 月 7 日起，任何人都可以登录 synthid.com 用 SynthID Detector 上传文件查验。第三方工具（包括本站）能查的是 C2PA、XMP 这类标准化元数据。" },
+  { q: "怎么自己检查 Gemini 图片有没有 SynthID？", a: "把 Gemini 直接下载的原图上传到 Google 的 SynthID Detector（synthid.com），需要登录，结果只有“检测到 / 未检测到水印”。它能查 Google、OpenAI、NVIDIA、Kakao 加了 SynthID 的图片、视频和音频；截图后元数据没了，水印通常还在。" },
   { q: "本地检测比上传检测有什么好处？", a: "文件不离开浏览器，适合客户素材、未发布的设计稿这类不方便外传的内容。代价是浏览器版定位于快速信号扫描，不做 C2PA 签名链验证，需要法证级结论时应使用 c2patool 等完整验证工具。" },
   { q: "Gemini / Veo 生成的视频也能检测吗？", a: "可以试。Veo 部分导出视频的 MP4 容器 ©too 字段写着 'Google'，部分带 C2PA 文本。浏览器版会扫容器元数据、C2PA、SEI marker 和文件名，没命中再抽帧分析水印。转码或录屏后的视频通常查不到容器层线索。" },
 ];
@@ -27,7 +28,7 @@ const jsonLd = [
     "description": "用真实 Gemini 原图拆解 Google 写入的来源信号：PNG caBX chunk 里的 C2PA manifest、Google C2PA Core Generator Library、XMP Credit、SynthID 的边界，以及 Veo 视频线索。",
     "url": "https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/",
     "datePublished": "2026-05-26",
-    "dateModified": "2026-07-10",
+    "dateModified": "2026-10-08",
     "inLanguage": "zh-CN",
     "isAccessibleForFree": true,
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.aicheck365.com/blog/how-to-detect-gemini-generated-images/" },
@@ -59,7 +60,7 @@ const jsonLd = [
 
     <article class="card content-article">
       <h1>如何检测 Gemini 生成的图片和视频？C2PA、XMP Credit 与 SynthID 详解</h1>
-      <p class="article-meta">2026年5月发布 · 2026年7月更新 · Gemini · C2PA · Content Credentials</p>
+      <p class="article-meta">2026年5月发布 · 2026年10月更新 · Gemini · C2PA · Content Credentials</p>
       <p class="article-meta">作者：<a href="/about/">AICheck365</a> · 基于检测器实现、真实样本与公开规范</p>
 
       <p class="lead-text">Google 给 Gemini 生成内容上的"标记"其实有三套：标准化的 C2PA Content Credentials、XMP 里的署名字段，以及只有 Google 自己能读的 SynthID 像素水印。能不能检测出来，主要取决于你手里的文件经历过什么——原始 PNG 里证据相当扎实，截图和微信转图则基本什么都不剩。这篇用真实样本拆解每一套标记长什么样、存在哪、可信度如何。</p>
@@ -81,8 +82,9 @@ const jsonLd = [
       <p>C2PA 之外，Google 系生成图常带一段 XMP，其中 <code>photoshop:Credit</code> 字段的值是 <code>Made with Google AI</code>。这是纯文本、没有签名，理论上可以伪造，所以证据强度记中等——但配合 C2PA 出现时是很好的旁证。</p>
       <p>一个容易踩的实战坑：Gemini 图片的 XMP 块不一定在文件开头附近。我们遇到过 XMP 出现在好几 MB 之后的样本，扫描窗口太小就会漏报——AICheck365 为此把 XMP 扫描范围扩到了文件前 10MB。如果你用自己的脚本解析，记得别只读文件头。</p>
 
-      <h2>信号三：SynthID——存在，但你读不了</h2>
-      <p>Google 反复宣传的 SynthID 需要单独说清楚：它是 DeepMind 开发的像素级隐形水印，生成时直接织进像素值里，对转码、裁剪有一定鲁棒性。但它的嵌入算法和解码器都不公开，<strong>目前只有 Google 自己的检测入口能给出 SynthID 判定，任何第三方工具都读不了</strong>。所以指望本地工具"验 SynthID"是不现实的；第三方能做的是对水印状统计异常的概率性分析（小波域指标），性质完全不同，置信度也低得多。</p>
+      <h2>信号三：SynthID——本地读不了，但可以交给 Google 查</h2>
+      <p>Google 反复宣传的 SynthID 需要单独说清楚：它是 DeepMind 开发的像素级隐形水印，生成时直接织进像素值里，对转码、裁剪有一定鲁棒性。但它的嵌入算法和解码器都不公开，<strong>只有 Google 自己的检测能给出 SynthID 判定，任何第三方工具都读不了</strong>。所以指望本地工具"验 SynthID"是不现实的；第三方能做的是对水印状统计异常的概率性分析（小波域指标），性质完全不同，置信度也低得多。</p>
+      <p>变化在于入口：2026 年 10 月 7 日，Google 把 <a href="https://synthid.com/" rel="noopener" target="_blank">SynthID Detector</a> 向所有人开放，登录后可以上传图片、视频或音频查水印，覆盖 Google、OpenAI、NVIDIA、Kakao 的生成内容。它和本地元数据检测正好互补：截图、转发洗掉了 C2PA 和 XMP，水印通常还在。支持格式、结果读法和局限见 <a href="/blog/synthid-detector/">SynthID Detector 详解</a>。</p>
 
       <h2>信号四：文件名</h2>
       <p>Gemini 默认下载名形如 <code>Gemini_Generated_Image_xxxxxx.png</code>。文件名人人可改，单独只算低置信度的辅助线索，但在"原图 + 默认文件名 + C2PA 命中"的组合里，它能让整个证据链更顺。</p>
@@ -97,7 +99,7 @@ const jsonLd = [
             <tr><td><code>digitalSourceType=trainedAlgorithmicMedia</code></td><td>C2PA manifest（caBX / APP11）</td><td>受签名保护</td><td><span class="badge high">高</span></td></tr>
             <tr><td><code>claim_generator</code> 含 Google/Imagen</td><td>C2PA manifest</td><td>受签名保护</td><td><span class="badge high">高</span></td></tr>
             <tr><td><code>Credit="Made with Google AI"</code></td><td>XMP（可能深至文件 10MB 处）</td><td>纯文本可改</td><td><span class="badge medium">中</span></td></tr>
-            <tr><td>SynthID</td><td>像素</td><td>难，但第三方不可读</td><td>仅 Google 可验证</td></tr>
+            <tr><td>SynthID</td><td>像素</td><td>难，但第三方不可读</td><td>需上传到 Google SynthID Detector 验证</td></tr>
             <tr><td><code>Gemini_Generated_Image</code> 文件名</td><td>文件系统</td><td>随手可改</td><td><span class="badge low">低</span></td></tr>
           </tbody>
         </table>
@@ -112,6 +114,7 @@ const jsonLd = [
       <h2>来源与复现</h2>
       <ul class="content-list">
         <li><a href="https://deepmind.google/science/synthid/" rel="noopener" target="_blank">Google DeepMind SynthID</a>：像素级水印的官方范围与用途。</li>
+        <li><a href="https://synthid.com/" rel="noopener" target="_blank">SynthID Detector</a>：Google 官方水印检测入口，2026 年 10 月 7 日全球开放。</li>
         <li><a href="https://c2pa.org/specifications/" rel="noopener" target="_blank">C2PA Specifications</a>：Content Credentials、JUMBF 和签名验证规范。</li>
         <li><a href="/research/ai-media-provenance-report-2026-q3/">AICheck365 2026 Q3 实验汇总</a>：Google 生成式 AI 视频与其他样本的实测记录和边界。</li>
       </ul>
