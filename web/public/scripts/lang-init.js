@@ -104,6 +104,7 @@ const themeBtn = document.getElementById('theme-toggle');
 
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
+  document.documentElement.dataset.theme = theme; // keep <html> (set pre-paint) in step with <body>
   // Icon visibility is driven by [data-theme] in CSS; no text swap needed.
   localStorage.setItem('theme', theme);
 }

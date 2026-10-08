@@ -1,0 +1,33 @@
+---
+// One ad container for every page. Reserves space (CLS-safe) and carries the
+// disclosure label; live AdSense markup goes in the slot once approved, see
+// docs/seo/ad-placement.md. Never place next to upload zones, CTAs or results.
+interface Props {
+  placement: string;
+  variant?: 'horizontal' | 'rectangle' | 'in-article';
+  lang?: string;
+}
+
+const AD_LABEL: Record<string, string> = {
+  'zh-CN': '广告', 'zh-TW': '廣告', en: 'Advertisement', ja: '広告', ko: '광고',
+  de: 'Anzeige', fr: 'Publicité', es: 'Publicidad', 'pt-BR': 'Publicidade',
+};
+
+const { placement, variant = 'horizontal', lang = 'en' } = Astro.props;
+const label = AD_LABEL[lang] ?? AD_LABEL.en;
+---
+<aside class={`ad-slot ad-slot--${placement} ad-slot--${variant}`} data-ad-placement={placement} aria-label={label}>
+  <span class="ad-label">{label}</span>
+  <div class="ad-body">
+    <slot />
+    <!-- Replace after AdSense approval:
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    -->
+  </div>
+</aside>

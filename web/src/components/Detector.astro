@@ -1,4 +1,5 @@
 ---
+import AdSlot from './AdSlot.astro';
 const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
 const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
 const lang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
@@ -189,8 +190,6 @@ const NOSCRIPT = {
 const noscriptCopy = NOSCRIPT[lang] ?? NOSCRIPT.en;
 
 // §16: ad slots must be clearly labeled
-const AD_LABEL = { 'zh-CN': '广告', 'zh-TW': '廣告', en: 'Advertisement', ja: '広告', ko: '광고', de: 'Anzeige', fr: 'Publicité', es: 'Publicidad', 'pt-BR': 'Publicidade' };
-const adLabel = AD_LABEL[lang] ?? AD_LABEL.en;
 const EXPERT_LABEL = {
   'zh-CN': '专家模式',
   'zh-TW': '專家模式',
@@ -346,18 +345,7 @@ const platformNames = [
   </div>
 </section>
 
-<div class="ad-slot ad-slot--horizontal" data-ad-placement="after-detector-results">
-  <span class="ad-label" style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.55;margin-bottom:6px">{adLabel}</span>
-  <!-- Replace after AdSense approval:
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-       data-ad-slot="XXXXXXXXXX"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  -->
-</div>
+<AdSlot placement="after-detector-results" lang={lang} />
 
 <section class="card history-section">
   <h2 data-i18n="history.title">{copy.history}</h2>

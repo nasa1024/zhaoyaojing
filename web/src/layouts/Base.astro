@@ -478,6 +478,16 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RF8YQ5YB1"></script>
 
+    <script is:inline>
+      // Set the theme before first paint so light-mode visitors never see a dark flash.
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/og.svg" />
     <link rel="alternate icon" type="image/png" href="/og.png" />
@@ -496,6 +506,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
 
     <link rel="stylesheet" href="/tokens.css" />
     <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/polish.css" />
   </head>
   <body data-i18n-page={i18nPage} data-single-lang={singleLang ? 'true' : undefined}>
     <header class="site-header">

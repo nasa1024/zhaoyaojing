@@ -7,6 +7,7 @@ import EvidenceVanish from '../components/EvidenceVanish.astro';
 import FiveLayer from '../components/FiveLayer.astro';
 import PlatformFingerprint from '../components/PlatformFingerprint.astro';
 import MethodologyBlock from '../components/MethodologyBlock.astro';
+import AdSlot from '../components/AdSlot.astro';
 import SampleExperience from '../components/SampleExperience.astro';
 import LatestExperiments from '../components/LatestExperiments.astro';
 
@@ -14,8 +15,8 @@ const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', '
 const urlLang = Astro.url.pathname.split('/').filter(Boolean)[0];
 const pageLang = SUPPORTED_LANGS.includes(urlLang) ? urlLang : 'zh-CN';
 const prefix = pageLang === 'zh-CN' ? '' : `/${pageLang}`;
-const AD_LABEL = { 'zh-CN': '广告', 'zh-TW': '廣告', en: 'Advertisement', ja: '広告', ko: '광고', de: 'Anzeige', fr: 'Publicité', es: 'Publicidad', 'pt-BR': 'Publicidade' };
-const adLabel = AD_LABEL[pageLang] ?? AD_LABEL.en;
+
+const tickerItems = ['C2PA', 'EXIF', 'XMP', 'IPTC', 'PNG tEXt', 'Content Credentials', 'digitalSourceType', 'claim_generator', 'MP4 SEI', 'JUMBF', 'SynthID'];
 
 const homeCopy = {
   'zh-CN': {
@@ -380,6 +381,12 @@ const jsonLd = {
       <div class="notice warning" data-i18n-html="notice" set:html={copy.notice} />
     </section>
 
+    <div class="signal-ticker" aria-hidden="true">
+      <div class="signal-ticker__track">
+        {[0, 1].map(() => tickerItems.map((item) => <span>{item}</span>))}
+      </div>
+    </div>
+
     <section class="card content-section file-anatomy-section">
       <FileAnatomy />
     </section>
@@ -447,23 +454,13 @@ const jsonLd = {
 
     <MethodologyBlock />
 
-    <div class="ad-slot ad-slot--after-methodology" data-ad-placement="after-methodology">
-      <span class="ad-label" style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.55;margin-bottom:6px">{adLabel}</span>
-      <!-- Replace after AdSense approval:
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-           data-ad-slot="XXXXXXXXXX"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      -->
-    </div>
+    <AdSlot placement="after-methodology" lang={pageLang} />
 
     <SampleExperience />
 
     <LatestExperiments />
 
     <script type="module" src="/scripts/scroll-narrative.js"></script>
+    <script type="module" src="/scripts/hero-tilt.js"></script>
   </main>
 </Base>

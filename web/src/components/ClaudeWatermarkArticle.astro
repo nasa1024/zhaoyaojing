@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import AdSlot from './AdSlot.astro';
 
 interface Props {
   lang: 'en' | 'zh-TW';
@@ -361,6 +362,7 @@ const jsonLd = [
       <a href={`/${lang}/`}>{c.homeLabel}</a> › <a href={c.blogHref}>{c.blogLabel}</a> › Claude
     </nav>
 
+    <div class="article-layout">
     <article class="card content-article priority-seo-page" data-priority-page={`blog/${slug}`}>
       <div class="article-kicker">{c.badge}</div>
       <h1>{c.h1}</h1>
@@ -431,6 +433,8 @@ const jsonLd = [
           </table>
         </div>
       </section>
+
+      <AdSlot placement="article-inline" variant="in-article" lang={lang} />
 
       <section id="comparison">
         <h2>{c.comparisonHeading}</h2>
@@ -510,6 +514,10 @@ const jsonLd = [
 
       <p class="article-back"><a href={c.blogHref}>← {c.back}</a></p>
     </article>
+    <aside class="article-rail" aria-label="Sidebar">
+      <AdSlot placement="article-rail" variant="rectangle" lang={lang} />
+    </aside>
+    </div>
   </main>
 
   <script is:inline>
@@ -528,17 +536,6 @@ const jsonLd = [
 
 <style>
   .claude-mark-article { max-width: 1120px; }
-  .article-kicker {
-    display: inline-flex;
-    margin-bottom: 12px;
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: .82rem;
-    font-weight: 700;
-    letter-spacing: .02em;
-    color: var(--text-muted);
-  }
   .article-update {
     margin: 28px 0;
     padding: 22px 24px;
@@ -548,33 +545,12 @@ const jsonLd = [
     background: var(--surface-2);
   }
   .article-update h2 { margin-top: 0; }
-  .article-toc {
-    margin: 24px 0 32px;
-    padding: 18px 20px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-  }
-  .article-toc-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
-    margin-top: 10px;
-  }
-  .article-toc-links a { font-size: .92rem; }
   .mechanism-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
     margin: 1.25rem 0;
   }
-  .mechanism-card {
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--surface-2);
-  }
-  .mechanism-card h3 { margin: 0 0 8px; }
-  .mechanism-card p { margin: 0; }
   .watermark-myth { margin: 1.25rem 0 2rem; }
   .watermark-myth h3 { margin-top: 0; }
   .table-scroll { overflow-x: auto; margin: 1rem 0 1.5rem; }
