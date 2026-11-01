@@ -208,5 +208,35 @@
     "draft": false,
     "updatedAt": "2026-10-05",
     "internalLinks": ["/ja/tools/png-parameter-extractor/", "/ja/blog/how-to-detect-ai-images/", "/ja/platforms/stable-diffusion/", "/ja/platforms/comfyui/", "/ja/platforms/midjourney/", "/ja/platforms/firefly/", "/ja/platforms/gemini/"]
+  },
+  {
+    "id": "ai-image-checker-ko",
+    "slug": "ai-image-checker",
+    "route": "/ko/ai-image-checker/",
+    "locale": "ko",
+    "pageType": "tool",
+    "toolType": "ai-image-checker",
+    "title": "AI 사진·그림 판독기 (무료): AI 생성 이미지 판별 사이트 | AICheck365",
+    "description": "무료 AI 사진·그림 판독기. C2PA 서명, Stable Diffusion·ComfyUI·NovelAI의 PNG 생성 정보, EXIF/XMP로 AI로 만든 이미지인지 판별합니다. 그림체로 추측하지 않고 파일은 업로드되지 않습니다.",
+    "canonical": "https://www.aicheck365.com/ko/ai-image-checker/",
+    "primaryKeyword": "ai 사진 판독기",
+    "draft": false,
+    "updatedAt": "2026-11-01",
+    "internalLinks": ["/ko/tools/png-parameter-extractor/", "/ko/blog/how-to-detect-ai-images/", "/ko/platforms/stable-diffusion/", "/ko/platforms/comfyui/", "/ko/platforms/midjourney/", "/ko/platforms/dall-e/", "/ko/platforms/firefly/", "/ko/platforms/gemini/"]
+  },
+  {
+    "id": "ai-image-checker-zh-tw",
+    "slug": "ai-image-checker",
+    "route": "/zh-TW/ai-image-checker/",
+    "locale": "zh-TW",
+    "pageType": "tool",
+    "toolType": "ai-image-checker",
+    "title": "AI 圖片辨識網站（免費）：判斷圖片是不是 AI 生成 | AICheck365",
+    "description": "免費 AI 圖片辨識與檢測工具：在瀏覽器讀取 C2PA 簽章、Stable Diffusion／ComfyUI／NovelAI 的 PNG 生成參數與 EXIF/XMP，判斷圖片是不是 AI 生成。不靠畫風猜測，檔案不會上傳。",
+    "canonical": "https://www.aicheck365.com/zh-TW/ai-image-checker/",
+    "primaryKeyword": "ai 圖片 辨識 網站",
+    "draft": false,
+    "updatedAt": "2026-11-01",
+    "internalLinks": ["/zh-TW/tools/png-parameter-extractor/", "/zh-TW/blog/how-to-detect-ai-images/", "/zh-TW/blog/what-is-c2pa/", "/zh-TW/platforms/stable-diffusion/", "/zh-TW/platforms/comfyui/", "/zh-TW/platforms/midjourney/", "/zh-TW/platforms/dall-e/", "/zh-TW/platforms/firefly/", "/zh-TW/platforms/gemini/"]
   }
 ]

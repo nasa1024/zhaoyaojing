@@ -1,0 +1,158 @@
+---
+import Base from '../../layouts/Base.astro';
+import Detector from '../../components/Detector.astro';
+
+// Traditional Chinese landing page for the "AI 圖片辨識網站" tool intent. /zh-TW/
+// ranks 1-2 for video queries but 6-10 with few clicks for image ones (GSC
+// 2026-10: "ai 圖 像 辨識 網站", "ai圖片檢測", "ai 圖片 檢測 器 免費",
+// "判斷ai圖片"). The how-to guide at /zh-TW/blog/how-to-detect-ai-images/ keeps
+// the informational "如何判斷" intent; this page owns the tool intent. Same
+// pattern as /ja/ai-illust-checker/: embeds the local detector, zh-TW only.
+const SITE_URL = 'https://www.aicheck365.com';
+const canonical = `${SITE_URL}/zh-TW/ai-image-checker/`;
+const updatedAt = '2026-11-01';
+
+const title = 'AI 圖片辨識網站（免費）：判斷圖片是不是 AI 生成 | AICheck365';
+const description = '免費 AI 圖片辨識與檢測工具：在瀏覽器讀取 C2PA 簽章、Stable Diffusion／ComfyUI／NovelAI 的 PNG 生成參數與 EXIF/XMP，判斷圖片是不是 AI 生成。不靠畫風猜測，檔案不會上傳。';
+
+const signals = [
+  ['C2PA（內容憑證）', 'ChatGPT（OpenAI）、Adobe Firefly、Google Gemini 等會附加的簽章來源資訊。有效簽章裡記錄了 AI 生成（trainedAlgorithmicMedia），就是最強的證據。'],
+  ['PNG 文字區塊（生成參數）', 'Stable Diffusion WebUI（A1111／Forge）、ComfyUI、NovelAI 寫進 PNG 的 prompt、parameters、workflow。原始檔通常能看出是用哪個工具生成的。'],
+  ['XMP／EXIF', 'Software、CreatorTool 與標示 AI 生成的欄位等。屬於輔助線索，編輯時可以被改寫或刪除。'],
+  ['檔名', '像 Gemini_Generated_Image 這類名稱。只能當參考，改個名字就消失了。'],
+];
+
+const tools = [
+  ['ChatGPT／DALL-E', '檢查 C2PA 簽章與生成工具（claim generator）。', '/zh-TW/platforms/dall-e/'],
+  ['Midjourney', '檢查 XMP、IPTC 欄位與檔名線索。', '/zh-TW/platforms/midjourney/'],
+  ['Stable Diffusion', 'parameters 區塊裡有 prompt、seed、sampler 與模型名稱。', '/zh-TW/platforms/stable-diffusion/'],
+  ['ComfyUI', 'prompt／workflow 區塊裡有節點結構的 JSON。', '/zh-TW/platforms/comfyui/'],
+  ['NovelAI', 'PNG 文字的 Software、Comment 等欄位會留下 NovelAI 的紀錄。'],
+  ['Adobe Firefly', '檢查 C2PA 簽章與 digitalSourceType。', '/zh-TW/platforms/firefly/'],
+  ['Gemini／Imagen', '檢查 C2PA、XMP 與檔名。', '/zh-TW/platforms/gemini/'],
+];
+
+const steps = [
+  ['準備原始檔', '使用從生成工具直接下載的 PNG／JPEG，或向作者索取的原始檔。從 LINE、Facebook、IG、Threads 另存的圖片和螢幕截圖，痕跡大多已經被清掉。'],
+  ['拖進上方的辨識工具', '分析在瀏覽器裡完成，圖片不會傳到伺服器。用手機時，從相簿選擇原始照片即可。'],
+  ['查看證據', '每個命中的項目都會列出是哪個欄位、寫了什麼。證據強度依序是 C2PA 簽章 → PNG 生成參數 → XMP。'],
+  ['什麼都沒找到時怎麼看', '代表「這份檔案沒有可讀的痕跡」，不能證明是真人拍攝或手繪。'],
+];
+
+const faq = [
+  ['這個 AI 圖片辨識網站免費嗎？', '免費，也不需要註冊。圖片在你自己的裝置上分析，所以沒有次數或檔案大小限制。'],
+  ['只看畫風能判斷是不是 AI 圖嗎？', '這個工具不靠畫風猜測，只以檔案裡留下的生成參數、簽章與 metadata 為根據。靠畫風判斷的工具只會給一個機率，也常把用心畫的手繪圖誤判成 AI。'],
+  ['從 LINE、Facebook 或 IG 存下來的圖片也能辨識嗎？', '多數情況下，上傳或傳送時圖片會被重新壓縮、metadata 會被刪除，所以找不到痕跡。想確實判斷，最好請發布者提供原始檔。'],
+  ['AI 圖片檢測準確嗎？', '它不像靠畫風判斷的 AI 檢測器那樣輸出機率。只要檔案裡還有生成紀錄或簽章，就直接把內容當作證據列出來，結果可以重複查證。相反地，紀錄被清掉的圖片就無法判斷，這時會顯示「沒有痕跡」。'],
+  ['自己畫的圖會被判成 AI 嗎？', '只要檔案裡沒有 AI 生成工具的紀錄，就不會出現 AI 訊號。不過用了「生成式填色」這類 AI 功能的編輯，可能會被記錄在 C2PA 裡。'],
+  ['可以看到 Stable Diffusion 或 NovelAI 的 prompt 嗎？', '原始 PNG 若保留了生成參數，就能看到 prompt、seed 等數值。完整欄位可以用 PNG 參數擷取工具查看。'],
+  ['圖片會被上傳嗎？', '不會。工具用 WebAssembly 在瀏覽器裡分析，檔案不會離開你的裝置。'],
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'AICheck365 AI 圖片辨識工具',
+    url: canonical,
+    description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    browserRequirements: 'Modern browser with WebAssembly and JavaScript',
+    isAccessibleForFree: true,
+    inLanguage: 'zh-TW',
+    dateModified: updatedAt,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'TWD' },
+    featureList: ['C2PA 內容憑證', 'PNG 生成參數（Stable Diffusion／ComfyUI／NovelAI）', 'XMP／EXIF', '瀏覽器本機分析'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '首頁', item: `${SITE_URL}/zh-TW/` },
+      { '@type': 'ListItem', position: 2, name: 'AI 圖片辨識', item: canonical },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} canonical={canonical} lang="zh-TW" jsonLd={jsonLd} singleLang={true}>
+  <main class="page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/zh-TW/">首頁</a>
+      <span aria-hidden="true"> › </span>
+      <span>AI 圖片辨識</span>
+    </nav>
+
+    <section class="hero card priority-seo-page" data-seo-intent="transactional-tool" data-tool-owner="ai-image-checker">
+      <div class="eyebrow">免費 · 免註冊 · 不上傳</div>
+      <h1>AI 圖片辨識網站：用檔案留下的痕跡判斷是不是 AI 生成</h1>
+      <p class="lead">
+        把圖片或照片拖進來，就會檢查 C2PA 簽章、Stable Diffusion／ComfyUI／NovelAI 的生成參數與 XMP 等欄位裡，
+        有沒有留下 AI 生成的紀錄。這不是靠畫風猜測的判斷，而是把找到的證據原樣列出來的 AI 圖片檢測工具。
+      </p>
+      <div class="notice warning">
+        <strong>從 LINE、Facebook、IG 或 Threads 另存的圖片，metadata 大多已經被清掉。</strong>
+        想準確判斷，請使用從生成工具直接下載的原始檔。什麼都沒找到，也不代表一定是真人創作。
+      </div>
+    </section>
+
+    <Detector />
+
+    <article class="card content-article">
+      <h2>這個 AI 圖片檢測器會檢查什麼</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {signals.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+        </tbody>
+      </table>
+
+      <h2>和靠畫風判斷的網站有什麼不同</h2>
+      <p>
+        從圖片外觀推測「像不像 AI」的工具只會回傳一個機率，說不出根據；用心畫的手繪圖或修過的照片也可能被判成 AI。
+        AICheck365 只以檔案裡寫入的生成紀錄和簽章為根據，所以任何人都能確認「為什麼會是這個結果」。
+        相對地，紀錄已被清除的圖片，我們會老實告訴你無法判斷。
+      </p>
+
+      <h2>判斷圖片是不是 AI 生成的步驟</h2>
+      <ol class="content-list">
+        {steps.map(([label, value]) => <li><strong>{label}：</strong>{value}</li>)}
+      </ol>
+
+      <h2>常見圖片生成 AI 與容易留下的痕跡</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {tools.map(([label, value, href]) => (
+            <tr><th>{href ? <a href={href}>{label}</a> : label}</th><td>{value}</td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>常見問題</h2>
+      <dl class="faq-list">
+        {faq.map(([question, answer]) => (
+          <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
+        ))}
+      </dl>
+
+      <h2>相關工具與指南</h2>
+      <div class="related-links">
+        <a href="/zh-TW/tools/png-parameter-extractor/">PNG 參數擷取工具 →</a>
+        <a href="/zh-TW/blog/how-to-detect-ai-images/">如何判斷圖片是否由 AI 生成 →</a>
+        <a href="/zh-TW/blog/what-is-c2pa/">C2PA 是什麼 →</a>
+        <a href="/zh-TW/">AI 圖片／影片辨識 →</a>
+      </div>
+    </article>
+  </main>
+</Base>
+
+<script type="module" src="/scripts/market-analytics.js"></script>

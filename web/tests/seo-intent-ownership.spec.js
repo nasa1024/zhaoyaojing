@@ -130,3 +130,27 @@ test('Japanese AI illustration checker embeds the detector and stays single-lang
   const sitemap = await (await request.get('/sitemap-0.xml')).text();
   expect(sitemap).toContain('https://www.aicheck365.com/ja/ai-illust-checker/');
 });
+
+test('Korean and Traditional Chinese AI image checkers embed the detector and stay single-language', async ({ page, request }) => {
+  const cases = [
+    ['ko', 'AI 사진·그림 판독기'],
+    ['zh-TW', 'AI 圖片辨識網站'],
+  ];
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+
+  for (const [lang, h1] of cases) {
+    const pathname = `/${lang}/ai-image-checker/`;
+    await page.goto(pathname);
+
+    await expect(page.locator('h1')).toHaveCount(1);
+    await expect(page.locator('h1')).toContainText(h1);
+    await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-tool-owner', 'ai-image-checker');
+    await expect(page.locator('#file-input')).toHaveAttribute('accept', /image\/png/);
+    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
+
+    for (const linkingPage of [`/${lang}/`, `/${lang}/blog/how-to-detect-ai-images/`]) {
+      expect(await (await request.get(linkingPage)).text(), linkingPage).toContain(`href="${pathname}"`);
+    }
+    expect(sitemap).toContain(`https://www.aicheck365.com${pathname}`);
+  }
+});

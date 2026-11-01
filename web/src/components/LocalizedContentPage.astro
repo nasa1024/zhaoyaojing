@@ -3696,7 +3696,7 @@ const priorityArticleProfiles = {
       ],
       ctaLead: '先用完整檢測器建立證據摘要；若發現 C2PA 或 PNG workflow，再開啟專用工具查看簽章與原始欄位。',
       ctas: [
-        { href: '/', label: '在瀏覽器本機檢查圖片' },
+        { href: '/zh-TW/ai-image-checker/', label: '用 AI 圖片辨識工具檢查', localized: false },
         { href: '/en/tools/c2pa-validator/', label: '深入驗證 C2PA', localized: false },
         { href: '/en/tools/png-parameter-extractor/', label: '擷取 PNG 參數與 workflow', localized: false },
       ],
@@ -5202,12 +5202,12 @@ const priorityArticleProfiles = {
       },
     },
     'blog/how-to-detect-ai-videos': {
-      title: '¿Cómo saber si un vídeo fue creado con IA?',
-      description: 'Comprueba si un vídeo es IA desde el archivo original: C2PA, metadatos del contenedor MP4/MOV, marcadores SEI y marcas de agua en fotogramas. Gratis y sin subirlo.',
-      h1: '¿Cómo saber si un vídeo fue creado con IA?',
-      meta: 'Consulta objetivo: cómo saber si un vídeo es IA · Actualizado: 2026-10-05 · Parser: aicheck 0.2.0',
-      updatedAt: '2026-10-05',
-      lead: 'Los modelos de vídeo han mejorado hasta el punto de que mirar con atención ya no es una prueba fiable. El camino defendible es conservar el MP4 o MOV original y leerlo por capas: primero las credenciales C2PA/JUMBF, después los campos del contenedor —ftyp, el árbol de cajas, udta/meta/ilst, encoder, tool, software—, luego los marcadores SEI del flujo de vídeo y, solo si nada de eso aparece, fotogramas muestreados en busca de marcas de agua conocidas.',
+      title: 'Cómo saber si un video es IA: detector gratis (2026)',
+      description: 'Detector de videos IA gratis: comprueba si un video es IA desde el archivo original con C2PA, metadatos MP4/MOV, marcadores SEI y marcas de agua. Sin subirlo.',
+      h1: '¿Cómo saber si un video es IA?',
+      meta: 'Consulta objetivo: cómo saber si un video es IA · Actualizado: 2026-11-01 · Parser: aicheck 0.2.0',
+      updatedAt: '2026-11-01',
+      lead: 'Para saber si un video es IA, mirar con atención ya no basta: los modelos de video han mejorado hasta el punto de que el ojo no es una prueba fiable. El camino defendible es conservar el MP4 o MOV original y leerlo por capas: primero las credenciales C2PA/JUMBF, después los campos del contenedor —ftyp, el árbol de cajas, udta/meta/ilst, encoder, tool, software—, luego los marcadores SEI del flujo de vídeo y, solo si nada de eso aparece, fotogramas muestreados en busca de marcas de agua conocidas.',
       directAnswer: {
         heading: 'En resumen: baja por tres capas — contenedor, flujo y fotogramas',
         body: 'Un manifiesto C2PA válido que declare trainedAlgorithmicMedia, o un claim generator generativo, es la evidencia más sólida y explicable. Los campos de herramienta del MP4, las etiquetas AIGC y los marcadores SEI son señales de apoyo que sobreviven a algunos procesos pero no a una recodificación. El análisis de fotogramas es el recurso final cuando ya no hay metadatos. No encontrar nada en ninguna capa sigue sin demostrar que una persona grabó el vídeo.',
@@ -6123,7 +6123,7 @@ const priorityArticleProfiles = {
       ],
       ctaLead: '먼저 전체 검출기로 증거를 모으고, C2PA나 PNG workflow가 나오면 전용 도구로 자세히 확인하세요.',
       ctas: [
-        { href: '/', label: '브라우저에서 이미지 확인하기' },
+        { href: '/ko/ai-image-checker/', label: 'AI 사진·그림 판독기로 확인하기', localized: false },
         { href: '/en/tools/c2pa-validator/', label: 'C2PA 상세 검증하기', localized: false },
         { href: '/en/tools/png-parameter-extractor/', label: 'PNG 파라미터·workflow 추출하기', localized: false },
       ],

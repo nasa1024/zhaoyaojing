@@ -1,0 +1,158 @@
+---
+import Base from '../../layouts/Base.astro';
+import Detector from '../../components/Detector.astro';
+
+// Korean landing page for the AI photo / drawing checker query family. /ko/
+// ranks 1-5 for video queries but ~9 with no clicks for image ones (GSC
+// 2026-10: "ai 그림 판독기", "ai 이미지 판별 사이트", "ai사진인지 확인하는 방법").
+// Semrush KR 2026-11: "ai 사진 판독기" 720/mo KD 10, "ai 사진 판별 사이트"
+// 590 KD 12, "ai 판독기" 1K KD 34. Same pattern as /ja/ai-illust-checker/:
+// embeds the local detector, Korean-only, so hreflang is suppressed.
+const SITE_URL = 'https://www.aicheck365.com';
+const canonical = `${SITE_URL}/ko/ai-image-checker/`;
+const updatedAt = '2026-11-01';
+
+const title = 'AI 사진·그림 판독기 (무료): AI 생성 이미지 판별 사이트 | AICheck365';
+const description = '무료 AI 사진·그림 판독기. C2PA 서명, Stable Diffusion·ComfyUI·NovelAI의 PNG 생성 정보, EXIF/XMP로 AI로 만든 이미지인지 판별합니다. 그림체로 추측하지 않고 파일은 업로드되지 않습니다.';
+
+const signals = [
+  ['C2PA (콘텐츠 자격 증명)', 'ChatGPT(OpenAI), Adobe Firefly, Google Gemini 등이 붙이는 서명된 출처 정보입니다. 유효한 서명에 AI 생성(trainedAlgorithmicMedia)이 기록되어 있으면 가장 강한 근거가 됩니다.'],
+  ['PNG 텍스트 (생성 파라미터)', 'Stable Diffusion WebUI(A1111 / Forge), ComfyUI, NovelAI가 PNG에 기록하는 prompt·parameters·workflow입니다. 원본 파일이라면 어떤 도구로 만들었는지까지 알 수 있습니다.'],
+  ['XMP / EXIF', 'Software, CreatorTool, AI 생성 여부를 나타내는 항목 등입니다. 보조 단서이며 편집으로 바꾸거나 지울 수 있습니다.'],
+  ['파일명', 'Gemini_Generated_Image 같은 이름입니다. 참고용 단서일 뿐이며 이름을 바꾸면 사라집니다.'],
+];
+
+const tools = [
+  ['ChatGPT / DALL-E', 'C2PA 서명과 생성 도구(claim generator)를 확인합니다.', '/ko/platforms/dall-e/'],
+  ['Midjourney', 'XMP·IPTC 필드와 파일명 단서를 확인합니다.', '/ko/platforms/midjourney/'],
+  ['Stable Diffusion', 'parameters 청크에 prompt, seed, sampler, 모델명이 들어 있습니다.', '/ko/platforms/stable-diffusion/'],
+  ['ComfyUI', 'prompt / workflow 청크에 노드 구성 JSON이 들어 있습니다.', '/ko/platforms/comfyui/'],
+  ['NovelAI', 'PNG 텍스트의 Software·Comment 등에 NovelAI 기록이 남습니다.'],
+  ['Adobe Firefly', 'C2PA 서명과 digitalSourceType을 확인합니다.', '/ko/platforms/firefly/'],
+  ['Gemini / Imagen', 'C2PA, XMP, 파일명을 확인합니다.', '/ko/platforms/gemini/'],
+];
+
+const steps = [
+  ['원본 파일 준비하기', '생성 도구에서 바로 저장한 PNG / JPEG, 또는 만든 사람에게 받은 원본을 사용합니다. 카카오톡·인스타그램·X에서 다시 저장한 이미지나 스크린샷은 대부분 흔적이 지워져 있습니다.'],
+  ['위의 판독기에 끌어다 놓기', '분석은 브라우저 안에서 끝나며 이미지는 서버로 전송되지 않습니다. 휴대폰에서는 갤러리의 원본 사진을 선택하면 됩니다.'],
+  ['근거 확인하기', '찾은 항목마다 어느 필드에 무엇이 적혀 있었는지 표시됩니다. C2PA 서명 → PNG 생성 파라미터 → XMP 순으로 증거의 무게가 낮아집니다.'],
+  ['아무것도 나오지 않았을 때', '"이 파일에 읽을 수 있는 흔적이 없다"는 뜻이며, 사람이 직접 찍거나 그렸다는 증명은 아닙니다.'],
+];
+
+const faq = [
+  ['AI 사진 판독기는 무료인가요?', '무료이며 회원가입도 필요 없습니다. 이미지는 사용하는 기기 안에서 분석되므로 횟수나 파일 크기 제한도 없습니다.'],
+  ['그림체만 보고 AI 그림인지 판별할 수 있나요?', '이 판독기는 그림체로 추측하지 않습니다. 파일에 남은 생성 파라미터, 서명, 메타데이터만을 근거로 합니다. 그림체로 판별하는 도구는 확률만 보여 주며, 공들여 그린 손그림을 AI로 잘못 판정하기도 합니다.'],
+  ['카카오톡이나 인스타그램에서 저장한 사진도 판별되나요?', '대부분 업로드·전송 과정에서 이미지가 다시 압축되며 메타데이터가 지워지기 때문에 흔적이 남아 있지 않습니다. 확실히 확인하려면 올린 사람에게 원본 파일을 받아 보는 것이 가장 좋습니다.'],
+  ['AI 판독기의 정확도는 어느 정도인가요?', '그림체로 판별하는 AI 판독기 사이트처럼 확률을 내지 않습니다. 파일에 생성 기록이나 서명이 남아 있으면 그 내용을 그대로 근거로 보여 주므로, 나온 결과는 누구나 다시 확인할 수 있습니다. 반대로 기록이 지워진 이미지는 판별할 수 없고, 그때는 "흔적 없음"으로 표시합니다.'],
+  ['직접 그린 그림이 AI로 판정될 수도 있나요?', '파일에 AI 생성 도구의 기록이 없다면 AI 신호로 표시되지 않습니다. 다만 생성형 채우기처럼 AI 기능을 사용한 편집은 C2PA에 기록될 수 있습니다.'],
+  ['Stable Diffusion이나 NovelAI 프롬프트도 볼 수 있나요?', '원본 PNG에 생성 파라미터가 남아 있으면 prompt, seed 등의 값을 확인할 수 있습니다. 모든 항목은 PNG 파라미터 추출 도구에서 자세히 볼 수 있습니다.'],
+  ['이미지가 업로드되나요?', '아니요. WebAssembly로 브라우저 안에서 분석하기 때문에 파일이 기기 밖으로 나가지 않습니다.'],
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'AICheck365 AI 사진·그림 판독기',
+    url: canonical,
+    description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    browserRequirements: 'Modern browser with WebAssembly and JavaScript',
+    isAccessibleForFree: true,
+    inLanguage: 'ko',
+    dateModified: updatedAt,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+    featureList: ['C2PA 콘텐츠 자격 증명', 'PNG 생성 파라미터 (Stable Diffusion / ComfyUI / NovelAI)', 'XMP / EXIF', '브라우저 안에서 로컬 분석'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '홈', item: `${SITE_URL}/ko/` },
+      { '@type': 'ListItem', position: 2, name: 'AI 사진·그림 판독기', item: canonical },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} canonical={canonical} lang="ko" jsonLd={jsonLd} singleLang={true}>
+  <main class="page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/ko/">홈</a>
+      <span aria-hidden="true"> › </span>
+      <span>AI 사진·그림 판독기</span>
+    </nav>
+
+    <section class="hero card priority-seo-page" data-seo-intent="transactional-tool" data-tool-owner="ai-image-checker">
+      <div class="eyebrow">무료 · 회원가입 없음 · 업로드 없음</div>
+      <h1>AI 사진·그림 판독기: 파일에 남은 흔적으로 AI 생성 이미지 판별</h1>
+      <p class="lead">
+        사진이나 그림 파일을 끌어다 놓으면 C2PA 서명, Stable Diffusion·ComfyUI·NovelAI의 생성 파라미터, XMP 등에
+        AI로 만든 기록이 남아 있는지 확인합니다. 그림체로 추측하는 판정이 아니라, 찾아낸 근거를 그대로 보여 주는 AI 이미지 판별 도구입니다.
+      </p>
+      <div class="notice warning">
+        <strong>카카오톡·인스타그램·X에서 저장한 이미지는 대부분 메타데이터가 지워져 있습니다.</strong>
+        정확히 확인하려면 생성 도구에서 바로 저장한 원본 파일을 사용하세요. 아무것도 나오지 않아도 사람이 만들었다는 증명은 아닙니다.
+      </div>
+    </section>
+
+    <Detector />
+
+    <article class="card content-article">
+      <h2>이 AI 판독기가 확인하는 것</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {signals.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+        </tbody>
+      </table>
+
+      <h2>그림체로 판별하는 사이트와 다른 점</h2>
+      <p>
+        이미지의 겉모습에서 "AI 같은 느낌"을 추정하는 도구는 확률만 돌려줄 뿐 근거를 보여 주지 못합니다. 정성껏 그린 손그림이나
+        보정한 사진이 AI로 판정되는 오판도 생깁니다. AICheck365는 파일에 기록된 생성 정보와 서명만을 근거로 하므로,
+        "왜 이런 결과가 나왔는지"를 누구나 확인할 수 있습니다. 대신 기록이 지워진 이미지는 모른다고 솔직하게 표시합니다.
+      </p>
+
+      <h2>AI로 만든 사진인지 확인하는 방법</h2>
+      <ol class="content-list">
+        {steps.map(([label, value]) => <li><strong>{label}:</strong> {value}</li>)}
+      </ol>
+
+      <h2>주요 이미지 생성 AI와 남기 쉬운 흔적</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {tools.map(([label, value, href]) => (
+            <tr><th>{href ? <a href={href}>{label}</a> : label}</th><td>{value}</td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>자주 묻는 질문</h2>
+      <dl class="faq-list">
+        {faq.map(([question, answer]) => (
+          <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
+        ))}
+      </dl>
+
+      <h2>관련 도구와 가이드</h2>
+      <div class="related-links">
+        <a href="/ko/tools/png-parameter-extractor/">PNG 파라미터 추출 도구 →</a>
+        <a href="/ko/blog/how-to-detect-ai-images/">AI 사진인지 확인하는 방법 가이드 →</a>
+        <a href="/ko/platforms/stable-diffusion/">Stable Diffusion PNG 정보 →</a>
+        <a href="/ko/">AI 사진·영상 판독기 →</a>
+      </div>
+    </article>
+  </main>
+</Base>
+
+<script type="module" src="/scripts/market-analytics.js"></script>

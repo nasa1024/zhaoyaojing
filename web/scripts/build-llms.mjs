@@ -126,7 +126,7 @@ export function stripLangPrefix(pathname) {
 export function sectionForPath(pathname) {
   const base = stripLangPrefix(pathname);
   if (base === '/') return 'detector';
-  if (base.startsWith('/tools/') || base === '/ai-video-detector/' || base === '/ai-illust-checker/') return 'tools';
+  if (base.startsWith('/tools/') || ['/ai-video-detector/', '/ai-illust-checker/', '/ai-image-checker/'].includes(base)) return 'tools';
   if (base.startsWith('/platforms/')) return 'platforms';
   if (base.startsWith('/blog/')) return 'guides';
   if (base.startsWith('/research/')) return 'research';

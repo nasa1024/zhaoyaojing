@@ -403,7 +403,7 @@ const jsonLd = {
       <h2>{copy.seoTitle}</h2>
       <p set:html={copy.seoP1} />
       <p>{copy.seoP2}</p>
-      <p><a href={`${prefix}/platforms/`}>{copy.platformsLink}</a> · <a href={`${prefix}/blog/how-to-detect-ai-videos/`}>{copy.videoGuideLink}</a>{pageLang === 'ja' && <> · <a href="/ja/ai-illust-checker/">AIイラスト判定ツール</a></>}</p>
+      <p><a href={`${prefix}/platforms/`}>{copy.platformsLink}</a> · <a href={`${prefix}/blog/how-to-detect-ai-videos/`}>{copy.videoGuideLink}</a>{pageLang === 'ja' && <> · <a href="/ja/ai-illust-checker/">AIイラスト判定ツール</a></>}{pageLang === 'ko' && <> · <a href="/ko/ai-image-checker/">AI 사진·그림 판독기</a></>}{pageLang === 'zh-TW' && <> · <a href="/zh-TW/ai-image-checker/">AI 圖片辨識網站</a></>}</p>
       <h3>{copy.usageTitle}</h3>
       <ul class="content-list">
         {copy.usage.map((item) => <li>{item}</li>)}
