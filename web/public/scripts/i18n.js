@@ -1239,6 +1239,8 @@ function localizeInternalLinks() {
     if (cleanPath.startsWith('/tools/') && !LOCALIZED_TOOL_LANGS.includes(urlLang)) return;
     // Research pages are English-only; a /<lang>/research/ link would 404.
     if (cleanPath.startsWith('/research/') || cleanPath === '/research') return;
+    // Files such as /data/samples.json exist once; /<lang>/data/samples.json/ would 404.
+    if (/\.[a-z0-9]+$/i.test(cleanPath)) return;
     anchor.setAttribute('href', `${withLangInPathname(url.pathname, urlLang)}${url.search}${url.hash}`);
   });
 }

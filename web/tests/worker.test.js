@@ -54,3 +54,11 @@ test('redirects localized research URLs to the single English research page in o
   assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/research/openai-png-2026-06/')), null);
   assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/ja/researcher/')), null);
 });
+
+test('redirects localized data file URLs to the single root file', () => {
+  const response = canonicalRedirect(new Request('https://www.aicheck365.com/pt-BR/data/samples.json/'));
+
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get('location'), 'https://www.aicheck365.com/data/samples.json');
+  assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/data/samples.json')), null);
+});
