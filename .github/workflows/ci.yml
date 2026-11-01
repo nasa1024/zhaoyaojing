@@ -11,7 +11,8 @@ env:
 
 jobs:
   web:
-    runs-on: ubuntu-latest
+    # Playwright does not support Ubuntu 26.04 (what ubuntu-latest now resolves to).
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
