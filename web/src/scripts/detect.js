@@ -84,7 +84,7 @@ export function initDetector() {
     const files = Array.from(event.target.files || []);
     selectedFiles = files.filter(isSupportedMedia);
     if (selectedFiles.length) {
-      ga('upload_started', { source: 'picker', file_count: selectedFiles.length, file_type: selectedFiles[0].type || mediaTypeFromName(selectedFiles[0].name) });
+      ga('upload_started', { input_source: 'picker', file_count: selectedFiles.length, file_type: selectedFiles[0].type || mediaTypeFromName(selectedFiles[0].name) });
     }
     renderSelectedFiles(selectedFiles);
     syncAnalyzeButton();
@@ -108,7 +108,7 @@ export function initDetector() {
     const valid = files.filter(isSupportedMedia);
     if (!valid.length) { setStatus(t('status.unsupported'), true); return; }
     selectedFiles = valid;
-    ga('upload_started', { source: 'drop', file_count: valid.length, file_type: valid[0].type || mediaTypeFromName(valid[0].name) });
+    ga('upload_started', { input_source: 'drop', file_count: valid.length, file_type: valid[0].type || mediaTypeFromName(valid[0].name) });
     fileInput.value = '';
     renderSelectedFiles(valid);
     syncAnalyzeButton();
@@ -588,7 +588,7 @@ export function initDetector() {
   }
 
   openSampleBtn?.addEventListener('click', async () => {
-    ga('sample_opened', { source: 'cta' });
+    ga('sample_opened', { input_source: 'cta' });
     let samplesData = [];
     try {
       // Fetch the samples data (served from web/public/data, available in dev + prod)
@@ -608,7 +608,7 @@ export function initDetector() {
   function handleSampleCard(card) {
     const fileRef = card?.dataset?.fileRef;
     if (!fileRef) return;
-    ga('sample_opened', { source: 'card', sample: card.dataset.sampleId || '' });
+    ga('sample_opened', { input_source: 'card', sample: card.dataset.sampleId || '' });
     document.querySelector('#upload-zone')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     loadSampleIntoDetector(fileRef, card.dataset.sampleId);
   }

@@ -4,7 +4,7 @@ const guideCases = [
   {
     path: '/en/platforms/comfyui/',
     intent: 'informational-guide',
-    title: 'ComfyUI EXIF and Metadata Viewer',
+    title: 'ComfyUI Workflow from Image',
     h1: 'ComfyUI EXIF Explained',
     marker: 'ComfyUI / Stable Diffusion XL PNG',
     toolHref: '/en/tools/png-parameter-extractor/',

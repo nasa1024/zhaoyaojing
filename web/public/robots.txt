@@ -37,5 +37,7 @@ User-agent: YouBot
 User-agent: CCBot
 User-agent: Bytespider
 Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
 
 Sitemap: https://www.aicheck365.com/sitemap-index.xml

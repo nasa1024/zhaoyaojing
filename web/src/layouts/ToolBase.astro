@@ -122,6 +122,10 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
       />
     ))}
     <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
+    <link rel="llms-txt" href={`${SITE_URL}/llms.txt`} />
+    <link rel="llms-full-txt" href={`${SITE_URL}/llms-full.txt`} />
+    <link rel="author" href={`${SITE_URL}/about/`} />
+    <link rel="privacy-policy" href={`${SITE_URL}/privacy/`} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={seoTitle} />
@@ -225,6 +229,10 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
           <a href={platformsHref}>{locale.nav.platforms}</a>
           <a href={toolsHref}>{locale.nav.tools}</a>
           <a href={methodologyHref}>{locale.nav.methodology}</a>
+        </div>
+        <div class="footer-links footer-featured" aria-label="Featured">
+          <a href="/en/ai-video-detector/" lang="en" data-no-localize>AI Video Detector</a>
+          <a href="/research/ai-media-provenance-report-2026-q3/" lang="en" data-no-localize>AI Media Provenance Report 2026 Q3</a>
         </div>
         <p class="footer-note">© {new Date().getFullYear()} AICheck365 · Local browser analysis · No file upload</p>
       </div>

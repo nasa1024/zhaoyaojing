@@ -360,6 +360,10 @@ const siteJsonLd = [
     knowsAbout: [
       'AI-generated media detection',
       'C2PA Content Credentials',
+      'ChatGPT and GPT-4o C2PA Content Credentials',
+      'Claude statistical text watermark',
+      'Google SynthID watermark detection',
+      'ComfyUI and Stable Diffusion PNG workflow metadata',
       'EXIF metadata',
       'XMP metadata',
       'MP4 and MOV metadata',
@@ -418,6 +422,8 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
       </>
     )}
     <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
+    <link rel="llms-txt" href={`${SITE_URL}/llms.txt`} />
+    <link rel="llms-full-txt" href={`${SITE_URL}/llms-full.txt`} />
     <link rel="author" href={`${SITE_URL}/about/`} />
     <link rel="privacy-policy" href={`${SITE_URL}/privacy/`} />
 
@@ -567,12 +573,17 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
           <a href={`${navPrefix}/terms/`} data-i18n="nav.terms">{navLabels.terms}</a>
           <a href={`${navPrefix}/contact/`} data-i18n="nav.contact">{navLabels.contact}</a>
         </div>
+        <div class="footer-links footer-featured" aria-label="Featured">
+          <a href="/en/ai-video-detector/" lang="en" data-no-localize>AI Video Detector</a>
+          <a href="/research/ai-media-provenance-report-2026-q3/" lang="en" data-no-localize>AI Media Provenance Report 2026 Q3</a>
+        </div>
         <p class="footer-note" data-i18n="footer.note">
           {navLabels.footer}
         </p>
       </div>
     </footer>
 
+    <script type="module" src="/scripts/market-analytics.js"></script>
     <script type="module" src="/scripts/consent.js"></script>
     <script type="module" src="/scripts/lang-init.js"></script>
   </body>

@@ -193,15 +193,21 @@ aic info photo.jpg
 
 ---
 
-## 🔗 More Resources
+## 🔗 Online Browser Tools & Resources (100% Local WebAssembly, No Upload)
 
-- [AICheck365](https://www.aicheck365.com/en/) — free online AI image & video detector, no install needed
-- [C2PA Validator](https://www.aicheck365.com/en/tools/c2pa-validator/) — verify C2PA provenance signatures on images/video online
-- [Detection Methodology & Limitations](https://www.aicheck365.com/en/methodology/)
-- [How to Detect AI-Generated Images](https://www.aicheck365.com/en/blog/how-to-detect-ai-images/)
-- [How to Detect AI-Generated Videos](https://www.aicheck365.com/en/blog/how-to-detect-ai-videos/)
-- [What is C2PA?](https://www.aicheck365.com/en/blog/what-is-c2pa/)
-- [AI Platform Metadata Retention Report](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) (Chinese) — real-world tests of how much provenance metadata survives exports from Sora, Midjourney, Kling, and more
+| Tool / Resource | URL | What it checks |
+| --- | --- | --- |
+| **AICheck365 Main Detector** | [https://www.aicheck365.com/en/](https://www.aicheck365.com/en/) | One-click browser check for C2PA, EXIF/XMP, PNG parameters, MP4 metadata & frame watermarks |
+| **C2PA Validator** | [https://www.aicheck365.com/en/tools/c2pa-validator/](https://www.aicheck365.com/en/tools/c2pa-validator/) | Verify C2PA Content Credentials from ChatGPT (GPT-4o / DALL-E), Firefly, Gemini, and Sora |
+| **C2PA Raw JSON Viewer** | [https://www.aicheck365.com/en/tools/c2pa-viewer/](https://www.aicheck365.com/en/tools/c2pa-viewer/) | Inspect and export raw decoded C2PA / JUMBF manifests in the browser |
+| **PNG Parameter Extractor** | [https://www.aicheck365.com/en/tools/png-parameter-extractor/](https://www.aicheck365.com/en/tools/png-parameter-extractor/) | Extract ComfyUI workflow JSON, Stable Diffusion / A1111 prompts, seed, sampler, and CFG |
+| **EXIF / XMP Metadata Reader** | [https://www.aicheck365.com/en/tools/exif-xmp-reader/](https://www.aicheck365.com/en/tools/exif-xmp-reader/) | Inspect EXIF, XMP, IPTC DigitalSourceType, and AI software tags locally |
+| **AI Video Detector** | [https://www.aicheck365.com/en/ai-video-detector/](https://www.aicheck365.com/en/ai-video-detector/) | Check MP4/MOV videos from Sora, Kling, Runway, and Veo for C2PA, container tags & watermarks |
+| **MP4 / MOV Metadata Inspector** | [https://www.aicheck365.com/en/tools/mp4-metadata-inspector/](https://www.aicheck365.com/en/tools/mp4-metadata-inspector/) | Inspect ISO BMFF box trees, udta/ilst AIGC tags, and H.264/H.265 SEI markers |
+| **2026 Q3 AI Provenance Report** | [https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) | Reproducible empirical dataset of provenance metadata survival across AI platforms |
+| **SynthID Detector Guide** | [https://www.aicheck365.com/en/blog/synthid-detector/](https://www.aicheck365.com/en/blog/synthid-detector/) | How Google SynthID Detector works, supported partners, and C2PA comparison |
+| **Claude Watermark Explained** | [https://www.aicheck365.com/en/blog/claude-watermark-explained/](https://www.aicheck365.com/en/blog/claude-watermark-explained/) | Anthropic's statistical word-choice watermark, hidden-Unicode myths & EU AI Act scope |
+| **LLM Site Map (`llms.txt`)** | [https://www.aicheck365.com/llms.txt](https://www.aicheck365.com/llms.txt) | Machine-readable index for ChatGPT / Claude / Perplexity (full corpus: [llms-full.txt](https://www.aicheck365.com/llms-full.txt)) |
 
 ---
 

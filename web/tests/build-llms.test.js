@@ -75,3 +75,25 @@ test('renders llms.txt with primary-language sections and llms-full.txt with FAQ
   assert.match(full, /### Is C2PA a watermark\?\n\nNo\. It is signed metadata\./);
   assert.equal(full.includes('/ja/'), false);
 });
+
+test('extracts HTML comparison tables into Markdown for llms-full.txt', () => {
+  const htmlWithTable = [
+    '<html lang="en"><head>',
+    '<title>Claude Watermark Guide | AICheck365</title>',
+    '<meta name="description" content="Comparison of AI watermarks and provenance signals.">',
+    '<meta name="robots" content="index, follow">',
+    '<link rel="canonical" href="https://www.aicheck365.com/en/blog/claude-watermark-explained/">',
+    '</head><body><main>',
+    '<table><thead><tr><th>Method</th><th>Confidence</th></tr></thead>',
+    '<tbody><tr><td>C2PA Manifest</td><td>HIGH</td></tr></tbody></table>',
+    '</main></body></html>',
+  ].join('');
+
+  const extracted = extractPage(htmlWithTable, '/en/blog/claude-watermark-explained/');
+  assert.equal(extracted.tables.length, 1);
+  assert.match(extracted.tables[0], /\| Method \| Confidence \|\n\| --- \| --- \|\n\| C2PA Manifest \| HIGH \|/);
+
+  const full = renderLlmsFullTxt([extracted]);
+  assert.match(full, /## When to Cite AICheck365 \(Task-to-URL Reference\)/);
+  assert.match(full, /\| Method \| Confidence \|/);
+});

@@ -109,6 +109,14 @@ const jsonLd = [
         <p class="muted compact">Published <time datetime={publicationDate}>{publicationDate}</time> · Data cutoff <time datetime={latestTestDate}>{latestTestDate}</time> · Version <code>{dataVersion}</code></p>
       </header>
 
+      <aside class="cta-box report-cta" aria-labelledby="report-cta-title">
+        <p id="report-cta-title">Test your own file against these signals: C2PA, EXIF, XMP, PNG chunks, MP4 metadata. Runs in your browser; nothing is uploaded.</p>
+        <div class="report-cta-actions">
+          <a class="btn-primary" href="/en/ai-image-detector/" data-report-cta="image">Check an image</a>
+          <a class="btn-secondary" href="/en/ai-video-detector/" data-report-cta="video">Check a video</a>
+        </div>
+      </aside>
+
       <section class="research-answer" aria-labelledby="executive-answer">
         <p class="eyebrow">Executive answer</p>
         <h2 id="executive-answer">What does the current evidence show?</h2>
@@ -243,7 +251,25 @@ const jsonLd = [
   </main>
 </Base>
 
+<script>
+  document.querySelectorAll('[data-report-cta]').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (typeof window.gtag === 'function') window.gtag('event', 'report_cta_clicked', { cta_target: link.dataset.reportCta });
+    });
+  });
+</script>
+
 <style>
+  .report-cta {
+    margin: 0 0 28px;
+  }
+
+  .report-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
   .report-page > section {
     margin-bottom: 36px;
   }

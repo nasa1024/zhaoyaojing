@@ -214,7 +214,9 @@ test('upload_started fires when a file is selected on the home detector', async 
   const calls = await getAllRecordedEvents(page);
   const started = calls.filter((c) => c.name === 'upload_started');
   expect(started.length).toBeGreaterThan(0);
-  expect(started[0].params.source).toBe('picker');
+  expect(started[0].params.input_source).toBe('picker');
+  // `source` is a reserved GA4 campaign dimension; it must never ride on event payloads.
+  expect(started[0].params.source).toBeUndefined();
 });
 
 test('evidence_card_expanded fires when a card is toggled back open', async ({ page }) => {

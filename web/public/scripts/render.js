@@ -171,7 +171,7 @@ export function renderResult(container, report, { expert = false } = {}) {
   // render — only when the user toggles one back open after collapsing it.
   container.querySelectorAll('details.evidence-card').forEach((card) => {
     card.addEventListener('toggle', () => {
-      if (card.open) ga('evidence_card_expanded', { source: card.querySelector('.signal-source')?.textContent || '' });
+      if (card.open) ga('evidence_card_expanded', { evidence_source: card.querySelector('.signal-source')?.textContent || '' });
     });
   });
 

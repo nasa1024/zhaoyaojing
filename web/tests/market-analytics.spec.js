@@ -23,3 +23,20 @@ test('legacy English tool links are localized for target-language content pages'
   await expect(localized.first()).toBeVisible();
   expect(await localized.count()).toBeGreaterThan(0);
 });
+
+test('GEO referral from ChatGPT or Claude is recorded in market context and fires geo_referral_landing', async ({ page }) => {
+  await page.goto('/en/?utm_source=chatgpt.com');
+  const data = await page.evaluate(() => {
+    const geoEvent = [...window.dataLayer].find((entry) => entry?.[0] === 'event' && entry?.[1] === 'geo_referral_landing');
+    return {
+      context: window.__AICHECK_MARKET_CONTEXT__,
+      geoEvent: geoEvent?.[2] || null,
+    };
+  });
+  expect(data.context.ai_referrer).toBe('chatgpt');
+  expect(data.geoEvent).toMatchObject({
+    ai_referrer: 'chatgpt',
+    page_locale: 'en',
+    page_type: 'home',
+  });
+});

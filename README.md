@@ -261,15 +261,20 @@ aic info photo.jpg
 
 ---
 
-## 🔗 更多资源
+## 🔗 更多资源与在线工具（浏览器本地运行，不上传文件）
 
-- [AICheck365 官网](https://www.aicheck365.com/) — 免费在线使用，无需安装
-- [C2PA 验证工具](https://www.aicheck365.com/tools/c2pa-validator/) — 在线校验图片/视频的 C2PA 来源签名
-- [检测方法论与局限性](https://www.aicheck365.com/methodology/)
-- [怎么判断图片是不是 AI 生成的](https://www.aicheck365.com/blog/how-to-detect-ai-images/)
-- [AI 视频检测指南](https://www.aicheck365.com/blog/how-to-detect-ai-videos/)
-- [C2PA 是什么](https://www.aicheck365.com/blog/what-is-c2pa/)
-- [AI 平台元数据留存报告](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) — Sora/Midjourney/Kling 等平台导出文件的溯源信号留存实测
+| 在线工具 / 指南 | 地址 | 检测能力说明 |
+| --- | --- | --- |
+| **AICheck365 综合检测器** | [https://www.aicheck365.com/](https://www.aicheck365.com/) | 一键检查图片/视频的 C2PA、EXIF/XMP、PNG 参数、MP4 元数据与帧水印 |
+| **C2PA 验证器** | [https://www.aicheck365.com/tools/c2pa-validator/](https://www.aicheck365.com/tools/c2pa-validator/) | 校验 ChatGPT (GPT-4o / DALL-E)、Firefly、Gemini、Sora 的 C2PA 签名与信任状态 |
+| **C2PA 原始查看器** | [https://www.aicheck365.com/tools/c2pa-viewer/](https://www.aicheck365.com/tools/c2pa-viewer/) | 解析并导出图片与视频的原始 C2PA / JUMBF JSON 清单 |
+| **PNG 参数提取器 (ComfyUI / SD)** | [https://www.aicheck365.com/tools/png-parameter-extractor/](https://www.aicheck365.com/tools/png-parameter-extractor/) | 提取 ComfyUI workflow JSON、Stable Diffusion / A1111 / NovelAI 生成参数 |
+| **EXIF / XMP 阅读器** | [https://www.aicheck365.com/tools/exif-xmp-reader/](https://www.aicheck365.com/tools/exif-xmp-reader/) | 查看图片 EXIF、XMP、IPTC 与 AI 生成工具字段 |
+| **MP4 / MOV 元数据检查器** | [https://www.aicheck365.com/tools/mp4-metadata-inspector/](https://www.aicheck365.com/tools/mp4-metadata-inspector/) | 检查 Sora、可灵 (Kling)、Runway、Veo 视频的容器 box 树、AIGC 标签与 SEI 标记 |
+| **2026 Q3 AI 媒体溯源实测报告** | [https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) | 多平台真实样本的 C2PA 与元数据留存基准测试数据集 |
+| **SynthID Detector 深度解析** | [https://www.aicheck365.com/blog/synthid-detector/](https://www.aicheck365.com/blog/synthid-detector/) | Google SynthID 水印检测机制、覆盖范围与 C2PA 对比 |
+| **Claude 文本水印技术解析** | [https://www.aicheck365.com/en/blog/claude-watermark-explained/](https://www.aicheck365.com/en/blog/claude-watermark-explained/) | Anthropic 统计词选水印原理、零宽字符误区与欧盟 AI 法案例外 |
+| **LLM 站点索引 (`llms.txt`)** | [https://www.aicheck365.com/llms.txt](https://www.aicheck365.com/llms.txt) | 面向 ChatGPT / Claude / Perplexity 的结构化工具索引（全文版：[llms-full.txt](https://www.aicheck365.com/llms-full.txt)） |
 
 ---
 
