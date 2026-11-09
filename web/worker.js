@@ -28,6 +28,16 @@ export function canonicalRedirect(request) {
 
 export default {
   async fetch(request, env) {
-    return canonicalRedirect(request) ?? env.ASSETS.fetch(request);
+    const redirect = canonicalRedirect(request);
+    if (redirect) return redirect;
+
+    const response = await env.ASSETS.fetch(request);
+    // Raw data files are linked as citations from content pages, so Google
+    // crawls them and reports them as "Crawled - currently not indexed".
+    // Mark them noindex; crawlers and AI agents can still fetch them.
+    if (!new URL(request.url).pathname.startsWith('/data/')) return response;
+    const tagged = new Response(response.body, response);
+    tagged.headers.set('X-Robots-Tag', 'noindex');
+    return tagged;
   },
 };

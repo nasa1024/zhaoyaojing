@@ -62,3 +62,13 @@ test('redirects localized data file URLs to the single root file', () => {
   assert.equal(response.headers.get('location'), 'https://www.aicheck365.com/data/samples.json');
   assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/data/samples.json')), null);
 });
+
+test('marks raw data files noindex without touching pages', async () => {
+  const env = { ASSETS: { fetch: async () => new Response('{}', { status: 200 }) } };
+
+  const data = await worker.fetch(new Request('https://www.aicheck365.com/data/samples.json'), env);
+  const page = await worker.fetch(new Request('https://www.aicheck365.com/blog/'), env);
+
+  assert.equal(data.headers.get('x-robots-tag'), 'noindex');
+  assert.equal(page.headers.get('x-robots-tag'), null);
+});
