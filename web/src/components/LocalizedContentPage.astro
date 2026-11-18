@@ -6152,6 +6152,27 @@ const priorityArticleProfiles = {
 const priorityPlatformProfile = platform ? priorityPlatformProfiles[lang]?.[platform.slug] : null;
 const priorityArticleProfile = priorityArticleProfiles[lang]?.[path] ?? null;
 const isExternalHref = (href) => /^https?:\/\//i.test(href);
+// Dedicated single-language image checkers convert best but were only linked
+// from their homepage. Link them from every image-related page in the same
+// language so they get contextual internal links.
+const IMAGE_CHECKERS = {
+  ja: { href: '/ja/ai-illust-checker/', label: 'AIイラスト判定ツール' },
+  ko: { href: '/ko/ai-image-checker/', label: 'AI 사진·그림 판독기' },
+  'zh-TW': { href: '/zh-TW/ai-image-checker/', label: 'AI 圖片辨識網站' },
+};
+const VIDEO_ONLY_PLATFORMS = new Set(['sora', 'kling', 'runway']);
+const IMAGE_ARTICLES = new Set([
+  'blog/how-to-detect-ai-images',
+  'blog/ai-image-metadata-guide',
+  'blog/how-to-detect-gemini-generated-images',
+]);
+const isImagePage = platform ? !VIDEO_ONLY_PLATFORMS.has(platform.slug) : IMAGE_ARTICLES.has(path);
+const imageChecker = isImagePage ? IMAGE_CHECKERS[lang] ?? null : null;
+const articleCtas = priorityArticleProfile
+  ? (imageChecker && !priorityArticleProfile.ctas.some((cta) => cta.href === imageChecker.href)
+    ? [{ ...imageChecker, localized: false }, ...priorityArticleProfile.ctas]
+    : priorityArticleProfile.ctas)
+  : [];
 const profileHref = (link) => (link.localized === false || isExternalHref(link.href)) ? link.href : localHref(link.href);
 const absoluteProfileHref = (link) => {
   const href = profileHref(link);
@@ -6413,7 +6434,7 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <div class="cta-box">
           <p>{priorityArticleProfile.ctaLead}</p>
           <div class="related-links">
-            {priorityArticleProfile.ctas.map((cta) => <a href={profileHref(cta)}>{cta.label} -></a>)}
+            {articleCtas.map((cta) => <a href={profileHref(cta)}>{cta.label} -></a>)}
           </div>
         </div>
 
@@ -6566,6 +6587,7 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <div class="related-platforms card">
           <h2>{c.platforms}</h2>
           <div class="related-links">
+            {imageChecker && <a href={imageChecker.href} data-no-localize>{imageChecker.label} -></a>}
             {relatedPlatforms.map((item) => (
               <a href={localHref(`/platforms/${item.slug}/`)}>{item.name} -></a>
             ))}
@@ -6605,6 +6627,7 @@ const articles = Object.keys(pageTitles).map((slug) => ({
         <div class="related-platforms card">
           <h2>{c.platforms}</h2>
           <div class="related-links">
+            {imageChecker && <a href={imageChecker.href} data-no-localize>{imageChecker.label} -></a>}
             {relatedPlatforms.map((item) => (
               <a href={localHref(`/platforms/${item.slug}/`)}>{item.name} -></a>
             ))}
