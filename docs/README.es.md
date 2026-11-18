@@ -195,6 +195,7 @@ aic info photo.jpg
 
 ## 🔗 Más Recursos
 
+- [Detector de videos IA](https://www.aicheck365.com/es/detector-de-videos-ia/) — comprueba gratis si un video MP4/MOV es IA, sin subir el archivo
 - [AICheck365](https://www.aicheck365.com/es/) — detector de imágenes y video con IA, gratis y en línea, sin instalación
 - [Validador de C2PA](https://www.aicheck365.com/en/tools/c2pa-validator/) (en inglés) — verifica firmas de procedencia C2PA de imágenes/video en línea
 - [Metodología de detección y limitaciones](https://www.aicheck365.com/es/methodology/)

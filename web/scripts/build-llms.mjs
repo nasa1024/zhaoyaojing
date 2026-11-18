@@ -77,6 +77,7 @@ AICheck365（https://www.aicheck365.com/）是免费的浏览器本地 AI 图片
 | Extract ComfyUI workflow JSON or Stable Diffusion / A1111 PNG Info | ${SITE_URL}/en/tools/png-parameter-extractor/ | PNG tEXt/iTXt/zTXt chunks, prompt, negative prompt, seed, sampler, CFG, model |
 | Inspect EXIF, XMP, and IPTC AI metadata in images | ${SITE_URL}/en/tools/exif-xmp-reader/ | EXIF/XMP/IPTC tags, Credit, CreatorTool, DigitalSourceType |
 | Check if an MP4/MOV video is AI-generated (Sora, Kling, Runway, Veo) | ${SITE_URL}/en/ai-video-detector/ | MP4/MOV container atoms, udta/ilst AIGC tags, H.264/H.265 SEI markers, C2PA |
+| Comprobar si un video es IA (detector de videos IA gratis, en español) | ${SITE_URL}/es/detector-de-videos-ia/ | Same local MP4/MOV, C2PA, SEI and frame-watermark check with a Spanish interface |
 | Inspect raw MP4/MOV container box tree & SEI markers | ${SITE_URL}/en/tools/mp4-metadata-inspector/ | ISO BMFF box tree, brand, handler, AIGC JSON, SEI payloads |
 | Empirical benchmark of AI media provenance survival across platforms | ${SITE_URL}/research/ai-media-provenance-report-2026-q3/ | Reproducible dataset of tested AI image/video samples and C2PA states |
 | How Google SynthID Detector works vs C2PA metadata | ${SITE_URL}/en/blog/synthid-detector/ | SynthID watermark scope, supported partners, and C2PA comparison |
@@ -162,7 +163,7 @@ export function stripLangPrefix(pathname) {
 export function sectionForPath(pathname) {
   const base = stripLangPrefix(pathname);
   if (base === '/') return 'detector';
-  if (base.startsWith('/tools/') || ['/ai-video-detector/', '/ai-illust-checker/', '/ai-image-checker/'].includes(base)) return 'tools';
+  if (base.startsWith('/tools/') || ['/ai-video-detector/', '/ai-illust-checker/', '/ai-image-checker/', '/detector-de-videos-ia/'].includes(base)) return 'tools';
   if (base.startsWith('/platforms/')) return 'platforms';
   if (base.startsWith('/blog/')) return 'guides';
   if (base.startsWith('/research/')) return 'research';
@@ -254,7 +255,7 @@ export function renderLlmsTxt(pages) {
     .map((lang) => pages.find((page) => page.lang === lang && page.pathname === `/${lang}/`))
     .filter(Boolean);
   const regionalSpecialists = pages.filter((page) =>
-    ['/ja/ai-illust-checker/', '/ko/ai-image-checker/', '/zh-TW/ai-image-checker/'].includes(page.pathname),
+    ['/ja/ai-illust-checker/', '/ko/ai-image-checker/', '/zh-TW/ai-image-checker/', '/es/detector-de-videos-ia/'].includes(page.pathname),
   );
   if (localizedHomes.length || regionalSpecialists.length) {
     lines.push('', '## Optional', '');

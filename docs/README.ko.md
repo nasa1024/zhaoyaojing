@@ -195,6 +195,7 @@ aic info photo.jpg
 
 ## 🔗 더 많은 자료
 
+- [AI 사진·그림 판독기](https://www.aicheck365.com/ko/ai-image-checker/) — 사진·그림이 AI로 만든 것인지 파일의 흔적으로 무료 확인
 - [AICheck365](https://www.aicheck365.com/ko/) — 무료 온라인 AI 이미지·동영상 감지 도구, 설치 불필요
 - [C2PA 검증 도구](https://www.aicheck365.com/en/tools/c2pa-validator/)(영어) — 이미지/동영상의 C2PA 출처 서명을 온라인으로 검증
 - [감지 방법론 및 한계](https://www.aicheck365.com/ko/methodology/)

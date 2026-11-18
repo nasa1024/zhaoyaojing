@@ -1,0 +1,161 @@
+---
+import Base from '../../layouts/Base.astro';
+import Detector from '../../components/Detector.astro';
+
+// Spanish landing page for the AI video detector tool intent. The Spanish
+// video guide is the third most-shown page on the site (GSC 28d to 2026-11-16:
+// 1,037 impressions, 2.4% CTR, position ~7) but searchers who type "detector
+// de videos ia gratis" or "como saber si un video es ia" land on an article.
+// /en/ai-video-detector/ shows the tool page pattern works: 66% key-event rate
+// in GA4 and the main ChatGPT landing page (86 of 155 AI-assistant sessions).
+// Spanish-only, so hreflang is suppressed like the other regional tool pages.
+const SITE_URL = 'https://www.aicheck365.com';
+const canonical = `${SITE_URL}/es/detector-de-videos-ia/`;
+const updatedAt = '2026-11-18';
+
+const title = 'Detector de videos IA gratis: comprueba MP4 y MOV online | AICheck365';
+const description = 'Detector de videos IA gratis y sin subir el archivo: comprueba si un video MP4 o MOV es de Sora, Veo, Kling o Runway con C2PA, metadatos y marcas de agua.';
+
+const signals = [
+  ['Credenciales de contenido C2PA', 'Manifiestos firmados dentro del MP4/MOV (por ejemplo, los de Google Veo) que declaran digitalSourceType = trainedAlgorithmicMedia. Es la prueba más sólida cuando la firma es válida.'],
+  ['Metadatos del contenedor', 'Marca ftyp, cajas udta/meta/ilst, codificador, campos de software, etiquetas AIGC y cadenas de plataforma que escriben los generadores o su proceso de exportación.'],
+  ['Marcadores SEI', 'Cadenas de herramienta dentro del flujo H.264/H.265. Suelen sobrevivir a un cambio de contenedor, pero no a una recodificación.'],
+  ['Marcas de agua en los fotogramas', 'Si el contenedor no dice nada, se revisan fotogramas de varios momentos en busca de marcas de agua visibles en las esquinas y patrones invisibles. Se decodifica en tu equipo con ffmpeg.wasm.'],
+];
+
+const platforms = [
+  ['/es/platforms/sora/', 'OpenAI Sora', 'C2PA y metadatos MP4 en las descargas originales; marca de agua visible en muchas exportaciones, que la revisión de fotogramas puede señalar.'],
+  ['/es/platforms/kling/', 'Kling AI', 'Campos de herramienta en el contenedor y marcas en los fotogramas de los MP4 originales.'],
+  ['/es/platforms/runway/', 'Runway', 'Metadatos del codificador y del contenedor; revisión de fotogramas cuando los campos se han eliminado.'],
+  ['/es/blog/how-to-detect-ai-videos/', 'Google Veo', 'Manifiesto C2PA firmado de Google Generative AI, verificado con un MP4 real de Veo.'],
+];
+
+const steps = [
+  ['Usa el archivo original', 'Descarga el MP4 o MOV directamente del generador o pídeselo a quien lo creó. Las grabaciones de pantalla y los videos descargados de redes sociales casi siempre pierden las pruebas.'],
+  ['Suéltalo en el detector de arriba', 'El análisis se hace en tu navegador. El video no se sube a ningún servidor.'],
+  ['Lee las pruebas por capas', 'Primero el estado de C2PA, después los campos del contenedor con la ruta de la caja de donde salen, y por último los marcadores SEI y los fotogramas.'],
+  ['Interpreta con cuidado un resultado vacío', 'Sin señales significa que esta copia no conserva pruebas legibles. No demuestra que el video lo haya grabado una persona.'],
+];
+
+const faq = [
+  ['¿Este detector de videos IA es gratis?', 'Sí. Es gratis, no pide registro y no tiene límite de subida, porque el archivo se analiza en tu propio dispositivo.'],
+  ['¿Cómo saber si un video es IA?', 'Parte del MP4 o MOV original. Comprueba si tiene un manifiesto C2PA válido que declare generación por IA, después los campos del contenedor y los marcadores SEI que deja el generador, y por último las marcas de agua conocidas en los fotogramas. Mirar el video a simple vista ya no es fiable con los modelos actuales.'],
+  ['¿Detecta videos de Sora, Veo, Kling y Runway?', 'Reconoce las señales de procedencia que estas herramientas escriben hoy —manifiestos C2PA, metadatos del contenedor y marcas de agua conocidas— siempre que sigan en el archivo. No es un clasificador que adivine a partir de los píxeles.'],
+  ['¿Funciona con videos de TikTok, Instagram, YouTube o WhatsApp?', 'A veces sobrevive una marca de agua o una pista en el nombre del archivo, pero estas plataformas recodifican lo que se sube y suelen eliminar C2PA y los metadatos del contenedor. Para una respuesta fiable, busca el archivo original o la primera publicación.'],
+  ['¿Puedo pegar un enlace en lugar de subir el archivo?', 'No. El detector lee el archivo en sí, no una página web. Descarga primero el video original y suéltalo en el detector.'],
+  ['¿Se sube mi video a algún servidor?', 'No. El contenedor se analiza con WebAssembly en tu navegador y la extracción de fotogramas, cuando hace falta, también se ejecuta en tu equipo.'],
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'AICheck365 Detector de videos IA',
+    url: canonical,
+    description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web browser',
+    browserRequirements: 'Navegador moderno con WebAssembly y JavaScript',
+    isAccessibleForFree: true,
+    inLanguage: 'es',
+    dateModified: updatedAt,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    featureList: ['Credenciales de contenido C2PA en video', 'Metadatos del contenedor MP4/MOV', 'Análisis de marcadores SEI', 'Revisión de marcas de agua en fotogramas', 'Procesamiento local en el navegador'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/es/` },
+      { '@type': 'ListItem', position: 2, name: 'Detector de videos IA', item: canonical },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} canonical={canonical} lang="es" jsonLd={jsonLd} singleLang={true}>
+  <main class="page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/es/">Inicio</a>
+      <span aria-hidden="true"> › </span>
+      <span>Detector de videos IA</span>
+    </nav>
+
+    <section class="hero card priority-seo-page" data-seo-intent="transactional-tool" data-tool-owner="detector-de-videos-ia">
+      <div class="eyebrow">Gratis · Sin subir el archivo · MP4 / MOV / WebM</div>
+      <h1>Detector de videos IA gratis: comprueba si un video es IA</h1>
+      <p class="lead">
+        Suelta un video original para comprobar si conserva pruebas de que lo generó una IA: credenciales de contenido
+        C2PA, metadatos de Sora, Veo, Kling y Runway, marcadores SEI y marcas de agua conocidas en los fotogramas. Todo se
+        ejecuta en tu navegador y cada coincidencia muestra el campo exacto del que procede.
+      </p>
+      <div class="notice warning">
+        <strong>Funciona mejor con el archivo original.</strong> Las grabaciones de pantalla y los videos descargados de
+        TikTok, Instagram o WhatsApp suelen perder los metadatos. Que no aparezca ninguna señal no significa que el video
+        no sea de IA.
+      </div>
+    </section>
+
+    <Detector />
+
+    <article class="card content-article">
+      <h2>Qué comprueba el detector de videos IA</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {signals.map(([label, value]) => <tr><th>{label}</th><td>{value}</td></tr>)}
+        </tbody>
+      </table>
+
+      <h2>Cómo saber si un video es IA, paso a paso</h2>
+      <ol class="content-list">
+        {steps.map(([label, value]) => <li><strong>{label}:</strong> {value}</li>)}
+      </ol>
+      <p>
+        ¿Quieres el método completo con muestras reales? Lee la
+        <a href="/es/blog/how-to-detect-ai-videos/">guía para saber si un video es IA</a>.
+      </p>
+
+      <h2>Generadores de video y las pruebas que dejan</h2>
+      <table class="tool-glossary">
+        <tbody>
+          {platforms.map(([href, label, value]) => <tr><th><a href={href}>{label}</a></th><td>{value}</td></tr>)}
+        </tbody>
+      </table>
+
+      <h2>Por qué no damos un “porcentaje de IA”</h2>
+      <p>
+        Los clasificadores de píxeles devuelven una probabilidad difícil de explicar y fácil de engañar con una simple
+        recodificación. AICheck365 solo informa de pruebas guardadas en el archivo —un manifiesto firmado, un campo de
+        metadatos, una marca de agua conocida— para que veas por qué se llegó a un resultado y puedas verificarlo. A
+        cambio, somos claros con los límites: si una plataforma eliminó las pruebas, el detector lo dice en lugar de
+        adivinar.
+      </p>
+
+      <h2>Preguntas frecuentes</h2>
+      <dl class="faq-list">
+        {faq.map(([question, answer]) => (
+          <div class="faq-item"><dt>{question}</dt><dd><p>{answer}</p></dd></div>
+        ))}
+      </dl>
+
+      <h2>Herramientas y guías relacionadas</h2>
+      <div class="related-links">
+        <a href="/es/blog/how-to-detect-ai-videos/">Cómo saber si un video es IA →</a>
+        <a href="/es/platforms/sora/">Videos de Sora →</a>
+        <a href="/es/platforms/kling/">Videos de Kling →</a>
+        <a href="/es/">Detector de imágenes y videos IA →</a>
+      </div>
+    </article>
+  </main>
+</Base>
+
+<script type="module" src="/scripts/market-analytics.js"></script>

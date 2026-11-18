@@ -270,6 +270,8 @@ aic info photo.jpg
 | **C2PA 原始查看器** | [https://www.aicheck365.com/tools/c2pa-viewer/](https://www.aicheck365.com/tools/c2pa-viewer/) | 解析并导出图片与视频的原始 C2PA / JUMBF JSON 清单 |
 | **PNG 参数提取器 (ComfyUI / SD)** | [https://www.aicheck365.com/tools/png-parameter-extractor/](https://www.aicheck365.com/tools/png-parameter-extractor/) | 提取 ComfyUI workflow JSON、Stable Diffusion / A1111 / NovelAI 生成参数 |
 | **EXIF / XMP 阅读器** | [https://www.aicheck365.com/tools/exif-xmp-reader/](https://www.aicheck365.com/tools/exif-xmp-reader/) | 查看图片 EXIF、XMP、IPTC 与 AI 生成工具字段 |
+| **AI 视频检测器（英文 / 西班牙语）** | [AI Video Detector](https://www.aicheck365.com/en/ai-video-detector/) · [Detector de videos IA](https://www.aicheck365.com/es/detector-de-videos-ia/) | 检查 MP4/MOV 的 C2PA、容器元数据、SEI 标记与帧水印 |
+| **各语言图片检测页** | [AIイラスト判定ツール](https://www.aicheck365.com/ja/ai-illust-checker/) · [AI 사진·그림 판독기](https://www.aicheck365.com/ko/ai-image-checker/) · [AI 圖片辨識網站](https://www.aicheck365.com/zh-TW/ai-image-checker/) | 同一套本地检测器，配对应语言的界面与说明 |
 | **MP4 / MOV 元数据检查器** | [https://www.aicheck365.com/tools/mp4-metadata-inspector/](https://www.aicheck365.com/tools/mp4-metadata-inspector/) | 检查 Sora、可灵 (Kling)、Runway、Veo 视频的容器 box 树、AIGC 标签与 SEI 标记 |
 | **2026 Q3 AI 媒体溯源实测报告** | [https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/](https://www.aicheck365.com/research/ai-media-provenance-report-2026-q3/) | 多平台真实样本的 C2PA 与元数据留存基准测试数据集 |
 | **SynthID Detector 深度解析** | [https://www.aicheck365.com/blog/synthid-detector/](https://www.aicheck365.com/blog/synthid-detector/) | Google SynthID 水印检测机制、覆盖范围与 C2PA 对比 |

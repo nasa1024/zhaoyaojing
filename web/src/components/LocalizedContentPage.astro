@@ -5261,9 +5261,9 @@ const priorityArticleProfiles = {
       ],
       ctaLead: 'Empieza con el inspector de metadatos MP4/MOV y abre el detector completo cuando necesites el análisis de fotogramas.',
       ctas: [
+        { href: '/es/detector-de-videos-ia/', label: 'Abrir el detector de videos IA gratis', localized: false },
         { href: '/en/tools/mp4-metadata-inspector/', label: 'Inspeccionar metadatos MP4/MOV', localized: false },
         { href: '/en/tools/c2pa-validator/', label: 'Validar el manifiesto C2PA', localized: false },
-        { href: '/', label: 'Ejecutar la detección completa' },
       ],
       faq: [
         ['¿Existe un detector de vídeos IA gratis?', 'Sí. AICheck365 comprueba vídeos de forma gratuita y sin registro. El análisis del contenedor se ejecuta en tu navegador, así que el archivo no se sube, y cada hallazgo se informa con el campo o la ruta de caja de la que procede.'],
@@ -6166,8 +6166,13 @@ const IMAGE_ARTICLES = new Set([
   'blog/ai-image-metadata-guide',
   'blog/how-to-detect-gemini-generated-images',
 ]);
+// Same idea for the dedicated video detectors, linked from video platform guides.
+const VIDEO_CHECKERS = {
+  es: { href: '/es/detector-de-videos-ia/', label: 'Detector de videos IA gratis' },
+};
 const isImagePage = platform ? !VIDEO_ONLY_PLATFORMS.has(platform.slug) : IMAGE_ARTICLES.has(path);
-const imageChecker = isImagePage ? IMAGE_CHECKERS[lang] ?? null : null;
+const isVideoPlatform = platform ? VIDEO_ONLY_PLATFORMS.has(platform.slug) : false;
+const imageChecker = (isImagePage ? IMAGE_CHECKERS[lang] : isVideoPlatform ? VIDEO_CHECKERS[lang] : null) ?? null;
 const articleCtas = priorityArticleProfile
   ? (imageChecker && !priorityArticleProfile.ctas.some((cta) => cta.href === imageChecker.href)
     ? [{ ...imageChecker, localized: false }, ...priorityArticleProfile.ctas]
@@ -6502,6 +6507,13 @@ const articles = Object.keys(pageTitles).map((slug) => ({
             <section id="direct-answer" class="priority-direct-answer" data-content-section="direct-answer">
               <h2>{priorityPlatformProfile.directAnswer.heading}</h2>
               <p>{priorityPlatformProfile.directAnswer.body}</p>
+              {priorityPlatformProfile.ctas?.[0] && (
+                <p>
+                  <a class="primary" data-top-tool-cta href={profileHref(priorityPlatformProfile.ctas[0])} style="display:inline-block;text-decoration:none;padding:12px 24px;">
+                    {priorityPlatformProfile.ctas[0].label} →
+                  </a>
+                </p>
+              )}
             </section>
           )}
 

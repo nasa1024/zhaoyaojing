@@ -238,5 +238,20 @@
     "draft": false,
     "updatedAt": "2026-11-01",
     "internalLinks": ["/zh-TW/tools/png-parameter-extractor/", "/zh-TW/blog/how-to-detect-ai-images/", "/zh-TW/blog/what-is-c2pa/", "/zh-TW/platforms/stable-diffusion/", "/zh-TW/platforms/comfyui/", "/zh-TW/platforms/midjourney/", "/zh-TW/platforms/dall-e/", "/zh-TW/platforms/firefly/", "/zh-TW/platforms/gemini/"]
+  },
+  {
+    "id": "detector-de-videos-ia-es",
+    "slug": "detector-de-videos-ia",
+    "route": "/es/detector-de-videos-ia/",
+    "locale": "es",
+    "pageType": "tool",
+    "toolType": "ai-video-detector",
+    "title": "Detector de videos IA gratis: comprueba MP4 y MOV online | AICheck365",
+    "description": "Detector de videos IA gratis y sin subir el archivo: comprueba si un video MP4 o MOV es de Sora, Veo, Kling o Runway con C2PA, metadatos y marcas de agua.",
+    "canonical": "https://www.aicheck365.com/es/detector-de-videos-ia/",
+    "primaryKeyword": "detector de videos ia gratis",
+    "draft": false,
+    "updatedAt": "2026-11-18",
+    "internalLinks": ["/es/blog/how-to-detect-ai-videos/", "/es/platforms/sora/", "/es/platforms/kling/", "/es/platforms/runway/", "/es/"]
   }
 ]

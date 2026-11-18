@@ -154,3 +154,20 @@ test('Korean and Traditional Chinese AI image checkers embed the detector and st
     expect(sitemap).toContain(`https://www.aicheck365.com${pathname}`);
   }
 });
+
+test('Spanish AI video detector embeds the detector, stays single-language and is linked from Spanish video pages', async ({ page, request }) => {
+  const pathname = '/es/detector-de-videos-ia/';
+  await page.goto(pathname);
+
+  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('h1')).toContainText('Detector de videos IA gratis');
+  await expect(page.locator('.priority-seo-page')).toHaveAttribute('data-tool-owner', 'detector-de-videos-ia');
+  await expect(page.locator('#file-input')).toHaveAttribute('accept', /video\/mp4/);
+  await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
+
+  for (const linkingPage of ['/es/', '/es/blog/how-to-detect-ai-videos/', '/es/platforms/sora/']) {
+    expect(await (await request.get(linkingPage)).text(), linkingPage).toContain(`href="${pathname}"`);
+  }
+  const sitemap = await (await request.get('/sitemap-0.xml')).text();
+  expect(sitemap).toContain(`https://www.aicheck365.com${pathname}`);
+});

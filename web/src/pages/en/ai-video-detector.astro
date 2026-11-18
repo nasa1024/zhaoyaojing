@@ -40,6 +40,7 @@ const faq = [
   ['How do I tell if a video is AI generated?', 'Start from the original MP4 or MOV. Check for a valid C2PA manifest that declares AI generation, then container fields and SEI markers left by the generator, then known frame watermarks. Visual inspection alone is no longer reliable for current video models.'],
   ['Can it detect Sora, Veo, Kling and Runway videos?', 'It recognizes the provenance signals these tools currently write — C2PA manifests, container metadata and known watermarks — when they are still present in the file. It is not a general classifier that guesses from pixels.'],
   ['Does it work on TikTok, YouTube or Instagram downloads?', 'Sometimes a watermark or file-name clue survives, but these platforms re-encode uploads and usually strip C2PA and container metadata. For a reliable answer, find the first published or original file.'],
+  ['Can I paste a link instead of a file?', 'No. The detector reads the file itself, not a web page. Download the original video first, then drop it in.'],
   ['Is my video uploaded?', 'No. The container is parsed with WebAssembly in your browser, and frame extraction, when needed, also runs locally.'],
 ];
 

@@ -195,6 +195,7 @@ aic info photo.jpg
 
 ## 🔗 その他のリソース
 
+- [AIイラスト判定ツール](https://www.aicheck365.com/ja/ai-illust-checker/) — イラスト・画像がAI生成かをファイルの痕跡で無料確認
 - [AICheck365](https://www.aicheck365.com/ja/) — 無料オンライン AI 画像・動画検出ツール、インストール不要
 - [C2PA 検証ツール](https://www.aicheck365.com/en/tools/c2pa-validator/)（英語）— 画像・動画の C2PA 来歴署名をオンラインで検証
 - [検出方法論と限界](https://www.aicheck365.com/ja/methodology/)

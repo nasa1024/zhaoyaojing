@@ -6,7 +6,7 @@ test('English Sora page has an archival provenance profile and tool CTA', async 
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Sora provenance checks');
   await expect(page.locator('.lead-text')).toContainText('original MP4 or MOV');
   await expect(page.getByText('Sora regression fixtures')).toBeVisible();
-  await expect(page.locator('a[href="/en/tools/mp4-metadata-inspector/"]')).toBeVisible();
+  await expect(page.locator('a[href="/en/tools/mp4-metadata-inspector/"]').first()).toBeVisible();
 });
 
 test('English Gemini page targets scanner intent with sample-status honesty', async ({ page }) => {
