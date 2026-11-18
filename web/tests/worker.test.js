@@ -61,6 +61,22 @@ test('redirects localized data file URLs to the single root file', () => {
   assert.equal(response.status, 301);
   assert.equal(response.headers.get('location'), 'https://www.aicheck365.com/data/samples.json');
   assert.equal(canonicalRedirect(new Request('https://www.aicheck365.com/data/samples.json')), null);
+  assert.equal(
+    canonicalRedirect(new Request('https://www.aicheck365.com/data/samples.json/')).headers.get('location'),
+    'https://www.aicheck365.com/data/samples.json',
+  );
+});
+
+test('sends HSTS on production pages and redirects but not on preview hosts', async () => {
+  const env = { ASSETS: { fetch: async () => new Response('ok', { status: 200 }) } };
+
+  const page = await worker.fetch(new Request('https://www.aicheck365.com/blog/'), env);
+  const redirect = await worker.fetch(new Request('https://aicheck365.com/blog/'), env);
+  const preview = await worker.fetch(new Request('https://preview.aicheck365.workers.dev/'), env);
+
+  assert.equal(page.headers.get('strict-transport-security'), 'max-age=31536000');
+  assert.equal(redirect.headers.get('strict-transport-security'), 'max-age=31536000');
+  assert.equal(preview.headers.get('strict-transport-security'), null);
 });
 
 test('marks raw data files noindex without touching pages', async () => {

@@ -281,13 +281,13 @@ test('tool routes appear in the sitemap', async ({ request }) => {
   expect(text).not.toContain('https://www.aicheck365.com/es/tools/');
 });
 
-test('tool pages emit only the available zh-CN and en hreflang alternates', async ({ page }) => {
+test('tool pages emit hreflang alternates for every localized tool language', async ({ page }) => {
   for (const route of TOOL_ROUTES) {
     await page.goto(route);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href', `https://www.aicheck365.com${route}`
     );
-    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(3);
+    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(7);
     await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
       'href', `https://www.aicheck365.com/en${route}`
     );
@@ -303,7 +303,7 @@ test('tool pages emit only the available zh-CN and en hreflang alternates', asyn
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href', `https://www.aicheck365.com/en${route}`
     );
-    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(3);
+    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(7);
     await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
       'href', `https://www.aicheck365.com/en${route}`
     );

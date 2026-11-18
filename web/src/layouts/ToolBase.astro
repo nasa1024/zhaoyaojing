@@ -116,7 +116,7 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${localizedPath(canonicalPath, 'en')}`} />
     {TOOL_LANGS.map((targetLang) => (
       <link
-        rel={targetLang === 'zh-CN' || targetLang === 'en' ? 'alternate' : 'alternate translation'}
+        rel="alternate"
         hreflang={targetLang}
         href={`${SITE_URL}${localizedPath(canonicalPath, targetLang)}`}
       />
