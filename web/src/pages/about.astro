@@ -6,6 +6,7 @@ const jsonLd = {
   "@type": "AboutPage",
   "name": "关于 AICheck365",
   "url": "https://www.aicheck365.com/about/",
+  "dateModified": "2026-11-19",
   "description": "AICheck365 是免费的 AI 图片/视频来源检测工具，基于 EXIF、XMP、C2PA、MP4 元数据和视频帧水印线索分析，完全在浏览器本地运行。"
 };
 ---
@@ -20,14 +21,13 @@ const jsonLd = {
     <article class="card content-article">
       <h1>关于 AICheck365</h1>
 
-      <p class="lead-text">AICheck365（也简称 AICheck）是一款免费的 AI 图片/视频来源检测工具，帮助你判断原始文件是否保留了 AI 生成来源线索，并识别可能的平台或工具。</p>
+      <p class="lead-text">AICheck365（也简称 AICheck）是一款免费、本地优先的 AI 图片与视频来源检测工具，帮助你在不上传文件的前提下，检查原始媒体文件是否保留了可验证的 AI 生成来源线索。</p>
 
-      <!-- GitHub badge 和快速统计 -->
       <div class="about-stats">
-        <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener" class="stat-card">
+        <a href="https://github.com/nasa1024/zhaoyaojing" target="_blank" rel="noopener noreferrer" class="stat-card">
           <span class="stat-icon">⭐</span>
-          <span class="stat-label">GitHub 开源</span>
-          <span class="stat-desc">基于 aicheck 项目</span>
+          <span class="stat-label">开源项目仓库</span>
+          <span class="stat-desc">nasa1024/zhaoyaojing</span>
         </a>
         <div class="stat-card">
           <span class="stat-icon">🌐</span>
@@ -41,63 +41,47 @@ const jsonLd = {
         </div>
         <div class="stat-card">
           <span class="stat-icon">🆓</span>
-          <span class="stat-label">永久免费</span>
-          <span class="stat-desc">核心功能无限使用</span>
+          <span class="stat-label">免费使用</span>
+          <span class="stat-desc">核心检测无需注册</span>
         </div>
       </div>
 
-      <h2>工作原理</h2>
-      <p>AICheck365 不依赖黑盒神经网络判定，而是通过解析原始文件中的<strong>来源信号</strong>来识别 AI 来源。这些信号包括：</p>
-      <ul class="content-list">
-        <li><strong>EXIF 元数据</strong>：相机或软件在拍摄/生成时写入的设备和软件信息</li>
-        <li><strong>XMP 标签</strong>：Adobe 发起的可扩展元数据平台，许多 AI 工具会在此写入来源信息</li>
-        <li><strong>C2PA 数字签名</strong>：内容真实性倡议（Coalition for Content Provenance and Authenticity）制定的标准，OpenAI、Adobe、微软等厂商均已采用</li>
-        <li><strong>PNG 文本块</strong>：PNG 格式支持在文件中嵌入自定义文本，Stable Diffusion 等开源工具会在此写入生成参数</li>
-        <li><strong>MP4/MOV 元数据</strong>：视频容器可能记录工具名、AIGC 标签、SEI marker 或其他来源文本</li>
-        <li><strong>视频帧水印</strong>：当视频元数据没有命中时，浏览器可抽样少量帧检查隐形或可见水印线索</li>
-        <li><strong>文件名启发式</strong>：某些平台生成的文件名有规律性特征</li>
-      </ul>
+      <section>
+        <h2>使命与浏览器本地检测信号</h2>
+        <p>AICheck365 不依赖容易出错的黑盒图像分类打分，而是优先解析原始文件中实际记录的<strong>来源证据信号</strong>，并明确展示每条线索来自哪一个字段或签名块：</p>
+        <ul class="content-list">
+          <li><strong>C2PA 数字签名（Content Credentials / JUMBF）</strong>：校验签名有效性、声明生成器（<code>claim_generator</code>）和 <code>digitalSourceType</code> 字段。</li>
+          <li><strong>EXIF 与 XMP 标签</strong>：检查相机或生成软件写入的 <code>Software</code>、<code>CreatorTool</code>、<code>Credit</code> 与 <code>DigitalSourceType</code>。</li>
+          <li><strong>PNG 文本块与工作流</strong>：解析 Stable Diffusion、AUTOMATIC1111 与 ComfyUI 在 <code>tEXt</code>/<code>iTXt</code>/<code>zTXt</code> 中保存的参数与节点图 JSON。</li>
+          <li><strong>MP4/MOV 容器元数据与 SEI marker</strong>：检查视频原子树、编码工具、AIGC 标签及 H.264/H.265 比特流 SEI 标记。</li>
+          <li><strong>视频抽样帧水印与文件名线索</strong>：当容器元数据未命中时，按需通过本地 <code>ffmpeg.wasm</code> 抽样帧检查可见或已知水印线索，并结合文件名模式作弱辅助提示。</li>
+        </ul>
+        <p>关于证据强弱分级与信任模型，请参阅<a href="/methodology/">检测方法论</a>。</p>
+      </section>
 
-      <h2>支持的平台</h2>
-      <p>AICheck365 当前可检测来自以下平台的图片/视频来源信号：</p>
-      <ul class="content-list">
-        <li><a href="/platforms/midjourney/">Midjourney</a> — XMP、IPTC 元数据</li>
-        <li><a href="/platforms/dall-e/">DALL-E 3 / GPT Image</a> — C2PA 数字签名</li>
-        <li><a href="/platforms/stable-diffusion/">Stable Diffusion</a> — PNG tEXt 生成参数</li>
-        <li><a href="/platforms/firefly/">Adobe Firefly</a> — C2PA、XMP 企业级溯源</li>
-        <li><a href="/platforms/flux/">Flux (Black Forest Labs)</a> — XMP、PNG 工作流</li>
-        <li><a href="/platforms/comfyui/">ComfyUI</a> — PNG tEXt 工作流 JSON</li>
-        <li><a href="/platforms/leonardo/">Leonardo AI</a> — XMP、EXIF 标识</li>
-        <li><a href="/platforms/sora/">Sora</a> — C2PA-lite、MP4 元数据、文件名、视频帧水印</li>
-        <li><a href="/platforms/kling/">可灵 Kling</a> — EXIF、XMP、MP4/SEI、视频帧水印</li>
-        <li>及更多平台持续更新中...</li>
-      </ul>
+      <section>
+        <h2>支持的平台与适用边界</h2>
+        <p>AICheck365 为主流生成平台提供专门的字段对照与原始样本指南，涵盖 <a href="/platforms/gemini/">Gemini</a>、<a href="/platforms/dall-e/">DALL-E / GPT Image</a>、<a href="/platforms/firefly/">Adobe Firefly</a>、<a href="/platforms/midjourney/">Midjourney</a>、<a href="/platforms/stable-diffusion/">Stable Diffusion</a>、<a href="/platforms/comfyui/">ComfyUI</a>、<a href="/platforms/flux/">Flux</a>、<a href="/platforms/sora/">Sora</a>、<a href="/platforms/kling/">可灵 Kling</a> 及 <a href="/platforms/runway/">Runway</a> 等。</p>
+        <p>需要注意的是，AICheck365 并非万能鉴真器：文件一旦经过微信、微博、X 等社交平台压缩转码、截图、录屏、编辑器重新导出或元数据清理，原有来源信号往往会被剥离。“未检测到信号”只代表当前副本未保留可读线索，并不能证明内容由人类拍摄或创作。</p>
+      </section>
 
-      <h2>隐私保护</h2>
-      <p>AICheck365 使用 WebAssembly（WASM）技术，将检测逻辑编译为浏览器可执行的代码，<strong>所有分析完全在你的设备上完成</strong>，图片和视频数据不会上传到任何服务器。</p>
-      <p>我们收集匿名的页面访问统计（通过 Google Analytics 4），但不收集任何文件内容或检测结果。详见 <a href="/privacy/">隐私政策</a>。</p>
+      <section id="editorial-independence">
+        <h2>编辑独立性与联盟披露</h2>
+        <p>AICheck365 的图片与视频检测工具始终免费向公众开放，无需登录，也不限制常规本地检测次数。</p>
+        <p>为了持续承担域名、CDN 托管、样本维护与工具研发成本，AICheck365 可能在部分引导或工具推荐场景中通过 <strong>Impact.com</strong>（impact.com）等联盟合作伙伴计划获得推荐佣金，<strong>用户无需承担任何额外费用</strong>。</p>
+        <ul class="content-list">
+          <li><strong>清晰披露与链接标识</strong>：所有联盟及合作伙伴链接均会在附近予以明确披露，并统一标注 <code>rel="sponsored"</code> 属性。</li>
+          <li><strong>检测逻辑完全独立</strong>：商业合作、广告位或联盟佣金关系<strong>绝不会影响</strong> AICheck365 的本地 Rust/WebAssembly 检测代码、C2PA 验证标准、证据分级或任何具体文件的判定结论。</li>
+        </ul>
+        <p>如需洽谈合规合作或联盟品牌对接，请发送邮件至 <a href="mailto:contact@aicheck365.com?subject=PARTNERSHIP">contact@aicheck365.com</a>（主题注明 <code>PARTNERSHIP</code>），或查看<a href="/contact/">联系我们</a>。</p>
+      </section>
 
-      <h2>适用场景</h2>
-      <ul class="content-list">
-        <li>判断网络图片或视频是否保留 AI 生成来源线索（需尽量使用原始文件）</li>
-        <li>验证自己创作的 AI 图片/视频是否包含可追溯的来源信号</li>
-        <li>了解主流 AI 平台在图片和视频中嵌入了哪些元数据或水印线索</li>
-        <li>媒体核查、内容审核辅助参考</li>
-        <li>研究 AI 图片/视频生成平台的元数据标准</li>
-      </ul>
-
-      <h2>局限性</h2>
-      <p>此工具<strong>不是万能的 AI 鉴定器</strong>。以下情况会导致检测失效：</p>
-      <ul class="content-list">
-        <li>文件经过社交平台压缩或转码（微信、微博、Twitter 等会剥离元数据）</li>
-        <li>截图、录屏或屏幕翻拍（不会携带原始元数据）</li>
-        <li>使用元数据清除工具处理过的文件</li>
-        <li>通过图片或视频编辑软件重新导出的文件</li>
-        <li>部分 AI 平台本身不写入元数据</li>
-      </ul>
-
-      <h2>技术栈</h2>
-      <p>AICheck365 基于开源项目 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener">aicheck</a>，使用 Rust 编写，通过 wasm-pack 编译为 WebAssembly 在浏览器中运行。网站使用 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> 静态生成，并通过 Cloudflare 的边缘网络托管和分发。</p>
+      <section>
+        <h2>项目运营、技术栈与开源致谢</h2>
+        <p>AICheck365 由项目团队独立运营与维护，站点源代码与问题跟踪托管于 <a href="https://github.com/nasa1024/zhaoyaojing" target="_blank" rel="noopener noreferrer">https://github.com/nasa1024/zhaoyaojing</a>，官方联系邮箱为 <a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a>。</p>
+        <p><strong>开源致谢</strong>：AICheck365 的浏览器端核心解析引擎使用 Rust 编写并通过 <code>wasm-pack</code> 编译为 WebAssembly 在本地运行，构建于上游开源项目 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener noreferrer">MatrixA/aicheck</a> 之上并遵循适用开源许可证；网站前端使用 <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a> 静态构建，并通过 Cloudflare 边缘网络托管分发。</p>
+        <p>更多关于数据使用与使用规范的说明，请阅读我们的<a href="/privacy/">隐私政策</a>与<a href="/terms/">服务条款</a>。</p>
+      </section>
     </article>
   </main>
 </Base>

@@ -3,100 +3,94 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base
-  title="AICheck365 隐私政策：文件本地分析与数据使用说明"
-  description="AICheck365 隐私政策：图片和视频仅在浏览器本地分析，不会上传到服务器。本页说明我们收集的有限数据、Cookie、广告、数据保留方式和你的选择。"
+  title="AICheck365 隐私政策：本地分析、Cookie 与联盟追踪说明"
+  description="AICheck365 隐私政策：图片和视频仅在浏览器本地分析，不上传文件。说明 GA4 统计、AdSense、Impact.com 联盟追踪、同意机制与你的数据权利。"
   canonical="https://www.aicheck365.com/privacy/"
   lang="zh-CN"
 >
   <main class="page content-page">
     <article class="card content-article">
       <h1>隐私政策</h1>
-      <p class="article-meta">最后更新：2026 年 7 月</p>
+      <p class="article-meta">最后更新：2026 年 11 月</p>
 
-      <p class="lead-text">AICheck365 重视你的隐私。本政策说明我们收集哪些信息、如何使用这些信息，以及你可以作出的选择。</p>
+      <p class="lead-text">AICheck365 重视你的隐私。本政策说明我们的浏览器本地处理原则、收集的有限非个人信息、Cookie 与联盟归因机制，以及你可以作出的隐私选择。</p>
 
-      <h2>1. 媒体文件数据</h2>
-      <p>AICheck365 使用 WebAssembly 技术，<strong>完全在你的浏览器内</strong>分析图片和视频。媒体文件<strong>不会上传到任何服务器</strong>，图片或视频数据不会离开你的设备。</p>
+      <section>
+        <h2>1. 本地优先的文件分析（WebAssembly）</h2>
+        <p>AICheck365 的图片和视频分析完全在你的浏览器内运行，核心检测逻辑由 Rust 编译为 WebAssembly（WASM）执行，视频抽帧按需在本地加载 <code>ffmpeg.wasm</code>。<strong>媒体文件及其任何内容都不会上传到我们的服务器或任何第三方服务器。</strong></p>
+        <ul class="content-list">
+          <li><strong>文件字节不离开设备</strong>：选择或拖入文件后，文件字节仅在当前浏览器内存的 WASM 模块中解析。</li>
+          <li><strong>结果不远程保存</strong>：检测结论仅呈现在当前浏览器会话中；若启用本地历史记录，也只保存在设备浏览器的 <code>localStorage</code> 中。</li>
+          <li><strong>零文件内容遥测</strong>：我们明确将以下数据排除在所有分析、日志和遥测之外——原始图片或视频字节、原始文件名或路径、完整 EXIF 元数据表、内嵌 GPS 或位置坐标、完整或部分 AI 生成提示词、其他私密元数据（相机序列号、内嵌缩略图、证书序列号）以及文件哈希或指纹。</li>
+        </ul>
+        <p>在允许使用分析服务的情况下，事件仅可包含粗粒度、不可识别个人的技术统计（例如文件大类“图片”或“视频”、耗时区间、所用工具类型与信号类别），绝不包含任何文件内容或由此派生的敏感数据。</p>
+      </section>
 
-      <h2>2. 我们收集的信息</h2>
-      <p>为了运行和改进服务，我们只收集有限的非个人信息：</p>
-      <ul class="content-list">
-        <li><strong>使用情况分析</strong>：通过 Google Analytics 4 统计页面浏览、会话时长和功能交互。这些数据经过匿名化并以汇总形式使用。</li>
-        <li><strong>浏览器存储</strong>：我们使用 <code>localStorage</code> 保存语言偏好和最近的检测历史，这些内容只存储在你的设备上。</li>
-        <li><strong>日志数据</strong>：标准网站服务器日志可能包含 IP 地址、浏览器类型和来源网址，最长保留 30 天。</li>
-      </ul>
+      <section>
+        <h2>2. 我们收集的有限非个人信息</h2>
+        <p>为了维持网站稳定运行与改进检测体验，我们仅收集有限的非个人信息：</p>
+        <ul class="content-list">
+          <li><strong>汇总使用情况统计</strong>：通过 Google Analytics 4（启用 <code>anonymize_ip: true</code>）了解页面访问、会话时长与基础功能交互的汇总趋势。</li>
+          <li><strong>浏览器本地存储（<code>localStorage</code>）</strong>：仅在你的设备上保存主题设置（<code>theme</code>）、界面语言偏好、可选本地检测历史与隐私同意选择（<code>aicheck_consent_v1</code>）。</li>
+          <li><strong>边缘服务器日志</strong>：通过 Cloudflare 处理标准网络请求时，边缘日志可能记录 IP 地址、浏览器 User-Agent 与来源网址，用于安全防护和故障排查，最长保留 30 天。</li>
+        </ul>
+      </section>
 
-      <h2>3. Cookie 与广告</h2>
-      <p>AICheck365 使用以下可能设置 Cookie 的第三方服务：</p>
-      <ul class="content-list">
-        <li><strong>Google AdSense</strong>：网站预留了广告位，但当前默认不加载 AdSense 广告脚本。如果未来启用，Google 可能使用 Cookie 提供个性化或非个性化广告；你可以前往 <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google 广告设置</a>管理选择。</li>
-        <li><strong>Google Analytics</strong>：用于了解访客如何使用网站。你可以安装 <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics 停用浏览器插件</a>选择退出。</li>
-      </ul>
-      <p>对于依法需要征得同意的访客（包括根据语言或浏览器时区识别的欧洲经济区、英国和瑞士流量），AICheck365 会先将 Google Consent Mode 默认设置为拒绝，并在允许分析或广告存储前征求选择。你可以选择“仅必要项”，也可以允许分析和广告存储；还可以通过浏览器设置管理 Cookie。</p>
+      <section>
+        <h2>3. Cookie、分析、广告与联盟链接</h2>
+        <p>AICheck365 可能涉及以下可能设置 Cookie 或使用浏览器存储的第三方功能：</p>
+        <ul class="content-list">
+          <li><strong>Google Analytics 4</strong>：用于衡量整体流量与工具改进效果。你可以通过 <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics 停用浏览器插件</a>选择退出。</li>
+          <li><strong>Google AdSense（默认预留且禁用）</strong>：网站在部分页面预留了广告位结构，但当前默认禁用且不加载 AdSense 广告脚本。若未来启用广告，Google 可能使用 Cookie 投放个性化或非个性化广告；你可随时前往 <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google 广告设置</a>管理偏好。</li>
+          <li><strong>Impact.com（impact.com）联盟追踪与归因</strong>：AICheck365 通过 Impact.com（impact.com）参与合作工具与服务的联盟计划。当合作推广链接（均标注 <code>rel="sponsored"</code> 或经由 <code>/go/</code> 跳转）及 Impact 追踪脚本激活时，Impact.com 可能设置归因 Cookie 或记录页面展示与链接点击，以便在不增加你任何费用的情况下核实合规推广归因。详见<a href="/about/#editorial-independence">编辑独立性与联盟披露</a>。</li>
+        </ul>
+        <p><strong>欧洲经济区（EEA）、英国及瑞士访客的同意门槛</strong>：对于依据页面语言或浏览器时区识别为欧洲经济区、英国和瑞士的访客，AICheck365 默认将 Google Consent Mode（<code>ad_storage</code>、<code>analytics_storage</code>、<code>ad_user_data</code>、<code>ad_personalization</code>）设为拒绝，且在用户明确点击同意前<strong>不会加载</strong>任何可选分析、广告或 Impact.com 联盟追踪脚本。选择“仅必要项”可保持这些脚本完全关闭。</p>
+      </section>
 
-      <h2>4. 信息用途</h2>
-      <ul class="content-list">
-        <li>运行和维护网站</li>
-        <li>了解使用方式并改进服务</li>
-        <li>在广告功能启用后展示相关广告</li>
-        <li>履行法律义务</li>
-      </ul>
+      <section>
+        <h2>4. 我们如何使用信息</h2>
+        <ul class="content-list">
+          <li>运营、托管并维护网站与检测工具的安全性及可用性</li>
+          <li>基于汇总趋势改进浏览器本地媒体检测功能</li>
+          <li>在获同意或启用相应功能时，衡量推广合作归因与广告表现</li>
+          <li>遵守适用的法律法规与安全合规义务</li>
+        </ul>
+      </section>
 
-      <h2>5. 第三方服务</h2>
-      <p>AICheck365 使用 Cloudflare 的托管与边缘分发服务。Cloudflare 可能根据其<a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">隐私政策</a>处理流量数据。</p>
-      <p>Google Analytics，以及未来启用时的 Google AdSense，受 Google 的<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">隐私政策</a>约束。</p>
+      <section>
+        <h2>5. 第三方服务与隐私政策</h2>
+        <ul class="content-list">
+          <li><strong>Cloudflare</strong>（网站托管与边缘网络分发）：受 <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare 隐私政策</a>约束。</li>
+          <li><strong>Google</strong>（Google Analytics 4 及未来启用时的 Google AdSense）：受 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google 隐私政策</a>约束。</li>
+          <li><strong>Impact.com</strong>（联盟网络追踪与合作归因）：受 <a href="https://impact.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Impact.com 隐私政策</a>约束。</li>
+        </ul>
+      </section>
 
-      <h2>6. 数据保留</h2>
-      <p>Google Analytics 分析数据保留 14 个月，服务器日志保留 30 天。媒体文件从不离开浏览器，因此我们不会保留任何图片或视频数据。</p>
+      <section>
+        <h2>6. 数据保留、GDPR/CCPA 权利与清除本地数据</h2>
+        <p>Google Analytics 4 事件数据最长保留 14 个月，Cloudflare 访问日志最长保留 30 天。由于你的图片和视频从不离开设备，我们在服务器上不保留任何媒体文件或检测结果。</p>
+        <p>根据《通用数据保护条例》（GDPR）、英国 GDPR、瑞士 FADP、《加州消费者隐私法案》（CCPA/CPRA）及其他适用法律，你可能享有访问、更正、删除、限制或反对处理个人数据、数据可携带权、随时撤回同意以及退出个性化广告或共享的权利。</p>
+        <p>你可以随时通过以下方式清除本地数据：</p>
+        <ul class="content-list">
+          <li>在浏览器网站数据设置中清除 <code>aicheck365.com</code> 的 <code>localStorage</code>（包含语言、主题、本地检测历史与 <code>aicheck_consent_v1</code> 同意状态）。</li>
+          <li>在浏览器设置中删除 <code>aicheck365.com</code> 相关 Cookie，或使用第 3 节提供的第三方停用工具。</li>
+        </ul>
+      </section>
 
-      <h2>7. 你的权利</h2>
-      <p>根据你所在的地区，你可能拥有以下权利：</p>
-      <ul class="content-list">
-        <li>访问你的个人数据</li>
-        <li>更正或删除你的数据</li>
-        <li>选择退出个性化广告</li>
-        <li>数据可携带权</li>
-      </ul>
-      <p>如需行使这些权利，请通过下方联系方式与我们联系。</p>
+      <section>
+        <h2>7. 儿童隐私</h2>
+        <p>AICheck365 不面向 13 岁以下儿童（或当地法律规定的更高最低年龄），我们不会故意收集 13 岁以下儿童的任何个人信息。</p>
+      </section>
 
-      <h2>8. 儿童隐私</h2>
-      <p>AICheck365 不面向 13 岁以下儿童，我们不会故意收集 13 岁以下儿童的个人信息。</p>
+      <section>
+        <h2>8. 政策变更</h2>
+        <p>我们可能随着产品功能或合规要求的变化不时更新本隐私政策。更新后的版本将发布在本页面，并同步修订顶部的更新日期。</p>
+      </section>
 
-      <h2>9. 政策变更</h2>
-      <p>我们可能不时更新本隐私政策。更新后的版本会发布在本页面，并注明新的更新日期。</p>
-
-      <h2>10. 联系方式</h2>
-      <p>如果你对本隐私政策有疑问，请<a href="/contact/">联系我们</a>。</p>
-
-      <h2>11. 本地优先的文件处理</h2>
-      <p>AICheck365 的图片和视频分析完全在浏览器内进行，核心检测逻辑由 Rust 编译为 WebAssembly（WASM）运行。<strong>文件及其任何内容都不会上传到我们的服务器或第三方服务器。</strong></p>
-      <ul class="content-list">
-        <li><strong>文件不会上传。</strong>选择或拖入文件后，文件字节只会传给浏览器内存中的 WASM 代码。</li>
-        <li><strong>检测结果不会远程保存。</strong>分析输出只存在于当前浏览器会话，不会传出设备。</li>
-        <li><strong>历史记录只保存在本地。</strong>如果启用检测历史，它只会写入设备浏览器的 <code>localStorage</code>，不会同步到服务器。</li>
-        <li><strong>不收集私密元数据。</strong>我们不会提取、记录或传输文件中的 GPS 坐标、相机序列号、完整 EXIF 表或嵌入缩略图等私密字段。</li>
-      </ul>
-
-      <h2>12. 永远不会发送给分析服务的内容</h2>
-      <p>以下数据明确排除在所有分析、日志和遥测之外：</p>
-      <ul class="content-list">
-        <li>原始图片或视频字节</li>
-        <li>原始文件名或文件路径</li>
-        <li>完整 EXIF 元数据表</li>
-        <li>文件内嵌的 GPS 或位置数据</li>
-        <li>完整或部分 AI 生成提示词</li>
-        <li>文件中的其他私密元数据字段</li>
-        <li>文件哈希或指纹</li>
-      </ul>
-      <p>分析事件可能包含文件类别或 MIME 大类（例如“图片”或“视频”）、耗时区间、工具类型和检测结果类别等粗粒度且不可识别个人的信息，但不会包含文件名、提示词、原始元数据值、哈希、证书序列号、GPS 或任何从文件内容派生的数据。</p>
-
-      <h2>13. 删除本地数据</h2>
-      <p>AICheck365 不在服务器保存账户或检测数据，因此没有需要删除的远程数据。你可以通过以下方式删除本地信息：</p>
-      <ul class="content-list">
-        <li><strong>检测历史</strong>：在浏览器设置中清除 aicheck365.com 的 <code>localStorage</code>（通常位于“设置 → 隐私 → 网站数据 / Cookie 与存储”）。</li>
-        <li><strong>语言偏好</strong>：同样保存在 <code>localStorage</code>，通过上述步骤一并清除。</li>
-        <li><strong>第三方 Cookie</strong>：在浏览器设置中清除 aicheck365.com 的 Cookie，或使用第 3 节列出的停用链接。</li>
-      </ul>
+      <section>
+        <h2>9. 联系方式</h2>
+        <p>如果你对本隐私政策有任何疑问，或希望行使隐私权利，请发送邮件至 <a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a>，或访问<a href="/contact/">联系 AICheck365</a>。</p>
+      </section>
     </article>
   </main>
 </Base>

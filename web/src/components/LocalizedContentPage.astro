@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import LegalTrustPages from './LegalTrustPages.astro';
 
 interface Props {
   lang: string;
@@ -6224,9 +6225,10 @@ function jsonLdBase(type, name, description, dateModified = modifiedAt, citation
   ];
 }
 
+const legalModifiedAt = '2026-11-19';
 let pageTitle = c.aboutTitle;
 let pageDescription = c.aboutDesc;
-let jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
+let jsonLd = jsonLdBase('AboutPage', pageTitle, pageDescription, legalModifiedAt);
 
 if (path === 'blog') {
   pageTitle = c.blogTitle;
@@ -6255,15 +6257,15 @@ if (path === 'blog') {
 } else if (path === 'contact') {
   pageTitle = c.contactTitle;
   pageDescription = c.contactDesc;
-  jsonLd = jsonLdBase('ContactPage', pageTitle, pageDescription);
+  jsonLd = jsonLdBase('ContactPage', pageTitle, pageDescription, legalModifiedAt);
 } else if (path === 'privacy') {
   pageTitle = c.privacyTitle;
   pageDescription = c.privacyDesc;
-  jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
+  jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription, legalModifiedAt);
 } else if (path === 'terms') {
   pageTitle = c.termsTitle;
   pageDescription = c.termsDesc;
-  jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription);
+  jsonLd = jsonLdBase('WebPage', pageTitle, pageDescription, legalModifiedAt);
 }
 
 if (priorityPlatformProfile) {
@@ -6630,91 +6632,8 @@ const articles = Object.keys(pageTitles).map((slug) => ({
       </>
     )}
 
-    {path === 'about' && (
-      <article class="card content-article">
-        <h1>{c.aboutTitle}</h1>
-        <p class="lead-text">{c.aboutLead}</p>
-        <h2>{c.sections.signals}</h2>
-        <p>{c.signalIntro}</p>
-        <ul class="content-list">
-          {c.aboutSignals.map((item) => <li>{item}</li>)}
-        </ul>
-        <h2>{c.sections.privacy}</h2>
-        <p>{c.privacyLead}</p>
-        <h2>{c.sections.limits}</h2>
-        <p>{c.limitText}</p>
-        <h2>{c.sections.next}</h2>
-        <p>{c.platformsDesc}</p>
-        <p>{c.blogDesc}</p>
-        <p>{c.privacyText}</p>
-        <p>{c.signalIntro}</p>
-      </article>
-    )}
-
-    {path === 'contact' && (
-      <article class="card content-article">
-        <h1>{c.contactTitle}</h1>
-        <p class="lead-text">{c.contactLead}</p>
-        <h2>Email</h2>
-        <p><a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a></p>
-        <h2>GitHub</h2>
-        <ul class="content-list">
-          <li><a href="https://github.com/MatrixA/aicheck/issues" target="_blank" rel="noopener">GitHub Issues</a></li>
-          <li><a href="https://github.com/MatrixA/aicheck/discussions" target="_blank" rel="noopener">GitHub Discussions</a></li>
-        </ul>
-        <h2>{c.sections.include}</h2>
-        <ul class="content-list">
-          {c.contactInclude.map((item) => <li>{item}</li>)}
-        </ul>
-        <h2>{c.sections.privacy}</h2>
-        <p>{c.privacyText}</p>
-        <h2>{c.sections.limits}</h2>
-        <p>{c.limitText}</p>
-        <h2>{c.sections.next}</h2>
-        <p>{c.platformsDesc}</p>
-        <p>{c.blogDesc}</p>
-        <p>{c.signalIntro}</p>
-        <p>{c.aboutLead}</p>
-      </article>
-    )}
-
-    {path === 'privacy' && (
-      <article class="card content-article">
-        <h1>{c.privacyTitle}</h1>
-        <p class="lead-text">{c.privacyLead}</p>
-        <h2>{c.sections.privacy}</h2>
-        <p>{c.privacyText}</p>
-        <h2>{c.sections.signals}</h2>
-        <p>{c.signalIntro}</p>
-        <h2>{c.sections.limits}</h2>
-        <p>{c.limitText}</p>
-        <h2>{c.sections.next}</h2>
-        <p>{c.inspect}</p>
-        <p>{c.platformsDesc}</p>
-        <p>{c.limitText}</p>
-        <p>{c.signalIntro}</p>
-        <p>{c.aboutLead}</p>
-      </article>
-    )}
-
-    {path === 'terms' && (
-      <article class="card content-article">
-        <h1>{c.termsTitle}</h1>
-        <p class="lead-text">{c.termsLead}</p>
-        <h2>{c.sections.signals}</h2>
-        <p>{c.signalIntro}</p>
-        <h2>{c.sections.limits}</h2>
-        <p>{c.limitText}</p>
-        <h2>{c.sections.privacy}</h2>
-        <p>{c.privacyText}</p>
-        <h2>{c.sections.next}</h2>
-        <p>{c.inspect}</p>
-        <p>{c.blogDesc}</p>
-        <p>{c.platformsDesc}</p>
-        <p>{c.signalIntro}</p>
-        <p>{c.aboutLead}</p>
-        <p>{c.termsLead}</p>
-      </article>
+    {(path === 'about' || path === 'contact' || path === 'privacy' || path === 'terms') && (
+      <LegalTrustPages lang={lang} pagePath={path} />
     )}
   </main>
 </Base>

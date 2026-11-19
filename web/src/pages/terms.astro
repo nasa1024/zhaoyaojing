@@ -4,55 +4,74 @@ import Base from '../layouts/Base.astro';
 
 <Base
   title="AICheck365 服务条款：AI 媒体检测范围、限制与免责声明"
-  description="AICheck365 服务条款：说明免费 AI 图片和视频来源检测工具的使用规则、检测能力边界、免责声明、知识产权及责任限制。使用服务前请阅读本条款。"
+  description="AICheck365 服务条款：说明免费 AI 图片和视频来源检测工具的使用规则、非法证限制、免责声明、开源致谢及第三方联盟链接条款。"
   canonical="https://www.aicheck365.com/terms/"
   lang="zh-CN"
 >
   <main class="page content-page">
     <article class="card content-article">
       <h1>服务条款</h1>
-      <p class="article-meta">最后更新：2026 年 7 月</p>
+      <p class="article-meta">最后更新：2026 年 11 月</p>
 
-      <p class="lead-text">使用 AICheck365 即表示你同意本服务条款。请在使用服务前仔细阅读。</p>
+      <p class="lead-text">访问或使用 AICheck365 即表示你同意遵守本服务条款。请在使用本工具前仔细阅读以下内容。</p>
 
-      <h2>1. 服务说明</h2>
-      <p>AICheck365 提供免费的浏览器端 AI 图片和视频来源信号检测工具。服务会检查 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 元数据、文件名以及抽样视频帧中的水印线索。所有处理均在你的浏览器本地进行。</p>
+      <section>
+        <h2>1. 服务说明</h2>
+        <p>AICheck365 提供免费的浏览器本地 AI 图片和视频来源信号检查工具，支持解析 EXIF、XMP、C2PA、PNG 文本块、MP4/MOV 容器元数据、文件名特征以及抽样视频帧水印线索。所有文件分析均在你的本地浏览器中执行。</p>
+      </section>
 
-      <h2>2. 合理使用</h2>
-      <p>你同意只将 AICheck365 用于合法目的，不得：</p>
-      <ul class="content-list">
-        <li>分析你无权处理的图片或视频</li>
-        <li>以违反适用开源许可证或法律的方式逆向、修改或分发服务</li>
-        <li>使用自动化工具抓取、攻击或滥用服务</li>
-        <li>以任何违反适用法律法规的方式使用服务</li>
-      </ul>
+      <section>
+        <h2>2. 合理使用</h2>
+        <p>你同意仅出于合法目的使用 AICheck365，且不得从事以下行为：</p>
+        <ul class="content-list">
+          <li>处理或分析你无权访问、查看或检测的图片或视频文件</li>
+          <li>违反适用开源许可证或法律法规对网站、接口或客户端代码进行滥用式逆向、篡改或分发</li>
+          <li>使用自动化脚本高频抓取、恶意请求或干扰网站正常运行</li>
+          <li>将检测输出用于任何违反适用法律法规、侵权或欺诈性的用途</li>
+        </ul>
+      </section>
 
-      <h2>3. 服务限制</h2>
-      <p><strong>AICheck365 不是可以给出确定结论的 AI 鉴真工具。</strong>检测结果仅基于当前文件中保留的来源信号，只应作为辅助参考。服务存在以下限制：</p>
-      <ul class="content-list">
-        <li>元数据被清除后，可能无法识别 AI 生成内容</li>
-        <li>无法可靠分析经过截图、录屏、转码或重新导出的文件</li>
-        <li>不提供具有法律证据效力的媒体真实性结论</li>
-        <li>可能出现误报或漏报</li>
-      </ul>
+      <section>
+        <h2>3. 非法证局限性声明</h2>
+        <p><strong>AICheck365 不是能够给出确定结论的法证级真实性鉴定工具。</strong>检测输出仅反映当前文件副本中可读的元数据与来源信号，仅作技术参考：</p>
+        <ul class="content-list">
+          <li>当生成平台未写入元数据或元数据被清除后，工具可能无法检测到任何 AI 来源信号</li>
+          <li>经过社交平台压缩转码、截图、录屏或编辑器重新导出的文件，通常会丢失大部分原始来源证据</li>
+          <li>检测结果不具有司法、执法或法证鉴定所需的证据效力</li>
+          <li>受标准差异或文件构造影响，未签名字段可能被篡改，亦可能出现误报或漏报</li>
+        </ul>
+      </section>
 
-      <h2>4. 无担保声明</h2>
-      <p>AICheck365 按“现状”提供，不附带任何明示或默示担保。我们不保证服务始终不中断、没有错误，也不保证检测结果完全准确。</p>
+      <section>
+        <h2>4. 无担保声明</h2>
+        <p>AICheck365 按“现状”（AS IS）和“可用”（AS AVAILABLE）基础提供，不附带任何明示或默示担保（包括但不限于适销性、特定用途适用性或检测结果绝对准确性的担保）。我们不保证服务始终不中断或完全无错误。</p>
+      </section>
 
-      <h2>5. 责任限制</h2>
-      <p>在适用法律允许的最大范围内，AICheck365 及其运营者不对因使用服务而产生的任何间接、附带、特殊或后果性损失承担责任。</p>
+      <section>
+        <h2>5. 责任限制</h2>
+        <p>在适用法律允许的最大范围内，AICheck365 及其运营方、维护者与贡献者不对因使用或无法使用本服务、依赖检测输出或访问外部链接而产生的任何直接、间接、附带、特殊或后果性损失承担责任。</p>
+      </section>
 
-      <h2>6. 知识产权</h2>
-      <p>AICheck365 基于开源 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener">aicheck</a> 项目构建。网站设计、内容和品牌归 AICheck365 所有；底层检测库受其相应开源许可证约束。</p>
+      <section>
+        <h2>6. 知识产权与开源致谢</h2>
+        <p>AICheck365 网站界面设计、原创文档、品牌标识与内容版权归 AICheck365 所有。本站点与工具代码维护于 <a href="https://github.com/nasa1024/zhaoyaojing" target="_blank" rel="noopener noreferrer">nasa1024/zhaoyaojing</a>，并基于上游开源项目 <a href="https://github.com/MatrixA/aicheck" target="_blank" rel="noopener noreferrer">MatrixA/aicheck</a> 构建，底层检测逻辑及第三方开源组件均受其各自开源许可证约束。</p>
+      </section>
 
-      <h2>7. 第三方服务</h2>
-      <p>AICheck365 使用 Google Analytics 分析网站流量。网站预留了广告位，但当前默认不加载 Google AdSense；如果未来启用广告服务，你对网站的使用也可能受相应第三方服务条款约束。</p>
+      <section>
+        <h2>7. 第三方服务与联盟链接</h2>
+        <p>AICheck365 使用 Cloudflare 进行托管与边缘分发，使用 Google Analytics 4 进行汇总流量统计，并在部分页面预留了默认禁用的 Google AdSense 广告位。此外，本站可能包含通过 <strong>Impact.com</strong>（impact.com）等联盟平台追踪的合作推荐链接（通常标注 <code>rel="sponsored"</code> 或经由 <code>/go/</code> 路径跳转）。</p>
+        <p>当你点击联盟链接或外部网站链接时，将离开 AICheck365 并受相应第三方网站的服务条款与隐私政策约束。AICheck365 不对第三方服务的内容、可用性或产品承诺承担责任。更多信息请参阅我们的<a href="/privacy/">隐私政策</a>与<a href="/about/#editorial-independence">编辑独立性与联盟披露</a>。</p>
+      </section>
 
-      <h2>8. 条款变更</h2>
-      <p>我们可能随时更新本条款。更新后继续使用服务，即表示你接受新的条款。</p>
+      <section>
+        <h2>8. 条款变更</h2>
+        <p>我们可能随时更新本服务条款，修订后的版本将在本页面发布并更新生效日期。你在条款更新后继续使用本服务，即视为接受更新后的条款。</p>
+      </section>
 
-      <h2>9. 联系方式</h2>
-      <p>如果你对本条款有疑问，请<a href="/contact/">联系我们</a>。</p>
+      <section>
+        <h2>9. 联系方式</h2>
+        <p>如对本服务条款有任何疑问，请发送邮件至 <a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a> 或前往<a href="/contact/">联系我们</a>。</p>
+      </section>
     </article>
   </main>
 </Base>

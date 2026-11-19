@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base
-  title="联系 AICheck365：AI 图片/视频检测支持与问题反馈"
-  description="联系 AICheck365，反馈 AI 图片或视频检测中的误判、漏判、平台来源线索、产品建议与安全问题。请仅描述问题，不要通过邮件发送实际媒体文件。"
+  title="联系 AICheck365：技术支持、问题反馈与商务合作"
+  description="联系 AICheck365，反馈 AI 图片或视频检测问题、平台线索或提交商务合作与联盟咨询。请勿通过邮件发送实际或私密媒体文件。"
   canonical="https://www.aicheck365.com/contact/"
   lang="zh-CN"
 >
@@ -12,30 +12,43 @@ import Base from '../layouts/Base.astro';
     <article class="card content-article">
       <h1>联系 AICheck365</h1>
 
-      <p class="lead-text">如果你遇到检测问题、发现程序错误，或希望我们增加新的 AI 平台识别线索，欢迎联系我们。</p>
+      <p class="lead-text">如果你遇到检测异常、发现程序错误、希望补充新的 AI 平台来源线索，或有隐私与商务合作咨询，欢迎通过以下方式联系我们。</p>
 
-      <h2>电子邮件</h2>
-      <p>请发送邮件至：<a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a></p>
+      <section>
+        <h2>电子邮件</h2>
+        <p>日常支持、误判/漏判反馈、隐私权利请求与产品建议，请发送邮件至：<a href="mailto:contact@aicheck365.com">contact@aicheck365.com</a></p>
+      </section>
 
-      <h2>GitHub</h2>
-      <p>AICheck365 基于开源技术构建。你可以通过以下渠道报告问题或参与讨论：</p>
-      <ul class="content-list">
-        <li><a href="https://github.com/MatrixA/aicheck/issues" target="_blank" rel="noopener">在 GitHub 报告问题</a></li>
-        <li><a href="https://github.com/MatrixA/aicheck/discussions" target="_blank" rel="noopener">加入 GitHub 讨论</a></li>
-      </ul>
+      <section>
+        <h2>商务合作与联盟咨询</h2>
+        <p>如涉及品牌合作、<strong>Impact.com</strong> 联盟推广计划对接、赞助或媒体洽谈，请发送邮件至 <a href="mailto:contact@aicheck365.com?subject=PARTNERSHIP">contact@aicheck365.com</a>，并在邮件主题中注明 <strong>PARTNERSHIP</strong>。所有商业合作均遵守我们的<a href="/about/#editorial-independence">编辑独立性与联盟披露</a>原则。</p>
+      </section>
 
-      <h2>反馈时请提供</h2>
-      <p>如果你要反馈检测问题，请尽量说明：</p>
-      <ul class="content-list">
-        <li>生成图片或视频的 AI 平台，例如 Midjourney、DALL-E、Sora 或可灵</li>
-        <li>所用文件是平台直接下载的原始文件，还是副本、截图、录屏或重新导出的版本</li>
-        <li>你得到的检测结果，以及预期结果</li>
-        <li>所用浏览器和操作系统</li>
-      </ul>
-      <p><strong>请勿通过邮件发送实际图片或视频文件</strong>，请只描述问题和必要的非敏感信息。</p>
+      <section>
+        <h2>GitHub 问题反馈</h2>
+        <p>AICheck365 为开源项目，你也可以直接在项目仓库提交缺陷报告或参与功能讨论：</p>
+        <ul class="content-list">
+          <li><a href="https://github.com/nasa1024/zhaoyaojing/issues" target="_blank" rel="noopener noreferrer">在 GitHub 报告问题（Issues）</a></li>
+          <li><a href="https://github.com/nasa1024/zhaoyaojing/discussions" target="_blank" rel="noopener noreferrer">加入 GitHub 讨论（Discussions）</a></li>
+        </ul>
+      </section>
 
-      <h2>回复时间</h2>
-      <p>我们通常会在 3–5 个工作日内回复。紧急安全问题请在邮件主题中注明“SECURITY”。</p>
+      <section>
+        <h2>反馈检测问题时请包含</h2>
+        <p>为了帮助我们更快复现和定位问题，请在来信中尽量说明：</p>
+        <ul class="content-list">
+          <li>生成图片或视频的 AI 平台名称，例如 Midjourney、DALL-E、Gemini、Sora、可灵或 Runway</li>
+          <li>文件来源形态：平台直接下载的原始文件、副本、截图、录屏还是编辑器重新导出版本</li>
+          <li>AICheck365 给出的检测结果以及你预期的结果</li>
+          <li>你使用的浏览器名称、版本号及操作系统</li>
+        </ul>
+        <p><strong>请勿通过邮件发送实际或私密的图片、视频媒体文件。</strong>AICheck365 在本地浏览器运行，请仅在邮件中描述现象与非敏感技术细节。</p>
+      </section>
+
+      <section>
+        <h2>回复时间与安全漏洞</h2>
+        <p>我们通常会在 <strong>3–5 个工作日</strong>内回复邮件。若需报告紧急安全问题，请在邮件主题中注明 <code>SECURITY</code>。</p>
+      </section>
     </article>
   </main>
 </Base>
