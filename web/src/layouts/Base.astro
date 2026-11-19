@@ -214,6 +214,7 @@ const toolsLang = LOCALIZED_TOOL_LANGS.has(pageLang) ? pageLang : 'en';
 const toolsHref = toolsLang === DEFAULT_LANG ? '/tools/' : `/${toolsLang}/tools/`;
 const toolsNoLocalize = toolsLang !== pageLang;
 const aboutHref = `${navPrefix}/about/`;
+const privacyHref = `${navPrefix}/privacy/`;
 const i18nPage = canonicalPath === '/' ? 'home' : 'content';
 const FOOTER_LANGS = [
   ['zh-CN', '中文（简）'], ['zh-TW', '中文（繁）'], ['en', 'English'], ['ja', '日本語'], ['ko', '한국어'],
@@ -428,8 +429,8 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
     <link rel="llms-txt" href={`${SITE_URL}/llms.txt`} />
     <link rel="llms-full-txt" href={`${SITE_URL}/llms-full.txt`} />
-    <link rel="author" href={`${SITE_URL}/about/`} />
-    <link rel="privacy-policy" href={`${SITE_URL}/privacy/`} />
+    <link rel="author" href={`${SITE_URL}${aboutHref}`} />
+    <link rel="privacy-policy" href={`${SITE_URL}${privacyHref}`} />
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website" />
@@ -476,6 +477,7 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
         var granted = state === 'granted_all';
         window.__AICHECK_CONSENT_REQUIRED__ = consentRequired;
         window.__AICHECK_CONSENT_STATE__ = state;
+        window.__AICHECK_IMPACT_STAT_SRC__ = 'https://utt.impactcdn.com/P-A8151808-6473-4831-b4b6-3341eeb5b97c1.js';
         window.gtag('consent', 'default', {
           ad_storage: granted ? 'granted' : 'denied',
           analytics_storage: granted ? 'granted' : 'denied',
@@ -487,7 +489,6 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
       window.gtag('config', 'G-8RF8YQ5YB1', { anonymize_ip: true });
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RF8YQ5YB1"></script>
-    <script is:inline type="text/javascript">(function(i,m,p,a,c,t){c.ire_o=p;c[p]=c[p]||function(){(c[p].a=c[p].a||[]).push(arguments)};t=a.createElement(m);var z=a.getElementsByTagName(m)[0];t.async=1;t.src=i;z.parentNode.insertBefore(t,z)})('https://utt.impactcdn.com/P-A8151808-6473-4831-b4b6-3341eeb5b97c1.js','script','impactStat',document,window);impactStat('transformLinks');impactStat('trackImpression');</script>
 
     <script is:inline>
       // Set the theme before first paint so light-mode visitors never see a dark flash.

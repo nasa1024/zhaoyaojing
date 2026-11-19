@@ -1,0 +1,99 @@
+---
+interface Props {
+  lang?: string;
+  compact?: boolean;
+}
+
+const { lang = 'en', compact = false } = Astro.props;
+
+const SUPPORTED_LANGS = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'pt-BR'];
+const resolvedLang = SUPPORTED_LANGS.includes(lang) ? lang : 'en';
+const prefix = resolvedLang === 'zh-CN' ? '' : `/${resolvedLang}`;
+const disclosureHref = `${prefix}/about/#editorial-independence`;
+
+const COPY: Record<string, { text: string; linkLabel: string }> = {
+  'zh-CN': {
+    text: '披露说明：本页部分推荐链接为合作伙伴联盟链接，通过这些链接购买可能会让我们获得佣金（不增加您的任何费用）。商业合作绝不影响浏览器本地检测结果。',
+    linkLabel: '了解编辑独立性',
+  },
+  'zh-TW': {
+    text: '揭露說明：本頁部分推薦連結為合作夥伴聯盟連結，透過這些連結購買可能會讓我們獲得佣金（不增加您的任何費用）。商業合作絕不影響瀏覽器本機檢測結果。',
+    linkLabel: '了解編輯獨立性',
+  },
+  en: {
+    text: 'Disclosure: Some links here are affiliate partner links, and we may earn a commission at no extra cost to you. Commissions never affect our local browser detection results.',
+    linkLabel: 'Editorial independence',
+  },
+  ja: {
+    text: '開示事項：本ページの一部のリンクはアフィリエイトパートナーリンクであり、追加費用なしで当サイトが紹介料を受け取る場合があります。紹介料がブラウザ内のローカル検出結果に影響することはありません。',
+    linkLabel: '編集の独立性について',
+  },
+  ko: {
+    text: '고지 사항: 이 페이지의 일부 링크는 제휴 파트너 링크이며 추가 비용 없이 수수료를 받을 수 있습니다. 제휴 수익은 브라우저 로컬 탐지 결과에 어떠한 영향도 미치지 않습니다.',
+    linkLabel: '편집 독립성 안내',
+  },
+  de: {
+    text: 'Hinweis: Einige Links auf dieser Seite sind Affiliate-Partner-Links, über die wir ohne Mehrkosten für Sie eine Provision erhalten können. Provisionen beeinflussen niemals die lokale Browser-Erkennung oder deren Ergebnisse.',
+    linkLabel: 'Redaktionelle Unabhängigkeit',
+  },
+  fr: {
+    text: 'Transparence : Certains liens de cette page sont des liens d’affiliation pouvant générer une commission sans surcoût pour vous. Les commissions n’influencent jamais les résultats de détection locale dans votre navigateur.',
+    linkLabel: 'Indépendance éditoriale',
+  },
+  es: {
+    text: 'Divulgación: Algunos enlaces de esta página son enlaces de afiliados y podemos recibir una comisión sin costo adicional para ti. Las comisiones nunca afectan los resultados de detección local en tu navegador.',
+    linkLabel: 'Independencia editorial',
+  },
+  'pt-BR': {
+    text: 'Divulgação: Alguns links nesta página são links de afiliados e podemos receber comissão sem custo extra para você. Comissões nunca afetam os resultados da detecção local no seu navegador.',
+    linkLabel: 'Independência editorial',
+  },
+};
+
+const copy = COPY[resolvedLang] ?? COPY.en;
+---
+
+<aside
+  class={`affiliate-disclosure${compact ? ' affiliate-disclosure--compact' : ''}`}
+  role="note"
+  data-affiliate-disclosure
+>
+  <p class="affiliate-disclosure__text">
+    {copy.text}{' '}
+    <a class="affiliate-disclosure__link" href={disclosureHref}>{copy.linkLabel}</a>
+  </p>
+</aside>
+
+<style>
+  .affiliate-disclosure {
+    margin: 16px 0;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 10px);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .affiliate-disclosure--compact {
+    margin: 10px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .affiliate-disclosure__text {
+    margin: 0;
+  }
+
+  .affiliate-disclosure__link {
+    color: var(--text-soft, var(--muted));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .affiliate-disclosure__link:hover {
+    color: var(--text-strong, inherit);
+  }
+</style>

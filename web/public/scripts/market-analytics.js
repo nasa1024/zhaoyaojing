@@ -83,6 +83,49 @@
   const context = Object.freeze(baseContext);
   window.__AICHECK_MARKET_CONTEXT__ = context;
 
+  const sanitizePartner = (raw) =>
+    String(raw || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]/g, '');
+
+  const extractAffiliatePartner = (link) => {
+    const fromData = sanitizePartner(link.dataset?.affiliatePartner);
+    if (fromData) return fromData;
+    const href = link.getAttribute('href') || '';
+    try {
+      const url = new URL(href, window.location.origin);
+      const match = url.pathname.match(/^\/go\/([^/]+)\/?$/i);
+      if (match) return sanitizePartner(match[1]);
+    } catch {}
+    return '';
+  };
+
+  document.addEventListener('click', (event) => {
+    const baseTarget = event.target?.nodeType === 3 ? event.target.parentElement : event.target;
+    const link = baseTarget?.closest?.('a[href^="/go/"], a[data-affiliate-partner]');
+    if (!link) return;
+
+    const partner = extractAffiliatePartner(link);
+    if (!partner) return;
+
+    const placement = (link.dataset?.affiliatePlacement || '').trim() || 'inline';
+    const resultState = (link.dataset?.resultState || '').trim();
+    const relTokens = (link.getAttribute('rel') || '').toLowerCase().split(/\s+/).filter(Boolean);
+    const payload = {
+      partner,
+      placement,
+      rel_sponsored: relTokens.includes('sponsored'),
+    };
+    if (resultState) {
+      payload.result_state = resultState;
+    }
+
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'affiliate_click', payload);
+    }
+  });
+
   // Existing Playwright tests intentionally install a recording stub and
   // assert the historical event allowlist. Do not mutate that test harness.
   if (Array.isArray(window.__ga_calls__)) return;

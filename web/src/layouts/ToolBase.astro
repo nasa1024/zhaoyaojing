@@ -32,6 +32,19 @@ const toolsHref = `${prefix}/tools/`;
 const platformsHref = `${prefix}/platforms/`;
 const blogHref = `${prefix}/blog/`;
 const methodologyHref = `${prefix}/methodology/`;
+const aboutHref = `${prefix}/about/`;
+const privacyHref = `${prefix}/privacy/`;
+const termsHref = `${prefix}/terms/`;
+const contactHref = `${prefix}/contact/`;
+const LEGAL_LABELS: Record<string, { about: string; privacy: string; terms: string; contact: string }> = {
+  'zh-CN': { about: '关于', privacy: '隐私政策', terms: '服务条款', contact: '联系' },
+  'zh-TW': { about: '關於', privacy: '隱私權政策', terms: '服務條款', contact: '聯絡' },
+  en: { about: 'About', privacy: 'Privacy', terms: 'Terms', contact: 'Contact' },
+  ja: { about: '概要', privacy: 'プライバシー', terms: '利用規約', contact: 'お問い合わせ' },
+  ko: { about: '소개', privacy: '개인정보', terms: '약관', contact: '문의' },
+  de: { about: 'Über uns', privacy: 'Datenschutz', terms: 'Bedingungen', contact: 'Kontakt' },
+};
+const legalLabels = LEGAL_LABELS[lang] ?? LEGAL_LABELS.en;
 const OG_LOCALE = { 'zh-CN': 'zh_CN', 'zh-TW': 'zh_TW', en: 'en_US', ja: 'ja_JP', ko: 'ko_KR', de: 'de_DE' };
 const BRAND_DESCRIPTOR = {
   'zh-CN': 'AI 图片视频检测',
@@ -124,8 +137,8 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
     <link rel="sitemap" type="application/xml" href={`${SITE_URL}/sitemap-index.xml`} />
     <link rel="llms-txt" href={`${SITE_URL}/llms.txt`} />
     <link rel="llms-full-txt" href={`${SITE_URL}/llms-full.txt`} />
-    <link rel="author" href={`${SITE_URL}/about/`} />
-    <link rel="privacy-policy" href={`${SITE_URL}/privacy/`} />
+    <link rel="author" href={`${SITE_URL}${aboutHref}`} />
+    <link rel="privacy-policy" href={`${SITE_URL}${privacyHref}`} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={seoTitle} />
@@ -153,11 +166,12 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
         var tz = '';
         try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch {}
         var europeTz = /^Europe\//.test(tz) || ['Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Azores'].includes(tz);
-        var consentRequired = lang === 'de' || europeTz;
+        var consentRequired = ['de', 'fr', 'es'].includes(lang) || europeTz;
         var state = stored && stored.state ? stored.state : (consentRequired ? 'unset_required' : 'granted_all');
         var granted = state === 'granted_all';
         window.__AICHECK_CONSENT_REQUIRED__ = consentRequired;
         window.__AICHECK_CONSENT_STATE__ = state;
+        window.__AICHECK_IMPACT_STAT_SRC__ = 'https://utt.impactcdn.com/P-A8151808-6473-4831-b4b6-3341eeb5b97c1.js';
         window.gtag('consent', 'default', {
           ad_storage: granted ? 'granted' : 'denied',
           analytics_storage: granted ? 'granted' : 'denied',
@@ -169,7 +183,6 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
       window.gtag('config', 'G-8RF8YQ5YB1', { anonymize_ip: true });
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8RF8YQ5YB1"></script>
-    <script is:inline type="text/javascript">(function(i,m,p,a,c,t){c.ire_o=p;c[p]=c[p]||function(){(c[p].a=c[p].a||[]).push(arguments)};t=a.createElement(m);var z=a.getElementsByTagName(m)[0];t.async=1;t.src=i;z.parentNode.insertBefore(t,z)})('https://utt.impactcdn.com/P-A8151808-6473-4831-b4b6-3341eeb5b97c1.js','script','impactStat',document,window);impactStat('transformLinks');impactStat('trackImpression');</script>
 
     <script is:inline>
       // Same pre-paint theme as the main layout: saved choice, else the OS setting.
@@ -231,6 +244,10 @@ const allJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
           <a href={platformsHref}>{locale.nav.platforms}</a>
           <a href={toolsHref}>{locale.nav.tools}</a>
           <a href={methodologyHref}>{locale.nav.methodology}</a>
+          <a href={aboutHref}>{legalLabels.about}</a>
+          <a href={privacyHref}>{legalLabels.privacy}</a>
+          <a href={termsHref}>{legalLabels.terms}</a>
+          <a href={contactHref}>{legalLabels.contact}</a>
         </div>
         <div class="footer-links footer-featured" aria-label="Featured">
           <a href="/en/ai-video-detector/" lang="en" data-no-localize>AI Video Detector</a>
