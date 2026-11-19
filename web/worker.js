@@ -1,3 +1,5 @@
+import { resolveAffiliateDestination } from './affiliate-links.js';
+
 const CANONICAL_HOST = 'www.aicheck365.com';
 const APEX_HOST = 'aicheck365.com';
 
@@ -9,11 +11,24 @@ const LOCALIZED_RESEARCH_PATH = /^\/(?:zh-CN|zh-TW|en|ja|ko|de|fr|es|pt-BR)(\/re
 const LOCALIZED_DATA_PATH = /^\/(?:zh-CN|zh-TW|en|ja|ko|de|fr|es|pt-BR)(\/data\/[^/]+\.json)\/?$/;
 // A data file requested with a trailing slash is a 404 in the asset binding.
 const SLASHED_DATA_PATH = /^(\/data\/[^/]+\.json)\/$/;
+const AFFILIATE_ROUTE_PREFIX = /^\/go(?:\/|$)/i;
+const AFFILIATE_GO_PATH = /^\/go\/([a-z0-9-]+)\/?$/i;
 // Browsers and crawlers should never retry this site over plain HTTP. Scoped
 // to the host that sends it (no includeSubDomains) so other subdomains are
 // unaffected.
 const HSTS = 'max-age=31536000';
 const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable';
+const NOINDEX_NOFOLLOW = 'noindex, nofollow';
+const NO_STORE_PRIVATE = 'no-store, private';
+
+function applyAffiliateSecurityHeaders(headers, isProductionHost) {
+  headers.set('X-Robots-Tag', NOINDEX_NOFOLLOW);
+  headers.set('Cache-Control', NO_STORE_PRIVATE);
+  headers.set('X-Content-Type-Options', 'nosniff');
+  if (isProductionHost) {
+    headers.set('Strict-Transport-Security', HSTS);
+  }
+}
 
 export function canonicalRedirect(request) {
   const url = new URL(request.url);
@@ -38,10 +53,54 @@ export function canonicalRedirect(request) {
   });
 }
 
+export function affiliateRedirect(request, env) {
+  const url = new URL(request.url);
+  if (!AFFILIATE_ROUTE_PREFIX.test(url.pathname)) return null;
+
+  const isProductionHost = url.hostname === CANONICAL_HOST;
+  const method = (request.method || 'GET').toUpperCase();
+  if (method !== 'GET' && method !== 'HEAD') {
+    const headers = new Headers({
+      Allow: 'GET, HEAD',
+      'Content-Type': 'text/plain; charset=utf-8',
+    });
+    applyAffiliateSecurityHeaders(headers, isProductionHost);
+    return new Response('Method Not Allowed', { status: 405, headers });
+  }
+
+  const match = url.pathname.match(AFFILIATE_GO_PATH);
+  const destination = match
+    ? resolveAffiliateDestination(match[1], url.searchParams, env?.AFFILIATE_LINKS_JSON)
+    : null;
+
+  if (!destination) {
+    const headers = new Headers({
+      'Content-Type': 'text/plain; charset=utf-8',
+    });
+    applyAffiliateSecurityHeaders(headers, isProductionHost);
+    return new Response(method === 'HEAD' ? null : 'Not Found', {
+      status: 404,
+      headers,
+    });
+  }
+
+  const headers = new Headers({
+    Location: destination,
+    // Preserve HTTPS->HTTPS referrer for partner attribution while blocking
+    // downgrade leaks; destinations are already validated as https:.
+    'Referrer-Policy': 'no-referrer-when-downgrade',
+  });
+  applyAffiliateSecurityHeaders(headers, isProductionHost);
+  return new Response(null, { status: 302, headers });
+}
+
 export default {
   async fetch(request, env) {
     const redirect = canonicalRedirect(request);
     if (redirect) return redirect;
+
+    const affiliate = affiliateRedirect(request, env);
+    if (affiliate) return affiliate;
 
     const response = await env.ASSETS.fetch(request);
     const url = new URL(request.url);
