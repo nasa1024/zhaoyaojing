@@ -58,15 +58,31 @@ test('non-EEA default route grants consent defaults without showing a banner', a
   expect(defaults.params.ad_storage).toBe('granted');
 });
 
-test('ad slots reserve space and stay away from dedicated tool controls', async ({ page }) => {
+test('ad slots stay hidden when empty, reserve space when active, and stay away from dedicated tool controls', async ({ page }) => {
   await page.goto('/');
-  const slots = await page.locator('.ad-slot').evaluateAll((els) =>
+  const slotLocator = page.locator('.ad-slot');
+  const count = await slotLocator.count();
+  expect(count).toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i += 1) {
+    await expect(slotLocator.nth(i)).toHaveAttribute('data-ad-state', 'empty');
+    await expect(slotLocator.nth(i)).not.toBeVisible();
+  }
+
+  await slotLocator.evaluateAll((els) => {
+    els.forEach((el) => el.setAttribute('data-ad-state', 'active'));
+  });
+
+  for (let i = 0; i < count; i += 1) {
+    await expect(slotLocator.nth(i)).toBeVisible();
+  }
+
+  const slots = await slotLocator.evaluateAll((els) =>
     els.map((el) => ({
       placement: el.getAttribute('data-ad-placement'),
       minHeight: Number.parseFloat(getComputedStyle(el).minHeight),
     }))
   );
-  expect(slots.length).toBeGreaterThan(0);
   for (const slot of slots) {
     expect(slot.minHeight).toBeGreaterThanOrEqual(90);
   }

@@ -971,6 +971,10 @@ a.tool-hub-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 
   overflow: hidden;
   text-align: center;
 }
+/* Hide unpopulated slots cleanly until AdSense or partner cards render. */
+.ad-slot[data-ad-state="empty"] {
+  display: none;
+}
 .ad-slot .ad-label {
   display: block;
   margin: 0;

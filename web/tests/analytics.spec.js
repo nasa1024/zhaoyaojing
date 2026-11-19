@@ -267,13 +267,44 @@ test('platform_page_clicked and related_guide_clicked fire from the related-link
   expect(calls.filter((c) => c.name === 'related_guide_clicked').length).toBeGreaterThan(0);
 });
 
-test('ad_viewable fires when a reserved ad slot scrolls into view', async ({ page }) => {
+test('ad_viewable ignores empty hidden slots and fires once when an active ad slot scrolls into view', async ({ page }) => {
   await installGtagStub(page);
   await page.goto('/');
-  await page.locator('.ad-slot').first().scrollIntoViewIfNeeded();
-  await page.waitForTimeout(600);
-  const calls = await getAllRecordedEvents(page);
-  expect(calls.filter((c) => c.name === 'ad_viewable').length).toBeGreaterThan(0);
+
+  const firstSlot = page.locator('.ad-slot').first();
+  await expect(firstSlot).toHaveAttribute('data-ad-state', 'empty');
+  await expect(firstSlot).not.toBeVisible();
+
+  // Scroll past surrounding sections and invoke observer while all slots remain empty
+  await page.locator('.history-section').scrollIntoViewIfNeeded();
+  await page.locator('#methodology').scrollIntoViewIfNeeded();
+  await page.evaluate(() => {
+    window.__AICHECK_OBSERVE_AD_SLOTS__?.();
+  });
+  await page.waitForTimeout(300);
+
+  let calls = await getAllRecordedEvents(page);
+  expect(calls.filter((c) => c.name === 'ad_viewable')).toHaveLength(0);
+
+  // Return to top, activate only the first slot, attach observer, then scroll it into view
+  await page.evaluate(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const first = document.querySelector('.ad-slot');
+    if (first) first.setAttribute('data-ad-state', 'active');
+    window.__AICHECK_OBSERVE_AD_SLOTS__();
+  });
+  await expect(firstSlot).toBeVisible();
+  await firstSlot.scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => window.__ga_calls__?.some((c) => c.name === 'ad_viewable'), null, { timeout: 5000 });
+
+  // Calling __AICHECK_OBSERVE_AD_SLOTS__ again must remain idempotent
+  await page.evaluate(() => window.__AICHECK_OBSERVE_AD_SLOTS__());
+  await page.waitForTimeout(200);
+
+  calls = await getAllRecordedEvents(page);
+  const adEvents = calls.filter((c) => c.name === 'ad_viewable');
+  expect(adEvents).toHaveLength(1);
+  expect(adEvents[0].params.slot).toBeTruthy();
 });
 
 test('sitemap-0.xml contains methodology and no user/result data', async ({ request }) => {

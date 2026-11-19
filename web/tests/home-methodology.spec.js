@@ -42,9 +42,11 @@ test('LatestExperiments renders real experiment cards', async ({ page }) => {
 
 test('no .ad-slot is above the Detector / first screen', async ({ page }) => {
   await page.goto('/');
-  // The detector upload zone must exist and be below any ad-slot
+  // Activate reserved ad slots before measuring bounding boxes, then verify none sit above the detector
   const result = await page.evaluate(() => {
     const adSlots = Array.from(document.querySelectorAll('.ad-slot'));
+    if (!adSlots.length) return { ok: false, reason: 'no .ad-slot elements found' };
+    adSlots.forEach((ad) => ad.setAttribute('data-ad-state', 'active'));
     const detector = document.querySelector('#upload-zone');
     if (!detector) return { ok: false, reason: 'no #upload-zone' };
     const detectorTop = detector.getBoundingClientRect().top + window.scrollY;
@@ -62,10 +64,12 @@ test('no .ad-slot is above the Detector / first screen', async ({ page }) => {
 test('an .ad-slot exists after the methodology section', async ({ page }) => {
   await page.goto('/');
   const result = await page.evaluate(() => {
+    const adSlots = Array.from(document.querySelectorAll('.ad-slot'));
+    if (!adSlots.length) return { ok: false, reason: 'no .ad-slot elements found' };
+    adSlots.forEach((ad) => ad.setAttribute('data-ad-state', 'active'));
     const methodology = document.querySelector('#methodology');
     if (!methodology) return { ok: false, reason: 'no #methodology' };
     const methodologyBottom = methodology.getBoundingClientRect().bottom + window.scrollY;
-    const adSlots = Array.from(document.querySelectorAll('.ad-slot'));
     const hasAdAfter = adSlots.some((ad) => {
       const adTop = ad.getBoundingClientRect().top + window.scrollY;
       return adTop >= methodologyBottom - 40; // allow small tolerance

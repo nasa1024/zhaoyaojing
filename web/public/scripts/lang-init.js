@@ -117,23 +117,40 @@ themeBtn?.addEventListener('click', () => {
   applyTheme(document.body.dataset.theme === 'light' ? 'dark' : 'light');
 });
 
-// ─── ad_viewable: fire once when a reserved ad slot scrolls into view ──────
-// Measures ad-slot viewability (spec §18). Works on the reserved containers
-// today; stays correct once live AdSense markup is uncommented. Sends only a
-// slot identifier — never file or result data.
+// ─── ad_viewable: fire once when an active ad slot scrolls into view ──────
+// Measures ad-slot viewability (spec §18). Skips empty hidden placeholders
+// so GA4 is not polluted before real AdSense or partner cards populate a slot.
+// Sends only a slot identifier — never file or result data.
 (function trackAdViewable() {
-  const slots = document.querySelectorAll('.ad-slot');
-  if (!slots.length || typeof IntersectionObserver !== 'function') return;
+  if (typeof IntersectionObserver !== 'function') {
+    window.__AICHECK_OBSERVE_AD_SLOTS__ = () => {};
+    return;
+  }
   const ga = (name, params) => { if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); };
   const slotName = (el) =>
     (Array.from(el.classList).find((c) => c.startsWith('ad-slot--')) || 'ad-slot').replace('ad-slot--', '') || 'ad';
+  const observed = new WeakSet();
+  const fired = new WeakSet();
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
-      if (entry.isIntersecting) {
+      if (entry.isIntersecting && !fired.has(entry.target)) {
+        if (entry.target.getAttribute('data-ad-state') === 'empty') continue;
+        fired.add(entry.target);
         ga('ad_viewable', { slot: slotName(entry.target) });
         io.unobserve(entry.target);
       }
     }
   }, { threshold: 0.5 });
-  slots.forEach((s) => io.observe(s));
+
+  function observeActiveSlots() {
+    const slots = document.querySelectorAll('.ad-slot:not([data-ad-state="empty"])');
+    slots.forEach((slot) => {
+      if (observed.has(slot) || fired.has(slot)) return;
+      observed.add(slot);
+      io.observe(slot);
+    });
+  }
+
+  window.__AICHECK_OBSERVE_AD_SLOTS__ = observeActiveSlots;
+  observeActiveSlots();
 })();
