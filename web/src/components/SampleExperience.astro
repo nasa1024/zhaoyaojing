@@ -18,7 +18,6 @@ const h = homeStrings(resolveLang(Astro.url.pathname)).sample;
           data-sample-id={s.id}
           tabindex="0"
           role="button"
-          aria-label={`${s.title} — ${h.title}`}
         >
           {/\.(jpe?g|png|webp|gif|avif)$/i.test(s.fileRef ?? '') ? (
             <img class="sample-thumb" src={s.fileRef} alt={s.title} loading="lazy" decoding="async" />

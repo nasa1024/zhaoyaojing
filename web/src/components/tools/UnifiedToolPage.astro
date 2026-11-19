@@ -86,7 +86,7 @@ const jsonLd = [
         <h2>{copy.uploadTitle}</h2>
         <div class="tool-upload">
           <label class="tool-drop-zone" id="tool-drop-zone" for="tool-file-input">
-            <input id="tool-file-input" type="file" accept={tech.accept} />
+            <input id="tool-file-input" type="file" accept={tech.accept} aria-label={copy.uploadZone} />
             <span class="upload-icon" aria-hidden="true">↥</span>
             <span>{copy.uploadZone}</span>
             <small class="muted">{copy.formats}</small>

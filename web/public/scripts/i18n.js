@@ -1107,6 +1107,10 @@ const OG_LOCALE = {
 };
 
 const SUPPORTED_LANGS = Object.keys(translations);
+// Language the server rendered this document in. Title and description are
+// already localized in the HTML for that language, so they are only rewritten
+// when the page is shown in a different language without a navigation.
+const SERVER_LANG = typeof document !== 'undefined' ? document.documentElement.lang : '';
 const LOCALIZED_TOOL_LANGS = ['en'];
 
 function langFromPathname(pathname = window.location.pathname) {
@@ -1196,7 +1200,7 @@ export function applyI18n() {
 
   document.documentElement.lang = currentLang;
 
-  if (document.body?.dataset.i18nPage === 'home') {
+  if (document.body?.dataset.i18nPage === 'home' && currentLang !== SERVER_LANG) {
     document.title = t('page.title');
     document.querySelector('meta[name="description"]')
       ?.setAttribute('content', t('page.description'));

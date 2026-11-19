@@ -436,7 +436,7 @@ function initToolInspector() {
       const mime = file.type || guessMime(file.name);
       const report = await cfg.call(api, bytes, mime);
       render(report);
-      ga('analysis_complete', {
+      ga('analysis_completed', {
         result_category: resultCategory(report),
         duration_bucket: durationBucket(performance.now() - startedAt),
         file_category: category,

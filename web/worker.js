@@ -13,6 +13,7 @@ const SLASHED_DATA_PATH = /^(\/data\/[^/]+\.json)\/$/;
 // to the host that sends it (no includeSubDomains) so other subdomains are
 // unaffected.
 const HSTS = 'max-age=31536000';
+const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable';
 
 export function canonicalRedirect(request) {
   const url = new URL(request.url);
@@ -49,7 +50,15 @@ export default {
     if (!isProductionHost && !isDataFile) return response;
 
     const tagged = new Response(response.body, response);
-    if (isProductionHost) tagged.headers.set('Strict-Transport-Security', HSTS);
+    if (isProductionHost) {
+      tagged.headers.set('Strict-Transport-Security', HSTS);
+      tagged.headers.set('X-Content-Type-Options', 'nosniff');
+      // Astro fingerprints everything under /_astro/, so a changed file always
+      // gets a new URL and the old one can be cached indefinitely.
+      if (response.status === 200 && url.pathname.startsWith('/_astro/')) {
+        tagged.headers.set('Cache-Control', IMMUTABLE_CACHE);
+      }
+    }
     // Raw data files are linked as citations from content pages, so Google
     // crawls them and reports them as "Crawled - currently not indexed".
     // Mark them noindex; crawlers and AI agents can still fetch them.

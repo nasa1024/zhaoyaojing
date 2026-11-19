@@ -67,8 +67,8 @@ test('result page populates #related-links', async ({ page }) => {
   expect(count).toBeGreaterThan(0);
 });
 
-// On a prefixed-language route, related links must localize AND the root-only
-// methodology page must be linked unprefixed (so it does not 404).
+// On a prefixed-language route, every related link must stay in that language,
+// including the localized methodology page.
 test('related-links stay valid + localized on a prefixed route', async ({ page }) => {
   await page.goto('/en/');
   const res = await page.evaluate(async () => {
@@ -85,8 +85,7 @@ test('related-links stay valid + localized on a prefixed route', async ({ page }
       heading: el.querySelector('#related-links h3')?.textContent || '',
     };
   });
-  expect(res.links).toContain('/methodology/');               // root-only, never /en/methodology/
-  expect(res.links.some((h) => h.includes('/en/methodology/'))).toBe(false);
+  expect(res.links).toContain('/en/methodology/');
   expect(res.links).toContain('/en/platforms/imagen/');       // platform link IS prefixed
   expect(res.links).toContain('/en/blog/how-to-detect-ai-images/');
   expect(res.heading).toBe('Related reading');                // i18n resolved, not Chinese fallback

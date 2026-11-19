@@ -2268,7 +2268,9 @@ select:focus-visible {
   cursor: pointer; text-align: center; transition: border-color .15s, background .15s;
 }
 .tool-drop-zone.drag-over { border-color: var(--accent-text); background: rgb(var(--info-rgb) / 0.07); }
-.tool-drop-zone input[type="file"] { display: none; }
+.tool-drop-zone { position: relative; }
+.tool-drop-zone input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip-path: inset(50%); }
+.tool-drop-zone:focus-within { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .tool-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 16px 0 8px; }
 .tool-toolbar input[type="text"] { flex: 1 1 220px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); }
 .tool-raw-section { margin: 18px 0; }

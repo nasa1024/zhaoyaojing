@@ -375,8 +375,7 @@ function renderRelatedLinks(report) {
   }
   links.push(`<a href="${p}/platforms/">${esc(tt('result.related.platforms', '全部平台指南'))} →</a>`);
   links.push(`<a href="${p}/blog/${guide}/">${esc(tt('result.related.guide', '相关检测指南'))} →</a>`);
-  // methodology is a root-only page (no per-language route) — always link unprefixed
-  links.push(`<a href="/methodology/">${esc(tt('result.related.methodology', '方法论与限制'))} →</a>`);
+  links.push(`<a href="${p}/methodology/">${esc(tt('result.related.methodology', '方法论与限制'))} →</a>`);
   return `<div class="related-row" id="related-links">
     <h3>${esc(tt('result.related', '相关阅读'))}</h3>
     <nav class="related-links-inline" aria-label="${esc(tt('result.related', '相关阅读'))}">${links.join('')}</nav>

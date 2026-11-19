@@ -14,7 +14,7 @@ const TOOL_EVENT_ALLOWED_PARAMS = {
   detector_view: ['locale', 'page_type', 'tool_type'],
   file_select: ['file_category', 'mime_group', 'file_count_bucket'],
   analysis_start: ['tool_type'],
-  analysis_complete: ['result_category', 'duration_bucket', 'file_category'],
+  analysis_completed: ['result_category', 'duration_bucket', 'file_category'],
   analysis_error: ['sanitized_error_code', 'file_category'],
   copy_result: ['copy_type'],
   export_result: ['export_type'],
@@ -184,7 +184,7 @@ test('tool page analytics follows the PRD allowlist and keeps file data private'
   const calls = await getAllRecordedEvents(page);
   const toolCalls = calls.filter((c) => Object.prototype.hasOwnProperty.call(TOOL_EVENT_ALLOWED_PARAMS, c.name));
   const names = toolCalls.map((c) => c.name);
-  for (const eventName of ['detector_view', 'file_select', 'analysis_start', 'analysis_complete', 'copy_result', 'export_result']) {
+  for (const eventName of ['detector_view', 'file_select', 'analysis_start', 'analysis_completed', 'copy_result', 'export_result']) {
     expect(names).toContain(eventName);
   }
 
@@ -196,7 +196,7 @@ test('tool page analytics follows the PRD allowlist and keeps file data private'
 
   const selected = toolCalls.find((c) => c.name === 'file_select');
   expect(selected.params).toEqual({ file_category: 'image', mime_group: 'image', file_count_bucket: '1' });
-  const completed = toolCalls.find((c) => c.name === 'analysis_complete');
+  const completed = toolCalls.find((c) => c.name === 'analysis_completed');
   expect(completed.params.result_category).toBe('signals_found');
 
   assertNoForbiddenAnalyticsParams(toolCalls);

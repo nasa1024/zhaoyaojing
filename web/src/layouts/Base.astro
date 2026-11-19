@@ -215,6 +215,10 @@ const toolsHref = toolsLang === DEFAULT_LANG ? '/tools/' : `/${toolsLang}/tools/
 const toolsNoLocalize = toolsLang !== pageLang;
 const aboutHref = `${navPrefix}/about/`;
 const i18nPage = canonicalPath === '/' ? 'home' : 'content';
+const FOOTER_LANGS = [
+  ['zh-CN', '中文（简）'], ['zh-TW', '中文（繁）'], ['en', 'English'], ['ja', '日本語'], ['ko', '한국어'],
+  ['de', 'Deutsch'], ['fr', 'Français'], ['es', 'Español'], ['pt-BR', 'Português'],
+];
 const navLabels = NAV_LABELS[pageLang] ?? NAV_LABELS[DEFAULT_LANG];
 const pageAlternateLangs = (alternateLangs ?? SUPPORTED_LANGS).filter((lang) => SUPPORTED_LANGS.includes(lang));
 const BRAND_DESCRIPTOR = {
@@ -354,7 +358,7 @@ const siteJsonLd = [
     name: SITE_NAME,
     url: SITE_URL,
     logo: `${SITE_URL}/og.png`,
-    sameAs: ['https://github.com/nasa1024/zhaoyaojing', 'https://github.com/MatrixA/aicheck'],
+    sameAs: ['https://github.com/nasa1024/zhaoyaojing'],
     description: SITE_DESCRIPTION,
     foundingDate: '2026',
     knowsAbout: [
@@ -506,10 +510,8 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
     <!-- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (code) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" /></noscript>
 
     <link rel="stylesheet" href="/tokens.css" />
     <link rel="stylesheet" href="/style.css" />
@@ -574,6 +576,11 @@ const allJsonLd = [...siteJsonLd, ...normalizedJsonLd];
           <a href={`${navPrefix}/terms/`} data-i18n="nav.terms">{navLabels.terms}</a>
           <a href={`${navPrefix}/contact/`} data-i18n="nav.contact">{navLabels.contact}</a>
         </div>
+        <nav class="footer-links footer-langs" aria-label="Languages">
+          {FOOTER_LANGS.map(([code, label]) => (
+            <a href={code === DEFAULT_LANG ? '/' : `/${code}/`} lang={code} hreflang={code} data-no-localize aria-current={code === pageLang ? 'true' : undefined}>{label}</a>
+          ))}
+        </nav>
         <div class="footer-links footer-featured" aria-label="Featured">
           <a href="/en/ai-video-detector/" lang="en" data-no-localize>AI Video Detector</a>
           <a href="/research/ai-media-provenance-report-2026-q3/" lang="en" data-no-localize>AI Media Provenance Report 2026 Q3</a>

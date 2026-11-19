@@ -1418,7 +1418,7 @@ const priorityPlatformProfiles = {
       h1: 'Sora provenance checks for existing and archived video files',
       meta: 'Target query: Sora AI detector for existing files · Updated July 10, 2026 · Parser: aicheck 0.2.0',
       updatedAt: '2026-07-10',
-      lead: 'OpenAI says the Sora Web/App service ended on April 26, 2026, and the Sora API is scheduled to stop on September 24, 2026. This page is therefore an archive and provenance workflow for files you already have, not a guide to accessing the discontinued product. Preserve the original MP4 or MOV: AICheck365 checks C2PA/JUMBF evidence, container fields, SEI markers, file-name clues, and sampled frame watermarks locally in the browser.',
+      lead: 'OpenAI says the Sora Web/App service ended on April 26, 2026, and set September 24, 2026 as the stop date for the Sora API. This page is therefore an archive and provenance workflow for files you already have, not a guide to accessing the discontinued product. Preserve the original MP4 or MOV: AICheck365 checks C2PA/JUMBF evidence, container fields, SEI markers, file-name clues, and sampled frame watermarks locally in the browser.',
       directAnswer: {
         heading: 'Service status: use this checker for existing Sora files',
         body: 'Sora Web/App is no longer available. If you already have a Sora export, keep the untouched file and inspect its container evidence before editing or re-encoding it. A readable Sora or C2PA signal can support provenance; a missing signal cannot prove that the video was not made with Sora.',
@@ -1458,7 +1458,7 @@ const priorityPlatformProfiles = {
         { href: '/blog/how-to-detect-ai-videos/', label: 'Read the AI video workflow' },
       ],
       faq: [
-        ['Is Sora still available?', 'OpenAI states that Sora Web/App ended on April 26, 2026. The Sora API is scheduled to stop on September 24, 2026. This page is intended for existing and archived files.'],
+        ['Is Sora still available?', 'OpenAI states that Sora Web/App ended on April 26, 2026. OpenAI set September 24, 2026 as the stop date for the Sora API. This page is intended for existing and archived files.'],
         ['Can AICheck365 identify every archived Sora video?', 'No. It can only show evidence that remains in the file. Transcoding, screen recording, editing, or metadata stripping may remove the strongest provenance signals.'],
         ['Should I upload a screenshot of a Sora frame?', 'Prefer the original video. A screenshot is a new image file and usually has none of the MP4/C2PA container evidence.'],
       ],
@@ -2590,7 +2590,7 @@ const priorityPlatformProfiles = {
       h1: '手元に残る Sora 動画の来歴を確かめる',
       meta: '主要検索語: Sora 動画 判定 · 更新: 2026-07-23 · パーサー: aicheck 0.2.0',
       updatedAt: '2026-07-23',
-      lead: 'OpenAI の案内では、Sora の Web/App は 2026年4月26日に提供を終了し、Sora API も 2026年9月24日に停止が予定されています。そのため、このページは終了したサービスの使い方ではなく、すでに手元にある、あるいは保存済みのファイルを調べるための手順です。鍵になるのは元の MP4/MOV をそのまま保つことです。AICheck365 は C2PA/JUMBF、コンテナのフィールド、SEI マーカー、抽出したフレームの透かしを、ブラウザの中だけで確認します。',
+      lead: 'OpenAI の案内では、Sora の Web/App は 2026年4月26日に提供を終了し、Sora API の停止日は 2026年9月24日と案内されています。そのため、このページは終了したサービスの使い方ではなく、すでに手元にある、あるいは保存済みのファイルを調べるための手順です。鍵になるのは元の MP4/MOV をそのまま保つことです。AICheck365 は C2PA/JUMBF、コンテナのフィールド、SEI マーカー、抽出したフレームの透かしを、ブラウザの中だけで確認します。',
       directAnswer: {
         heading: '結論：判断材料はコンテナに残った証拠です',
         body: '編集や再エンコードをする前に、ダウンロードしたままのファイルを調べてください。読み取れる C2PA 宣言や Sora 由来の文字列が見つかれば来歴の裏づけになります。ただし逆は成り立ちません。シグナルが無いことは、その動画が Sora で作られていない証明にはならず、単にこのコピーに読める証拠が残っていないという意味です。',
@@ -2646,7 +2646,7 @@ const priorityPlatformProfiles = {
         { href: '/blog/how-to-detect-ai-videos/', label: 'AI動画の見分け方を読む' },
       ],
       faq: [
-        ['Sora はまだ使えますか？', 'OpenAI は Sora の Web/App が 2026年4月26日に終了したと案内しています。Sora API も 2026年9月24日に停止予定です。このページは、すでに手元にあるファイルや保存済みのファイルを対象にしています。'],
+        ['Sora はまだ使えますか？', 'OpenAI は Sora の Web/App が 2026年4月26日に終了したと案内しています。Sora API の停止日は 2026年9月24日と案内されています。このページは、すでに手元にあるファイルや保存済みのファイルを対象にしています。'],
         ['保存した Sora 動画なら必ず判別できますか？', 'いいえ。示せるのはファイルに残っている証拠だけです。トランスコード、画面録画、編集、メタデータの削除によって、最も強い来歴の信号は失われることがあります。'],
         ['Sora 動画のスクリーンショットでも調べられますか？', '元の動画を使ってください。スクリーンショットは新しい画像ファイルであり、MP4 や C2PA のコンテナ証拠はまず残っていません。'],
         ['ファイルはアップロードされますか？', 'いいえ。解析は WebAssembly にコンパイルされた Rust がブラウザ内で行うため、動画は端末から出ません。'],
@@ -6185,25 +6185,14 @@ const absoluteProfileHref = (link) => {
 };
 const profileCitations = (profile) => profile.sources?.items?.map(absoluteProfileHref) ?? [];
 
-function profileHowToJsonLd(profile) {
-  if (!profile.steps?.items?.length) return [];
-  const pageUrl = `${SITE_URL}${prefix}/${path}/`;
-  return [{
-    '@context': 'https://schema.org',
-    '@type': 'HowTo',
-    name: profile.steps.heading,
-    description: profile.directAnswer?.body ?? profile.description,
-    url: pageUrl,
-    inLanguage: lang,
-    step: profile.steps.items.map(([name, text], index) => ({
-      '@type': 'HowToStep',
-      position: index + 1,
-      name,
-      text,
-      url: `${pageUrl}#step-${index + 1}`,
-    })),
-  }];
-}
+// The first segment of a profile's meta line names the query the page was
+// written for. That is an editorial note, so only the update date and parser
+// version are shown to readers.
+const QUERY_NOTE = /^(Target query|Consulta alvo|Consulta objetivo|Keyword alvo|Requête cible|Termo principal|Ziel-Keyword|Zielsuchbegriff|주요 검색어|主要キーワード|主要搜尋詞|主要検索語|主要關鍵字|対象キーワード)/;
+const readerMeta = (meta = '') => {
+  const parts = meta.split(' · ');
+  return parts.length > 1 && QUERY_NOTE.test(parts[0]) ? parts.slice(1).join(' · ') : meta;
+};
 
 function jsonLdBase(type, name, description, dateModified = modifiedAt, citations = []) {
   const pageUrl = `${SITE_URL}${prefix}/${path}/`;
@@ -6282,7 +6271,6 @@ if (priorityPlatformProfile) {
   pageDescription = priorityPlatformProfile.description;
   jsonLd = [
     ...jsonLdBase('Article', pageTitle, pageDescription, priorityPlatformProfile.updatedAt ?? modifiedAt, profileCitations(priorityPlatformProfile)),
-    ...profileHowToJsonLd(priorityPlatformProfile),
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -6300,7 +6288,6 @@ if (priorityArticleProfile) {
   pageDescription = priorityArticleProfile.description;
   jsonLd = [
     ...jsonLdBase('Article', pageTitle, pageDescription, priorityArticleProfile.updatedAt ?? modifiedAt, profileCitations(priorityArticleProfile)),
-    ...profileHowToJsonLd(priorityArticleProfile),
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -6384,7 +6371,7 @@ const articles = Object.keys(pageTitles).map((slug) => ({
     {priorityArticleProfile && (
       <article class="card content-article priority-seo-page" data-priority-page={path}>
         <h1>{priorityArticleProfile.h1}</h1>
-        <p class="article-meta">{priorityArticleProfile.meta}</p>
+        <p class="article-meta">{readerMeta(priorityArticleProfile.meta)}</p>
         <p class="lead-text">{priorityArticleProfile.lead}</p>
 
         {priorityArticleProfile.directAnswer && (
@@ -6500,7 +6487,7 @@ const articles = Object.keys(pageTitles).map((slug) => ({
       <>
         <article class="card content-article priority-seo-page" data-priority-page={path}>
           <h1>{priorityPlatformProfile.h1}</h1>
-          <p class="article-meta">{priorityPlatformProfile.meta}</p>
+          <p class="article-meta">{readerMeta(priorityPlatformProfile.meta)}</p>
           <p class="lead-text">{priorityPlatformProfile.lead}</p>
 
           {priorityPlatformProfile.directAnswer && (
@@ -6622,11 +6609,6 @@ const articles = Object.keys(pageTitles).map((slug) => ({
           <p>{c.limitText}</p>
           <h2>{c.sections.privacy}</h2>
           <p>{c.privacyText}</p>
-          <ul class="content-list">
-            <li>{c.platformLead(platform.name)}</li>
-            <li>{c.signalIntro}</li>
-            <li>{c.limitText}</li>
-          </ul>
           <h2>{c.sections.next}</h2>
           <p>{c.platformCta(platform.name)}.</p>
           <div class="cta-box">
